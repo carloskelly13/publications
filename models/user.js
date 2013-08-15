@@ -15,8 +15,7 @@ var Schema = mongoose.Schema,
 var userSchema = new Schema({
     name: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
-    modified: { type: Date, default: Date.now },
-    documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }]
+    modified: { type: Date, default: Date.now }
 });
 
 userSchema.pre('save', function(next) {

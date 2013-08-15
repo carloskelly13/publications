@@ -10,7 +10,8 @@ var express = require('express'),
 
 var IndexController = require('../controllers/index'),
     UserController = require('../controllers/user'),
-    DocumentController = require('../controllers/document');
+    DocumentController = require('../controllers/document'),
+    ShapeController = require('../controllers/shape');
 
 var auth = function (req, res, next) {
     if (!req.isAuthenticated()) res.send(401);
@@ -31,5 +32,8 @@ module.exports = function (app, passport) {
 
     // Document model routes
     app.get('/documents', auth, DocumentController.index);
+
+    // Shape model routes
+    app.get('/shapes/:id?', auth, ShapeController.index);
 
 };

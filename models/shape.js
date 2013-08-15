@@ -11,7 +11,7 @@ var express = require('express'),
 var Schema = mongoose.Schema;
 
 var shapeSchema = new Schema({
-    _document: { type: String, ref: 'Document' },
+    _document: { type: Schema.Types.ObjectId, ref: 'Document' },
     type: { type: Number, required: true },
     width: { type: Number, required: true },
     height: { type: Number, required: true },

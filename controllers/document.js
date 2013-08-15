@@ -13,7 +13,7 @@ var DocumentModel = require('../models/document');
 exports.index = function(req, res) {
     var userId = req.user['_id'];
 
-    DocumentModel.find({ userId: userId }, function(err, documents) {
+    DocumentModel.find({ _user: userId }, function(err, documents) {
         if (_.isObject(documents))
             res.json(documents);
         else

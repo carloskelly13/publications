@@ -14,7 +14,8 @@ define(function(require) {
         appModule = require('app-module');
 
     var Document = appModule.module(),
-        User = require('user');
+        User = require('user'),
+        Shape = require('shape');
 
     Document.Model = Backbone.Model.extend({
         url: '/document',
@@ -30,13 +31,30 @@ define(function(require) {
         }
     });
 
+    Document.Views.Item = Backbone.View.extend({
+
+    });
+
     Document.Views.Library = Backbone.View.extend({
         tagName: 'div',
         className: 'pure-u-1',
         template: _.template(require('text!../templates/document-library.html')),
 
-        addDocument: function(documentModel) {
-            console.log(documentModel);
+        initialize: function() {
+            var view = this;
+            view.documents = [];
+        },
+
+        addDocument: function(model) {
+            var view = this;
+
+            var shapeCollection = new Shape.Collection([], { documentId: model.id }),
+                documentView = new Document.Views.Item({ model: model, collection: shapeCollection });
+
+            shapeCollection.fetch();
+            view.documents.push(documentView);
+
+            console.log(documentView);
         },
 
         render: function() {

@@ -13,7 +13,7 @@ var ShapeModel = require('../models/shape');
 exports.index = function(req, res) {
     var documentId = req.route.params.id;
 
-    ShapeModel.find({ documentId: documentId }, function(err, shapes) {
+    ShapeModel.find({ _document: documentId }, function(err, shapes) {
         if (_.isObject(shapes))
             res.json(shapes);
         else

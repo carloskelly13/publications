@@ -46,14 +46,14 @@ mongoose.connect('mongodb://localhost/pub-js');
 
 if (_.contains(process.argv, 'db:seed')) {
 
-    var carlosUser = new UserModel({
+    var user = new UserModel({
         name: 'carlos13@icloud.com',
         password: '123'
     });
 
-    carlosUser.save(function(err) {
+    user.save(function(err) {
         var documentModel = new DocumentModel({
-            _user: carlosUser._id,
+            _user: user._id,
             name: 'Sample Document',
             width: 432, height: 288
         });
