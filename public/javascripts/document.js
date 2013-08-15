@@ -19,7 +19,12 @@ define(function(require) {
 
     Document.Model = Backbone.Model.extend({
         url: '/document',
-        idAttribute: '_id'
+        idAttribute: '_id',
+
+        getPrintedSize: function() {
+            var model = this;
+            return (model.get('width') / 72.0) + '” × ' + (model.get('height') / 72.0) + '”';
+        }
     });
 
     Document.Collection = Backbone.Collection.extend({
@@ -32,7 +37,19 @@ define(function(require) {
     });
 
     Document.Views.Item = Backbone.View.extend({
+        tagName: 'div',
+        className: 'document-view-item',
+        template: _.template(require('text!../templates/document-item.html')),
 
+        render: function() {
+            var view = this;
+            view.$el.html(view.template({
+                name: view.model.get('name'),
+                printedSize: view.model.getPrintedSize()
+            }));
+
+            return view;
+        }
     });
 
     Document.Views.Library = Backbone.View.extend({
@@ -54,7 +71,7 @@ define(function(require) {
             shapeCollection.fetch();
             view.documents.push(documentView);
 
-            console.log(documentView);
+            view.$el.append(documentView.render().el);
         },
 
         render: function() {
