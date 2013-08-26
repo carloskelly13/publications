@@ -1,5 +1,4 @@
 
-
 /**
  * Publications JS App
  * Document Module
@@ -10,29 +9,34 @@ define(function(require) {
     var _ = require('underscore'),
         $ = require('jquery'),
         amplify = require('amplify'),
+        ui = require('ui'),
+        NProgress = require('nprogress'),
         Backbone = require('backbone'),
-        appModule = require('app-module');
+        appModule = require('app-module'),
+        d3 = require('d3');
 
     var Document = appModule.module(),
+        DocumentContext = require('contexts/document-context'),
+        ShapeContext = require('contexts/shape-context'),
         User = require('user'),
-        Shape = require('shape');
+        Shape = require('shape'),
+        Inspector = require('inspector'),
+        Modal = require('modal');
 
     Document.Model = Backbone.Model.extend({
-        url: '/document',
+        urlRoot: '/document',
         idAttribute: '_id',
 
         getPrintedSize: function() {
             var model = this;
             return (model.get('width') / 72.0) + '” × ' + (model.get('height') / 72.0) + '”';
-        }
-    });
+        },
 
-    Document.Collection = Backbone.Collection.extend({
-        url: '/documents',
-        model: Document.Model,
+        getPrintedDate: function() {
+            var model = this,
+                format = d3.time.format('%e %b %Y');
 
-        parse: function(response) {
-            return response;
+            return format(new Date(model.get('modified')));
         }
     });
 
@@ -41,11 +45,28 @@ define(function(require) {
         className: 'document-view-item',
         template: _.template(require('text!../templates/document-item.html')),
 
+        events: {
+            'click' : 'listItemClicked'
+        },
+
+        listItemClicked: function() {
+            var view = this,
+                documentEditor = new Document.Views.Editor({ model: view.model });
+
+            appModule.documentContext.trigger('update', {
+                documentModel: view.model,
+                listItem: view,
+                contentView: documentEditor,
+                superview: $('.document-editor')
+            });
+        },
+
         render: function() {
             var view = this;
             view.$el.html(view.template({
                 name: view.model.get('name'),
-                printedSize: view.model.getPrintedSize()
+                printedSize: view.model.getPrintedSize(),
+                date: view.model.getPrintedDate()
             }));
 
             return view;
@@ -54,31 +75,291 @@ define(function(require) {
 
     Document.Views.Library = Backbone.View.extend({
         tagName: 'div',
-        className: 'pure-u-1',
+        className: 'document-library',
         template: _.template(require('text!../templates/document-library.html')),
+
+        events: {
+            'click .source-list' : 'sourceListClicked'
+        },
 
         initialize: function() {
             var view = this;
             view.documents = [];
+            view.fetchDocuments();
+            appModule.documentContext = new DocumentContext.Service({ model: new DocumentContext.Model() });
+        },
+
+        createNewDocument: function() {
+            var view = this,
+                documentModel = new Document.Model({
+                _user: view.model.id,
+                name: 'Untitled Document',
+                width: 432,
+                height: 288,
+                shapes: []
+            });
+
+            view.listenToOnce(documentModel, 'change', view.addDocument);
+            documentModel.save();
+        },
+
+        fetchDocuments: function() {
+            var view = this;
+            _.each(view.model.get('documents'), function(documentId) {
+                var documentModel = new Document.Model({ _id: documentId });
+                view.listenToOnce(documentModel, 'sync', view.addDocument);
+                documentModel.fetch();
+            });
         },
 
         addDocument: function(model) {
-            var view = this;
-
-            var shapeCollection = new Shape.Collection([], { documentId: model.id }),
-                documentView = new Document.Views.Item({ model: model, collection: shapeCollection });
-
-            shapeCollection.fetch();
+            var view = this,
+                documentView = new Document.Views.Item({ model: model });
             view.documents.push(documentView);
+            view.sourceList.append(documentView.render().el);
+        },
 
-            view.$el.append(documentView.render().el);
+        sourceListClicked: function(event) {
+            if (event.target.id.toLowerCase() === 'source-list-content'.toLowerCase())
+                appModule.documentContext.trigger('clear');
         },
 
         render: function() {
             var view = this;
             view.$el.html(view.template());
-            view.$el.append(new User.Views.SignOutButton().render().el);
+            view.sourceList = view.$('.source-list .content');
+            return view;
+        }
+    });
 
+    Document.Views.Editor = Backbone.View.extend({
+        tagName: 'div',
+        className: 'content fadeInGrowAnimation',
+        id: 'document-editor-content',
+        template: _.template(require('text!../templates/document-editor.html')),
+
+        events: {
+            'click #doc-edit-btn' : 'editButtonClicked',
+            'click #doc-pdf-btn' : 'pdfButtonClicked',
+            'click #save-edit-btn' : 'saveButtonClicked',
+            'click #doc-delete-btn' : 'deleteButtonClicked',
+            'click #close-edit-btn' : 'closeButtonClicked',
+            'change input.document-name' : 'documentNameChanged'
+        },
+
+        initialize: function() {
+            var view = this;
+            appModule.inspector = new Inspector.Views.Main();
+            appModule.shapeContext = new ShapeContext.Service({ model: new ShapeContext.Model() });
+            view.shapes = [];
+        },
+
+        createShapes: function() {
+            var view = this;
+            view.collection = new Shape.Collection();
+            view.listenTo(view.collection, 'add', view.addShape);
+            view.collection.add(view.model.get('shapes'));
+            return view;
+        },
+
+        saveButtonClicked: function() {
+            var view = this;
+            NProgress.start();
+            view.model.set('shapes', view.collection.toJSON());
+            view.listenToOnce(view.model, 'sync', function() { NProgress.done(); });
+            view.model.save();
+        },
+
+        deleteButtonClicked: function() {
+            var view = this;
+            new Modal.Views.YesNo({
+                yesFunction: function(sender) {
+                    var documentContext = appModule.documentContext,
+                        sourceListItem = documentContext.model.get('listItem'),
+                        documentModel = documentContext.model.get('documentModel');
+
+                    documentContext.trigger('clear');
+                    ui.hingeAnimation(sourceListItem.$el, function() {
+                        sourceListItem.remove();
+                        documentModel.destroy();
+                    });
+                },
+                noFunction: null,
+                model: new Backbone.Model({
+                    title: 'Delete ' + view.model.get('name'),
+                    message: 'Are you sure you want to delete ' + view.model.get('name') + '? This action cannot be reversed.',
+                    yesButton: 'Delete',
+                    noButton: 'Cancel'
+                })
+            }).render();
+        },
+
+        closeButtonClicked: function() {
+            var view = this,
+                viewControls = view.$('.view-controls'),
+                editControls = view.$('.edit-controls'),
+                documentControls = $('.pub-nav .controls'),
+                sourceList = $('.full-height-content.source-list'),
+                documentEditor = $('.full-height-content.document-editor');
+
+            view.saveButtonClicked();
+            _.each(view.shapes, function(shape) { shape.shouldEdit(false); });
+            documentEditor.css({ right: 0 });
+            sourceList.css({ left: 0 });
+            appModule.inspector.$el.css({ right: '-24%' });
+            appModule.shapeContext.trigger('clear');
+            appModule.isEditingDocument = false;
+            ui.fadeOut(editControls, function() {
+                view.drawDocumentFrameWithAxisAndGrid(false);
+                ui.fadeIn(viewControls);
+                ui.fadeIn(documentControls);
+                view.$('input.document-name').prop('disabled', true);
+                appModule.inspector.remove();
+                appModule.documentContext.model.get('listItem').render();
+            });
+        },
+
+        editButtonClicked: function() {
+            var view = this,
+                viewControls = view.$('.view-controls'),
+                editControls = view.$('.edit-controls'),
+                documentControls = $('.pub-nav .controls'),
+                sourceList = $('.full-height-content.source-list'),
+                documentEditor = $('.full-height-content.document-editor');
+
+            _.each(view.shapes, function(shape) { shape.shouldEdit(true); });
+
+            appModule.inspector.render();
+            appModule.isEditingDocument = true;
+            ui.fadeOut(documentControls);
+            ui.fadeOut(viewControls, function() {
+                documentEditor.css({ right: '23%' });
+                sourceList.css({ left: '-24%' });
+                appModule.inspector.$el.css({ right: 0 });
+                view.$('input.document-name').prop('disabled', false);
+                view.drawDocumentFrameWithAxisAndGrid(true);
+                ui.fadeIn(editControls);
+            });
+        },
+
+        pdfButtonClicked: function(event) {
+            var view = this,
+                documentModel = appModule.documentContext.model.get('documentModel');
+
+            if (documentModel.id)
+                window.location = '/document/' + documentModel.id + '/pdf';
+        },
+
+        documentNameChanged: function(event) {
+            var view = this,
+                documentName = event.target.value;
+            if (_.isEmpty(documentName))
+                event.target.value = view.model.get('name');
+            else
+                view.model.set({ name: documentName });
+        },
+
+        addShape: function(model) {
+            var view = this,
+                shapeView = null;
+
+            if (model.get('type') == 1)
+                shapeView = new Shape.Views.Rectangle({ model: model, svg: view.svg }).createSVGEl().render();
+            else if (model.get('type') == 2)
+                shapeView = new Shape.Views.Ellipse({ model: model, svg: view.svg }).createSVGEl().render();
+
+            if (appModule.isEditingDocument) {
+                shapeView.shouldEdit(true);
+                appModule.shapeContext.trigger('update', shapeView);
+            }
+
+            view.shapes.push(shapeView);
+        },
+
+        documentSVGClicked: function() {
+            appModule.shapeContext.trigger('clear');
+        },
+
+        drawDocumentFrameWithAxisAndGrid: function(sender) {
+            d3.select('.x.axis').remove();
+            d3.select('.y.axis').remove();
+            d3.select('.x.grid').remove();
+            d3.select('.y.grid').remove();
+
+            var view = this,
+                svg = view.svg,
+                width = view.model.get('width'),
+                height = view.model.get('height');
+
+            var xScale = d3.scale.linear()
+                .domain([0, (width / 72.0)])
+                .range([0, width]),
+                yScale = d3.scale.linear()
+                .domain([0, (height / 72.0)])
+                .range([0, height]);
+
+            var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .ticks((width / 36.0) + 1.0)
+                .orient('top'),
+                yAxis = d3.svg.axis()
+                .scale(yScale)
+                .ticks((height / 36.0) + 1.0)
+                .orient('left');
+
+            if (sender) {
+                svg.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(40, 20)')
+                    .call(xAxis);
+                svg.append('g')
+                    .attr('class', 'y axis')
+                    .attr('transform', 'translate(40, 20)')
+                    .call(yAxis);
+            }
+
+            svg.insert('g', '.shape-group')
+                .attr('class', 'x grid')
+                .attr('transform', 'translate(40, 20)')
+                .call(xAxis.tickSize(-height, 0, 0).tickFormat(''));
+            svg.insert('g', '.shape-group')
+                .attr('class', 'y grid')
+                .attr('transform', 'translate(40, 20)')
+                .call(yAxis.tickSize(-width, 0, 0).tickFormat(''));
+        },
+
+        createDocumentSVG: function() {
+            var view = this;
+
+            var width = view.model.get('width'),
+                height = view.model.get('height');
+
+            var svg = d3.select('.document-svg-container').append('svg')
+                .attr('class', 'document-svg')
+                .attr('width', width + 80)
+                .attr('height', height + 40)
+                .append('g');
+
+            svg.append('g')
+                .attr('class', 'shape-group');
+
+            svg.append('rect')
+                .attr('class', 'document-svg-frame')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('x', 40)
+                .attr('y', 20)
+                .style('fill', 'transparent')
+                .on('click', view.documentSVGClicked);
+
+            view.svg = svg;
+            view.drawDocumentFrameWithAxisAndGrid(false);
+            return view;
+        },
+
+        render: function() {
+            var view = this;
+            view.$el.html(view.template(view.model.toJSON()));
             return view;
         }
     });

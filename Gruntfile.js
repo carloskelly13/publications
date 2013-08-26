@@ -32,7 +32,7 @@ module.exports = function(grunt) {
         options: {
           name: "app",
           mainConfigFile: "public/javascripts/app.js",
-          out: "public/javascripts/app.min.js"
+          out: "public/javascripts/dist/app.min.js"
         }
       }
     },

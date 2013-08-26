@@ -1,0 +1,21 @@
+.landing-page {
+    background: #fff;
+    bottom: 0;
+    display: block;
+    height: auto;
+    position: absolute;
+    top: @navbar-height;
+    width: 100%;
+    .animation(opacity, 0.25s);
+
+    .content {
+        height: 100%;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        .publications-wordmark-big {
+            .retina-picture('pub-logo-414-87', 414px, 87px, inline-block);
+        }
+    }
+}

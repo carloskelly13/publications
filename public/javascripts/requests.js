@@ -20,14 +20,4 @@
         dataType: 'json',
         type: 'GET'
     });
-
-    amplify.request.define('app#user', 'ajax', {
-        url: '/app/user',
-        dataType: 'json',
-        type: 'GET',
-        decoder: function( data, status, xhr, success, error ) {
-            if (status === 'success') success(data);
-            else error(xhr);
-        }
-    });
 });

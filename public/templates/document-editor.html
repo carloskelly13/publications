@@ -1,0 +1,17 @@
+<div class="header">
+    <input type="text" id="document-name" class="document-name" value="<%= name %>" disabled="true" placeholder="Document Name">
+    <div class="controls">
+        <div class="view-controls">
+            <button class="btn" type="button" id="doc-edit-btn">Edit</button>
+            <a class="btn" href="/document/<%= _id %>/pdf"download>PDF</a>
+            <button class="btn red" type="button" id="doc-delete-btn">Delete</button>
+        </div>
+        <div class="edit-controls">
+            <button class="btn" type="button" id="save-edit-btn">Save</button>
+            <button class="btn" type="button" id="close-edit-btn">Close</button>
+        </div>
+    </div>
+</div>
+<div class="edit-view">
+    <div class="document-svg-container"></div>
+</div>

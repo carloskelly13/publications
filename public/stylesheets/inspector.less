@@ -1,0 +1,57 @@
+.inspector-main {
+    border-left: 1px solid #bbb;
+    width: 23%;
+    right: -24%;
+    .animation(right, 0.4s);
+
+    .inspector-section {
+        .content {
+            padding: 1em 1em 2em 1em;
+            position: relative;
+        }
+
+        .icon-btns {
+            margin: 1.5em 0 0.5em 0;
+            .icon-btn {
+                margin-right: 5%;
+            }
+        }
+
+        h3 {
+            font-size: 1em;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            margin: 0 0 0.5em 0;
+        }
+
+        fieldset {
+            border: none;
+            display: inline-block;
+            margin: 0.5em 4% 0.25em 0;
+            padding: 0;
+            width: 44%;
+
+            &.rectangle-only {
+                display: none;
+            }
+
+            input {
+                width: 100%;
+
+                &:disabled + label {
+                    color: #bbb;
+                }
+
+                &:focus + label {
+                    color: @copy-blue;
+                }
+            }
+
+            label {
+                display: block;
+                margin: 0.5em 0 0;
+            }
+        }
+    }
+}

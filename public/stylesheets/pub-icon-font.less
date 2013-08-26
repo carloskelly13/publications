@@ -1,0 +1,29 @@
+
+@charset "UTF-8";
+
+@font-face {
+  font-family: "pub-icon-font";
+  src:url("../images/pub-icon-font.eot");
+  src:url("../images/pub-icon-font.eot?#iefix") format("embedded-opentype"),
+    url("../images/pub-icon-font.ttf") format("truetype"),
+    url("../images/pub-icon-font.svg#pub-icon-font") format("svg"),
+    url("../images/pub-icon-font.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "pub-icon-font";
+  content: attr(data-icon);
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none !important;
+  speak: none;
+  display: inline-block;
+  text-decoration: none;
+  width: 1em;
+  line-height: 1em;
+  -webkit-font-smoothing: antialiased;
+}

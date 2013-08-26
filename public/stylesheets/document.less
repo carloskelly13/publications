@@ -1,0 +1,172 @@
+
+/**
+* Publications JS App
+* Document LESS Stylesheet
+* Michael Kelly and Carlos Paelinck
+*/
+
+@navbar-height: 41px;
+
+.pub-nav {
+    background: @background-gray;
+    border-bottom: 1px solid #bbb;
+    height: @navbar-height;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 5;
+    top: 0;
+
+    .pub-logo {
+        .retina-picture('pub-logo-152-21', 152px, 21px, inline-block);
+        margin: 10px 0 0 10px;
+    }
+
+    .controls {
+        position: absolute;
+        right: 10px;
+        top: 9px;
+
+        .auth, .unauth {
+            display: none;
+        }
+
+        .unauth {
+            .sign-in-form {
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.document-library {
+    height: inherit;
+    min-height: inherit;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    top: 0;
+
+    .full-height-content {
+        bottom: 0;
+        display: block;
+        height: auto;
+        position: absolute;
+        top: @navbar-height;
+
+        .content {
+            height: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
+        &.source-list {
+            background: @background-spot;
+            border-right: 1px solid @line;
+            left: -24%;
+            width: 23%;
+            z-index: 4;
+            .animation(left, 0.4s);
+
+            .document-view-item {
+                border-bottom: 1px solid darken(@background-spot, 12%);
+                cursor: default;
+                padding: 15px;
+
+                &:hover {
+                    background: darken(@background-spot, 8%);
+                }
+
+                &.active {
+                    background: darken(@background-spot, 5%);
+                }
+
+                .name {
+                    display: block;
+                    font-size: 1.2em;
+                    margin: 0 0 0.25em 0;
+                }
+
+                .description {
+                    color: @copy-blue;
+                    font-size: 0.9em;
+                    font-weight: 500;
+                }
+            }
+        }
+
+        &.document-editor {
+            right: 0;
+            width: 77%;
+            z-index: 3;
+            .animation(right, 0.4s);
+
+            .header {
+                text-align: center;
+
+                .document-name {
+                    color: @copy;
+                    border-radius: 4px;
+                    font-size: 1.6em;
+                    font-weight: 300;
+                    margin: 1em 0 0;
+                    text-align: center;
+                    border-bottom: none;
+                    padding: 0.25em;
+                    .animation(all, 0.25s);
+                    width: 33%;
+
+                    &:hover {
+                        color: @line;
+                        background: @background-spot;
+                    }
+
+                    &:disabled, &:disabled:hover {
+                        color: @copy;
+                        -webkit-text-fill-color: @copy;
+                        background: #fff;
+                    }
+
+
+                }
+
+                .controls {
+                    padding: 0.67em 3em 1em 3em;
+                    text-align: center;
+
+                    .edit-controls {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.axis text {
+    fill: #666;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.axis line,
+.axis path {
+    fill: none;
+    stroke: #ddd;
+    shape-rendering: crispEdges;
+}
+
+.grid .tick {
+    stroke: #ddd;
+}
+
+.grid path {
+    stroke-width: 0;
+}
+
+.document-svg-frame {
+    shape-rendering: crispEdges;
+}

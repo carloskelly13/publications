@@ -8,17 +8,14 @@
 requirejs.config({
   paths: {
     jquery: 'components/jquery/jquery',
-    jqueryUI: 'components/jquery-ui/ui/jquery-ui',
     amplify: 'components/amplify/lib/amplify',
     underscore: 'components/lodash/dist/lodash.underscore',
     backbone: 'components/backbone/backbone',
-    text: 'components/requirejs-text/text'
+    text: 'components/requirejs-text/text',
+    d3: 'components/d3/d3',
+    nprogress: 'components/nprogress/nprogress'
   },
   shim: {
-    jqueryUI : {
-      deps: ['jquery'],
-      exports: '$'
-    },
     amplify: {
       deps: ['jquery'],
       exports: 'amplify'
@@ -29,6 +26,13 @@ requirejs.config({
     backbone: {
       deps: ['underscore', 'jquery'],
       exports: 'Backbone'
+    },
+    d3: {
+      exports: 'd3'
+    },
+    nprogress: {
+      deps: ['jquery'],
+      exports: 'NProgress'
     }
   }
 });

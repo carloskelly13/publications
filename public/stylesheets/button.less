@@ -1,0 +1,247 @@
+.btn-divider {
+    color: #bbb;
+    font-size: 1.2em;
+    font-weight: 500;
+    line-height: 1.4em;
+    padding: 0.2em 1em;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: baseline;
+    width: 1px;
+}
+
+.icon-btn {
+    display: inline-block;
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 0;
+    color: #3498db;
+    position: relative;
+    font-size: 1.5em;
+
+    &:disabled {
+        color: #ccc;
+
+        &:hover {
+            color: #ccc;
+        }
+
+        &:active {
+            top: 0;
+        }
+    }
+
+    &.green:not(:disabled) {
+        color: #2ecc71;
+
+        &:hover {
+            color: #27ae60;
+        }
+    }
+
+    &.red:not(:disabled) {
+        color: #e74c3c;
+
+        &:hover {
+            color: #c0392b;
+        }
+    }
+
+    &:hover {
+        color: #2980b9;
+    }
+
+    &:active {
+        top: 1px;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.btn {
+    -webkit-font-smoothing: antialiased;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: @copy-blue;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.2em;
+    font-weight: 500;
+    line-height: 1.4em;
+    padding: 0.2em 1em;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: baseline;
+    white-space: nowrap;
+    zoom: 1;
+    outline: none;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background: darken(@background-spot, 5%);
+    }
+
+    &:active {
+        background: darken(@background-spot, 10%);
+    }
+
+    &.red {
+        &:hover {
+            color: #c0392b;
+            background: lighten(#e74c3c, 30%);
+        }
+
+        &:active {
+            color: #c0392b;
+            background: lighten(#e74c3c, 20%);
+        }
+    }
+
+    &.green {
+        &:hover {
+            color: #27ae60;
+            background: lighten(#2ecc71, 30%);
+        }
+
+        &:active {
+            color: #27ae60;
+            background: lighten(#2ecc71, 20%);
+        }
+    }
+
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="week"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="color"] {
+    -webkit-font-smoothing: antialiased;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #e5e5e9;
+    box-sizing: border-box;
+    color: @copy;
+    display: inline-block;
+    line-height: normal;
+    font-size: 1.2em;
+    font-weight: 400;
+    line-height: 1.3em;
+    padding: 0.2em 0;
+    vertical-align: baseline;
+    zoom: 1;
+
+    &.invalid {
+        border-color: #e74c3c;
+
+        &:focus {
+            outline: none;
+            border-color: darken(#e74c3c, 30%);
+        }
+    }
+
+    &:-webkit-autofill {
+        background-color: transparent !important;
+        background: transparent !important;
+        color: @copy !important;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: @line;
+    }
+}
+
+fieldset.inline {
+    margin: 0;
+    display: inline-block;
+    padding: 0;
+    border: none;
+
+    input {
+        margin-right: 1em;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+.form {
+    h2 {
+        color: @copy;
+        font-size: 1.5em;
+        font-weight: 300;
+        margin: 0.5em 2em 0 2em;
+        text-align: center;
+    }
+
+    p {
+        margin: 1em 2em 2em 2em;
+        text-align: center;
+        font-size: 1.2em;
+        line-height: 1.5em;
+
+        &.error {
+            color: #e74c3c;
+        }
+    }
+
+    fieldset {
+        border: none;
+
+        label {
+            color: @copy;
+            cursor: default;
+            display: inline-block;
+            font-size: 1.2em;
+            margin: 0 10px 0 0;
+            text-align: right;
+            width: 25%;
+            vertical-align: middle;
+        }
+
+        input {
+            width: 60%
+        }
+
+        &.form-controls {
+            margin: 2em 0.5em 0.5em 0.5em;
+
+            .btn {
+                float: right;
+
+                &:last-child {
+                    float: left;
+                }
+
+                &:only-child {
+                    float: right;
+                }
+            }
+
+            &:after {
+                content: '';
+                clear: both;
+                display: block;
+            }
+        }
+    }
+}
