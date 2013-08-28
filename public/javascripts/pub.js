@@ -93,7 +93,6 @@ define(function(require) {
 
         initialize: function() {
             var view = this;
-            // NProgress.configure({ showSpinner: false });
             view.subviews = {};
             view.subviews.landingPage = new Pub.Views.LandingPage();
             $('body').append(view.el);

@@ -13,6 +13,7 @@ define(function(require) {
         NProgress = require('nprogress'),
         Backbone = require('backbone'),
         appModule = require('app-module'),
+        bootstrap = require('vendor/bootstrap-dropdowns');
         d3 = require('d3');
 
     var Inspector = appModule.module(),
@@ -35,73 +36,48 @@ define(function(require) {
                 value = parseFloat(event.target.value),
                 documentModel = appModule.documentContext.model,
                 offset = _.isEqual(dataProperty, 'width') ? 80.0 : 40.0;
-            event.target.value = value.toFixed(2);
 
-            var svg = d3.select('.document-svg'),
-                svgFrame = d3.select('.document-svg-frame');
-            svg.attr(dataProperty, (value * 72.0) + offset);
-            svgFrame.attr(dataProperty, (value * 72.0));
-            documentModel.get('documentModel').set(dataProperty, (value * 72.0));
-            documentModel.get('contentView').drawDocumentFrameWithAxisAndGrid(true);
+            if (value >= 0.0 && value <= 64.0) {
+                var svg = d3.select('.document-svg'),
+                    svgFrame = d3.select('.document-svg-frame');
+                event.target.value = value.toFixed(2);
+                svg.attr(dataProperty, (value * 72.0) + offset);
+                svgFrame.attr(dataProperty, (value * 72.0));
+                documentModel.get('documentModel').set(dataProperty, (value * 72.0));
+                documentModel.get('contentView').drawDocumentFrameWithAxisAndGrid();
+
+            } else {
+                event.target.value = (parseFloat(documentModel.get('documentModel')
+                    .get(dataProperty)) / 72)
+                    .toFixed(2);
+                ui.shakeAnimation($(event.target));
+            }
         },
 
         shapeMetricsChanged: function(event) {
             var view = this,
                 dataProperty = event.target.getAttribute('data-property'),
-                value = event.target.value,
+                dataMin = parseFloat(event.target.getAttribute('data-min')),
+                dataMax = parseFloat(event.target.getAttribute('data-max')),
+                dataRadix = parseFloat(event.target.getAttribute('data-radix')),
+                dataMult = parseFloat(event.target.getAttribute('data-mult')),
+                value = parseFloat(event.target.value),
                 shape = appModule.shapeContext.model.get('shape');
 
-            if (_.contains(['width', 'height'], dataProperty)) {
-                value = parseFloat(value);
-                if (value >= 0.125 && value <= 64.0) {
-                    event.target.value = value.toFixed(2);
-                    value *= 72.0;
-                } else {
-                    event.target.value = (shape.model.get(dataProperty) / 72.0).toFixed(2);
-                    ui.shakeAnimation($(event.target));
-                    return;
-                }
-            } else if (_.contains(['x', 'y'], dataProperty)) {
-                value = parseFloat(value);
-                if (value >= 0.0 && value <= 64.0) {
-                    event.target.value = value.toFixed(2);
-                    value *= 72.0;
-                } else {
-                    event.target.value = (shape.model.get(dataProperty) / 72.0).toFixed(2);
-                    ui.shakeAnimation($(event.target));
-                    return;
-                }
-            } else if (_.contains(['strokeWidth', 'r'], dataProperty)) {
-                value = parseFloat(value);
-                if (value >= 0 && value <= 32.0) {
-                    event.target.value = value.toFixed(0);
-                    value = value.toFixed(0);
-                } else {
-                    event.target.value = shape.model.get(dataProperty);
-                    ui.shakeAnimation($(event.target));
-                    return;
-                }
-            } else if (_.contains(['fillOpacity', 'strokeOpacity'], dataProperty)) {
-                value = parseFloat(value);
-                if (value >= 0 && value <= 1.0) {
-                    event.target.value = value.toFixed(2);
-                    value = value.toFixed(2);
-                } else {
-                    event.target.value = shape.model.get(dataProperty);
-                    ui.shakeAnimation($(event.target));
-                    return;
-                }
-            } else if (_.contains(['stroke', 'fill'], dataProperty) &&
-                !/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
-                event.target.value = shape.model.get(dataProperty);
-                ui.shakeAnimation($(event.target));
-                return;
-            }
+            if (shape.model.validateNumber(value, dataMin, dataMax)) {
+                event.target.value = value.toFixed(dataRadix);
+                shape.selectionFrame.remove();
+                shape.selectionFrame = null;
+                shape.model.set(dataProperty, value * dataMult);
+                shape.render();
+                shape.select();
+                shape.shouldEdit(true);
 
-            shape.model.set(dataProperty, value);
-            shape.render();
-            shape.select();
-            shape.shouldEdit(true);
+            } else {
+                event.target.value = (parseFloat(shape.model.get(dataProperty)) / dataMult)
+                    .toFixed(dataRadix);
+                ui.shakeAnimation($(event.target));
+            }
         },
 
         shapeButtonClicked: function(event) {
@@ -115,19 +91,22 @@ define(function(require) {
                 documentEditor.collection.add(new Shape.Model({
                     type: shapeType, width: 72, height: 72,
                     x: 72, y: 72, r: 0, strokeOpacity: 1, fillOpacity: 1,
-                    fill: '#95a5a6', stroke: '#7f8c8d', strokeWidth: 1
+                    fill: '#1abc9c', stroke: '#16a085', strokeWidth: 1
                 }));
+
             } else if (_.isEqual(dataAction, 'remove')) {
                 shape.shape.remove();
                 documentEditor.shapes = _.without(documentEditor.shapes, shape);
                 documentEditor.collection.remove(shape.model);
                 appModule.shapeContext.trigger('clear');
-            } else if (_.isEqual(dataAction, 'copy')) {
+
+            } else if (_.isEqual(dataAction, 'copy'))
                 view.updateClipboard(_.clone(shape.model.toJSON()));
-            } else if (_.isEqual(dataAction, 'paste')) {
-                if (view.clipboard)
-                    documentEditor.collection.add(new Shape.Model(_.clone(view.clipboard)));
-            } else if (_.isEqual(dataAction, 'cut')) {
+
+            else if (_.isEqual(dataAction, 'paste') && view.clipboard)
+                documentEditor.collection.add(new Shape.Model(_.clone(view.clipboard)));
+
+            else if (_.isEqual(dataAction, 'cut')) {
                 view.updateClipboard(_.clone(shape.model.toJSON()));
                 shape.shape.remove();
                 documentEditor.shapes = _.without(documentEditor.shapes, shape);
@@ -145,20 +124,26 @@ define(function(require) {
         updateShapeMetrics: function(model) {
             var view = this;
             if (model) {
-                view.$('#inspector-shape-width').val((model.get('width') / 72.0).toFixed(2));
-                view.$('#inspector-shape-height').val((model.get('height') / 72.0).toFixed(2));
-                view.$('#inspector-shape-x').val((model.get('x') / 72.0).toFixed(2));
-                view.$('#inspector-shape-y').val((model.get('y') / 72.0).toFixed(2));
-                view.$('#inspector-shape-fill').val(model.get('fill'));
-                view.$('#inspector-shape-stroke').val(model.get('stroke'));
-                view.$('#inspector-shape-fill-opacity').val(model.get('fillOpacity'));
-                view.$('#inspector-shape-stroke-opacity').val(model.get('strokeOpacity'));
-                view.$('#inspector-shape-stroke-width').val(model.get('strokeWidth'));
-                view.$('#inspector-shape-r').val(model.get('r'));
+                view.$('#inspector-shape-width').val((model.get('width') / 72.0).toFixed(3));
+                view.$('#inspector-shape-height').val((model.get('height') / 72.0).toFixed(3));
+                view.$('#inspector-shape-x').val((model.get('x') / 72.0).toFixed(3));
+                view.$('#inspector-shape-y').val((model.get('y') / 72.0).toFixed(3));
+                view.$('#inspector-shape-fill').css({ background: model.get('fill') });
+                view.$('#inspector-shape-stroke').css({ background: model.get('stroke') });
+                view.$('#inspector-shape-fill-input').val(model.get('fill'));
+                view.$('#inspector-shape-stroke-input').val(model.get('stroke'));
+                view.$('#inspector-shape-fill-opacity').val(model.get('fillOpacity').toFixed(2));
+                view.$('#inspector-shape-stroke-opacity').val(model.get('strokeOpacity').toFixed(2));
+                view.$('#inspector-shape-stroke-width').val(model.get('strokeWidth').toFixed(0));
+                view.$('#inspector-shape-r').val(model.get('r').toFixed(0));
                 view.$('.rectangle-only').css({ display: (model.get('type') == 1) ? 'inline-block' : 'none' });
             } else {
                 view.$('.inspector-shape-input').val('');
+                view.$('.inspector-color-input').val('');
                 view.$('.rectangle-only').css({ display: 'none' });
+                view.$('#inspector-shape-fill').css({ background: 'transparent' });
+                view.$('#inspector-shape-stroke').css({ background: 'transparent' });
+                if (view.colorPicker) view.closeColorPicker();
             }
         },
 
@@ -166,6 +151,8 @@ define(function(require) {
             var view = this,
                 shape = appModule.shapeContext.model.get('shape');
             view.$('.inspector-shape-input').prop('disabled', !sender);
+            view.$('.inspector-color-input').prop('disabled', !sender);
+            view.$('.color-btn').prop('disabled', !sender);
             view.$('.inspector-shape-btn.contextual').prop('disabled', !sender);
 
             view.updateShapeMetrics(sender ? shape.model : null);
@@ -185,10 +172,70 @@ define(function(require) {
                 documentLibrary = $('.document-library');
             view.$el.html(view.template());
             view.$('.inspector-shape-btn').on('click', view.shapeButtonClicked);
+            view.$('.color-btn').on('click', view.colorButtonClicked);
             view.$('.inspector-shape-input').on('change', view.shapeMetricsChanged);
             view.$('.inspector-document-input').on('change', view.documentMetricsChanged);
             view.updateDocumentMetrics(appModule.documentContext.model.get('documentModel'));
+
+            view.$('fieldset#fill-fieldset').prepend(new Inspector.Views.ColorPicker({
+                model: new Backbone.Model({ property: 'fill', label: 'Fill' })
+            }).render().el);
+
+            view.$('fieldset#stroke-fieldset').prepend(new Inspector.Views.ColorPicker({
+                model: new Backbone.Model({ property: 'stroke', label: 'Stroke' })
+            }).render().el);
+
             documentLibrary.append(view.el);
+            return view;
+        }
+    });
+
+    Inspector.Views.ColorPicker = Backbone.View.extend({
+        tagName: 'div',
+        className: 'color-picker',
+        template: _.template(require('text!../templates/inspector-color-picker.html')),
+
+        initialize: function() {
+            _.bindAll(this);
+        },
+
+        colorInputChanged: function(event) {
+            var view = this,
+                color = event.target.value,
+                shape = appModule.shapeContext.model.get('shape'),
+                property = view.model.get('property');
+
+            if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
+                view.$('.color-btn').css({ background: color });
+                shape.model.set(property, color);
+                shape.render();
+                shape.select();
+                shape.shouldEdit(true);
+            } else {
+                event.target.value = shape.model.get(property);
+                ui.shakeAnimation($(event.target));
+            }
+        },
+
+        colorSelected: function(event) {
+            var view = this,
+                color = event.target.getAttribute('data-color'),
+                shape = appModule.shapeContext.model.get('shape'),
+                property = view.model.get('property');
+
+            view.$('.color-btn').css({ background: color });
+            view.$('#inspector-shape-' + property + '-input').val(color);
+            shape.model.set(property, color);
+            shape.render();
+            shape.select();
+            shape.shouldEdit(true);
+        },
+
+        render: function() {
+            var view = this;
+            view.$el.html(view.template(view.model.toJSON()));
+            view.$('.colors li').on('click', view.colorSelected);
+            view.$('.inspector-color-input').on('change', view.colorInputChanged);
             return view;
         }
     });

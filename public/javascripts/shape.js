@@ -15,7 +15,15 @@ define(function(require) {
     var Shape = appModule.module();
 
     Shape.Model = Backbone.Model.extend({
-        idAttribute: '_id'
+        idAttribute: '_id',
+
+        validateNumber: function(number, min, max) {
+            return number >= min && number <= max;
+        },
+
+        validateColor: function(hexColor) {
+            return (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).test(hexColor);
+        }
     });
 
     Shape.Collection = Backbone.Collection.extend({
@@ -26,11 +34,29 @@ define(function(require) {
         select: function() {
             var view = this,
                 fill = d3.rgb(view.model.get('fill')),
-                stroke = d3.rgb(view.model.get('stroke'));
+                stroke = d3.rgb(view.model.get('stroke')),
+                padding = view.model.get('strokeWidth') + 4;
 
-            view.shape.style('fill', fill.darker(0.75));
-            view.shape.style('stroke', stroke.darker(0.75));
+
+            if (!view.selectionFrame)
+                view.selectionFrame = view.options.svg.insert('rect', '#shape-' + view.cid)
+                    .attr('class', 'selection-frame')
+                    .attr('width', view.model.get('width') + padding)
+                    .attr('height', view.model.get('height') + padding)
+                    .attr('x', view.model.get('x') + 40.0 - (padding / 2.0))
+                    .attr('y', view.model.get('y') + 20.0 - (padding / 2.0));
+
             view.shape.call(d3.behavior.drag().origin(Object).on('drag', view.drag));
+        },
+
+        repositionSelectionFrame: function() {
+            var view = this,
+                padding = view.model.get('strokeWidth') + 4,
+                x = view.model.get('x') + 40.0 - (padding / 2.0),
+                y = view.model.get('y') + 20.0 - (padding / 2.0);
+
+            view.selectionFrame.attr('x', x);
+            view.selectionFrame.attr('y', y);
         },
 
         deselect: function() {
@@ -38,8 +64,8 @@ define(function(require) {
                 fill = d3.rgb(view.model.get('fill')),
                 stroke = d3.rgb(view.model.get('stroke'));
 
-            view.shape.style('fill', fill);
-            view.shape.style('stroke', stroke);
+            view.selectionFrame.remove();
+            view.selectionFrame = null;
             view.shape.call(d3.behavior.drag().origin(Object).on('drag', null));
         },
 
@@ -69,6 +95,7 @@ define(function(require) {
             dragTarget.attr('y', y);
             view.model.set('x', x - 40.0);
             view.model.set('y', y - 20.0);
+            view.repositionSelectionFrame();
             appModule.inspector.updateShapeMetrics(view.model);
         },
 
@@ -90,7 +117,7 @@ define(function(require) {
                 .attr('y', view.model.get('y') + 20.0)
                 .attr('rx', view.model.get('r'))
                 .attr('ry', view.model.get('r'))
-                .attr('cid', view.cid)
+                .attr('id', 'shape-' + view.cid)
                 .style('fill', view.model.get('fill'))
                 .style('stroke', view.model.get('stroke'))
                 .style('fill-opacity', view.model.get('fillOpacity'))
@@ -111,6 +138,7 @@ define(function(require) {
             dragTarget.attr('cy', cy);
             view.model.set('x', cx - (view.model.get('width') / 2.0) - 40.0);
             view.model.set('y', cy - (view.model.get('height') / 2.0) - 20.0);
+            view.repositionSelectionFrame();
             appModule.inspector.updateShapeMetrics(view.model);
         },
 
@@ -130,7 +158,7 @@ define(function(require) {
                 .attr('ry', (view.model.get('height') / 2.0))
                 .attr('cx', view.model.get('x') + (view.model.get('width') / 2.0) + 40.0)
                 .attr('cy', view.model.get('y') + (view.model.get('height') / 2.0) + 20.0)
-                .attr('cid', view.cid)
+                .attr('id', 'shape-' + view.cid)
                 .style('fill', view.model.get('fill'))
                 .style('stroke', view.model.get('stroke'))
                 .style('fill-opacity', view.model.get('fillOpacity'))

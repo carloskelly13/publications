@@ -6,6 +6,7 @@
 */
 
 @navbar-height: 41px;
+@footer-height: 25px;
 
 .pub-nav {
     background: @background-gray;
@@ -26,7 +27,7 @@
     .controls {
         position: absolute;
         right: 10px;
-        top: 9px;
+        top: 11px;
 
         .auth, .unauth {
             display: none;
@@ -49,7 +50,7 @@
     top: 0;
 
     .full-height-content {
-        bottom: 0;
+        bottom: @footer-height;
         display: block;
         height: auto;
         position: absolute;
@@ -63,24 +64,24 @@
         }
 
         &.source-list {
-            background: @background-spot;
-            border-right: 1px solid @line;
+            background: #fff;
+            border-right: 1px solid #bbb;
             left: -24%;
             width: 23%;
             z-index: 4;
             .animation(left, 0.4s);
 
             .document-view-item {
-                border-bottom: 1px solid darken(@background-spot, 12%);
                 cursor: default;
                 padding: 15px;
+                border-bottom: 1px solid #ddd;
 
                 &:hover {
-                    background: darken(@background-spot, 8%);
+                    background: #f4f4f4;
                 }
 
                 &.active {
-                    background: darken(@background-spot, 5%);
+                    background: @background-spot;
                 }
 
                 .name {
@@ -90,9 +91,8 @@
                 }
 
                 .description {
-                    color: @copy-blue;
                     font-size: 0.9em;
-                    font-weight: 500;
+                    font-weight: 400;
                 }
             }
         }
@@ -115,15 +115,14 @@
                     text-align: center;
                     border-bottom: none;
                     padding: 0.25em;
-                    .animation(all, 0.25s);
                     width: 33%;
 
-                    &:hover {
-                        color: @line;
-                        background: @background-spot;
+                    &:hover, &:focus {
+                        box-shadow: inset 0 0 0 1px #037bff;
                     }
 
                     &:disabled, &:disabled:hover {
+                        box-shadow: none;
                         color: @copy;
                         -webkit-text-fill-color: @copy;
                         background: #fff;
@@ -146,8 +145,8 @@
 }
 
 .axis text {
-    fill: #666;
-    font-size: 12px;
+    fill: #34495e;
+    font-size: 10px;
     font-weight: bold;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -169,4 +168,28 @@
 
 .document-svg-frame {
     shape-rendering: crispEdges;
+}
+
+footer {
+    bottom: 0;
+    background: @background-gray;
+    border-top: 1px solid #bbb;
+    height: @footer-height;
+    position: absolute;
+    width: 100%;
+    z-index: 200;
+    text-align: center;
+    line-height: @footer-height;
+
+    .left-content {
+        padding: 0 1em;
+        float: left;
+        font-weight: 600;
+    }
+
+    .right-content {
+        padding: 0 1em;
+        float: right;
+    }
+
 }

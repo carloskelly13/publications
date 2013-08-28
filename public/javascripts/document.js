@@ -210,7 +210,6 @@ define(function(require) {
             appModule.shapeContext.trigger('clear');
             appModule.isEditingDocument = false;
             ui.fadeOut(editControls, function() {
-                view.drawDocumentFrameWithAxisAndGrid(false);
                 ui.fadeIn(viewControls);
                 ui.fadeIn(documentControls);
                 view.$('input.document-name').prop('disabled', true);
@@ -237,7 +236,6 @@ define(function(require) {
                 sourceList.css({ left: '-24%' });
                 appModule.inspector.$el.css({ right: 0 });
                 view.$('input.document-name').prop('disabled', false);
-                view.drawDocumentFrameWithAxisAndGrid(true);
                 ui.fadeIn(editControls);
             });
         },
@@ -280,7 +278,7 @@ define(function(require) {
             appModule.shapeContext.trigger('clear');
         },
 
-        drawDocumentFrameWithAxisAndGrid: function(sender) {
+        drawDocumentFrameWithAxisAndGrid: function() {
             d3.select('.x.axis').remove();
             d3.select('.y.axis').remove();
             d3.select('.x.grid').remove();
@@ -307,16 +305,14 @@ define(function(require) {
                 .ticks((height / 36.0) + 1.0)
                 .orient('left');
 
-            if (sender) {
-                svg.append('g')
-                    .attr('class', 'x axis')
-                    .attr('transform', 'translate(40, 20)')
-                    .call(xAxis);
-                svg.append('g')
-                    .attr('class', 'y axis')
-                    .attr('transform', 'translate(40, 20)')
-                    .call(yAxis);
-            }
+            svg.append('g')
+                .attr('class', 'x axis')
+                .attr('transform', 'translate(40, 20)')
+                .call(xAxis);
+            svg.append('g')
+                .attr('class', 'y axis')
+                .attr('transform', 'translate(40, 20)')
+                .call(yAxis);
 
             svg.insert('g', '.shape-group')
                 .attr('class', 'x grid')
@@ -353,7 +349,7 @@ define(function(require) {
                 .on('click', view.documentSVGClicked);
 
             view.svg = svg;
-            view.drawDocumentFrameWithAxisAndGrid(false);
+            view.drawDocumentFrameWithAxisAndGrid();
             return view;
         },
 

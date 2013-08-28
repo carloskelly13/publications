@@ -23,43 +23,39 @@
             <button class="icon-btn inspector-shape-btn contextual" disabled="true" data-icon="d" data-action="cut"></button>
         </div>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-width" disabled="true" autocomplete="off" data-property="width">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-width" disabled="true" autocomplete="off" data-property="width" data-min="0.25" data-max="64.0" data-radix="3" data-mult="72">
             <label for="inspector-shape-width">Width</label>
         </fieldset>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-height" disabled="true" autocomplete="off" data-property="height">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-height" disabled="true" autocomplete="off" data-property="height" data-min="0.25" data-max="64.0" data-radix="3" data-mult="72">
             <label for="inspector-shape-height">Height</label>
         </fieldset>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-x" disabled="true" autocomplete="off" data-property="x">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-x" disabled="true" autocomplete="off" data-property="x" data-min="-1.0" data-max="64.0" data-radix="3" data-mult="72">
             <label for="inspector-shape-x">X</label>
         </fieldset>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-y" disabled="true" autocomplete="off" data-property="y">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-y" disabled="true" autocomplete="off" data-property="y" data-min="-1.0" data-max="64.0" data-radix="3" data-mult="72">
             <label for="inspector-shape-y">Y</label>
         </fieldset>
-        <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-fill" disabled="true" autocomplete="off" data-property="fill">
-            <label for="inspector-shape-fill">Fill Color</label>
+        <fieldset id="fill-fieldset">
+        </fieldset>
+        <fieldset id="stroke-fieldset">
         </fieldset>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-stroke" disabled="true" autocomplete="off" data-property="stroke">
-            <label for="inspector-shape-stroke">Stroke Color</label>
-        </fieldset>
-        <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-fill-opacity" disabled="true" autocomplete="off" data-property="fillOpacity">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-fill-opacity" disabled="true" autocomplete="off" data-property="fillOpacity" data-min="0.0" data-max="1.0" data-radix="2" data-mult="1">
             <label for="inspector-shape-fill-opacity">Fill Opacity</label>
         </fieldset>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-stroke-opacity" disabled="true" autocomplete="off" data-property="strokeOpacity">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-stroke-opacity" disabled="true" autocomplete="off" data-property="strokeOpacity" data-min="0.0" data-max="1.0" data-radix="2" data-mult="1">
             <label for="inspector-shape-stroke-opacity">Stroke Opacity</label>
         </fieldset>
         <fieldset>
-            <input type="text" class="inspector-shape-input" id="inspector-shape-stroke-width" disabled="true" autocomplete="off" data-property="strokeWidth">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-stroke-width" disabled="true" autocomplete="off" data-property="strokeWidth" data-min="0.0" data-max="32.0" data-radix="0" data-mult="1">
             <label for="inspector-shape-stroke-width">Stroke Width</label>
         </fieldset>
         <fieldset class="rectangle-only">
-            <input type="text" class="inspector-shape-input" id="inspector-shape-r" disabled="true" autocomplete="off" data-property="r">
+            <input type="text" class="inspector-shape-input" id="inspector-shape-r" disabled="true" autocomplete="off" data-property="r" data-min="0.0" data-max="64.0" data-radix="0" data-mult="1">
             <label for="inspector-shape-r">Corner Radius</label>
         </fieldset>
     </div>
