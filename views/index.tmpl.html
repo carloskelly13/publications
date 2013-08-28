@@ -3,8 +3,12 @@
     <head>
         <title>Publications</title>
         <link rel='stylesheet' href='/stylesheets/style.css' />
-        
+        <!--(if target development)><!-->
         <script type="text/javascript" src="/javascripts/components/requirejs/require.js" data-main="/javascripts/app"></script>
+        <!--<!(endif)-->
+        <!--(if target production)><!-->
+        <script type="text/javascript" src="/javascripts/components/requirejs/require.js" data-main="/javascripts/dist/app.min"></script>
+        <!--<!(endif)-->
     </head>
     <body>
         <div class="modal-container"></div>

@@ -2544,6 +2544,26 @@ footer .right-content {
 .landing-page .content .padding {
   padding: 1em;
 }
+.landing-page .content .info-box {
+  background: #037bff;
+  border-radius: 3px;
+  padding: 2em;
+  width: 50%;
+  margin: 2em auto;
+  color: #fff;
+  text-align: center;
+}
+.landing-page .content .info-box h1 {
+  margin: 0 0 0.5em 0;
+  font-weight: 300;
+  font-size: 1.8em;
+}
+.landing-page .content .info-box p {
+  font-weight: 500;
+  font-size: 1.2em;
+  line-height: 1.4em;
+  margin: 0;
+}
 .landing-page .content .publications-wordmark-big {
   background-image: url("../images/pub-logo-414-87.png");
   background-size: 414px 87px;

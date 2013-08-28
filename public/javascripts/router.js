@@ -21,7 +21,6 @@ define(function(require) {
         },
 
         index: function() {
-            console.log('Publications Web App Starting');
             new Pub.Views.Index().render();
         }
     });
