@@ -2214,15 +2214,11 @@ fieldset.inline input:last-child {
   left: 0;
   z-index: 100;
 }
-.modal-active {
-  -webkit-filter: grayscale(1);
-  filter: grayscale(1);
-}
 .modal-view {
-  background: #fff;
+  border: 1px solid #bbb;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 1px 0 #ccc;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  box-shadow: 0 1px 0 #ddd;
   z-index: 200;
   -webkit-transition: height 0.3 ease;
   -moz-transition: height 0.3 ease;
@@ -2241,6 +2237,37 @@ fieldset.inline input:last-child {
   padding: 1em 0 0 0;
   width: 350px;
 }
+.modal-view h3 {
+  color: #037bff;
+  font-size: 1.25em;
+  margin-bottom: 0.2em;
+}
+.modal-view h3 + p {
+  margin-top: 0.2em;
+}
+.modal-view#modal-about {
+  width: 350px;
+  text-align: center;
+}
+.modal-view#modal-about .pub-logo {
+  background-image: url("../images/pub-logo-414-87.png");
+  background-size: 207px 44px;
+  background-repeat: no-repeat;
+  width: 207px;
+  height: 44px;
+  display: inline-block;
+  margin: 2em auto 0 auto;
+}
+@media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
+  .modal-view#modal-about .pub-logo {
+    background-image: url("../images/pub-logo-414-87@2x.png");
+    background-size: 207px 44px;
+    background-repeat: no-repeat;
+    width: 207px;
+    height: 44px;
+    display: inline-block;
+  }
+}
 /**
 * Publications JS App
 * Document LESS Stylesheet
@@ -2248,7 +2275,7 @@ fieldset.inline input:last-child {
 */
 .pub-nav {
   background: #f5f5f7;
-  border-bottom: 1px solid #bbb;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.25);
   height: 41px;
   margin: 0;
   padding: 0;
@@ -2410,17 +2437,15 @@ footer {
   position: absolute;
   width: 100%;
   z-index: 200;
-  text-align: center;
+  text-align: left;
   line-height: 25px;
 }
-footer .left-content {
-  padding: 0 1em;
-  float: left;
-  font-weight: 600;
+footer .footer-content {
+  padding: 0 0 0 1em;
 }
-footer .right-content {
-  padding: 0 1em;
+footer #about-btn {
   float: right;
+  margin: 3px 3px 0 0;
 }
 .inspector-main {
   border-left: 1px solid #bbb;
@@ -2449,7 +2474,7 @@ footer .right-content {
   top: 4px;
 }
 .inspector-main .color-picker .color-btn:hover:not(:disabled) {
-  box-shadow: inset 0 0 0 1px #999999, inset 0 0 0 3px #cccccc, inset 0 0 0 4px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), inset 0 0 0 3px #037bff, inset 0 0 0 4px rgba(0, 0, 0, 0.4);
 }
 .inspector-main .color-picker .color-btn:disabled {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
@@ -2474,7 +2499,7 @@ footer .right-content {
   cursor: pointer;
 }
 .inspector-main .color-picker .colors li:hover {
-  box-shadow: inset 0 0 0 1px #aaaaaa, inset 0 0 0 3px #cccccc, inset 0 0 0 4px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), inset 0 0 0 3px #037bff, inset 0 0 0 4px rgba(0, 0, 0, 0.4);
 }
 .inspector-main .inspector-section .content {
   padding: 1em 1em 2em 1em;
@@ -2546,41 +2571,74 @@ footer .right-content {
 }
 .landing-page .content .info-box {
   background: #037bff;
-  border-radius: 3px;
-  padding: 2em;
-  width: 50%;
-  margin: 2em auto;
+  width: 100%;
+  margin: 0 auto 2em auto;
   color: #fff;
   text-align: center;
+}
+.landing-page .content .info-box .info-box-content {
+  padding: 4em 0 4.25em 0;
+  width: 85%;
+  margin: 0 auto;
 }
 .landing-page .content .info-box h1 {
   margin: 0 0 0.5em 0;
   font-weight: 300;
-  font-size: 1.8em;
+  font-size: 2.2em;
 }
 .landing-page .content .info-box p {
   font-weight: 500;
-  font-size: 1.2em;
+  font-size: 1.5em;
   line-height: 1.4em;
   margin: 0;
 }
-.landing-page .content .publications-wordmark-big {
-  background-image: url("../images/pub-logo-414-87.png");
-  background-size: 414px 87px;
-  background-repeat: no-repeat;
-  width: 414px;
-  height: 87px;
-  display: inline-block;
+.landing-page .content .page-content {
+  width: 85%;
+  margin: 3em auto 2em auto;
 }
-@media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
-  .landing-page .content .publications-wordmark-big {
-    background-image: url("../images/pub-logo-414-87@2x.png");
-    background-size: 414px 87px;
-    background-repeat: no-repeat;
-    width: 414px;
-    height: 87px;
-    display: inline-block;
-  }
+.landing-page .content .hero-info .pure-u-1-3 {
+  text-align: center;
+  margin-bottom: 3em;
+}
+.landing-page .content .hero-info .pure-u-1 {
+  text-align: left;
+  margin-bottom: 2em;
+}
+.landing-page .content .hero-info h2 {
+  font-weight: 500;
+  margin: 0.5em 0 0.67em 0;
+  padding: 0;
+  font-size: 1.25em;
+}
+.landing-page .content .hero-info p {
+  font-size: 1.25em;
+  line-height: 1.5em;
+  padding: 0 1.5em;
+}
+.landing-page .content .hero-info p.small {
+  font-size: 0.95em;
+  line-height: 1.2em;
+  margin-top: 0.1em;
+}
+.landing-page .content .hero-info .badge {
+  background: #037bff;
+  color: #fff;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.95em;
+  margin: 0 auto;
+  text-transform: uppercase;
+  padding: 0.25em 1.25em;
+  border-radius: 3px;
+}
+.landing-page .content .hero-info .hero-icon {
+  display: block;
+  width: 48px;
+  height: 48px;
+  color: #037bff;
+  font-size: 48px;
+  margin: 0 auto;
+  text-align: center;
 }
 /**
 * Publications JS App

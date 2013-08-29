@@ -196,5 +196,20 @@ define(function(require) {
         }
     });
 
+    Modal.Views.About = Modal.Views.Base.extend({
+        id: 'modal-about',
+        template: _.template(require('text!../templates/modal-about.html')),
+
+        events: {
+            'click #close-button' : 'close'
+        },
+
+        modalDidShow: function() {
+            var view = this;
+            view.$el.append(view.template());
+            return view;
+        }
+    });
+
     return Modal;
 });

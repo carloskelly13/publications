@@ -10,7 +10,7 @@
 
 .pub-nav {
     background: @background-gray;
-    border-bottom: 1px solid #bbb;
+    box-shadow: 0 1px 0 0 hsla(0, 0%, 0%, 0.25);
     height: @navbar-height;
     margin: 0;
     padding: 0;
@@ -178,18 +178,15 @@ footer {
     position: absolute;
     width: 100%;
     z-index: 200;
-    text-align: center;
+    text-align: left;
     line-height: @footer-height;
 
-    .left-content {
-        padding: 0 1em;
-        float: left;
-        font-weight: 600;
+    .footer-content {
+        padding: 0 0 0 1em;
     }
 
-    .right-content {
-        padding: 0 1em;
+    #about-btn {
         float: right;
+        margin: 3px 3px 0 0;
     }
-
 }

@@ -7,16 +7,16 @@
     z-index: 100;
 }
 
-.modal-active {
-    -webkit-filter: grayscale(1);
-    filter: grayscale(1);
-}
+// .modal-active {
+//     -webkit-filter: grayscale(1);
+//     filter: grayscale(1);
+// }
 
 .modal-view {
-    background: #fff;
+    border: 1px solid #bbb;
+    background: hsla(0, 0%, 100%, 0.97);
+    box-shadow: 0 1px 0 #ccc;
     border-radius: 6px;
-    border: 1px solid #ccc;
-    box-shadow: 0 1px 0 #ddd;
     z-index: 200;
     .animation(height, 0.3);
 
@@ -33,5 +33,25 @@
     &#modal-yes-no {
         padding: 1em 0 0 0;
         width: 350px;
+    }
+
+    h3 {
+        color: #037bff;
+        font-size: 1.25em;
+        margin-bottom: 0.2em;
+
+        + p {
+            margin-top: 0.2em;
+        }
+    }
+
+    &#modal-about {
+        width: 350px;
+        text-align: center;
+
+        .pub-logo {
+            .retina-picture('pub-logo-414-87', 207px, 44px, inline-block);
+            margin: 2em auto 0 auto;
+        }
     }
 }

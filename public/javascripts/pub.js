@@ -27,6 +27,7 @@ define(function(require) {
         events: {
             'click #sign-in-btn' : 'signInButtonClicked',
             'click #sign-out-btn' : 'signOutButtonClicked',
+            'click #about-btn' : 'aboutButtonClicked',
             'click #create-account-modal-btn' : 'createAccountModalButtonClicked',
             'click #new-doc-btn' : 'newDocumentButtonClicked'
         },
@@ -80,6 +81,10 @@ define(function(require) {
                     NProgress.done();
                 });
             });
+        },
+
+        aboutButtonClicked: function() {
+            new Modal.Views.About().render();
         },
 
         createAccountModalButtonClicked: function() {

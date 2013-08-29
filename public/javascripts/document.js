@@ -128,6 +128,7 @@ define(function(require) {
             var view = this;
             view.$el.html(view.template());
             view.sourceList = view.$('.source-list .content');
+            window.document.title = 'Publications - Documents';
             return view;
         }
     });
@@ -215,6 +216,7 @@ define(function(require) {
                 view.$('input.document-name').prop('disabled', true);
                 appModule.inspector.remove();
                 appModule.documentContext.model.get('listItem').render();
+                window.document.title = 'Publications - Documents';
             });
         },
 
@@ -237,6 +239,7 @@ define(function(require) {
                 appModule.inspector.$el.css({ right: 0 });
                 view.$('input.document-name').prop('disabled', false);
                 ui.fadeIn(editControls);
+                window.document.title = 'Publications - Editing ' + view.model.get('name');
             });
         },
 
