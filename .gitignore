@@ -16,3 +16,5 @@ node_modules
 public/javascripts/components
 public/stylesheets/style.css
 public/javascripts/dist/app.min.js
+public/stylesheets/style.css
+views/index.ejs
