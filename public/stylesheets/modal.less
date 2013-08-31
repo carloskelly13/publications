@@ -13,10 +13,9 @@
 // }
 
 .modal-view {
-    border: 1px solid #bbb;
-    background: hsla(0, 0%, 100%, 0.97);
-    box-shadow: 0 1px 0 #ccc;
-    border-radius: 6px;
+    background: hsla(0, 0%, 100%, 0.95);
+    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2), 0 0 0 4px hsla(0, 0%, 100%, 0.95);
+    border-radius: 3px;
     z-index: 200;
     .animation(height, 0.3);
 
@@ -35,16 +34,6 @@
         width: 350px;
     }
 
-    h3 {
-        color: #037bff;
-        font-size: 1.25em;
-        margin-bottom: 0.2em;
-
-        + p {
-            margin-top: 0.2em;
-        }
-    }
-
     &#modal-about {
         width: 350px;
         text-align: center;
@@ -52,6 +41,18 @@
         .pub-logo {
             .retina-picture('pub-logo-414-87', 207px, 44px, inline-block);
             margin: 2em auto 0 auto;
+        }
+
+         h3 {
+            color: #037bff;
+            font-size: 1.6em;
+            font-weight: 300;
+            margin-bottom: 0;
+
+            + p {
+                font-size: 1.1em;
+                margin-top: 0.2em;
+            }
         }
     }
 }

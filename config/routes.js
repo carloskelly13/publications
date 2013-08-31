@@ -29,10 +29,12 @@ module.exports = function (app, passport) {
     app.get('/user/:id?', auth, UserController.show);
     app.post('/user', UserController.create);
 
+    app.use('/document/*', auth);
+
     // Document model routes
-    app.get('/document/:id?', auth, DocumentController.show);
-    app.post('/document', auth, DocumentController.create);
-    app.put('/document/:id?', auth, DocumentController.update);
-    app.delete('/document/:id?', auth, DocumentController.delete);
-    app.get('/document/:id?/pdf', auth, DocumentController.pdf);
+    app.get('/document/:id?', DocumentController.show);
+    app.post('/document', DocumentController.create);
+    app.put('/document/:id?', DocumentController.update);
+    app.delete('/document/:id?', DocumentController.delete);
+    app.get('/document/:id?/pdf', DocumentController.pdf);
 };

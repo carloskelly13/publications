@@ -159,6 +159,7 @@ define(function(require) {
             var view = this;
             view.collection = new Shape.Collection();
             view.listenTo(view.collection, 'add', view.addShape);
+            view.listenTo(view.collection, 'remove', view.removeShape);
             view.collection.add(view.model.get('shapes'));
             return view;
         },
@@ -262,12 +263,19 @@ define(function(require) {
 
         addShape: function(model) {
             var view = this,
-                shapeView = null;
+                shapeView = null,
+                layersList = appModule.inspector.layersList;
+
+            model.set({ z: view.shapes.length });
 
             if (model.get('type') == 1)
                 shapeView = new Shape.Views.Rectangle({ model: model, svg: view.svg }).createSVGEl().render();
             else if (model.get('type') == 2)
                 shapeView = new Shape.Views.Ellipse({ model: model, svg: view.svg }).createSVGEl().render();
+
+            if (layersList) {
+                layersList.addLayer(model);
+            }
 
             if (appModule.isEditingDocument) {
                 shapeView.shouldEdit(true);
@@ -275,6 +283,14 @@ define(function(require) {
             }
 
             view.shapes.push(shapeView);
+        },
+
+        removeShape: function(model) {
+            var view = this,
+                layersList = appModule.inspector.layersList;
+
+            if (layersList)
+                layersList.removeLayer(model);
         },
 
         documentSVGClicked: function() {

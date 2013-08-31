@@ -68,10 +68,25 @@
             position: relative;
         }
 
+        &.inspector-section-layers {
+            .content {
+                padding-bottom: 0.25em;
+            }
+
+            .layers-list {
+                border-top: 1px solid #bbb;
+                border-bottom: 1px solid #bbb;
+                max-height: 300px;
+                width: 100%;
+                overflow-y: scroll;
+                overflow-x: hidden;
+            }
+        }
+
         .icon-btns {
             margin: 1.5em 0 1em 0;
             .icon-btn {
-                margin-right: 5%;
+                margin-right: 3%;
             }
         }
 

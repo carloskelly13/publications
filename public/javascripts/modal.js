@@ -20,7 +20,16 @@ define(function(require) {
 
     Modal.Views.Cover = Backbone.View.extend({
         className: 'modal-cover',
-        tagName: 'div'
+        tagName: 'div',
+
+        events: {
+            click: 'modalCoverClicked'
+        },
+
+        modalCoverClicked: function() {
+            var view = this;
+            view.options.superview.close();
+        }
     });
 
     Modal.Views.Base = Backbone.View.extend({
@@ -47,7 +56,7 @@ define(function(require) {
         render: function() {
             var view = this,
                 modalContainer = $('.modal-container'),
-                modalCover = new Modal.Views.Cover();
+                modalCover = new Modal.Views.Cover({ superview: view });
 
             modalContainer.append(modalCover.render().el);
             modalContainer.append(this.el);

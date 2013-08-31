@@ -13,7 +13,9 @@ requirejs.config({
     backbone: 'components/backbone/backbone',
     text: 'components/requirejs-text/text',
     d3: 'components/d3/d3',
-    nprogress: 'components/nprogress/nprogress'
+    nprogress: 'components/nprogress/nprogress',
+    dropdown: 'components/bootstrap/js/dropdown',
+    tooltip: 'components/bootstrap/js/tooltip'
   },
   shim: {
     amplify: {
@@ -33,6 +35,12 @@ requirejs.config({
     nprogress: {
       deps: ['jquery'],
       exports: 'NProgress'
+    },
+    dropdown: {
+      exports: 'dropdown'
+    },
+    tooltip: {
+      exports: 'tooltip'
     }
   }
 });

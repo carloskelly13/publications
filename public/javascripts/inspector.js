@@ -13,7 +13,8 @@ define(function(require) {
         NProgress = require('nprogress'),
         Backbone = require('backbone'),
         appModule = require('app-module'),
-        bootstrap = require('vendor/bootstrap-dropdowns');
+        tooltip = require('tooltip'),
+        dropdown = require('dropdown'),
         d3 = require('d3');
 
     var Inspector = appModule.module(),
@@ -41,8 +42,8 @@ define(function(require) {
                 var svg = d3.select('.document-svg'),
                     svgFrame = d3.select('.document-svg-frame');
                 event.target.value = value.toFixed(2);
-                svg.attr(dataProperty, (value * 72.0) + offset);
-                svgFrame.attr(dataProperty, (value * 72.0));
+                svg.transition().attr(dataProperty, (value * 72.0) + offset);
+                svgFrame.transition().attr(dataProperty, (value * 72.0));
                 documentModel.get('documentModel').set(dataProperty, (value * 72.0));
                 documentModel.get('contentView').drawDocumentFrameWithAxisAndGrid();
 
@@ -169,7 +170,9 @@ define(function(require) {
 
         render: function() {
             var view = this,
-                documentLibrary = $('.document-library');
+                documentLibrary = $('.document-library'),
+                layersList = new Inspector.Views.LayersList();
+
             view.$el.html(view.template());
             view.$('.inspector-shape-btn').on('click', view.shapeButtonClicked);
             view.$('.color-btn').on('click', view.colorButtonClicked);
@@ -185,7 +188,11 @@ define(function(require) {
                 model: new Backbone.Model({ property: 'stroke', label: 'Stroke' })
             }).render().el);
 
+
             documentLibrary.append(view.el);
+            view.layersList = layersList;
+            // view.$('.inspector-section-layers').append(layersList.render().el);
+            view.$('.inspector-shape-btn').tooltip();
             return view;
         }
     });
@@ -236,6 +243,26 @@ define(function(require) {
             view.$el.html(view.template(view.model.toJSON()));
             view.$('.colors li').on('click', view.colorSelected);
             view.$('.inspector-color-input').on('change', view.colorInputChanged);
+            return view;
+        }
+    });
+
+    Inspector.Views.LayersList = Backbone.View.extend({
+        tagName: 'div',
+        className: 'layers-list',
+
+        addLayer: function(model) {
+            console.log(model);
+        },
+
+        removeLayer: function(model) {
+            console.log(model);
+        },
+
+        render: function() {
+            var view = this;
+
+
             return view;
         }
     });

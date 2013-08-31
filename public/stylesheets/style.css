@@ -2202,6 +2202,105 @@ fieldset.inline input:last-child {
   position: absolute;
   left: 0;
 }
+.tooltip {
+  position: absolute;
+  z-index: 2000;
+  display: block;
+  visibility: visible;
+  font-size: 10px;
+  line-height: 1.4;
+  opacity: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.tooltip.in {
+  opacity: 0.9;
+}
+.tooltip.top {
+  margin-top: -3px;
+  padding: 5px 0;
+}
+.tooltip.right {
+  margin-left: 3px;
+  margin-top: -1px;
+  padding: 0 5px;
+}
+.tooltip.bottom {
+  margin-top: 3px;
+  padding: 5px 0;
+}
+.tooltip.left {
+  margin-left: -3px;
+  margin-top: -1px;
+  padding: 0 5px;
+}
+.tooltip-inner {
+  padding: 3px 8px;
+  color: #34495e;
+  text-align: center;
+  text-decoration: none;
+  background-color: #dddddd;
+  border-radius: 3px;
+}
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.tooltip.top .tooltip-arrow {
+  bottom: 0;
+  left: 50%;
+  margin-left: -8px;
+  border-width: 8px 8px 0;
+  border-top-color: #dddddd;
+}
+.tooltip.top-left .tooltip-arrow {
+  bottom: 0;
+  left: 5px;
+  border-width: 8px 8px 0;
+  border-top-color: #dddddd;
+}
+.tooltip.top-right .tooltip-arrow {
+  bottom: 0;
+  right: 5px;
+  border-width: 8px 8px 0;
+  border-top-color: #dddddd;
+}
+.tooltip.right .tooltip-arrow {
+  top: 50%;
+  left: 0;
+  margin-top: -8px;
+  border-width: 8px 8px 8px 0;
+  border-right-color: #dddddd;
+}
+.tooltip.left .tooltip-arrow {
+  top: 50%;
+  right: 0;
+  margin-top: -8px;
+  border-width: 8px 0 8px 8px;
+  border-left-color: #dddddd;
+}
+.tooltip.bottom .tooltip-arrow {
+  top: 0;
+  left: 50%;
+  margin-left: -8px;
+  border-width: 0 8px 8px;
+  border-bottom-color: #dddddd;
+}
+.tooltip.bottom-left .tooltip-arrow {
+  top: 0;
+  left: 5px;
+  border-width: 0 8px 8px;
+  border-bottom-color: #dddddd;
+}
+.tooltip.bottom-right .tooltip-arrow {
+  top: 0;
+  right: 5px;
+  border-width: 0 8px 8px;
+  border-bottom-color: #dddddd;
+}
 .modal-cover {
   background: transparent;
   display: block;
@@ -2215,10 +2314,9 @@ fieldset.inline input:last-child {
   z-index: 100;
 }
 .modal-view {
-  border: 1px solid #bbb;
-  background: rgba(255, 255, 255, 0.97);
-  box-shadow: 0 1px 0 #ccc;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 0 0 4px rgba(255, 255, 255, 0.95);
+  border-radius: 3px;
   z-index: 200;
   -webkit-transition: height 0.3 ease;
   -moz-transition: height 0.3 ease;
@@ -2236,14 +2334,6 @@ fieldset.inline input:last-child {
 .modal-view#modal-yes-no {
   padding: 1em 0 0 0;
   width: 350px;
-}
-.modal-view h3 {
-  color: #037bff;
-  font-size: 1.25em;
-  margin-bottom: 0.2em;
-}
-.modal-view h3 + p {
-  margin-top: 0.2em;
 }
 .modal-view#modal-about {
   width: 350px;
@@ -2267,6 +2357,16 @@ fieldset.inline input:last-child {
     height: 44px;
     display: inline-block;
   }
+}
+.modal-view#modal-about h3 {
+  color: #037bff;
+  font-size: 1.6em;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+.modal-view#modal-about h3 + p {
+  font-size: 1.1em;
+  margin-top: 0.2em;
 }
 /**
 * Publications JS App
@@ -2436,7 +2536,7 @@ footer {
   height: 25px;
   position: absolute;
   width: 100%;
-  z-index: 200;
+  z-index: 80;
   text-align: left;
   line-height: 25px;
 }
@@ -2507,11 +2607,22 @@ footer #about-btn {
   overflow-y: visible;
   position: relative;
 }
+.inspector-main .inspector-section.inspector-section-layers .content {
+  padding-bottom: 0.25em;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list {
+  border-top: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  max-height: 300px;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 .inspector-main .inspector-section .icon-btns {
   margin: 1.5em 0 1em 0;
 }
 .inspector-main .inspector-section .icon-btns .icon-btn {
-  margin-right: 5%;
+  margin-right: 3%;
 }
 .inspector-main .inspector-section h3 {
   font-size: 1em;

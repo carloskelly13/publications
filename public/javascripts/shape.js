@@ -27,7 +27,11 @@ define(function(require) {
     });
 
     Shape.Collection = Backbone.Collection.extend({
-        model: Shape.Model
+        model: Shape.Model,
+
+        comparator: function(shape) {
+            return shape.get('z');
+        }
     });
 
     Shape.Views.Base = Backbone.View.extend({
@@ -36,7 +40,6 @@ define(function(require) {
                 fill = d3.rgb(view.model.get('fill')),
                 stroke = d3.rgb(view.model.get('stroke')),
                 padding = view.model.get('strokeWidth') + 4;
-
 
             if (!view.selectionFrame)
                 view.selectionFrame = view.options.svg.insert('rect', '#shape-' + view.cid)
@@ -111,7 +114,9 @@ define(function(require) {
         render: function() {
             var view = this;
 
-            view.shape.attr('width', view.model.get('width'))
+            view.shape
+                .transition()
+                .attr('width', view.model.get('width'))
                 .attr('height', view.model.get('height'))
                 .attr('x', view.model.get('x') + 40.0)
                 .attr('y', view.model.get('y') + 20.0)
@@ -154,7 +159,9 @@ define(function(require) {
         render: function() {
             var view = this;
 
-            view.shape.attr('rx', (view.model.get('width') / 2.0))
+            view.shape
+                .transition()
+                .attr('rx', (view.model.get('width') / 2.0))
                 .attr('ry', (view.model.get('height') / 2.0))
                 .attr('cx', view.model.get('x') + (view.model.get('width') / 2.0) + 40.0)
                 .attr('cy', view.model.get('y') + (view.model.get('height') / 2.0) + 20.0)
