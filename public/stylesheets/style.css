@@ -2611,12 +2611,34 @@ footer #about-btn {
   padding-bottom: 0.25em;
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list {
-  border-top: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  max-height: 300px;
+  border-top: 1px solid #ddd;
   width: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item {
+  padding: 0.6em 1em;
+  border-bottom: 1px solid #ddd;
+  cursor: default;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .color-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin: 0 0.5em 0 0;
+  border: 2px solid transparent;
+  vertical-align: middle;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .metrics {
+  height: 16px;
+  font-size: 0.9em;
+  line-height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item:hover {
+  background: #f4f4f4;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item.active {
+  background: #e1f0fa;
 }
 .inspector-main .inspector-section .icon-btns {
   margin: 1.5em 0 1em 0;

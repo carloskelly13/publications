@@ -23,7 +23,12 @@ define(function(require) {
 
         validateColor: function(hexColor) {
             return (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).test(hexColor);
-        }
+        },
+
+        getPrintedSize: function() {
+            var model = this;
+            return (model.get('width') / 72.0).toFixed(3) + '” × ' + (model.get('height') / 72.0).toFixed(3) + '”';
+        },
     });
 
     Shape.Collection = Backbone.Collection.extend({
@@ -50,6 +55,8 @@ define(function(require) {
                     .attr('y', view.model.get('y') + 20.0 - (padding / 2.0));
 
             view.shape.call(d3.behavior.drag().origin(Object).on('drag', view.drag));
+
+            return view;
         },
 
         repositionSelectionFrame: function() {
@@ -70,17 +77,21 @@ define(function(require) {
             view.selectionFrame.remove();
             view.selectionFrame = null;
             view.shape.call(d3.behavior.drag().origin(Object).on('drag', null));
+
+            return view;
         },
 
         clicked: function() {
             var view = this;
             appModule.shapeContext.trigger('update', view);
+            return view;
         },
 
         shouldEdit: function(sender) {
             var view = this;
             if (sender) view.shape.on('click', view.clicked);
             else view.shape.on('click', null);
+            return view;
         },
 
         initialize: function() {
@@ -114,8 +125,11 @@ define(function(require) {
         render: function() {
             var view = this;
 
+            if (view.layerItem) view.layerItem.render();
+
             view.shape
                 .transition()
+                .duration(200)
                 .attr('width', view.model.get('width'))
                 .attr('height', view.model.get('height'))
                 .attr('x', view.model.get('x') + 40.0)
@@ -135,6 +149,7 @@ define(function(require) {
 
     Shape.Views.Ellipse = Shape.Views.Base.extend({
         drag: function() {
+            console.log('this is a drag');
             var view = this,
                 dragTarget = view.shape,
                 cx = d3.event.dx + parseInt(dragTarget.attr('cx'), 10),
@@ -159,8 +174,11 @@ define(function(require) {
         render: function() {
             var view = this;
 
+            if (view.layerItem) view.layerItem.render();
+
             view.shape
                 .transition()
+                .duration(200)
                 .attr('rx', (view.model.get('width') / 2.0))
                 .attr('ry', (view.model.get('height') / 2.0))
                 .attr('cx', view.model.get('x') + (view.model.get('width') / 2.0) + 40.0)

@@ -159,7 +159,6 @@ define(function(require) {
             var view = this;
             view.collection = new Shape.Collection();
             view.listenTo(view.collection, 'add', view.addShape);
-            view.listenTo(view.collection, 'remove', view.removeShape);
             view.collection.add(view.model.get('shapes'));
             return view;
         },
@@ -241,6 +240,9 @@ define(function(require) {
                 view.$('input.document-name').prop('disabled', false);
                 ui.fadeIn(editControls);
                 window.document.title = 'Publications - Editing ' + view.model.get('name');
+                _.each(view.shapes, function(shape) {
+                    appModule.inspector.layersList.addLayer(shape);
+                });
             });
         },
 
@@ -274,23 +276,15 @@ define(function(require) {
                 shapeView = new Shape.Views.Ellipse({ model: model, svg: view.svg }).createSVGEl().render();
 
             if (layersList) {
-                layersList.addLayer(model);
+                layersList.addLayer(shapeView);
             }
 
             if (appModule.isEditingDocument) {
                 shapeView.shouldEdit(true);
-                appModule.shapeContext.trigger('update', shapeView);
+                setTimeout(function() { shapeView.clicked(); }, 250);
             }
 
             view.shapes.push(shapeView);
-        },
-
-        removeShape: function(model) {
-            var view = this,
-                layersList = appModule.inspector.layersList;
-
-            if (layersList)
-                layersList.removeLayer(model);
         },
 
         documentSVGClicked: function() {

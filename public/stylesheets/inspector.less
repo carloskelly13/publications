@@ -74,12 +74,39 @@
             }
 
             .layers-list {
-                border-top: 1px solid #bbb;
-                border-bottom: 1px solid #bbb;
-                max-height: 300px;
+                border-top: 1px solid #ddd;
+                // border-bottom: 1px solid #bbb;
                 width: 100%;
-                overflow-y: scroll;
-                overflow-x: hidden;
+
+                .layer-item {
+                    padding: 0.6em 1em;
+                    border-bottom: 1px solid #ddd;
+                    cursor: default;
+
+                    .color-dot {
+                        display: inline-block;
+                        width: 14px; height: 14px;
+                        margin: 0 0.5em 0 0;
+                        border: 2px solid transparent;
+                        vertical-align: middle;
+                    }
+
+                    .metrics {
+                        height: 16px;
+                        font-size: 0.9em;
+                        line-height: 16px;
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+
+                    &:hover {
+                        background: #f4f4f4;
+                    }
+
+                    &.active {
+                        background: @background-spot;
+                    }
+                }
             }
         }
 

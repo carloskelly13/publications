@@ -37,6 +37,7 @@ define(function(require) {
             else if (currentShape) service.trigger('clear');
 
             sender.select();
+            sender.layerItem.$el.addClass('active');
             service.model.set({ shape: sender });
             appModule.inspector.shapeWasSelected(true);
         },
@@ -47,6 +48,7 @@ define(function(require) {
 
             if (!currentContext) return;
             currentContext.deselect();
+            currentContext.layerItem.$el.removeClass('active');
             service.model.set({ shape: null });
             appModule.inspector.shapeWasSelected(false);
         }

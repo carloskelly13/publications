@@ -100,6 +100,8 @@ define(function(require) {
                 documentEditor.shapes = _.without(documentEditor.shapes, shape);
                 documentEditor.collection.remove(shape.model);
                 appModule.shapeContext.trigger('clear');
+                view.layersList.removeLayer(shape);
+                $(event.target).tooltip('hide');
 
             } else if (_.isEqual(dataAction, 'copy'))
                 view.updateClipboard(_.clone(shape.model.toJSON()));
@@ -191,7 +193,7 @@ define(function(require) {
 
             documentLibrary.append(view.el);
             view.layersList = layersList;
-            // view.$('.inspector-section-layers').append(layersList.render().el);
+            view.$('.inspector-section-layers').append(layersList.render().el);
             view.$('.inspector-shape-btn').tooltip();
             return view;
         }
@@ -251,18 +253,51 @@ define(function(require) {
         tagName: 'div',
         className: 'layers-list',
 
-        addLayer: function(model) {
-            console.log(model);
+        addLayer: function(shapeView) {
+            var view = this;
+            view.$el.append(new Inspector.Views.LayerItem({
+                shapeView: shapeView
+            }).render().el);
         },
 
-        removeLayer: function(model) {
-            console.log(model);
+        removeLayer: function(shapeView) {
+            shapeView.layerItem.remove();
         },
 
         render: function() {
             var view = this;
+            return view;
+        }
+    });
 
+    Inspector.Views.LayerItem = Backbone.View.extend({
+        tagName: 'div',
+        className: 'layer-item',
+        template: _.template(require('text!../templates/inspector-layer-item.html')),
 
+        events: {
+            click : 'layerItemClicked'
+        },
+
+        initialize: function() {
+            var view = this;
+            view.options.shapeView.layerItem = view;
+        },
+
+        layerItemClicked: function() {
+            var view = this;
+            view.options.shapeView.clicked();
+        },
+
+        render: function() {
+            var view = this,
+                shapeModel = view.options.shapeView.model;
+            view.$el.html(view.template({
+                fill: shapeModel.get('fill'),
+                stroke: shapeModel.get('stroke'),
+                borderRadius: shapeModel.get('type') == 1 ? 0 : '16px',
+                size: shapeModel.getPrintedSize()
+            }));
             return view;
         }
     });
