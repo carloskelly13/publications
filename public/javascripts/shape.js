@@ -136,7 +136,9 @@ define(function(require) {
                 .attr('y', view.model.get('y') + 20.0)
                 .attr('rx', view.model.get('r'))
                 .attr('ry', view.model.get('r'))
+                .attr('class', 'd3-shape')
                 .attr('id', 'shape-' + view.cid)
+                .attr('data-model', view.model.cid)
                 .style('fill', view.model.get('fill'))
                 .style('stroke', view.model.get('stroke'))
                 .style('fill-opacity', view.model.get('fillOpacity'))
@@ -149,7 +151,6 @@ define(function(require) {
 
     Shape.Views.Ellipse = Shape.Views.Base.extend({
         drag: function() {
-            console.log('this is a drag');
             var view = this,
                 dragTarget = view.shape,
                 cx = d3.event.dx + parseInt(dragTarget.attr('cx'), 10),
@@ -183,7 +184,9 @@ define(function(require) {
                 .attr('ry', (view.model.get('height') / 2.0))
                 .attr('cx', view.model.get('x') + (view.model.get('width') / 2.0) + 40.0)
                 .attr('cy', view.model.get('y') + (view.model.get('height') / 2.0) + 20.0)
+                .attr('class', 'd3-shape')
                 .attr('id', 'shape-' + view.cid)
+                .attr('data-model', view.model.cid)
                 .style('fill', view.model.get('fill'))
                 .style('stroke', view.model.get('stroke'))
                 .style('fill-opacity', view.model.get('fillOpacity'))

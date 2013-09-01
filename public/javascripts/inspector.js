@@ -276,7 +276,9 @@ define(function(require) {
         template: _.template(require('text!../templates/inspector-layer-item.html')),
 
         events: {
-            click : 'layerItemClicked'
+            'click' : 'layerItemClicked',
+            'click #move-forward-btn' : 'moveForwardButtonClicked',
+            'click #move-backward-btn' : 'moveBackwardButtonClicked'
         },
 
         initialize: function() {
@@ -284,9 +286,58 @@ define(function(require) {
             view.options.shapeView.layerItem = view;
         },
 
+        moveBackwardButtonClicked: function() {
+            var view = this,
+                currentShape = view.options.shapeView,
+                shapeEl = $(_.first(currentShape.shape));
+
+            currentShape.deselect();
+
+            var previousShapeEl = shapeEl.prev('.d3-shape');
+
+            if (previousShapeEl.length > 0) {
+                var shapeCollection = appModule.documentContext.model.get('contentView').collection,
+                    previousShapeModel = shapeCollection.get(previousShapeEl.attr('data-model')),
+                    previousShapeModelCurrentZ = previousShapeModel.get('z');
+
+                shapeEl.insertBefore(previousShapeEl);
+                view.$el.insertBefore(view.$el.prev());
+                previousShapeModel.set({ z: previousShapeModelCurrentZ + 1 });
+                currentShape.model.set({ z: previousShapeModelCurrentZ });
+                shapeCollection.sort();
+                currentShape.select();
+            } else {
+                currentShape.select();
+            }
+        },
+
+        moveForwardButtonClicked: function() {
+            var view = this,
+                currentShape = view.options.shapeView,
+                shapeEl = $(_.first(currentShape.shape));
+            currentShape.deselect();
+
+            var nextShapeEl = shapeEl.next('.d3-shape');
+
+            if (nextShapeEl.length > 0) {
+                var shapeCollection = appModule.documentContext.model.get('contentView').collection,
+                    nextShapeModel = shapeCollection.get(nextShapeEl.attr('data-model')),
+                    nextShapeModelCurrentZ = nextShapeModel.get('z');
+                shapeEl.insertAfter(nextShapeEl);
+                view.$el.insertAfter(view.$el.next());
+                nextShapeModel.set({ z: nextShapeModelCurrentZ - 1 });
+                currentShape.model.set({ z: nextShapeModelCurrentZ });
+                currentShape.select();
+                shapeCollection.sort();
+            } else {
+                currentShape.select();
+            }
+        },
+
         layerItemClicked: function() {
             var view = this;
-            view.options.shapeView.clicked();
+            if (!view.$el.hasClass('active'))
+                view.options.shapeView.clicked();
         },
 
         render: function() {

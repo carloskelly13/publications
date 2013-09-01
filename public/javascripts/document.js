@@ -169,6 +169,7 @@ define(function(require) {
             view.model.set('shapes', view.collection.toJSON());
             view.listenToOnce(view.model, 'sync', function() { NProgress.done(); });
             view.model.save();
+            view.shapes = _.sortBy(view.shapes, function(shapeView) { return shapeView.model.attributes.z; });
         },
 
         deleteButtonClicked: function() {
@@ -228,8 +229,6 @@ define(function(require) {
                 sourceList = $('.full-height-content.source-list'),
                 documentEditor = $('.full-height-content.document-editor');
 
-            _.each(view.shapes, function(shape) { shape.shouldEdit(true); });
-
             appModule.inspector.render();
             appModule.isEditingDocument = true;
             ui.fadeOut(documentControls);
@@ -241,6 +240,7 @@ define(function(require) {
                 ui.fadeIn(editControls);
                 window.document.title = 'Publications - Editing ' + view.model.get('name');
                 _.each(view.shapes, function(shape) {
+                    shape.shouldEdit(true);
                     appModule.inspector.layersList.addLayer(shape);
                 });
             });

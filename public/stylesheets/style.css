@@ -2619,6 +2619,28 @@ footer #about-btn {
   border-bottom: 1px solid #ddd;
   cursor: default;
 }
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item:first-child #move-backward-btn {
+  display: none;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item:last-child #move-forward-btn {
+  display: none;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item:only-child #move-forward-btn,
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item:only-child #move-forward-btn {
+  display: none;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .controls {
+  display: none;
+  height: 16px;
+  vertical-align: middle;
+  float: right;
+  margin-top: 1px;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .controls .icon-btn {
+  font-size: 16px;
+  height: 16px;
+  margin-left: 0.2em;
+}
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .color-dot {
   display: inline-block;
   width: 14px;
@@ -2639,6 +2661,9 @@ footer #about-btn {
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item.active {
   background: #e1f0fa;
+}
+.inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item.active .controls {
+  display: inline-block;
 }
 .inspector-main .inspector-section .icon-btns {
   margin: 1.5em 0 1em 0;

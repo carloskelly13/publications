@@ -83,6 +83,38 @@
                     border-bottom: 1px solid #ddd;
                     cursor: default;
 
+                    &:first-child {
+                        #move-backward-btn {
+                            display: none;
+                        }
+                    }
+
+                    &:last-child {
+                        #move-forward-btn {
+                            display: none;
+                        }
+                    }
+
+                    &:only-child {
+                        #move-forward-btn, #move-forward-btn {
+                            display: none;
+                        }
+                    }
+
+                    .controls {
+                        display: none;
+                        height: 16px;
+                        vertical-align: middle;
+                        float: right;
+                        margin-top: 1px;
+
+                        .icon-btn {
+                            font-size: 16px;
+                            height: 16px;
+                            margin-left: 0.2em;
+                        }
+                    }
+
                     .color-dot {
                         display: inline-block;
                         width: 14px; height: 14px;
@@ -105,6 +137,10 @@
 
                     &.active {
                         background: @background-spot;
+
+                        .controls {
+                            display: inline-block;
+                        }
                     }
                 }
             }
