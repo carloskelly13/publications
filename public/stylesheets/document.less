@@ -24,10 +24,20 @@
         margin: 10px 0 0 10px;
     }
 
+    .pub-wordmark {
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: @navbar-height;
+        display: inline-block;
+        font-size: 1.5em;
+        margin-left: 15px;
+        letter-spacing: -1px;
+    }
+
     .controls {
         position: absolute;
         right: 10px;
-        top: 11px;
+        top: 10px;
 
         .auth, .unauth {
             display: none;
@@ -75,6 +85,7 @@
                 cursor: default;
                 padding: 15px;
                 border-bottom: 1px solid #ddd;
+                .animation(background, 0.25s);
 
                 &:hover {
                     background: #f4f4f4;
@@ -86,12 +97,12 @@
 
                 .name {
                     display: block;
-                    font-size: 1.2em;
+                    font-size: 1.3em;
                     margin: 0 0 0.25em 0;
                 }
 
                 .description {
-                    font-size: 0.9em;
+                    font-size: 1.1em;
                     font-weight: 400;
                 }
             }
@@ -109,9 +120,9 @@
                 .document-name {
                     color: @copy;
                     border-radius: 4px;
-                    font-size: 1.6em;
+                    font-size: 2em;
                     font-weight: 300;
-                    margin: 1em 0 0;
+                    margin: 0.7em 0 0;
                     text-align: center;
                     border-bottom: none;
                     padding: 0.25em;
@@ -127,8 +138,6 @@
                         -webkit-text-fill-color: @copy;
                         background: #fff;
                     }
-
-
                 }
 
                 .controls {
@@ -138,6 +147,10 @@
                     .edit-controls {
                         display: none;
                     }
+
+                    #inspector-controls {
+                        display: inline-block;
+                    }
                 }
             }
         }
@@ -146,9 +159,9 @@
 
 .axis text {
     fill: #34495e;
-    font-size: 10px;
-    font-weight: bold;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
 }
 
 .axis line,

@@ -1972,8 +1972,8 @@ stretchRight
   color: #037bff;
   cursor: pointer;
   display: inline-block;
-  font-size: 1.05em;
-  font-weight: 500;
+  font-size: 1.2em;
+  font-weight: 600;
   line-height: 1.35em;
   padding: 0.2em 1.35em;
   text-align: center;
@@ -1982,6 +1982,10 @@ stretchRight
   white-space: nowrap;
   zoom: 1;
   outline: none;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  -o-transition: all 0.25s ease;
+  transition: all 0.25s ease;
 }
 .btn.small {
   font-size: 12px;
@@ -1997,6 +2001,14 @@ stretchRight
   border-color: #0067d9;
   background: #0067d9;
   color: #fff;
+}
+.btn:disabled {
+  color: #ddd;
+}
+.btn:disabled:hover,
+.btn:disabled:active {
+  background: transparent;
+  color: #ddd;
 }
 input[type="text"],
 input[type="password"],
@@ -2360,8 +2372,9 @@ fieldset.inline input:last-child {
 }
 .modal-view#modal-about h3 {
   color: #037bff;
-  font-size: 1.6em;
-  font-weight: 300;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  font-weight: 600;
   margin-bottom: 0;
 }
 .modal-view#modal-about h3 + p {
@@ -2403,10 +2416,19 @@ fieldset.inline input:last-child {
     display: inline-block;
   }
 }
+.pub-nav .pub-wordmark {
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 41px;
+  display: inline-block;
+  font-size: 1.5em;
+  margin-left: 15px;
+  letter-spacing: -1px;
+}
 .pub-nav .controls {
   position: absolute;
   right: 10px;
-  top: 11px;
+  top: 10px;
 }
 .pub-nav .controls .auth,
 .pub-nav .controls .unauth {
@@ -2451,6 +2473,10 @@ fieldset.inline input:last-child {
   cursor: default;
   padding: 15px;
   border-bottom: 1px solid #ddd;
+  -webkit-transition: background 0.25s ease;
+  -moz-transition: background 0.25s ease;
+  -o-transition: background 0.25s ease;
+  transition: background 0.25s ease;
 }
 .document-library .full-height-content.source-list .document-view-item:hover {
   background: #f4f4f4;
@@ -2460,11 +2486,11 @@ fieldset.inline input:last-child {
 }
 .document-library .full-height-content.source-list .document-view-item .name {
   display: block;
-  font-size: 1.2em;
+  font-size: 1.3em;
   margin: 0 0 0.25em 0;
 }
 .document-library .full-height-content.source-list .document-view-item .description {
-  font-size: 0.9em;
+  font-size: 1.1em;
   font-weight: 400;
 }
 .document-library .full-height-content.document-editor {
@@ -2482,9 +2508,9 @@ fieldset.inline input:last-child {
 .document-library .full-height-content.document-editor .header .document-name {
   color: #34495e;
   border-radius: 4px;
-  font-size: 1.6em;
+  font-size: 2em;
   font-weight: 300;
-  margin: 1em 0 0;
+  margin: 0.7em 0 0;
   text-align: center;
   border-bottom: none;
   padding: 0.25em;
@@ -2508,11 +2534,14 @@ fieldset.inline input:last-child {
 .document-library .full-height-content.document-editor .header .controls .edit-controls {
   display: none;
 }
+.document-library .full-height-content.document-editor .header .controls #inspector-controls {
+  display: inline-block;
+}
 .axis text {
   fill: #34495e;
-  font-size: 10px;
-  font-weight: bold;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
 }
 .axis line,
 .axis path {
@@ -2564,7 +2593,7 @@ footer #about-btn {
   display: inline-block;
 }
 .inspector-main .color-picker .color-btn {
-  background: transparent;
+  background: #fff;
   height: 24px;
   width: 30%;
   border: none;
@@ -2572,12 +2601,16 @@ footer #about-btn {
   box-shadow: inset 0 0 0 1px #bbbbbb, inset 0 0 0 3px #ffffff, inset 0 0 0 4px rgba(0, 0, 0, 0.2);
   position: relative;
   top: 4px;
+  -webkit-transition: background 0.25s ease;
+  -moz-transition: background 0.25s ease;
+  -o-transition: background 0.25s ease;
+  transition: background 0.25s ease;
 }
 .inspector-main .color-picker .color-btn:hover:not(:disabled) {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), inset 0 0 0 3px #037bff, inset 0 0 0 4px rgba(0, 0, 0, 0.4);
 }
 .inspector-main .color-picker .color-btn:disabled {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 0 1px #bbbbbb, inset 0 0 0 3px #ffffff, inset 0 0 0 4px rgba(0, 0, 0, 0.2);
 }
 .inspector-main .color-picker .color-btn:disabled + label {
   color: #bbb;
@@ -2615,9 +2648,13 @@ footer #about-btn {
   width: 100%;
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item {
-  padding: 0.6em 1em;
+  padding: 0.8em 1em;
   border-bottom: 1px solid #ddd;
   cursor: default;
+  -webkit-transition: background 0.25s ease;
+  -moz-transition: background 0.25s ease;
+  -o-transition: background 0.25s ease;
+  transition: background 0.25s ease;
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item:first-child #move-backward-btn {
   display: none;
@@ -2635,6 +2672,11 @@ footer #about-btn {
   vertical-align: middle;
   float: right;
   margin-top: 1px;
+  opacity: 0;
+  -webkit-transition: opacity 0.25s ease;
+  -moz-transition: opacity 0.25s ease;
+  -o-transition: opacity 0.25s ease;
+  transition: opacity 0.25s ease;
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .controls .icon-btn {
   font-size: 16px;
@@ -2651,7 +2693,7 @@ footer #about-btn {
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item .metrics {
   height: 16px;
-  font-size: 0.9em;
+  font-size: 1.1em;
   line-height: 16px;
   display: inline-block;
   vertical-align: middle;
@@ -2664,6 +2706,7 @@ footer #about-btn {
 }
 .inspector-main .inspector-section.inspector-section-layers .layers-list .layer-item.active .controls {
   display: inline-block;
+  opacity: 1;
 }
 .inspector-main .inspector-section .icon-btns {
   margin: 1.5em 0 1em 0;
@@ -2672,7 +2715,7 @@ footer #about-btn {
   margin-right: 3%;
 }
 .inspector-main .inspector-section h3 {
-  font-size: 1em;
+  font-size: 1.2em;
   font-weight: 600;
   color: #999;
   text-transform: uppercase;
@@ -2700,7 +2743,7 @@ footer #about-btn {
 .inspector-main .inspector-section fieldset label {
   display: block;
   margin: 0.5em 0 0;
-  font-size: 0.8em;
+  font-size: 0.9em;
   font-weight: 600;
   color: #999;
   text-transform: uppercase;
@@ -2728,25 +2771,26 @@ footer #about-btn {
   padding: 1em;
 }
 .landing-page .content .info-box {
-  background: #037bff;
   width: 100%;
   margin: 0 auto 2em auto;
-  color: #fff;
   text-align: center;
 }
 .landing-page .content .info-box .info-box-content {
-  padding: 4em 0 4.25em 0;
+  padding: 3.5em 0;
   width: 85%;
   margin: 0 auto;
 }
 .landing-page .content .info-box h1 {
-  margin: 0 0 0.5em 0;
-  font-weight: 300;
-  font-size: 2.2em;
+  margin: 0 0 0.25em 0;
+  font-weight: 200;
+  font-size: 5.75em;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  padding: 0;
 }
 .landing-page .content .info-box p {
-  font-weight: 500;
-  font-size: 1.5em;
+  font-weight: 300;
+  font-size: 2.3em;
   line-height: 1.4em;
   margin: 0;
 }
@@ -2763,10 +2807,11 @@ footer #about-btn {
   margin-bottom: 2em;
 }
 .landing-page .content .hero-info h2 {
-  font-weight: 500;
+  font-weight: 600;
   margin: 0.5em 0 0.67em 0;
   padding: 0;
-  font-size: 1.25em;
+  font-size: 1.4em;
+  text-transform: uppercase;
 }
 .landing-page .content .hero-info p {
   font-size: 1.25em;
@@ -2798,6 +2843,48 @@ footer #about-btn {
   margin: 0 auto;
   text-align: center;
 }
+.error-404 {
+  display: block;
+  width: 300px;
+  margin: -80px 0 0 -150px;
+  height: 160px;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+}
+.error-404 .error-content {
+  text-align: center;
+}
+.error-404 .error-content h2 {
+  font-size: 1.8em;
+  font-weight: 300;
+}
+.error-404 .error-content .btn-container {
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #bbb;
+  padding-top: 1em;
+  width: 100%;
+}
+.error-404 .pub-logo {
+  background-image: url("../images/pub-logo-152-21.png");
+  background-size: 152px 21px;
+  background-repeat: no-repeat;
+  width: 152px;
+  height: 21px;
+  display: inline-block;
+  margin: 0 auto;
+}
+@media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
+  .error-404 .pub-logo {
+    background-image: url("../images/pub-logo-152-21@2x.png");
+    background-size: 152px 21px;
+    background-repeat: no-repeat;
+    width: 152px;
+    height: 21px;
+    display: inline-block;
+  }
+}
 /**
 * Publications JS App
 * Editor LESS Stylesheet
@@ -2822,7 +2909,7 @@ html,
 body {
   color: #34495e;
   background: #fff;
-  font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font: 12px 'Source Sans Pro', Helvetica, Arial, sans-serif;
   padding: 0;
   margin: 0;
   height: 100%;

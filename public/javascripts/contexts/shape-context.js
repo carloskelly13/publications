@@ -39,7 +39,7 @@ define(function(require) {
             sender.select();
             sender.layerItem.$el.addClass('active');
             service.model.set({ shape: sender });
-            appModule.inspector.shapeWasSelected(true);
+            appModule.documentContext.model.get('contentView').shapeWasSelected(true);
         },
 
         clearContext: function() {
@@ -50,7 +50,7 @@ define(function(require) {
             currentContext.deselect();
             currentContext.layerItem.$el.removeClass('active');
             service.model.set({ shape: null });
-            appModule.inspector.shapeWasSelected(false);
+            appModule.documentContext.model.get('contentView').shapeWasSelected(false);
         }
     });
 

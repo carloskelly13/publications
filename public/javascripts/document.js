@@ -153,6 +153,7 @@ define(function(require) {
             appModule.inspector = new Inspector.Views.Main();
             appModule.shapeContext = new ShapeContext.Service({ model: new ShapeContext.Model() });
             view.shapes = [];
+            _.bindAll(view);
         },
 
         createShapes: function() {
@@ -229,6 +230,7 @@ define(function(require) {
                 sourceList = $('.full-height-content.source-list'),
                 documentEditor = $('.full-height-content.document-editor');
 
+            view.clipboard = null;
             appModule.inspector.render();
             appModule.isEditingDocument = true;
             ui.fadeOut(documentControls);
@@ -254,6 +256,51 @@ define(function(require) {
                 window.location = '/document/' + documentModel.id + '/pdf';
         },
 
+        controlButtonClicked: function(event) {
+            var view = this,
+                dataAction = event.target.getAttribute('data-action'),
+                shape = appModule.shapeContext.model.get('shape');
+
+            if (_.isEqual(dataAction, 'add-shape')) {
+                var shapeType = event.target.getAttribute('data-shape');
+                view.collection.add(new Shape.Model({
+                    type: shapeType, width: 72, height: 72,
+                    x: 72, y: 72, r: 0, strokeOpacity: 1, fillOpacity: 1,
+                    fill: '#1abc9c', stroke: '#16a085', strokeWidth: 1
+                }));
+
+            } else if (_.isEqual(dataAction, 'delete')) {
+                shape.shape.remove();
+                view.shapes = _.without(view.shapes, shape);
+                view.collection.remove(shape.model);
+                appModule.shapeContext.trigger('clear');
+                appModule.inspector.layersList.removeLayer(shape);
+                $(event.target).tooltip('hide');
+
+            } else if (_.isEqual(dataAction, 'copy'))
+                view.updateClipboard(_.clone(shape.model.toJSON()));
+
+            else if (_.isEqual(dataAction, 'paste') && view.clipboard)
+                view.collection.add(new Shape.Model(_.clone(view.clipboard)));
+
+            else if (_.isEqual(dataAction, 'cut')) {
+                view.updateClipboard(_.clone(shape.model.toJSON()));
+                shape.shape.remove();
+                view.shapes = _.without(view.shapes, shape);
+                view.collection.remove(shape.model);
+                appModule.shapeContext.trigger('clear');
+            }
+        },
+
+        updateClipboard: function(jsonData) {
+            var view = this;
+            view.clipboard = jsonData;
+            delete view.clipboard['_id'];
+            view.clipboard.x += 18;
+            view.clipboard.y += 18;
+            // view.$('#inspector-paste-btn').prop('disabled', false);
+        },
+
         documentNameChanged: function(event) {
             var view = this,
                 documentName = event.target.value;
@@ -275,9 +322,8 @@ define(function(require) {
             else if (model.get('type') == 2)
                 shapeView = new Shape.Views.Ellipse({ model: model, svg: view.svg }).createSVGEl().render();
 
-            if (layersList) {
+            if (layersList)
                 layersList.addLayer(shapeView);
-            }
 
             if (appModule.isEditingDocument) {
                 shapeView.shouldEdit(true);
@@ -366,9 +412,16 @@ define(function(require) {
             return view;
         },
 
+        shapeWasSelected: function(condition) {
+            var view = this;
+            appModule.inspector.shapeWasSelected(condition);
+            view.$('#inspector-controls .btn.contextual').prop('disabled', !condition);
+        },
+
         render: function() {
             var view = this;
             view.$el.html(view.template(view.model.toJSON()));
+            view.$('#inspector-controls .btn').on('click', view.controlButtonClicked);
             return view;
         }
     });

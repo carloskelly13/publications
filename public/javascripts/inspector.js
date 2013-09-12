@@ -27,7 +27,6 @@ define(function(require) {
 
         initialize: function(event) {
             var view = this;
-            view.clipboard = null;
             _.bindAll(this);
         },
 
@@ -81,43 +80,6 @@ define(function(require) {
             }
         },
 
-        shapeButtonClicked: function(event) {
-            var view = this,
-                dataAction = event.target.getAttribute('data-action'),
-                documentEditor = appModule.documentContext.model.get('contentView'),
-                shape = appModule.shapeContext.model.get('shape');
-
-            if (_.isEqual(dataAction, 'new-shape')) {
-                var shapeType = event.target.getAttribute('data-shape');
-                documentEditor.collection.add(new Shape.Model({
-                    type: shapeType, width: 72, height: 72,
-                    x: 72, y: 72, r: 0, strokeOpacity: 1, fillOpacity: 1,
-                    fill: '#1abc9c', stroke: '#16a085', strokeWidth: 1
-                }));
-
-            } else if (_.isEqual(dataAction, 'remove')) {
-                shape.shape.remove();
-                documentEditor.shapes = _.without(documentEditor.shapes, shape);
-                documentEditor.collection.remove(shape.model);
-                appModule.shapeContext.trigger('clear');
-                view.layersList.removeLayer(shape);
-                $(event.target).tooltip('hide');
-
-            } else if (_.isEqual(dataAction, 'copy'))
-                view.updateClipboard(_.clone(shape.model.toJSON()));
-
-            else if (_.isEqual(dataAction, 'paste') && view.clipboard)
-                documentEditor.collection.add(new Shape.Model(_.clone(view.clipboard)));
-
-            else if (_.isEqual(dataAction, 'cut')) {
-                view.updateClipboard(_.clone(shape.model.toJSON()));
-                shape.shape.remove();
-                documentEditor.shapes = _.without(documentEditor.shapes, shape);
-                documentEditor.collection.remove(shape.model);
-                appModule.shapeContext.trigger('clear');
-            }
-        },
-
         updateDocumentMetrics: function(model) {
             var view = this;
             view.$('#inspector-document-width').val((model.get('width') / 72.0).toFixed(2));
@@ -156,18 +118,8 @@ define(function(require) {
             view.$('.inspector-shape-input').prop('disabled', !sender);
             view.$('.inspector-color-input').prop('disabled', !sender);
             view.$('.color-btn').prop('disabled', !sender);
-            view.$('.inspector-shape-btn.contextual').prop('disabled', !sender);
 
             view.updateShapeMetrics(sender ? shape.model : null);
-        },
-
-        updateClipboard: function(jsonData) {
-            var view = this;
-            view.clipboard = jsonData;
-            delete view.clipboard['_id'];
-            view.clipboard.x += 18;
-            view.clipboard.y += 18;
-            view.$('#inspector-paste-btn').prop('disabled', false);
         },
 
         render: function() {
@@ -176,7 +128,6 @@ define(function(require) {
                 layersList = new Inspector.Views.LayersList();
 
             view.$el.html(view.template());
-            view.$('.inspector-shape-btn').on('click', view.shapeButtonClicked);
             view.$('.color-btn').on('click', view.colorButtonClicked);
             view.$('.inspector-shape-input').on('change', view.shapeMetricsChanged);
             view.$('.inspector-document-input').on('change', view.documentMetricsChanged);
@@ -194,7 +145,6 @@ define(function(require) {
             documentLibrary.append(view.el);
             view.layersList = layersList;
             view.$('.inspector-section-layers').append(layersList.render().el);
-            view.$('.inspector-shape-btn').tooltip();
             return view;
         }
     });
@@ -301,7 +251,9 @@ define(function(require) {
                     previousShapeModelCurrentZ = previousShapeModel.get('z');
 
                 shapeEl.insertBefore(previousShapeEl);
-                view.$el.insertBefore(view.$el.prev());
+                view.$el.slideUp(function() {
+                    view.$el.insertBefore(view.$el.prev()).slideDown();
+                });
                 previousShapeModel.set({ z: previousShapeModelCurrentZ + 1 });
                 currentShape.model.set({ z: previousShapeModelCurrentZ });
                 shapeCollection.sort();
@@ -324,7 +276,9 @@ define(function(require) {
                     nextShapeModel = shapeCollection.get(nextShapeEl.attr('data-model')),
                     nextShapeModelCurrentZ = nextShapeModel.get('z');
                 shapeEl.insertAfter(nextShapeEl);
-                view.$el.insertAfter(view.$el.next());
+                view.$el.slideUp(function() {
+                    view.$el.insertAfter(view.$el.next()).slideDown();
+                });
                 nextShapeModel.set({ z: nextShapeModelCurrentZ - 1 });
                 currentShape.model.set({ z: nextShapeModelCurrentZ });
                 currentShape.select();

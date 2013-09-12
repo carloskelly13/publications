@@ -30,12 +30,14 @@ module.exports = function(grunt) {
         targethtml: {
             production: {
                 files: {
-                    'views/index.ejs': 'views/index.tmpl.html'
+                    'views/index.ejs': 'views/index.tmpl.html',
+                    'views/404.ejs': 'views/404.tmpl.html'
                 }
             },
             development: {
                 files: {
-                    'views/index.ejs': 'views/index.tmpl.html'
+                    'views/index.ejs': 'views/index.tmpl.html',
+                    'views/404.ejs': 'views/404.tmpl.html'
                 }
             }
         },

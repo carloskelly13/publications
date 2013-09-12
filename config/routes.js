@@ -37,4 +37,7 @@ module.exports = function (app, passport) {
     app.put('/document/:id?', DocumentController.update);
     app.delete('/document/:id?', DocumentController.delete);
     app.get('/document/:id?/pdf', DocumentController.pdf);
+
+    // 404 Error
+    app.use(function(req, res, next) { res.render('404'); });
 };

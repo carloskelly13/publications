@@ -19,27 +19,28 @@
         }
 
         .info-box {
-            background: #037bff;
             width: 100%;
             margin: 0 auto 2em auto;
-            color: #fff;
             text-align: center;
 
             .info-box-content {
-                padding: 4em 0 4.25em 0;
+                padding: 3.5em 0;
                 width: 85%;
                 margin: 0 auto;
             }
 
             h1 {
-                margin: 0 0 0.5em 0;
-                font-weight: 300;
-                font-size: 2.2em;
+                margin: 0 0 0.25em 0;
+                font-weight: 200;
+                font-size: 5.75em;
+                text-transform: uppercase;
+                letter-spacing: -2px;
+                padding: 0;
             }
 
             p {
-                font-weight: 500;
-                font-size: 1.5em;
+                font-weight: 300;
+                font-size: 2.3em;
                 line-height: 1.4em;
                 margin: 0;
             }
@@ -62,10 +63,11 @@
             }
 
             h2 {
-                font-weight: 500;
+                font-weight: 600;
                 margin: 0.5em 0 0.67em 0;
                 padding: 0;
-                font-size: 1.25em;
+                font-size: 1.4em;
+                text-transform: uppercase;
             }
 
             p {
@@ -101,5 +103,37 @@
                 text-align: center;
             }
         }
+    }
+}
+
+.error-404 {
+    display: block;
+    width: 300px;
+    margin: -80px 0 0 -150px;
+    height: 160px;
+    top: 50%; left: 50%;
+    position: absolute;
+
+
+    .error-content {
+        text-align: center;
+
+        h2 {
+            font-size: 1.8em;
+            font-weight: 300;
+        }
+
+        .btn-container {
+            position: absolute;
+            bottom: 0;
+            border-top: 1px solid #bbb;
+            padding-top: 1em;
+            width: 100%;
+        }
+    }
+
+    .pub-logo {
+        .retina-picture('pub-logo-152-21', 152px, 21px, inline-block);
+        margin: 0 auto;
     }
 }

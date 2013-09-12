@@ -18,3 +18,4 @@ public/stylesheets/style.css
 public/javascripts/dist/app.min.js
 public/stylesheets/style.css
 views/index.ejs
+404.ejs

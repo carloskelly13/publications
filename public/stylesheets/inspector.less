@@ -14,7 +14,7 @@
         }
 
         .color-btn {
-            background: transparent;
+            background: #fff;
             border: none;
             height: 24px;
             width: 30%;
@@ -23,13 +23,14 @@
             box-shadow:  inset 0 0 0 1px #bbb, inset 0 0 0 3px #fff, inset 0 0 0 4px hsla(0, 0%, 0%, 0.2);
             position: relative;
             top: 4px;
+            .animation(background, 0.25s);
 
             &:hover:not(:disabled) {
                 box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.2), inset 0 0 0 3px #037bff, inset 0 0 0 4px hsla(0, 0%, 0%, 0.4);
             }
 
             &:disabled {
-                box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.1);
+                box-shadow:  inset 0 0 0 1px #bbb, inset 0 0 0 3px #fff, inset 0 0 0 4px hsla(0, 0%, 0%, 0.2);
             }
 
             &:disabled + label {
@@ -79,9 +80,10 @@
                 width: 100%;
 
                 .layer-item {
-                    padding: 0.6em 1em;
+                    padding: 0.8em 1em;
                     border-bottom: 1px solid #ddd;
                     cursor: default;
+                    .animation(background, 0.25s);
 
                     &:first-child {
                         #move-backward-btn {
@@ -107,6 +109,8 @@
                         vertical-align: middle;
                         float: right;
                         margin-top: 1px;
+                        opacity: 0;
+                        .animation(opacity, 0.25s);
 
                         .icon-btn {
                             font-size: 16px;
@@ -125,7 +129,7 @@
 
                     .metrics {
                         height: 16px;
-                        font-size: 0.9em;
+                        font-size: 1.1em;
                         line-height: 16px;
                         display: inline-block;
                         vertical-align: middle;
@@ -140,6 +144,7 @@
 
                         .controls {
                             display: inline-block;
+                            opacity: 1;
                         }
                     }
                 }
@@ -154,7 +159,7 @@
         }
 
         h3 {
-            font-size: 1em;
+            font-size: 1.2em;
             font-weight: 600;
             color: #999;
             text-transform: uppercase;
@@ -187,7 +192,7 @@
             label {
                 display: block;
                 margin: 0.5em 0 0;
-                font-size: 0.8em;
+                font-size: 0.9em;
                 font-weight: 600;
                 color: #999;
                 text-transform: uppercase;

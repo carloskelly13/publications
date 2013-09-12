@@ -54,8 +54,8 @@
     color: #037bff;
     cursor: pointer;
     display: inline-block;
-    font-size: 1.05em;
-    font-weight: 500;
+    font-size: 1.2em;
+    font-weight: 600;
     line-height: 1.35em;
     padding: 0.2em 1.35em;
     text-align: center;
@@ -64,6 +64,7 @@
     white-space: nowrap;
     zoom: 1;
     outline: none;
+    .animation(all, 0.25s);
 
     &.small {
         font-size: 12px;
@@ -84,6 +85,14 @@
         color: #fff;
     }
 
+    &:disabled {
+        color: #ddd;
+
+        &:hover, &:active {
+            background: transparent;
+            color: #ddd;
+        }
+    }
 }
 
 input[type="text"],
