@@ -44,3 +44,15 @@ html, body {
 h1, h2, h3, h4, h5, p, label, button, table, ul, ol, section {
     text-rendering: optimizeLegibility;
 }
+
+@selection-color: #41ffe9;
+
+::selection {
+    background: @selection-color;
+    color: darken(@selection-color, 33%);
+}
+
+::-moz-selection {
+    background: @selection-color;
+    color: darken(@selection-color, 33%);
+}
