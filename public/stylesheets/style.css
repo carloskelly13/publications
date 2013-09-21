@@ -2869,8 +2869,8 @@ footer #about-btn {
 .error-404 {
   display: block;
   width: 300px;
-  margin: -80px 0 0 -150px;
-  height: 160px;
+  margin: -150px 0 0 -150px;
+  height: 250px;
   top: 50%;
   left: 50%;
   position: absolute;
@@ -2880,7 +2880,7 @@ footer #about-btn {
 }
 .error-404 .error-content h2 {
   font-size: 1.8em;
-  font-weight: 300;
+  font-weight: 400;
 }
 .error-404 .error-content .btn-container {
   position: absolute;
@@ -2890,21 +2890,21 @@ footer #about-btn {
   width: 100%;
 }
 .error-404 .pub-logo {
-  background-image: url("../images/pub-logo-152-21.png");
-  background-size: 152px 21px;
+  background-image: url("../images/pub-logo-92-106.png");
+  background-size: 92px 106px;
   background-repeat: no-repeat;
-  width: 152px;
-  height: 21px;
+  width: 92px;
+  height: 106px;
   display: inline-block;
   margin: 0 auto;
 }
 @media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
   .error-404 .pub-logo {
-    background-image: url("../images/pub-logo-152-21@2x.png");
-    background-size: 152px 21px;
+    background-image: url("../images/pub-logo-92-106@2x.png");
+    background-size: 92px 106px;
     background-repeat: no-repeat;
-    width: 152px;
-    height: 21px;
+    width: 92px;
+    height: 106px;
     display: inline-block;
   }
 }
