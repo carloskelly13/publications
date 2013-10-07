@@ -38,10 +38,7 @@ documentSchema.methods = {
             else if (_.isEqual(shape.type, 2))
                 obj = doc.ellipse(shape.x + (shape.width / 2.0), shape.y + (shape.height / 2.0),
                         shape.width / 2.0, shape.height / 2.0);
-
-            console.log([shape.x + (shape.width / 2.0), shape.y + (shape.height / 2.0),
-                        shape.width / 2.0, shape.height / 2.0]);
-
+                        
             obj.lineWidth(shape.strokeWidth)
                 .fillColor(shape.fill, shape.fillOpacity)
                 .strokeColor(shape.stroke, shape.strokeOpacity);

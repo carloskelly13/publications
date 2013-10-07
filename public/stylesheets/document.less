@@ -6,7 +6,7 @@
 */
 
 @navbar-height: 41px;
-@footer-height: 25px;
+@footer-height: 0;
 
 .pub-nav {
     background: @background-gray;
@@ -25,7 +25,7 @@
     }
 
     .pub-wordmark {
-        font-weight: 600;
+        font-weight: 300;
         text-transform: uppercase;
         line-height: @navbar-height;
         display: inline-block;
@@ -39,6 +39,10 @@
         right: 10px;
         top: 10px;
 
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+            display: none;
+        }
+
         .auth, .unauth {
             display: none;
         }
@@ -50,6 +54,7 @@
         }
     }
 }
+
 
 .document-library {
     height: inherit;
@@ -160,8 +165,8 @@
 .axis text {
     fill: #34495e;
     font-size: 12px;
-    font-weight: 600;
-    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 
 .axis line,

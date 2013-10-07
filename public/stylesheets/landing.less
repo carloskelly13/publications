@@ -1,118 +1,189 @@
+@import url(macbook.less);
+
 .landing-page {
     background: #fff;
-    bottom: 0;
+    bottom: 0; top: @navbar-height;
     display: block;
     height: auto;
     position: absolute;
-    top: @navbar-height;
     width: 100%;
-    .animation(opacity, 0.25s);
+    overflow-y: scroll;
+    padding: 0;
 
-    .content {
-        height: 100%;
-        min-height: 100%;
-        overflow-x: hidden;
-        overflow-y: scroll;
+    .landing-hero {
+        margin: 6em 0;
 
-        .padding {
-            padding: 1em;
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+            margin: 2em 0;
         }
 
-        .info-box {
-            width: 100%;
-            margin: 0 auto 2em auto;
-            text-align: center;
+        .mobile-info {
+            display: none;
 
-            .info-box-content {
-                padding: 3.5em 0;
-                width: 85%;
-                margin: 0 auto;
+            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
                 text-align: center;
-            }
-
-            h1 {
-                margin: 0 0 0.25em 0;
-                font-weight: 200;
-                font-size: 5.75em;
-                text-transform: uppercase;
-                letter-spacing: -2px;
-                padding: 0;
-            }
-            
-            #pub-logo-hero {
-                .retina-picture('pub-logo-142-163', 142px, 163px, inline-block);
-                margin-bottom: 1.5em;
-            }
-
-            p {
-                font-weight: 400;
-                font-size: 2em;
-                line-height: 1.4em;
-                margin: 0;
-                
-                strong {
-                    font-weight: 600;
-                }
-            }
-        }
-
-        .page-content {
-            width: 85%;
-            margin: 3em auto 2em auto;
-        }
-
-        .hero-info {
-            .pure-u-1-3 {
-                text-align: center;
-                margin-bottom: 3em;
-            }
-
-            .pure-u-1 {
-                text-align: left;
-                margin-bottom: 2em;
-            }
-
-            h2 {
-                font-weight: 600;
-                margin: 0.5em 0 0.67em 0;
-                padding: 0;
-                font-size: 1.4em;
-                text-transform: uppercase;
-            }
-
-            p {
-                font-size: 1.25em;
-                line-height: 1.5em;
-                padding: 0 1.5em;
-
-                &.small {
-                    font-size: 0.95em;
-                    line-height: 1.2em;
-                    margin-top: 0.1em;
-                }
-            }
-
-            .badge {
-                background: #037bff;
-                color: #fff;
-                display: inline-block;
-                font-weight: 600;
-                font-size: 0.95em;
-                margin: 0 auto;
-                text-transform: uppercase;
-                padding: 0.25em 1.25em;
-                border-radius: 3px;
-            }
-
-            .hero-icon {
+                padding: 2em 2em 1em 2em;
                 display: block;
-                width: 48px; height: 48px;
-                color: #037bff;
-                font-size: 48px;
-                margin: 0 auto;
-                text-align: center;
+                font-size: 1.2em;
+                font-weight: 400;
+                
+                .lil-mac-icon {
+                    font-size: 2.2em;
+                }
             }
         }
+    }
+
+    .pub-logo-big {
+        .retina-picture('pub-logo-175-201', 175px, 201px, block);
+        margin: 2em auto;
+
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+            .retina-picture('pub-logo-92-106', 92px, 106px, block);
+            margin: 1em auto;
+        }
+    }
+
+    .computer-hero-img {
+        .retina-picture('computer-hero-img', 960px, 552px, block);
+        margin: 1em auto 4em auto;
+
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+            display: none;
+        }
+    }
+
+    h2 {
+        font-size: 3em;
+        font-weight: 300;
+        padding: 0 3em;
+        top: 10%;
+        position: relative;
+        text-align: center;
+        max-width: 950px;
+        margin: 0 auto;
+
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+            font-size: 1.5em;
+            padding: 0 1em;
+        }
+
+        strong {
+            font-weight: 400;
+        }
+    }
+
+    .content-section {
+        max-width: 950px;
+        margin: 0 auto;
+
+        p.small {
+            margin: 0 0 2em 0;
+
+            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+                padding: 1em 2em;
+            }
+        }
+    }
+}
+
+.feature-list {
+    padding: 2em 0 0 0;
+    margin: 0;
+    border-top: 1px dashed #bbb;
+
+    .feature-content {
+        text-align: center;
+        padding: 2em;
+
+        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+            padding: 1em 2em;
+        }
+
+        h3 {
+            font-size: 2em;
+            line-height: 1em;
+            font-weight: 300;
+            margin: 0.5em 0;
+
+            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+                font-size: 1.5em;
+            }
+        }
+
+        p {
+            font-size: 1.5em;
+            line-height: 1.5em;
+            margin: 0 0 2em 0;
+
+            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+                margin: 0 0 1em 0;
+                font-size: 1.2em;
+                line-height: 1.4em;
+            }
+
+            strong {
+                font-weight: 600;
+                letter-spacing: -1px;
+            }
+        }
+
+        .badge {
+            background: #037bff;
+            color: #fff;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin: 0.25em auto 1em auto;
+            text-transform: uppercase;
+            padding: 0.25em 1.25em;
+            border-radius: 6px;
+        }
+
+        // &.green {
+        //     .hero-icon {
+        //         color: #00ff22;
+        //     }
+        // }
+
+        // &.blue {
+        //     .hero-icon {
+        //         color: #00a7ff;
+        //     }
+        // }
+
+        // &.yellow {
+        //     .hero-icon {
+        //         color: #ffdf00;
+        //     }
+        // }
+
+        // &.orange {
+        //     .hero-icon {
+        //         color: #ff7400;
+        //     }
+        // }
+
+        // &.red {
+        //     .hero-icon {
+        //         color: #ff003b;
+        //     }
+        // }
+
+        // &.purple {
+        //     .hero-icon {
+        //         color: #b000ff;
+        //     }
+        // }
+    }
+
+    .hero-icon {
+        display: inline-block;
+        font-size: 60px;
+        line-height: 60px;
+        margin: 0 auto;
+        color: #037bff;
+        text-align: center;
     }
 }
 

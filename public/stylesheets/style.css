@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 /**
  * Publications JS App
  * LESS Stylesheet
@@ -1967,13 +1968,13 @@ stretchRight
   -webkit-font-smoothing: antialiased;
   background: transparent;
   border: none;
-  border-radius: 3px;
+  border-radius: 2px;
   box-sizing: border-box;
   color: #037bff;
   cursor: pointer;
   display: inline-block;
   font-size: 1.2em;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35em;
   padding: 0.2em 1.35em;
   text-align: center;
@@ -1986,6 +1987,7 @@ stretchRight
   -moz-transition: all 0.25s ease;
   -o-transition: all 0.25s ease;
   transition: all 0.25s ease;
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 .btn.small {
   font-size: 12px;
@@ -2038,6 +2040,7 @@ input[type="color"] {
   padding: 0.2em 0;
   vertical-align: baseline;
   zoom: 1;
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 input[type="text"].invalid,
 input[type="password"].invalid,
@@ -2417,7 +2420,7 @@ fieldset.inline input:last-child {
   }
 }
 .pub-nav .pub-wordmark {
-  font-weight: 600;
+  font-weight: 300;
   text-transform: uppercase;
   line-height: 41px;
   display: inline-block;
@@ -2429,6 +2432,11 @@ fieldset.inline input:last-child {
   position: absolute;
   right: 10px;
   top: 10px;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .pub-nav .controls {
+    display: none;
+  }
 }
 .pub-nav .controls .auth,
 .pub-nav .controls .unauth {
@@ -2446,7 +2454,7 @@ fieldset.inline input:last-child {
   top: 0;
 }
 .document-library .full-height-content {
-  bottom: 25px;
+  bottom: 0;
   display: block;
   height: auto;
   position: absolute;
@@ -2540,8 +2548,8 @@ fieldset.inline input:last-child {
 .axis text {
   fill: #34495e;
   font-size: 12px;
-  font-weight: 600;
-  font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 .axis line,
 .axis path {
@@ -2562,12 +2570,12 @@ footer {
   bottom: 0;
   background: #f5f5f7;
   border-top: 1px solid #bbb;
-  height: 25px;
+  height: 0;
   position: absolute;
   width: 100%;
   z-index: 80;
   text-align: left;
-  line-height: 25px;
+  line-height: 0;
 }
 footer .footer-content {
   padding: 0 0 0 1em;
@@ -2748,122 +2756,267 @@ footer #about-btn {
   color: #999;
   text-transform: uppercase;
 }
+.macbook {
+  position: relative;
+  display: block;
+  margin: 0 auto 7% auto;
+}
+.macbook:before {
+  padding-top: 50%;
+  content: "";
+  display: block;
+}
+.macbook > div {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.macbook .macbook-screen {
+  height: 91%;
+  border: 1px solid #999999;
+  border-bottom: none;
+  -moz-border-radius-topleft: 10px;
+  -webkit-border-top-left-radius: 10px;
+  border-top-left-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  border-top-right-radius: 10px;
+  margin: 0 10%;
+  padding: 3%;
+}
+.macbook .macbook-screen > i {
+  display: block;
+  width: 1%;
+  height: 1.75%;
+  border: 1px solid #999999;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+  margin: -2.5% auto 1.5%;
+}
+.macbook .macbook-screen > div {
+  border: 1px solid #999999;
+  height: 100%;
+}
+.macbook .macbook-keyboard {
+  height: 5%;
+  border: 1px solid #999999;
+  border-radius: 2px 2px 0 0;
+}
+.macbook .macbook-keyboard > div {
+  border: 1px solid #999999;
+  border-top: none;
+  height: 40%;
+  width: 15%;
+  margin: 0 auto;
+  -moz-border-radius-bottomleft: 15px;
+  -webkit-border-bottom-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  -moz-border-radius-bottomright: 15px;
+  -webkit-border-bottom-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.macbook .macbook-base {
+  height: 1%;
+  box-shadow: inset 0 -1px 0 1px #999999;
+  -moz-border-radius-bottomleft: 50%;
+  -webkit-border-bottom-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  -moz-border-radius-bottomright: 50%;
+  -webkit-border-bottom-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
 .landing-page {
   background: #fff;
   bottom: 0;
+  top: 41px;
   display: block;
   height: auto;
   position: absolute;
-  top: 41px;
   width: 100%;
-  -webkit-transition: opacity 0.25s ease;
-  -moz-transition: opacity 0.25s ease;
-  -o-transition: opacity 0.25s ease;
-  transition: opacity 0.25s ease;
-}
-.landing-page .content {
-  height: 100%;
-  min-height: 100%;
-  overflow-x: hidden;
   overflow-y: scroll;
-}
-.landing-page .content .padding {
-  padding: 1em;
-}
-.landing-page .content .info-box {
-  width: 100%;
-  margin: 0 auto 2em auto;
-  text-align: center;
-}
-.landing-page .content .info-box .info-box-content {
-  padding: 3.5em 0;
-  width: 85%;
-  margin: 0 auto;
-  text-align: center;
-}
-.landing-page .content .info-box h1 {
-  margin: 0 0 0.25em 0;
-  font-weight: 200;
-  font-size: 5.75em;
-  text-transform: uppercase;
-  letter-spacing: -2px;
   padding: 0;
 }
-.landing-page .content .info-box #pub-logo-hero {
-  background-image: url("../images/pub-logo-142-163.png");
-  background-size: 142px 163px;
-  background-repeat: no-repeat;
-  width: 142px;
-  height: 163px;
-  display: inline-block;
-  margin-bottom: 1.5em;
+.landing-page .landing-hero {
+  margin: 6em 0;
 }
-@media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
-  .landing-page .content .info-box #pub-logo-hero {
-    background-image: url("../images/pub-logo-142-163@2x.png");
-    background-size: 142px 163px;
-    background-repeat: no-repeat;
-    width: 142px;
-    height: 163px;
-    display: inline-block;
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .landing-page .landing-hero {
+    margin: 2em 0;
   }
 }
-.landing-page .content .info-box p {
-  font-weight: 400;
-  font-size: 2em;
-  line-height: 1.4em;
-  margin: 0;
+.landing-page .landing-hero .mobile-info {
+  display: none;
 }
-.landing-page .content .info-box p strong {
-  font-weight: 600;
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .landing-page .landing-hero .mobile-info {
+    text-align: center;
+    padding: 2em 2em 1em 2em;
+    display: block;
+    font-size: 1.2em;
+    font-weight: 400;
+  }
+  .landing-page .landing-hero .mobile-info .lil-mac-icon {
+    font-size: 2.2em;
+  }
 }
-.landing-page .content .page-content {
-  width: 85%;
-  margin: 3em auto 2em auto;
+.landing-page .pub-logo-big {
+  background-image: url("../images/pub-logo-175-201.png");
+  background-size: 175px 201px;
+  background-repeat: no-repeat;
+  width: 175px;
+  height: 201px;
+  display: block;
+  margin: 2em auto;
 }
-.landing-page .content .hero-info .pure-u-1-3 {
+@media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
+  .landing-page .pub-logo-big {
+    background-image: url("../images/pub-logo-175-201@2x.png");
+    background-size: 175px 201px;
+    background-repeat: no-repeat;
+    width: 175px;
+    height: 201px;
+    display: block;
+  }
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .landing-page .pub-logo-big {
+    background-image: url("../images/pub-logo-92-106.png");
+    background-size: 92px 106px;
+    background-repeat: no-repeat;
+    width: 92px;
+    height: 106px;
+    display: block;
+    margin: 1em auto;
+  }
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-pixel-ratio: 1.3), only screen and (min-device-width: 320px) and (max-device-width: 568px) and (min-device-pixel-ratio: 1.3), only screen and (min-device-width: 320px) and (max-device-width: 568px) and (min-resolution: 1.3dppx) {
+  .landing-page .pub-logo-big {
+    background-image: url("../images/pub-logo-92-106@2x.png");
+    background-size: 92px 106px;
+    background-repeat: no-repeat;
+    width: 92px;
+    height: 106px;
+    display: block;
+  }
+}
+.landing-page .computer-hero-img {
+  background-image: url("../images/computer-hero-img.png");
+  background-size: 960px 552px;
+  background-repeat: no-repeat;
+  width: 960px;
+  height: 552px;
+  display: block;
+  margin: 1em auto 4em auto;
+}
+@media (-webkit-min-device-pixel-ratio: 1.3), (min-device-pixel-ratio: 1.3), (min-resolution: 1.3dppx) {
+  .landing-page .computer-hero-img {
+    background-image: url("../images/computer-hero-img@2x.png");
+    background-size: 960px 552px;
+    background-repeat: no-repeat;
+    width: 960px;
+    height: 552px;
+    display: block;
+  }
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .landing-page .computer-hero-img {
+    display: none;
+  }
+}
+.landing-page h2 {
+  font-size: 3em;
+  font-weight: 300;
+  padding: 0 3em;
+  top: 10%;
+  position: relative;
   text-align: center;
-  margin-bottom: 3em;
+  max-width: 950px;
+  margin: 0 auto;
 }
-.landing-page .content .hero-info .pure-u-1 {
-  text-align: left;
-  margin-bottom: 2em;
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .landing-page h2 {
+    font-size: 1.5em;
+    padding: 0 1em;
+  }
 }
-.landing-page .content .hero-info h2 {
-  font-weight: 600;
-  margin: 0.5em 0 0.67em 0;
-  padding: 0;
-  font-size: 1.4em;
-  text-transform: uppercase;
+.landing-page h2 strong {
+  font-weight: 400;
 }
-.landing-page .content .hero-info p {
-  font-size: 1.25em;
+.landing-page .content-section {
+  max-width: 950px;
+  margin: 0 auto;
+}
+.landing-page .content-section p.small {
+  margin: 0 0 2em 0;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .landing-page .content-section p.small {
+    padding: 1em 2em;
+  }
+}
+.feature-list {
+  padding: 2em 0 0 0;
+  margin: 0;
+  border-top: 1px dashed #bbb;
+}
+.feature-list .feature-content {
+  text-align: center;
+  padding: 2em;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .feature-list .feature-content {
+    padding: 1em 2em;
+  }
+}
+.feature-list .feature-content h3 {
+  font-size: 2em;
+  line-height: 1em;
+  font-weight: 300;
+  margin: 0.5em 0;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .feature-list .feature-content h3 {
+    font-size: 1.5em;
+  }
+}
+.feature-list .feature-content p {
+  font-size: 1.5em;
   line-height: 1.5em;
-  padding: 0 1.5em;
+  margin: 0 0 2em 0;
 }
-.landing-page .content .hero-info p.small {
-  font-size: 0.95em;
-  line-height: 1.2em;
-  margin-top: 0.1em;
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .feature-list .feature-content p {
+    margin: 0 0 1em 0;
+    font-size: 1.2em;
+    line-height: 1.4em;
+  }
 }
-.landing-page .content .hero-info .badge {
+.feature-list .feature-content p strong {
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+.feature-list .feature-content .badge {
   background: #037bff;
   color: #fff;
   display: inline-block;
   font-weight: 600;
   font-size: 0.95em;
-  margin: 0 auto;
+  margin: 0.25em auto 1em auto;
   text-transform: uppercase;
   padding: 0.25em 1.25em;
-  border-radius: 3px;
+  border-radius: 6px;
 }
-.landing-page .content .hero-info .hero-icon {
-  display: block;
-  width: 48px;
-  height: 48px;
-  color: #037bff;
-  font-size: 48px;
+.feature-list .hero-icon {
+  display: inline-block;
+  font-size: 60px;
+  line-height: 60px;
   margin: 0 auto;
+  color: #037bff;
   text-align: center;
 }
 .error-404 {
@@ -2932,11 +3085,12 @@ html,
 body {
   color: #34495e;
   background: #fff;
-  font: 12px 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font: 12px 'Roboto', Helvetica, Arial, sans-serif;
   padding: 0;
   margin: 0;
-  height: 100%;
-  min-height: 100%;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }

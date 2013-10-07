@@ -46,13 +46,11 @@ define(function(require) {
                 success: function(data) {
                     NProgress.start();
                     window.localStorage.publicationsUserId = data._id;
-                    ui.fadeOut(landingPage.$el, function() {
-                        NProgress.done();
-                        landingPage.remove();
-                        view.userDidAuthenticate(new User.Model(data));
-                        $('#sign-in-name').val('');
-                        $('#sign-in-password').val('');
-                    });
+                    NProgress.done();
+                    landingPage.remove();
+                    view.userDidAuthenticate(new User.Model(data));
+                    $('#sign-in-name').val('');
+                    $('#sign-in-password').val('');
                 },
                 error: function() {
                     ui.shakeAnimation(signInForm);
@@ -68,7 +66,6 @@ define(function(require) {
 
             NProgress.start();
             amplify.request('app#sign-out', {}, function(data) {
-                view.$el.append(landingPage.render().el);
                 window.localStorage.publicationsUserId = null;
 
                 ui.fadeOut(view.authNavbarControls, function() {
@@ -76,7 +73,7 @@ define(function(require) {
                 });
 
                 ui.fadeOut(documentLibrary.$el, function() {
-                    ui.fadeIn(landingPage.$el);
+                    view.showLandingPage();
                     documentLibrary.remove();
                     NProgress.done();
                 });
@@ -121,6 +118,7 @@ define(function(require) {
             window.localStorage.publicationsUserId = null;
             view.$el.append(view.subviews.landingPage.render().el);
             ui.fadeIn(view.unauthNavbarControls);
+            window.document.title = 'Publications';
         },
 
         render: function() {
