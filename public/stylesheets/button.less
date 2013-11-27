@@ -15,43 +15,26 @@
     background: transparent;
     border: none;
     text-align: left;
-    padding: 0;
-    color: #037bff;
-    position: relative;
-    font-size: 1.5em;
+    width: 16px; height: 16px;
 
-    &:disabled {
-        color: #ccc;
-
-        &:hover {
-            color: #ccc;
-        }
-
-        &:active {
-            top: 0;
-        }
+    &#move-backward-btn {
+        background: url(../images/navigate-up.svg) no-repeat;
+        background-size: 16px;
     }
 
-    &:hover {
-        color: darken(#037bff, 8%);
-    }
-
-    &:active {
-        top: 1px;
-    }
-
-    &:focus {
-        outline: none;
+    &#move-forward-btn {
+        background: url(../images/navigate-down.svg) no-repeat;
+        background-size: 16px;
     }
 }
 
 .btn {
     -webkit-font-smoothing: antialiased;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     border-radius: 2px;
     box-sizing: border-box;
-    color: #037bff;
+    color: #1d77ef;
     cursor: pointer;
     display: inline-block;
     font-size: 1.2em;
@@ -64,8 +47,8 @@
     white-space: nowrap;
     zoom: 1;
     outline: none;
-    .animation(all, 0.25s);
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    margin: 0;
 
     &.small {
         font-size: 12px;
@@ -76,13 +59,14 @@
     }
 
     &:hover {
-        background: #037bff;
+        border-color: #1d77ef;
+        background: #1d77ef;
         color: #fff;
     }
 
     &:active {
-        border-color: darken(#037bff, 8%);
-        background: darken(#037bff, 8%);
+        border-color: darken(#1d77ef, 10%);
+        background: darken(#1d77ef, 10%);
         color: #fff;
     }
 
@@ -90,7 +74,7 @@
         color: #ddd;
 
         &:hover, &:active {
-            background: transparent;
+            border-color: transparent;
             color: #ddd;
         }
     }
@@ -113,18 +97,20 @@ input[type="color"] {
     -webkit-font-smoothing: antialiased;
     background: transparent;
     border: none;
-    border-bottom: 1px solid #e5e5e9;
+    border-bottom: 1px solid #ccc;
     box-sizing: border-box;
+    box-shadow: none;
     color: @copy;
     display: inline-block;
     line-height: normal;
     font-size: 1.2em;
     font-weight: 400;
     line-height: 1.3em;
-    padding: 0.2em 0;
+    padding: 0.2em;
     vertical-align: baseline;
     zoom: 1;
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    margin: 0;
 
     &.invalid {
         border-color: #e74c3c;
@@ -138,6 +124,10 @@ input[type="color"] {
         background-color: transparent !important;
         background: transparent !important;
         color: @copy !important;
+    }
+
+    &::-moz-placeholder {
+        padding: 0;
     }
 
     &:focus {

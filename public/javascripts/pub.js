@@ -44,9 +44,7 @@ define(function(require) {
                     password: $('#sign-in-password').val()
                 },
                 success: function(data) {
-                    NProgress.start();
                     window.localStorage.publicationsUserId = data._id;
-                    NProgress.done();
                     landingPage.remove();
                     view.userDidAuthenticate(new User.Model(data));
                     $('#sign-in-name').val('');
@@ -64,18 +62,13 @@ define(function(require) {
                 landingPage = view.subviews.landingPage,
                 documentLibrary = view.subviews.documentLibrary;
 
-            NProgress.start();
             amplify.request('app#sign-out', {}, function(data) {
                 window.localStorage.publicationsUserId = null;
 
-                ui.fadeOut(view.authNavbarControls, function() {
-                    ui.fadeIn(view.unauthNavbarControls);
-                });
-
+                ui.fadeOut(view.authNavbarControls);
                 ui.fadeOut(documentLibrary.$el, function() {
                     view.showLandingPage();
                     documentLibrary.remove();
-                    NProgress.done();
                 });
             });
         },
@@ -107,8 +100,7 @@ define(function(require) {
             view.$el.append(documentLibrary.render().el);
             view.subviews.documentLibrary = documentLibrary;
 
-            ui.fadeOut(view.unauthNavbarControls, function() {
-                ui.fadeIn(view.authNavbarControls);
+            ui.fadeIn(view.authNavbarControls, function() {
                 documentLibrary.$('.source-list').css({ left: '0' });
             });
         },
@@ -117,15 +109,13 @@ define(function(require) {
             var view = this;
             window.localStorage.publicationsUserId = null;
             view.$el.append(view.subviews.landingPage.render().el);
-            ui.fadeIn(view.unauthNavbarControls);
             window.document.title = 'Publications';
         },
 
         render: function() {
             var view = this;
             view.$el.html(view.template());
-            view.authNavbarControls = view.$('.controls .auth');
-            view.unauthNavbarControls = view.$('.controls .unauth');
+            view.authNavbarControls = view.$('.pub-nav');
 
             var userId = window.localStorage.publicationsUserId;
 
@@ -148,6 +138,10 @@ define(function(require) {
         tagName: 'div',
         className: 'landing-page',
         template: _.template(require('text!../templates/pub-landing-page.html')),
+
+        initialize: function() {
+            _.bindAll(this);
+        },
 
         render: function() {
             var view = this;

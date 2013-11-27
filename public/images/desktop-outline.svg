@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="675px" height="530px" viewBox="0 0 675 530" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>desktop-outline</title>
+    <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="mac" sketch:type="MSLayerGroup" stroke="#34495E">
+            <g id="iMac" sketch:type="MSShapeGroup">
+                <g id="stand" transform="translate(234.000000, 467.000000)">
+                    <path d="M1,57 C1,57 14.1064226,51.8189976 22.128434,42.7314725 C30.1504452,33.6439474 30.1504452,0 30.1504452,0 L99.5,0 L170.992189,0 C170.992189,0 170.992189,33.6439474 179.250141,42.7314725 C187.508094,51.8189976 201,57 201,57 L99.5,57 L1,57 Z" id="Rectangle-6"></path>
+                    <rect id="Rectangle-6" x="0" y="56" width="202" height="7" rx="40"></rect>
+                </g>
+                <rect id="screen-border" x="0" y="0" width="675" height="408" rx="10"></rect>
+                <path d="M-2.16761054e-16,405 L-2.16761054e-16,456.990213 C-2.16761054e-16,463.07075 4.92667981,468 10.9966801,468 L664.00332,468 C670.076619,468 675,463.082737 675,456.990213 L675,405 L-2.16761054e-16,405 Z" id="Rectangle-17"></path>
+                <rect id="screen" x="32" y="29" width="612" height="347"></rect>
+                <path d="M337.5,21 C339.985281,21 342,18.9852815 342,16.5 C342,14.0147185 339.985281,12 337.5,12 C335.014719,12 333,14.0147185 333,16.5 C333,18.9852815 335.014719,21 337.5,21 Z" id="camera"></path>
+            </g>
+        </g>
+    </g>
+</svg>

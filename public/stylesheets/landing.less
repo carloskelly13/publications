@@ -1,220 +1,234 @@
-@import url(macbook.less);
 
 .landing-page {
-    background: #fff;
-    bottom: 0; top: @navbar-height;
-    display: block;
-    height: auto;
-    position: absolute;
+    background: #037bff;
     width: 100%;
-    overflow-y: scroll;
-    padding: 0;
+    overflow-x: hidden;
+    color: #fff;
 
-    .landing-hero {
-        margin: 6em 0;
+    .hero-section {
+        padding: 0;
+        border: none;
+        color: #fff;
+        height: 260px;
+        background: darken(#037bff, 10%);
 
-        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-            margin: 2em 0;
-        }
-
-        .mobile-info {
-            display: none;
+        h1, h2 {
+            font-family: 'Oswald', Helvetica, sans-serif;
+            font-weight: 400;
+            padding: 0;
+            line-height: 1.25em;
+            position: relative;
+            text-align: center;
+            max-width: 950px;
+            margin: 0 auto;
+            text-transform: uppercase;
 
             @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+                font-size: 1.5em;
+                padding: 0 1em;
+            }
+        }
+
+        h1 {
+            font-size: 7em;
+            margin: 0 auto 0.2em auto;
+            padding-top: 40px;
+        }
+
+        h2 {
+            font-size: 3em;
+            font-weight: 400;
+        }
+    }
+
+    .auth-flexcontainer {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: -moz-flexbox;
+        display: flex;
+        -webkit-justify-content: flex-start;
+        -ms-justify-content: flex-start;
+        -moz-justify-content: flex-start;
+       justify-content: flex-start;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        -moz-flex-direction: row;
+        flex-direction: row;
+        background: #fff;
+        width: 100%;
+
+        .big-flexbox, .small-flexbox {
+            padding: 2em;
+            vertical-align: middle;
+            text-align: center;
+
+            .btn {
+                padding: 0.5em 0;
+                border: 1px solid #ccc;
+
+                &:hover {
+                    border-color: #1d77ef;
+                }
+
+                &:active {
+                    border-color: #1d77ef;
+                }
+            }
+        }
+
+        .big-flexbox {
+            -webkit-flex: 3;
+            -ms-flex: 3;
+            -moz-flex: 3;
+            flex: 3;
+
+
+            .sign-in-form {
+                input, .btn {
+                    float: left;
+                }
+
+                #sign-in-name,
+                #sign-in-password,
+                #sign-in-btn {
+                    border-radius: 0;
+                    padding: 0.5em 0;
+                    box-sizing: border-box;
+                    width: 40%;
+                    text-align: center;
+                }
+
+                #sign-in-name {
+                    border: 1px solid #ccc;
+                    border-radius: 2px 0 0 2px;
+                }
+
+                #sign-in-password {
+                    border-top: 1px solid #ccc;
+                    border-bottom: 1px solid #ccc;
+                }
+
+                #sign-in-btn {
+                    border-radius: 0 2px 2px 0;
+                    width: 19%;
+                }
+
+                &:after {
+                    content: ' ';
+                    clear: both;
+                    display: block;
+                }
+            }
+
+        }
+        .small-flexbox {
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            -moz-flex: 1;
+            flex: 1;
+
+            #create-account-modal-btn {
+                width: 100%;
+            }
+        }
+    }
+
+    .content-group {
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+        z-index: 1;
+        position: relative;
+
+        .copy-content, .picture-content {
+            vertical-align: top;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .copy-content {
+            width: 49%;
+            padding: 4em 5%;
+
+            h1 {
+                font-size: 3em;
+                font-weight: 300;
+            }
+
+            p {
+                font-size: 1.9em;
+                line-height: 1.5em;
+                font-weight: 300;
+            }
+        }
+
+        .picture-content {
+            width: 40%;
+            padding: 4em 0;
+        }
+
+
+        &.second-group {
+            background: darken(#037bff, 10%);
+        }
+
+        &.third-group {
+            background: #fff;
+            color: @copy;
+
+            .copy-content {
+                width: 69%;
+            }
+
+            .picture-content {
                 text-align: center;
-                padding: 2em 2em 1em 2em;
-                display: block;
-                font-size: 1.2em;
-                font-weight: 400;
-                
-                .lil-mac-icon {
-                    font-size: 2.2em;
+                width: 20%;
+            }
+
+            a {
+                color: darken(#037bff, 10%);
+                text-decoration: none;
+
+                &:hover, &:active {
+                    text-decoration: underline;
                 }
             }
         }
     }
 
-    .pub-logo-big {
-        .retina-picture('pub-logo-175-201', 175px, 201px, block);
-        margin: 2em auto;
-
-        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-            .retina-picture('pub-logo-92-106', 92px, 106px, block);
-            margin: 1em auto;
-        }
+    .computer-outline {
+        @width: 900px;
+        background: url(../images/computer-outline.svg) no-repeat;
+        width: @width; height: @width / 1.7227;
+        background-size: 100%;
+        float: left;
     }
 
-    .computer-hero-img {
-        .retina-picture('computer-hero-img', 960px, 552px, block);
-        margin: 1em auto 4em auto;
-
-        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-            display: none;
-        }
+    .tablet-outline {
+        @width: 500px;
+        background: url(../images/tablet-outline.svg) no-repeat;
+        width: @width; height: @width / 0.76;
+        background-size: 100%;
+        float: right;
     }
 
-    h2 {
-        font-size: 3em;
+    .tech-outline {
+        @width: 135px;
+        background: url(../images/tech-outline.svg) no-repeat;
+        width: @width; height: @width / 0.3708;
+        background-size: 100%;
+        float: left;
+    }
+}
+
+.footer {
+    border-top: 1px solid #ccc;
+    background: #fff;
+    .content {
+        padding: 2em 5%;
+        color: @copy;
+        font-size: 1.4em;
+        text-align: left;
         font-weight: 300;
-        padding: 0 3em;
-        top: 10%;
-        position: relative;
-        text-align: center;
-        max-width: 950px;
-        margin: 0 auto;
-
-        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-            font-size: 1.5em;
-            padding: 0 1em;
-        }
-
-        strong {
-            font-weight: 400;
-        }
-    }
-
-    .content-section {
-        max-width: 950px;
-        margin: 0 auto;
-
-        p.small {
-            margin: 0 0 2em 0;
-
-            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-                padding: 1em 2em;
-            }
-        }
-    }
-}
-
-.feature-list {
-    padding: 2em 0 0 0;
-    margin: 0;
-    border-top: 1px dashed #bbb;
-
-    .feature-content {
-        text-align: center;
-        padding: 2em;
-
-        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-            padding: 1em 2em;
-        }
-
-        h3 {
-            font-size: 2em;
-            line-height: 1em;
-            font-weight: 300;
-            margin: 0.5em 0;
-
-            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-                font-size: 1.5em;
-            }
-        }
-
-        p {
-            font-size: 1.5em;
-            line-height: 1.5em;
-            margin: 0 0 2em 0;
-
-            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-                margin: 0 0 1em 0;
-                font-size: 1.2em;
-                line-height: 1.4em;
-            }
-
-            strong {
-                font-weight: 600;
-                letter-spacing: -1px;
-            }
-        }
-
-        .badge {
-            background: #037bff;
-            color: #fff;
-            display: inline-block;
-            font-weight: 600;
-            font-size: 0.95em;
-            margin: 0.25em auto 1em auto;
-            text-transform: uppercase;
-            padding: 0.25em 1.25em;
-            border-radius: 6px;
-        }
-
-        // &.green {
-        //     .hero-icon {
-        //         color: #00ff22;
-        //     }
-        // }
-
-        // &.blue {
-        //     .hero-icon {
-        //         color: #00a7ff;
-        //     }
-        // }
-
-        // &.yellow {
-        //     .hero-icon {
-        //         color: #ffdf00;
-        //     }
-        // }
-
-        // &.orange {
-        //     .hero-icon {
-        //         color: #ff7400;
-        //     }
-        // }
-
-        // &.red {
-        //     .hero-icon {
-        //         color: #ff003b;
-        //     }
-        // }
-
-        // &.purple {
-        //     .hero-icon {
-        //         color: #b000ff;
-        //     }
-        // }
-    }
-
-    .hero-icon {
-        display: inline-block;
-        font-size: 60px;
-        line-height: 60px;
-        margin: 0 auto;
-        color: #037bff;
-        text-align: center;
-    }
-}
-
-.error-404 {
-    display: block;
-    width: 300px;
-    margin: -150px 0 0 -150px;
-    height: 250px;
-    top: 50%; left: 50%;
-    position: absolute;
-
-
-    .error-content {
-        text-align: center;
-
-        h2 {
-            font-size: 1.8em;
-            font-weight: 400;
-        }
-
-        .btn-container {
-            position: absolute;
-            bottom: 0;
-            border-top: 1px solid #bbb;
-            padding-top: 1em;
-            width: 100%;
-        }
-    }
-
-    .pub-logo {
-        .retina-picture('pub-logo-92-106', 92px, 106px, inline-block);
-        margin: 0 auto;
     }
 }

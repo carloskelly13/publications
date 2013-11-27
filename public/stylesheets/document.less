@@ -9,7 +9,7 @@
 @footer-height: 0;
 
 .pub-nav {
-    background: @background-gray;
+    background: #f5f5f5;
     box-shadow: 0 1px 0 0 hsla(0, 0%, 0%, 0.25);
     height: @navbar-height;
     margin: 0;
@@ -18,6 +18,7 @@
     width: 100%;
     z-index: 5;
     top: 0;
+    display: none;
 
     .pub-logo {
         .retina-picture('pub-logo-152-21', 152px, 21px, inline-block);
@@ -25,34 +26,22 @@
     }
 
     .pub-wordmark {
-        font-weight: 300;
-        text-transform: uppercase;
         line-height: @navbar-height;
         display: inline-block;
         font-size: 1.5em;
         margin-left: 15px;
-        letter-spacing: -1px;
+        font-family: 'Oswald', Helvetica, sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: @copy;
     }
 
     .controls {
         position: absolute;
         right: 10px;
-        top: 10px;
-
-        @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-            display: none;
-        }
-
-        .auth, .unauth {
-            display: none;
-        }
-
-        .unauth {
-            .sign-in-form {
-                display: inline-block;
-            }
-        }
+        top: 8px;
     }
+
 }
 
 
@@ -109,6 +98,7 @@
                 .description {
                     font-size: 1.1em;
                     font-weight: 400;
+                    font-family: 'Roboto Condensed', Helvetica, sans-serif;
                 }
             }
         }
@@ -165,8 +155,9 @@
 .axis text {
     fill: #34495e;
     font-size: 12px;
+    font-family: 'Roboto Condensed', Helvetica, sans-serif;
     font-weight: 400;
-    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
 }
 
 .axis line,
