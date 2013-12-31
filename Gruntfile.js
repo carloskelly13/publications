@@ -24,7 +24,7 @@ module.exports = function(grunt) {
                 files: {
                     "public/stylesheets/style.css": "public/stylesheets/style.less"
                 }
-            },
+            }
         },
 
         targethtml: {
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
                     out: "public/javascripts/dist/app.min.js"
                 }
             }
-        },
+        }
     });
 
     //Load Plugins
