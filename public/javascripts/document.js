@@ -395,17 +395,18 @@ define(function(require) {
                 .attr('height', height + 40)
                 .append('g');
 
-            svg.append('g')
-                .attr('class', 'shape-group');
-
             svg.append('rect')
                 .attr('class', 'document-svg-frame')
                 .attr('width', width)
                 .attr('height', height)
                 .attr('x', 40)
                 .attr('y', 20)
-                .style('fill', 'transparent')
+                .style('fill', '#fff')
                 .on('click', view.documentSVGClicked);
+
+            svg.append('g')
+                .attr('class', 'shape-group');
+
 
             view.svg = svg;
             view.drawDocumentFrameWithAxisAndGrid();

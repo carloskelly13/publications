@@ -1918,21 +1918,126 @@ stretchRight
   vertical-align: baseline;
   width: 1px;
 }
+.btn-grp {
+  display: inline-block;
+  text-align: center;
+}
+.btn-grp.first-grp {
+  margin-right: 10px;
+}
+.btn-grp .btn {
+  border: 1px #ccc solid;
+  border-right: none;
+  border-radius: 0;
+  margin: 0;
+  float: left;
+  line-height: 1.75em;
+}
+.btn-grp .btn:first-child {
+  border-radius: 2px 0 0 2px;
+}
+.btn-grp .btn:last-child {
+  border-right: 1px #ccc solid;
+  border-radius: 0 2px 2px 0;
+}
+.btn-grp .btn:last-child:hover {
+  border-right-color: #1d77ef;
+}
+.btn-grp .btn:last-child:active {
+  border-right-color: #0e5fcb;
+}
+.btn-grp .btn:disabled {
+  color: #ddd;
+}
+.btn-grp .btn:disabled:hover,
+.btn-grp .btn:disabled:active {
+  background: transparent;
+  border-color: #ccc;
+  color: #ddd;
+}
+.btn-grp:after {
+  content: ' ';
+  clear: both;
+  display: block;
+}
 .icon-btn {
   display: inline-block;
   background: transparent;
   border: none;
   text-align: left;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }
 .icon-btn#move-backward-btn {
   background: url(../images/navigate-up.svg) no-repeat;
   background-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 .icon-btn#move-forward-btn {
   background: url(../images/navigate-down.svg) no-repeat;
   background-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+.svg-btn {
+  display: inline-block;
+  background: transparent;
+  border: none;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  position: relative;
+  background: url(../images/icon-sprite-map.svg) no-repeat;
+}
+.svg-btn.in-grp {
+  margin: 0 6px;
+}
+.svg-btn.plus-btn {
+  background-position: 0 0;
+}
+.svg-btn.plus-btn:hover {
+  background-position: -21px 0;
+}
+.svg-btn.plus-btn:active {
+  background-position: -42px 0;
+}
+.svg-btn.redirect-btn {
+  background-position: 0 -21px;
+}
+.svg-btn.redirect-btn:hover {
+  background-position: -21px -21px;
+}
+.svg-btn.redirect-btn:active {
+  background-position: -42px -21px;
+}
+.svg-btn.delete-btn {
+  background-position: 0 -42px;
+}
+.svg-btn.delete-btn:hover {
+  background-position: -21px -42px;
+}
+.svg-btn.delete-btn:active {
+  background-position: -42px -42px;
+}
+.svg-btn.edit-btn {
+  background-position: 0 -63px;
+}
+.svg-btn.edit-btn:hover {
+  background-position: -21px -63px;
+}
+.svg-btn.edit-btn:active {
+  background-position: -42px -63px;
+}
+.svg-btn.download-btn {
+  background-position: 0 -84px;
+}
+.svg-btn.download-btn:hover {
+  background-position: -21px -84px;
+}
+.svg-btn.download-btn:active {
+  background-position: -42px -84px;
 }
 .btn {
   -webkit-font-smoothing: antialiased;
@@ -1940,13 +2045,14 @@ stretchRight
   border: 1px solid transparent;
   border-radius: 2px;
   box-sizing: border-box;
-  color: #1d77ef;
+  color: #34495e;
   cursor: pointer;
   display: inline-block;
   font-size: 1.2em;
   font-weight: 500;
   line-height: 1.35em;
-  padding: 0.2em 1.35em;
+  padding: 0.2em 1.5em;
+  position: relative;
   text-align: center;
   text-decoration: none;
   vertical-align: baseline;
@@ -1977,6 +2083,7 @@ stretchRight
 }
 .btn:disabled:hover,
 .btn:disabled:active {
+  background: transparent;
   border-color: transparent;
   color: #ddd;
 }
@@ -2376,7 +2483,7 @@ fieldset.inline input:last-child {
 * Michael Kelly and Carlos Paelinck
 */
 .pub-nav {
-  background: #f5f5f5;
+  background: #fff;
   box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.25);
   height: 41px;
   margin: 0;
@@ -2409,7 +2516,7 @@ fieldset.inline input:last-child {
 .pub-nav .pub-wordmark {
   line-height: 41px;
   display: inline-block;
-  font-size: 1.5em;
+  font-size: 1.4em;
   margin-left: 15px;
   font-family: 'Oswald', Helvetica, sans-serif;
   font-weight: 400;
@@ -2418,8 +2525,18 @@ fieldset.inline input:last-child {
 }
 .pub-nav .controls {
   position: absolute;
-  right: 10px;
-  top: 8px;
+  right: 0;
+  top: 0;
+}
+.pub-nav .controls .btn {
+  border-radius: 0;
+  border-top: none;
+  border-bottom: none;
+  border-right: none;
+  line-height: 41px;
+  height: 41px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .document-library {
   height: inherit;
@@ -2428,6 +2545,7 @@ fieldset.inline input:last-child {
   width: 100%;
   z-index: 2;
   top: 0;
+  background: #f5f5f5;
 }
 .document-library .full-height-content {
   bottom: 0;
@@ -2476,7 +2594,6 @@ fieldset.inline input:last-child {
 .document-library .full-height-content.source-list .document-view-item .description {
   font-size: 1.1em;
   font-weight: 400;
-  font-family: 'Roboto Condensed', Helvetica, sans-serif;
 }
 .document-library .full-height-content.document-editor {
   right: 0;
@@ -2492,25 +2609,26 @@ fieldset.inline input:last-child {
 }
 .document-library .full-height-content.document-editor .header .document-name {
   color: #34495e;
-  border-radius: 4px;
   font-size: 2em;
   font-weight: 300;
   margin: 0.7em 0 0;
   text-align: center;
-  border-bottom: none;
   padding: 0.25em;
-  width: 33%;
+  width: 60%;
+  background: transparent;
+  border: none;
 }
 .document-library .full-height-content.document-editor .header .document-name:hover,
 .document-library .full-height-content.document-editor .header .document-name:focus {
-  box-shadow: inset 0 0 0 1px #037bff;
+  color: #037bff;
 }
 .document-library .full-height-content.document-editor .header .document-name:disabled,
 .document-library .full-height-content.document-editor .header .document-name:disabled:hover {
   box-shadow: none;
   color: #34495e;
   -webkit-text-fill-color: #34495e;
-  background: #fff;
+  border-color: transparent;
+  background: transparent;
 }
 .document-library .full-height-content.document-editor .header .controls {
   padding: 0.67em 3em 1em 3em;
@@ -2572,6 +2690,7 @@ footer #about-btn {
   transition: right 0.4s ease;
   overflow-y: scroll;
   overflow-x: hidden;
+  background: #fff;
 }
 .inspector-main .color-picker .inspector-color-input {
   width: 65%;
@@ -2744,9 +2863,8 @@ footer #about-btn {
 .landing-page .hero-section {
   padding: 0;
   border: none;
-  color: #fff;
-  height: 260px;
-  background: #0063cf;
+  color: #34495e;
+  background: #fff;
 }
 .landing-page .hero-section h1,
 .landing-page .hero-section h2 {
@@ -2760,21 +2878,29 @@ footer #about-btn {
   margin: 0 auto;
   text-transform: uppercase;
 }
-@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-  .landing-page .hero-section h1,
-  .landing-page .hero-section h2 {
-    font-size: 1.5em;
-    padding: 0 1em;
-  }
-}
 .landing-page .hero-section h1 {
   font-size: 7em;
   margin: 0 auto 0.2em auto;
-  padding-top: 40px;
+  padding: 50px 0 0 0;
 }
 .landing-page .hero-section h2 {
   font-size: 3em;
   font-weight: 400;
+  padding: 0 0 90px 0;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 800px) {
+  .landing-page .hero-section h1,
+  .landing-page .hero-section h2 {
+    text-align: left;
+  }
+  .landing-page .hero-section h1 {
+    font-size: 2.5em;
+    padding: 25px 20px 0 20px;
+  }
+  .landing-page .hero-section h2 {
+    font-size: 1.25em;
+    padding: 0 20px 30px 20px;
+  }
 }
 .landing-page .auth-flexcontainer {
   display: -webkit-flex;
@@ -2791,6 +2917,11 @@ footer #about-btn {
   flex-direction: row;
   background: #fff;
   width: 100%;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 800px) {
+  .landing-page .auth-flexcontainer {
+    display: none;
+  }
 }
 .landing-page .auth-flexcontainer .big-flexbox,
 .landing-page .auth-flexcontainer .small-flexbox {
@@ -2908,6 +3039,24 @@ footer #about-btn {
 .landing-page .content-group.third-group a:active {
   text-decoration: underline;
 }
+@media only screen and (min-device-width: 320px) and (max-device-width: 800px) {
+  .landing-page .content-group .copy-content {
+    width: auto;
+    padding: 1em 20px;
+  }
+  .landing-page .content-group .copy-content h1 {
+    font-size: 1.75em;
+  }
+  .landing-page .content-group .copy-content p {
+    font-size: 1.25em;
+  }
+  .landing-page .content-group.third-group .copy-content {
+    width: auto;
+  }
+  .landing-page .content-group .picture-content {
+    display: none;
+  }
+}
 .landing-page .computer-outline {
   background: url(../images/computer-outline.svg) no-repeat;
   width: 900px;
@@ -2939,6 +3088,12 @@ footer #about-btn {
   font-size: 1.4em;
   text-align: left;
   font-weight: 300;
+}
+@media only screen and (min-device-width: 320px) and (max-device-width: 800px) {
+  .footer .content {
+    padding: 1em 20px;
+    font-size: 1.2em;
+  }
 }
 /**
 * Publications JS App
@@ -2997,9 +3152,9 @@ section {
 }
 ::selection {
   background: #ff2a68;
-  color: #810025;
+  color: #fff;
 }
 ::-moz-selection {
   background: #ff2a68;
-  color: #810025;
+  color: #fff;
 }

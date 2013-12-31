@@ -10,21 +10,149 @@
     width: 1px;
 }
 
+.btn-grp {
+    display: inline-block;
+    text-align: center;
+    
+    &.first-grp {
+        margin-right: 10px;
+    }
+
+    .btn {
+        border: 1px #ccc solid;
+        border-right: none;
+        border-radius: 0;
+        margin: 0;
+        float: left;
+        line-height: 1.75em;
+        
+        &:first-child {
+            border-radius: 2px 0 0 2px;
+        }
+        
+        &:last-child {
+            border-right: 1px #ccc solid;
+            border-radius: 0 2px 2px 0;
+            
+            &:hover {
+                border-right-color: #1d77ef;
+            }
+            
+            &:active {
+                border-right-color: darken(#1d77ef, 10%);
+            }
+        }
+        
+        &:disabled {
+            color: #ddd;
+        
+            &:hover, &:active {
+                background: transparent;
+                border-color: #ccc;
+                color: #ddd;
+            }
+        }
+    }
+    
+    &:after {
+        content: ' ';
+        clear: both;
+        display: block;
+    }
+}
+
 .icon-btn {
     display: inline-block;
     background: transparent;
     border: none;
     text-align: left;
-    width: 16px; height: 16px;
+    width: 24px; height: 24px;
 
     &#move-backward-btn {
         background: url(../images/navigate-up.svg) no-repeat;
         background-size: 16px;
+        width: 16px; height: 16px;
     }
 
     &#move-forward-btn {
         background: url(../images/navigate-down.svg) no-repeat;
         background-size: 16px;
+        width: 16px; height: 16px;
+    }
+}
+
+.svg-btn {
+    display: inline-block;
+    background: transparent;
+    border: none;
+    text-align: center;
+    width: 20px; height: 20px;
+    padding: 0;
+    position: relative;
+    background: url(../images/icon-sprite-map.svg) no-repeat;
+
+    &.in-grp {
+        margin: 0 6px;
+    }
+
+    &.plus-btn {
+        background-position: 0 0;
+
+        &:hover {
+            background-position: -21px 0;
+        }
+
+        &:active {
+            background-position: -42px 0;
+        }
+    }
+
+    &.redirect-btn {
+        background-position: 0 -21px;
+
+        &:hover {
+            background-position: -21px -21px;
+        }
+
+        &:active {
+            background-position: -42px -21px;
+        }
+    }
+
+    &.delete-btn {
+        background-position: 0 -42px;
+
+        &:hover {
+            background-position: -21px -42px;
+        }
+
+        &:active {
+            background-position: -42px -42px;
+        }
+    }
+
+    &.edit-btn {
+        background-position: 0 -63px;
+
+        &:hover {
+            background-position: -21px -63px;
+        }
+
+        &:active {
+            background-position: -42px -63px;
+        }
+    }
+
+    &.download-btn {
+        background-position: 0 -84px;
+
+        &:hover {
+            background-position: -21px -84px;
+        }
+
+        &:active {
+            background-position: -42px -84px;
+        }
     }
 }
 
@@ -34,13 +162,14 @@
     border: 1px solid transparent;
     border-radius: 2px;
     box-sizing: border-box;
-    color: #1d77ef;
+    color: @copy;
     cursor: pointer;
     display: inline-block;
     font-size: 1.2em;
     font-weight: 500;
     line-height: 1.35em;
-    padding: 0.2em 1.35em;
+    padding: 0.2em 1.5em;
+    position: relative;
     text-align: center;
     text-decoration: none;
     vertical-align: baseline;
@@ -74,6 +203,7 @@
         color: #ddd;
 
         &:hover, &:active {
+            background: transparent;
             border-color: transparent;
             color: #ddd;
         }

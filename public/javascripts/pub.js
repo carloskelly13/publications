@@ -11,7 +11,6 @@ define(function(require) {
         amplify = require('amplify'),
         ui = require('ui'),
         Backbone = require('backbone'),
-        NProgress = require('nprogress'),
         appModule = require('app-module');
 
     var Pub = appModule.module(),
@@ -59,10 +58,9 @@ define(function(require) {
 
         signOutButtonClicked: function() {
             var view = this,
-                landingPage = view.subviews.landingPage,
                 documentLibrary = view.subviews.documentLibrary;
 
-            amplify.request('app#sign-out', {}, function(data) {
+            amplify.request('app#sign-out', {}, function() {
                 window.localStorage.publicationsUserId = null;
 
                 ui.fadeOut(view.authNavbarControls);
@@ -138,7 +136,7 @@ define(function(require) {
         tagName: 'div',
         className: 'landing-page',
         template: _.template(require('text!../templates/pub-landing-page.html')),
-
+   
         initialize: function() {
             _.bindAll(this);
         },

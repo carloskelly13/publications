@@ -8,9 +8,8 @@
     .hero-section {
         padding: 0;
         border: none;
-        color: #fff;
-        height: 260px;
-        background: darken(#037bff, 10%);
+        color: @copy;
+        background: #fff;
 
         h1, h2 {
             font-family: 'Oswald', Helvetica, sans-serif;
@@ -22,22 +21,37 @@
             max-width: 950px;
             margin: 0 auto;
             text-transform: uppercase;
-
-            @media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
-                font-size: 1.5em;
-                padding: 0 1em;
-            }
         }
 
         h1 {
             font-size: 7em;
             margin: 0 auto 0.2em auto;
-            padding-top: 40px;
+            padding: 50px 0 0 0;
         }
 
         h2 {
             font-size: 3em;
             font-weight: 400;
+            padding: 0 0 90px 0;
+        }
+    }
+    
+    @media only screen and (min-device-width : 320px) and (max-device-width : 800px) {
+        .hero-section {
+        
+            h1, h2 {
+                text-align: left;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+                padding: 25px 20px 0 20px;
+            }
+            
+            h2 {
+                font-size: 1.25em;
+                padding: 0 20px 30px 20px;
+            }
         }
     }
 
@@ -56,6 +70,10 @@
         flex-direction: row;
         background: #fff;
         width: 100%;
+        
+        @media only screen and (min-device-width : 320px) and (max-device-width : 800px) {
+            display: none;
+        }
 
         .big-flexbox, .small-flexbox {
             padding: 2em;
@@ -194,6 +212,31 @@
                 }
             }
         }
+        
+        @media only screen and (min-device-width : 320px) and (max-device-width : 800px) {
+            .copy-content {
+                width: auto;
+                padding: 1em 20px;
+                
+                h1 {
+                    font-size: 1.75em;
+                }
+                
+                p {
+                    font-size: 1.25em;
+                }
+            }
+            
+            &.third-group {
+                .copy-content {
+                    width: auto;
+                }
+            }
+            
+            .picture-content {
+                display: none;
+            }
+        }
     }
 
     .computer-outline {
@@ -230,5 +273,12 @@
         font-size: 1.4em;
         text-align: left;
         font-weight: 300;
+    }
+    
+    @media only screen and (min-device-width : 320px) and (max-device-width : 800px) {
+        .content {
+            padding: 1em 20px;
+            font-size: 1.2em;
+        }
     }
 }

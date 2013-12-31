@@ -1,23 +1,29 @@
 <div class="header">
-    <input type="text" id="document-name" class="document-name" value="<%= name %>" disabled="true" placeholder="Document Name">
+    <input type="text" id="document-name" class="document-name" autocomplete="off" value="<%= name %>" disabled="true" placeholder="Document Name">
     <div class="controls">
         <div class="view-controls">
-            <button class="btn" type="button" id="doc-edit-btn">Edit</button>
-            <a class="btn" href="/document/<%= _id %>/pdf"download>PDF</a>
-            <button class="btn red" type="button" id="doc-delete-btn">Delete</button>
+            <div class="btn-grp">
+                <button class="btn" type="button" id="doc-edit-btn">Edit</button>
+                <a class="btn" href="/document/<%= _id %>/pdf"download>PDF</a>
+                <button class="btn" type="button" id="doc-delete-btn">Delete</button>
+            </div>
         </div>
         <div class="edit-controls">
             <div id="inspector-controls">
-                <button class="btn" type="button" data-action="add-shape" data-shape="1">Rectangle</button>
-                <button class="btn" type="button" data-action="add-shape" data-shape="2">Ellipse</button>
-<!--                 <button class="btn" type="button" data-action="add-shape" data-shape="3">Text</button>
- -->                <button class="btn contextual" type="button" disabled="true" data-action="delete">Delete</button>
-                <button class="btn" type="button" id="" data-action="copy">Copy</button>
-                <button class="btn contextual" type="button" disabled="true" data-action="cut">Cut</button>
-                <button class="btn contextual" type="button" disabled="true" data-action="paste">Paste</button>
+                <div class="btn-grp first-grp">
+                    <button class="btn" type="button" data-action="add-shape" data-shape="1">Rectangle</button>
+                    <button class="btn" type="button" data-action="add-shape" data-shape="2">Ellipse</button>
+                    <!--<button class="btn" type="button" data-action="add-shape" data-shape="3">Text</button>-->
+                    <button class="btn contextual" type="button" disabled="true" data-action="delete">Delete</button>
+                    <button class="btn" type="button" id="" data-action="copy">Copy</button>
+                    <button class="btn contextual" type="button" disabled="true" data-action="cut">Cut</button>
+                    <button class="btn contextual" type="button" disabled="true" data-action="paste">Paste</button>
+                </div>
             </div>
-            <button class="btn" type="button" id="save-edit-btn">Save</button>
-            <button class="btn" type="button" id="close-edit-btn">Close</button>
+            <div class="btn-grp">
+                <button class="btn" type="button" id="save-edit-btn">Save</button>
+                <button class="btn" type="button" id="close-edit-btn">Close</button>
+            </div>
         </div>
     </div>
 </div>
