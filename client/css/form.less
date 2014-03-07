@@ -1,0 +1,128 @@
+.form {
+  &.form-vertical {
+    .message {
+      width: 84%;
+      margin: 0 auto 1.5em auto;
+      text-align: center;
+    }
+
+    .fieldset-text {
+      margin: 0 0 1em 0;
+
+      label {
+        display: inline-block;
+        font-size: 14px;
+        margin: 0 2% 0 4%;
+        text-align: right;
+        width: 26%;
+      }
+
+      input {
+        width: 56%;
+      }
+
+      &:last-child, &:only-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.form-controls {
+  .rounded-corners(0 0 1px 1px);
+  .gradient(#f0f0f0, #fbfbfb);
+  border-top: 1px solid @line-color;
+  bottom: 0;
+  margin: 0;
+  position: absolute;
+  width: 100%;
+
+  .button {
+    float: right;
+  }
+}
+
+.button {
+  .rounded-corners(4px);
+  -webkit-font-smoothing: antialiased;
+  background: transparent;
+  border: 1px solid @line-color;
+  box-sizing: border-box;
+  color: #646464;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Clear Sans', Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 3px 20px 4px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  vertical-align: baseline;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  zoom: 1;
+  outline: none;
+  margin: 0;
+
+  &:hover {
+    .gradient(#e0e0e0, #efefef)
+  }
+
+  &:active {
+    .gradient(#d0d0d0, #dfdfdf)
+  }
+
+  &.button-toolbar {
+    .rounded-corners(0);
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    margin: 0;
+    height: @app-nav-height;
+    line-height: @app-nav-height;
+    padding: 0 20px;
+
+    &.button-icon {
+      padding: 0 10px;
+      font-size: 20px;
+      line-height: 18px;
+    }
+  }
+
+  &:disabled {
+    color: #ccc;
+    cursor: default;
+
+    &:hover, &:active {
+      background: transparent;
+      color: #ccc;
+    }
+  }
+}
+
+.input-text {
+  .rounded-corners(4px);
+  -webkit-font-smoothing: antialiased;
+  background: #fff;
+  border: 1px solid @line-color;
+  box-sizing: border-box;
+  color: @gray-color;
+  display: inline-block;
+  font-family: 'Clear Sans', Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 3px 4px 4px;
+  position: relative;
+  margin: 0;
+  text-align: left;
+  text-decoration: none;
+  text-rendering: optimizeLegibility;
+  vertical-align: baseline;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  zoom: 1;
+  outline: none;
+  margin: 0;
+}
