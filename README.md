@@ -1,6 +1,6 @@
 ### Publications
 
-Publications is a NodeJS-based page layout and screen design web application. It uses ExpressJS, BackboneJS, d3, MongooseJS, MongoDB, Grunt and Bower. It currently works in the latest versions of Safari, Firefox, Chrome and Opera Next. Internet Explorer 10 support coming soon.
+Publications is an Angular-based page layout and screen design web application. It uses ExpressJS, AngularJS, d3, MongooseJS, MongoDB, Grunt and Bower. It is currently undergoing conversion to AngularJS and is very incomplete. Previous complete versions based on BackboneJS are tagged as 1.0.x.
 
 #### Getting Started
 
