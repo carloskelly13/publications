@@ -1,52 +1,156 @@
 .dropdown {
-  .dropdown-menu {
-    .rounded-corners(0 0 4px 4px);
-    background: #fff;
-    box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.1);
-    display: none;
-    border: 1px solid @line-color;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 200px;
-    text-align: left;
-    overflow: hidden;
-    z-index: 7000;
-
-    &.dropdown-menu-right {
-      .rounded-corners(0 0 0 4px);
-      border-right: none;
+  display: inline-block;
+  
+  &.dropdown-button {
+    position: relative;
+    height: auto;
+    
+    &.dropdown-icon {
+      height: 32px;
     }
-
-    li.menu-item {
-      color: #555;
-      padding: 0.5em 0.75em;
-      font-weight: 400;
-      font-size: 0.95em;
-      cursor: pointer;
-      border-bottom: 1px solid lighten(@line-color, 5%);
-
-      &:last-child, &:only-child {
-        border-bottom: none;
+    
+    .dropdown-menu {
+      .rounded-corners(4px);
+      box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25), 0 1px 1px 1px hsla(0, 0%, 0%, 0.1);
+      display: none;
+      position: absolute;
+      top: 41px;
+      left: -78px;
+      width: 200px;
+      background: #fff;
+      background: hsla(0, 0%, 100%, 0.85);
+      z-index: 7000;
+      
+      &.dropdown-menu-small {
+        width: 100px;
+        left: -30px;
+      }
+      
+      &:after, &:before {
+      	bottom: 100%;
+      	left: 50%;
+      	border: solid transparent;
+      	content: " ";
+      	height: 0;
+      	width: 0;
+      	position: absolute;
+      	pointer-events: none;
       }
 
-      &:hover {
-        .gradient(#e0e0e0, #efefef)
+      &:after {
+        border-color: transparent;
+        border-bottom-color: #fff;
+        border-width: 10px;
+        margin-left: -10px;
       }
-
-      &:active {
-        .gradient(#d0d0d0, #dfdfdf)
+      
+      &:before {
+        border-color: transparent;
+        border-bottom-color: hsla(0, 0%, 0%, 0.25);
+        border-width: 11px;
+        margin-left: -11px;
+      }
+      
+      .menu-item-header {
+        border-bottom: 1px solid hsla(0, 0%, 0%, 0.25);
+        padding: 5px 8px;
+        font-weight: 400;
+        font-size: 0.80em;
+        color: @darkgray-light;
+        text-transform: uppercase;
+        text-align: center;
+        cursor: default;
+      }
+      
+      .menu-item {
+        display: block;
+        padding: 8px;
+        cursor: pointer;
+        
+        &:hover {
+          background: @bluejeans-dark;
+          color: #fff;
+        }
+        
+        &:active {
+          background: @bluejeans-light;
+          color: #fff;
+        }
+        
+        &:first-child {
+          .rounded-corners(3px 3px 0 0);
+        }
+        
+        &:last-child {
+          .rounded-corners(0 0 3px 3px);
+        }
+        
+        &.selected {
+          position: relative;
+          
+          &:after {
+            content: '\e2ff';
+            display: inline-block;
+            font-family: "streamline-30px" !important;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+          }
+        }
       }
     }
   }
-
+  
+  &.dropdown-left {
+    position: relative;
+    
+    .dropdown-menu {
+      left: 0px;
+      
+      &:after, &:before {
+      	bottom: 100%;
+      	left: 22px;
+      	border: solid transparent;
+      	content: " ";
+      	height: 0;
+      	width: 0;
+      	position: absolute;
+      	pointer-events: none;
+      }
+      
+      &:after {
+        border-color: transparent;
+        border-bottom-color: #fff;
+        border-width: 10px;
+        margin-left: -10px;
+      }
+      
+      &:before {
+        border-color: transparent;
+        border-bottom-color: hsla(0, 0%, 0%, 0.25);
+        border-width: 11px;
+        margin-left: -11px;
+      }
+      
+      .menu-item {
+        text-align: left;
+      }
+    }
+  }
+  
   &.open {
     .dropdown-menu {
       display: block;
     }
-
-    .button {
-      background: #eee;
+    
+    .dropdown-toggle.button-icon {
+      color: @bluejeans-dark;
+    }
+    
+    .dropdown-toggle.button-text {
+      border-color: @bluejeans-dark;
+      background: @bluejeans-dark;
+      color: #fff;
     }
   }
 }

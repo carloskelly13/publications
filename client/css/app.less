@@ -1,10 +1,10 @@
 html, body {
   -webkit-font-smoothing: antialiased;
-  background: #f5f5f5;
-  color: @gray-color;
+  background: @lightgray-light;
+  color: @darkgray-dark;
   height: 100%;
-  font-family: 'Clear Sans', Helvetica, sans-serif;
-  letter-spacing: -0.025em;
+  font-family: 'Proxima Nova', Helvetica, sans-serif;
+  font-size: 15px;
   max-height: 100%;
   overflow: hidden;
   text-rendering: optimizeLegibility;
@@ -12,40 +12,46 @@ html, body {
 
 .app-nav {
   background: #fff;
-  border-bottom: 1px solid @line-color;
-  box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.1);
+  border-bottom: 1px solid @mediumgray-light;
   height: @app-nav-height;
-  text-align: center;
+  text-align: left;
   position: absolute;
   top: 0; left: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 5;
+  -webkit-align-items: center;
+  align-items: center;
+  align-content: center;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-flex-direction: row;
+  flex-direction: row;
 
-  .pub-logo {
-    .retina-picture('pub-logo-26-no-frame', 26px, 26px, inline-block);
-    position: absolute;
-    top: 5px; left: 5px;
+  .app-nav-controls {
+    -webkit-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 0 6px;
   }
 
-  .app-buttons {
-    display: inline-block;
+  .app-nav-secondary-controls {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0 4px 0 8px;
   }
 
-  .app-menu-button {
-    display: inline-block;
-    position: absolute;
-    top: 0; right: 0;
-    text-align: right;
+  .app-nav-logo {
+    .retina-picture('pub-logo-40', 41px, 40px, inline-block);
   }
 }
 
 .app-content {
   position: absolute;
-  top: @app-nav-height; left: 0; right: 0; bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   width: 100%;
   height: inherit;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   z-index: 1;
 }
 
@@ -59,21 +65,21 @@ html, body {
 }
 
 .user-box {
-  .modal-box(400px, 400px);
+  .modal-box(400px, 420px);
 
   .pub-logo-128 {
     margin: 2em auto 0.5em auto;
   }
 
   .app-name {
-    font-size: 2em;
-    font-weight: 500;
+    font-size: 2.2em;
+    font-weight: 200;
     text-align: center;
   }
 
   .app-credits {
-    font-size: 0.9em;
-    font-weight: 300;
+    font-size: 1em;
+    font-weight: 400;
     text-align: center;
     width: 85%;
     margin: 0 auto;

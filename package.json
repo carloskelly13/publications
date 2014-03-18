@@ -1,28 +1,29 @@
 {
-	"name": "publications-ng",
-	"version": "0.1.0",
-	"private": true,
-	"scripts": {
-		"start": "node app.js"
-	},
-	"dependencies": {
-		"express": "3.4.7",
-		"mongoose": "3.8.8",
-		"lodash": "2.4.1",
-		"passport": "0.2.0",
-		"passport-local": "0.1.6",
-		"bcrypt": "0.7.6",
-		"ejs": "*",
-		"pdfkit": "~0.4.3"
-	},
-	"devDependencies": {
-		"grunt": "~0.4.2",
-		"grunt-contrib-less": "~0.9.0",
-		"grunt-contrib-concat": "~0.3.0",
-		"grunt-contrib-copy": "~0.5.0",
-		"grunt-targethtml": "~0.2.6",
-		"grunt-contrib-uglify": "~0.3.2",
-		"bower": "~1.2.8",
-		"grunt-html2js": "~0.1.8"
-	}
+  "name": "publications-js",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.4.7",
+    "mongoose": "3.8.8",
+    "lodash": "2.4.1",
+    "passport": "0.2.0",
+    "passport-local": "0.1.6",
+    "bcrypt": "0.7.6",
+    "ejs": "*",
+    "pdfkit": "~0.4.3"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-less": "~0.9.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-targethtml": "~0.2.6",
+    "grunt-contrib-uglify": "~0.3.2",
+    "bower": "~1.2.8",
+    "grunt-html2js": "~0.1.8",
+    "grunt-contrib-watch": "^0.6.0"
+  }
 }

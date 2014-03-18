@@ -1,8 +1,50 @@
-<ul>
-<!--   <li class="document-item" ng-click="newDocument()">
-    <div class="new-document-icon" data-icon="&#xe00b;"></div>
-  </li> -->
-<!--   <li class="document-item" ng-repeat="document in documents">
-    {{ document.name }}
-  </li> -->
-</ul>
+<div class="app-nav">
+  <div class="app-nav-secondary-controls">
+    <div class="dropdown dropdown-button dropdown-left">
+      <button class="button button-text dropdown-toggle" data-toggle="dropdown">{{ user.name }}</button>
+      <div class="dropdown-menu">
+        <div class="menu-item-header">Publications</div>
+        <div class="menu-item" ng-click="aboutApp()">About Publications&#8230;</div>
+        <div class="menu-item" ng-click="logout()">Log Out</div>
+      </div>
+    </div>
+  </div>
+  <div class="app-nav-controls">
+    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
+  </div>
+  <div class="app-nav-logo"></div>
+</div>
+<div class="documents-list">
+  <table class="documents-table">
+    <thead>
+      <tr>
+        <td class="new-document-row" colspan="4" ng-click="newDocument()">
+          <span data-icon="&#xe2a9;"></span>
+        </td>
+      </tr>
+      <tr>
+        <th class="documents-table-column-name" data-sort="name">Name</th>
+        <th class="documents-table-column-date">Date Created</th>
+        <th class="documents-table-column-size">Size</th>
+        <th class="documents-table-column-controls"></th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr ng-repeat="doc in documents | filter: search | orderBy: 'modified' : true"
+          ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' );">
+        <td>{{ doc.name }}</td>
+        <td>{{ doc.modifiedStr }}</td>
+        <td>{{ doc.width }}&#8221;&#32;&#215;&#32;{{ doc.height }}</td>
+        <td class="documents-table-cell-controls">
+          <div class="button-group button-group-merge">
+            <button class="button button-text" ng-click="" ui-sref="pub.documents.document.views({ documentId: doc._id })">Edit</button>
+            <button class="button button-text" ng-click="">PDF</button>
+            <button class="button button-text button-red" ng-click="deleteDocument(doc)">Delete</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div ui-view>

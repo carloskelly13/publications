@@ -74,6 +74,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-targethtml');
 	grunt.loadNpmTasks('grunt-html2js');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.registerTask('production', [
 		'less:production', 'html2js', 'concat', 'uglify:production', 'targethtml:production'

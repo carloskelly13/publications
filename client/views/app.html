@@ -1,14 +1,3 @@
-<header class="app-nav" ng-if="authenticated">
-  <div class="pub-logo"></div>
-  <div class="dropdown app-menu-button">
-    <button data-toggle="dropdown" class="button button-toolbar button-icon" data-icon="&#xe01e;"></button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu">
-      <li class="menu-item" ng-click="aboutApp()">About Publications</li>
-      <li class="menu-item" ng-click="logout()">Log Out</li>
-    </ul>
-  </div>
-</header>
-
 <div class="app-cover" ng-if="aboutAppVisible">
   <div class="user-box">
     <div class="pub-logo-128"></div>
@@ -18,7 +7,9 @@
       <p>Built using AngularJS, ExpressJS, PdfKit, LoDash, Mongoose and MongoDB.</p>
     </div>
     <div class="form-controls">
-      <button class="button button-toolbar" ng-click="aboutApp()">Close</button>
+      <div class="button-group">
+        <button class="button button-text" ng-click="aboutApp()">Close</button>
+      </div>
     </div>
   </div>
 </div>

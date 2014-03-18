@@ -26,7 +26,6 @@
       };
 
       $scope.logout = function() {
-        $scope.userModalVisible = false;
         $scope.updateAuthenticationStatus();
 
         authentication.logout(function() {

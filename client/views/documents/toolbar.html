@@ -1,0 +1,126 @@
+<div class="app-nav">
+  <div class="app-nav-secondary-controls">
+    <span class="document-name">
+      <strong>{{ doc.name }}</strong>
+      &mdash;&#32;{{ doc.width }}&#8221;&#32;&#215;&#32;{{ doc.height }}&#8221;
+    </span>
+  </div>
+  <div class="app-nav-controls">
+    <div class="button-group button-group-icons button-group-editor">
+      <div class="dropdown dropdown-button dropdown-icon">
+        <button class="button button-icon dropdown-toggle" data-icon="&#xe2ab;" data-toggle="dropdown"></button>
+        <div class="dropdown-menu">
+          <div class="menu-item-header">Add Object</div>
+          <div class="menu-item" ng-click="addObject('rect')">Rectangle</div>
+          <div class="menu-item" ng-click="addObject('ellipse')">Ellipse</div>
+        </div>
+      </div>
+      <div class="dropdown dropdown-button dropdown-icon">
+        <button class="button button-icon dropdown-toggle" data-toggle="dropdown" data-icon="&#xe06b;" ng-disabled="!selectedObj"></button>
+        <div class="dropdown-menu" ng-click="$event.stopPropagation();">
+          <div class="menu-item-header">Object Metrics</div>
+          <table class="inspector-table">
+            <tr>
+              <td class="inspector-column-label">width</td>
+              <td class="inspector-column-input"><input id="obj-width" class="input-text" ng-model="selectedObj.width" type="number" min="0.1" max="64" step="0.1"></td>
+              <td class="inspector-column-unit">
+                <ng-pluralize count="selectedObj.width" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+              </td>
+            </tr>
+            <tr>
+              <td class="inspector-column-label">height</td>
+              <td class="inspector-column-input"><input id="obj-height" class="input-text" ng-model="selectedObj.height" type="number" min="0.1" max="64" step="0.1"></td>
+              <td class="inspector-column-unit">
+                <ng-pluralize count="selectedObj.height" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+              </td>
+            </tr>
+            <tr>
+              <td class="inspector-column-label">x</td>
+              <td class="inspector-column-input"><input id="obj-x" class="input-text" ng-model="selectedObj.x" type="number" min="-1.0" max="64" step="0.1"></td>
+              <td class="inspector-column-unit">
+                <ng-pluralize count="selectedObj.x" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+              </td>
+            </tr>
+            <tr>
+              <td class="inspector-column-label">y</td>
+              <td class="inspector-column-input"><input id="obj-y" class="input-text" ng-model="selectedObj.y" type="number" min="-1.0" max="64" step="0.1"></td>
+              <td class="inspector-column-unit">
+                <ng-pluralize count="selectedObj.y" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+              </td>
+            </tr>
+            <tr>
+              <td class="inspector-column-label">border</td>
+              <td class="inspector-column-input"><input id="obj-stroke-width" class="input-text" ng-model="selectedObj.strokeWidth" type="number" min="0" max="64" step="1"></td>
+              <td class="inspector-column-unit">
+                <ng-pluralize count="selectedObj.strokeWidth" when="{ '1': 'pixel', 'other': 'pixels' }"></ng-pluralize>
+              </td>
+            </tr>
+            <tr ng-if="selectedObj.type === 'rect'">
+              <td class="inspector-column-label">radius</td>
+              <td class="inspector-column-input"><input id="obj-radius" class="input-text" ng-model="selectedObj.r" type="number" min="0" max="64" step="1"></td>
+              <td class="inspector-column-unit">
+                <ng-pluralize count="selectedObj.r" when="{ '1': 'pixel', 'other': 'pixels' }"></ng-pluralize>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="dropdown dropdown-button">
+        <button class="button button-icon dropdown-toggle" data-toggle="dropdown" data-icon="&#xe065;" ng-disabled="!selectedObj"></button>
+        <div class="dropdown-menu" ng-click="$event.stopPropagation();">
+          <div class="menu-item-header">Color</div>
+          <table class="inspector-table">
+            <tr>
+              <td class="inspector-column-label">fill</td>
+              <td class="inspector-column-input inspector-column-input-left"><input class="input-text" ng-model="selectedObj.fill" type="text" hex-color-input></td>
+            </tr>
+            <tr>
+              <td class="inspector-column-label">border</td>
+              <td class="inspector-column-input inspector-column-input-left"><input class="input-text" ng-model="selectedObj.stroke" type="text" hex-color-input></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <button class="button button-icon" data-icon="&#xe02d;" ng-disabled="!selectedObj"></button>
+      <button class="button button-icon" data-icon="&#xe277;" ng-disabled="!selectedObj"></button>
+      <button class="button button-icon" data-icon="&#xe249;" ng-disabled="!selectedObj"></button>
+      <div class="separator"></div>
+      <button class="button button-icon" data-icon="&#xe054;" ng-disabled="!selectedObj"></button>
+      <button class="button button-icon" data-icon="&#xe055;" ng-disabled="!selectedObj"></button>
+      <div class="dropdown dropdown-button">
+        <button class="button button-icon dropdown-toggle" data-toggle="dropdown" data-icon="&#xe060;"></button>
+        <div class="dropdown-menu">
+          <div class="menu-item-header">Layers</div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <button class="button button-icon" data-icon="&#xe4e3;" ng-disabled="selectedObj.type !== 'text'"></button>
+      <div class="separator"></div>
+      <div class="dropdown dropdown-button">
+        <button class="button button-icon dropdown-toggle" data-toggle="dropdown" data-icon="&#xe26b;"></button>
+        <div class="dropdown-menu dropdown-menu-small">
+          <div class="menu-item-header">Zoom</div>
+          <div ng-repeat="level in zoomLevels" 
+            class="menu-item"
+            ng-click="setZoomLevel(level)"
+            ng-class="{ 'selected' : zoomLevel === level }">
+            {{level * 100}}%
+          </div>
+        </div>
+      </div>
+      <div class="dropdown dropdown-button">
+        <button class="button button-icon dropdown-toggle" data-toggle="dropdown" data-icon="&#xe26c;"></button>
+        <div class="dropdown-menu">
+          <div class="menu-item-header">Document Options</div>
+          <div class="menu-item" ng-click="updateDocument()">Save Document</div>
+          <div class="menu-item">Rename Document&#8230;</div>
+          <div class="menu-item">Document Metrics&#8230;</div>
+          <div class="menu-item">Download PDF</div>
+          <div class="menu-item" ng-click="showAllDocuments()">Show all Documents</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-nav-logo" ng-click="aboutApp()"></div>
+</div>

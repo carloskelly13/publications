@@ -1,0 +1,75 @@
+.documents-list {
+  height: inherit;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  top: @app-nav-height; left: 0; bottom: 0; right: 0;
+  width: 100%;
+  z-index: 3;
+
+  table.documents-table {
+    border-collapse: collapse;
+    width: 100%;
+    
+    .new-document-row {
+      cursor: pointer;
+      text-align: center;
+      
+      span {
+        font-size: 20px;
+        height: 20px;
+        display: inline-block;
+      }
+      
+      &:hover {
+        background: @bluejeans-dark;
+        color: #fff;
+      }
+      
+      &:active {
+        background: @bluejeans-light;
+        color: #fff;
+      }
+    }
+
+    .documents-table-column-name {
+      width: 40%;
+    }
+
+    .documents-table-column-date {
+      width: 25%;
+    }
+
+    .documents-table-column-size {
+      width: 10%;
+    }
+
+    .documents-table-column-controls {
+      width: 25%;
+    }
+
+    tr {
+      border-bottom: 1px solid @mediumgray-light;
+      cursor: default;
+
+      td, th {
+        padding: 0 12px;
+        height: 41px;
+        vertical-align: middle;
+
+        &.documents-table-cell-controls {
+          text-align: right;
+          padding-right: 10px;
+        }
+      }
+      
+      th {
+        font-weight: 500;
+      }
+
+      td {
+        height: 50px;
+      }
+    }
+  }
+}

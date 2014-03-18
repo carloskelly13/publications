@@ -7,6 +7,7 @@
     'pub.documents',
     'pub.security',
     'pub.services',
+    'pub.directives',
     'restangular'
   ]);
 

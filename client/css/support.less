@@ -1,49 +1,63 @@
-@yellow-color: #e9ff00;
-@green-color: #9ff000;
-@gray-color: #3a3a3a;
-@line-color: #c5c5c5;
-@blue-color: #007aff;
-@red-color: #ff3a2d;
+@bluejeans-dark:     #4a89dc;
+@bluejeans-light:    #5d9cec;
+@aqua-dark:          #3bafda;
+@aqua-light:         #4fc1e9;
+@mint-dark:          #37bc9b;
+@mint-light:         #48cfad;
+@grass-dark:         #8cc152;
+@grass-light:        #a0d468;
+@sunflower-dark:     #f6bb42;
+@sunflower-light:    #ffce54;
+@bittersweet-dark:   #e9573f;
+@bittersweet-light:  #fc6e51;
+@grapefruit-dark:    #da4453;
+@grapefruit-light:   #ed5565;
+@lavander-dark:      #967adc;
+@lavander-light:     #ac92ec;
+@pinkrose-dark:      #d770ad;
+@pinkrose-light:     #ec87c0;
+@lightgray-dark:     #e6e9ed;
+@lightgray-light:    #f5f7fa;
+@mediumgray-dark:    #aab2bd;
+@mediumgray-light:   #ccd1d9;
+@darkgray-dark:      #434a54;
+@darkgray-light:     #656d78;
 
-@app-nav-height: 36px;
+@app-nav-height: 40px;
 
 strong {
   font-weight: 500;
 }
 
 @font-face {
-  font-family: 'Clear Sans';
-  font-style: normal;
-  font-weight: 600;
-  src: url(woff/ClearSans-Bold.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Clear Sans';
-  font-style: normal;
-  font-weight: 500;
-  src: url(woff/ClearSans-Medium.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Clear Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: url(woff/ClearSans-Regular.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Clear Sans';
-  font-style: normal;
+  font-family: 'Proxima Nova';
+  src: url('woff/proximanova-light-webfont.woff') format('woff');
   font-weight: 300;
-  src: url(woff/ClearSans-Light.woff) format('woff');
 }
 
 @font-face {
-  font-family: 'Clear Sans';
-  font-style: normal;
-  font-weight: 200;
-  src: url(woff/ClearSans-Thin.woff) format('woff');
+  font-family: 'Proxima Nova';
+  src: url('woff/proximanova-reg-webfont.woff') format('woff');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('woff/proximanova-sbold-webfont.woff') format('woff');
+  font-weight: 500;
+}
+
+.search-input-icon {
+  font-family: "streamline-30px" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  font-size: 20px;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .rounded-corners (@radius) {
@@ -64,7 +78,7 @@ strong {
   padding: 0;
   top: 50%; left: 50%;
   background: #fff;
-  border: 1px solid @line-color;
+  border: 1px solid @mediumgray-dark;
   overflow: hidden;
   z-index: 9000;
 }

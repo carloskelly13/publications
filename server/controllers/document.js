@@ -26,7 +26,7 @@ exports.show = function(req, res) {
 
   DocumentModel.findById(id, function(err, doc) {
     if (_.isObject(doc)) res.json(doc);
-    else res.json(null);
+    else res.send(404);
   });
 };
 

@@ -1,0 +1,40 @@
+.inspector-table {
+  width: 100%;
+  
+  .inspector-column-label {
+    width: 40%;
+    padding: 8px 10px 8px 5px;
+    border-right: 1px solid hsla(0, 0%, 0%, 0.2);
+    text-align: right;
+    font-weight: 500;
+    cursor: default;
+  }
+  
+  .inspector-column-input {
+    width: 33%;
+    
+    input {
+      .rounded-corners(0);
+      border: none;
+      background: transparent;
+      text-align: right;
+      width: 100%;
+      padding: 8px 0;
+    }
+  }
+  
+  .inspector-column-input-left {
+    width: 60%;
+    padding: 0 0 0 8px;
+    
+    input {
+      text-align: left;
+    }
+  }
+  
+  .inspector-column-unit {
+    width: 27%;
+    padding: 8px 10px 8px 1px;
+    cursor: default;
+  }
+}

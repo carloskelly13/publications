@@ -1,0 +1,21 @@
+.editor-view {
+  background: @lightgray-light;
+  height: inherit;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  position: absolute;
+  top: @app-nav-height; right: 0; bottom: 0; left: 0;
+  width: 100%;
+  z-index: 4;
+  
+  path {
+    fill: none;
+    stroke: hsla(0, 0%, 0%, 0.1);
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+    
+    &.inch-mark {
+      stroke: fade(@aqua-light, 55%);
+    }
+  }
+}
