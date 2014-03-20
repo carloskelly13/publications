@@ -8,6 +8,31 @@
   width: 100%;
   z-index: 4;
   
+  .unit {
+    display: inline-block;
+    position: absolute;
+    font-size: 13px;
+    width: 36px;
+    
+    &.unit-top {
+      top: 8px;
+      text-align: center;
+    }
+    
+    &.unit-left {
+      left: -1px;
+      text-align: center;
+      -ms-transform:rotate(270deg);
+      -webkit-transform:rotate(270deg);
+      transform:rotate(270deg);
+    }
+  }
+  
+  
+  .canvas-svg {
+    margin: 25px 1em 1em 25px;
+  }
+  
   path {
     fill: none;
     stroke: hsla(0, 0%, 0%, 0.1);

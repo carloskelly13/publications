@@ -115,6 +115,14 @@
           <div class="menu-item-header">Document Options</div>
           <div class="menu-item" ng-click="updateDocument()">Save Document</div>
           <div class="menu-item">Rename Document&#8230;</div>
+          <div class="menu-item" ng-click="toggleCanvasGrid()"
+                                 ng-class="{ 'selected' : showCanvasGrid }">
+           Canvas Grid
+          </div>
+          <div class="menu-item" ng-click="toggleSnapToGrid()"
+                                 ng-class="{ 'selected' : snapToGrid }">
+           Snap to Grid
+          </div>
           <div class="menu-item">Document Metrics&#8230;</div>
           <div class="menu-item">Download PDF</div>
           <div class="menu-item" ng-click="showAllDocuments()">Show all Documents</div>
