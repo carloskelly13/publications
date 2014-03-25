@@ -28,3 +28,8 @@ Run the application:
 ```
 $ node app
 ```
+
+Seed the database with a sample user "user@email.com" and password "password"
+```
+$ mongoimport --db pub-ng --collection users --type json --file user-seed.json
+```

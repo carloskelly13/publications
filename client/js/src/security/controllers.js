@@ -17,12 +17,6 @@
         }
       });
 
-      $scope.testDrive = function() {
-        $scope.username = 'carlos13@icloud.com';
-        $scope.password = 'carlos';
-        $scope.login();
-      };
-
       $scope.login = function() {
 
         authentication.login({
