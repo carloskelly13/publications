@@ -1,22 +1,22 @@
 .new-object-table {
   width: 100%;
-  
+
   td {
     font-size: 24px;
     vertical-align: middle;
     text-align: center;
     padding: 8px 8px 6px 8px;
-    
+
     &:hover {
       background: @blue;
       color: #fff;
     }
-  
+
     &:active {
       background: lighten(@blue, 10%);
       color: #fff;
     }
-    
+
     span {
       vertical-align: middle;
 
@@ -26,19 +26,19 @@
 
 .inspector-table {
   width: 100%;
-  
+
   tr {
     td {
       border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
     }
-    
+
     &:last-child {
       td {
         border-bottom: none;
       }
     }
   }
-  
+
   .inspector-column-label {
     width: 40%;
     padding: 8px 10px 8px 8px;
@@ -46,28 +46,35 @@
     font-weight: 500;
     cursor: default;
   }
-  
+
   .inspector-column-input {
     width: 33%;
-    padding: 0 8px;
-    
+    padding: 0;
+
     input {
       .rounded-corners(0);
-      border: none;
-      background: transparent;
+      border-top: none;
+      border-bottom: none;
+      border-color: hsla(0, 0%, 0%, 0.1);
+      background: hsla(0, 0%, 0%, 0.033);
       text-align: right;
       width: 100%;
-      padding: 8px 0;
+      padding: 0 8px;
+      height: 100%;
     }
-    
+
     &.inspector-column-input-no-units {
       width: 60%;
+
+      input {
+        border-right: none;
+      }
     }
   }
-  
+
   .inspector-column-unit {
     width: 27%;
-    padding: 8px 10px 8px 1px;
+    padding: 8px 10px 8px 8px;
     cursor: default;
     color: #999;
   }
@@ -85,19 +92,19 @@
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
   top: 36px;
   text-align: left;
-  
+
   h1 {
     text-align: center;
     font-weight: 500;
     line-height: 1em;
     padding: 0.75em 0;
-    border-bottom: 1px solid hsla(0, 0%, 0%, 0.1); 
-    
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+
     &.border-top {
-      border-top: 1px solid hsla(0, 0%, 0%, 0.1);       
+      border-top: 1px solid hsla(0, 0%, 0%, 0.1);
     }
   }
-  
+
   &:before {
     display: block;
     position: absolute;
@@ -109,7 +116,7 @@
     border-width: 0 11px 11px 11px;
     border-color: transparent transparent hsla(0, 0%, 0%, 0.1) transparent;
   }
-  
+
   &:after {
     display: block;
     position: absolute;
@@ -121,28 +128,28 @@
     border-width: 0 10px 10px 10px;
     border-color: transparent transparent hsla(0, 0%, 100%, 0.9) transparent;
   }
-  
+
   &.inspector-view-full-width {
     width: 200px;
     left: -80px;
-    
+
     &:before {
       left: 89px;
     }
-    
+
     &:after {
       left: 90px;
     }
   }
-  
+
   &.inspector-view-half-width {
     width: 100px;
     left: -30px;
-    
+
     &:before {
       left: 39px;
     }
-    
+
     &:after {
       left: 40px;
     }

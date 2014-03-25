@@ -167,7 +167,7 @@
 .input-text {
   .rounded-corners(4px);
   -webkit-font-smoothing: antialiased;
-  background: #fff;
+  background: transparent;
   border: 1px solid @mediumgray-dark;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -193,6 +193,13 @@
     text-align: center;
     width: 100%;
     color: @darkgray-dark;
+    .rounded-corners(0);
+    border-top: none;
+    border-bottom: none;
+    border-color: hsla(0, 0%, 0%, 0.1);
+    background: hsla(0, 0%, 0%, 0.033);
+    height: 100%;
+    font-size: 16px;
 
     &::-webkit-input-placeholder {
       .search-input-icon;
