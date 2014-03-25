@@ -7,12 +7,17 @@
   top: @app-nav-height; right: 0; bottom: 0; left: 0;
   width: 100%;
   z-index: 4;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   
   .unit {
     display: inline-block;
     position: absolute;
     font-size: 13px;
     width: 36px;
+    color: @darkgray-dark;
     
     &.unit-top {
       top: 8px;
@@ -31,6 +36,16 @@
   
   .canvas-svg {
     margin: 25px 1em 1em 25px;
+    
+    .text-box {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
   }
   
   path {

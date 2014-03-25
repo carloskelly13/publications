@@ -1,17 +1,55 @@
+.new-object-table {
+  width: 100%;
+  
+  td {
+    font-size: 24px;
+    vertical-align: middle;
+    text-align: center;
+    padding: 8px 8px 6px 8px;
+    
+    &:hover {
+      background: @blue;
+      color: #fff;
+    }
+  
+    &:active {
+      background: lighten(@blue, 10%);
+      color: #fff;
+    }
+    
+    span {
+      vertical-align: middle;
+
+    }
+  }
+}
+
 .inspector-table {
   width: 100%;
   
+  tr {
+    td {
+      border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+    }
+    
+    &:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+  }
+  
   .inspector-column-label {
     width: 40%;
-    padding: 8px 10px 8px 5px;
-    border-right: 1px solid hsla(0, 0%, 0%, 0.2);
-    text-align: right;
+    padding: 8px 10px 8px 8px;
+    text-align: left;
     font-weight: 500;
     cursor: default;
   }
   
   .inspector-column-input {
     width: 33%;
+    padding: 0 8px;
     
     input {
       .rounded-corners(0);
@@ -21,14 +59,9 @@
       width: 100%;
       padding: 8px 0;
     }
-  }
-  
-  .inspector-column-input-left {
-    width: 60%;
-    padding: 0 0 0 8px;
     
-    input {
-      text-align: left;
+    &.inspector-column-input-no-units {
+      width: 60%;
     }
   }
   
@@ -36,5 +69,82 @@
     width: 27%;
     padding: 8px 10px 8px 1px;
     cursor: default;
+    color: #999;
+  }
+}
+
+.inspector-group {
+  display: inline-block;
+  position: relative;
+}
+
+.inspector-view {
+  .rounded-corners(4px);
+  position: absolute;
+  background: hsla(0, 0%, 100%, 0.90);
+  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  top: 36px;
+  text-align: left;
+  
+  h1 {
+    text-align: center;
+    font-weight: 500;
+    line-height: 1em;
+    padding: 0.75em 0;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.1); 
+    
+    &.border-top {
+      border-top: 1px solid hsla(0, 0%, 0%, 0.1);       
+    }
+  }
+  
+  &:before {
+    display: block;
+    position: absolute;
+    content: ' ';
+    top: -11px;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 11px 11px 11px;
+    border-color: transparent transparent hsla(0, 0%, 0%, 0.1) transparent;
+  }
+  
+  &:after {
+    display: block;
+    position: absolute;
+    content: ' ';
+    top: -10px;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent hsla(0, 0%, 100%, 0.9) transparent;
+  }
+  
+  &.inspector-view-full-width {
+    width: 200px;
+    left: -80px;
+    
+    &:before {
+      left: 89px;
+    }
+    
+    &:after {
+      left: 90px;
+    }
+  }
+  
+  &.inspector-view-half-width {
+    width: 100px;
+    left: -30px;
+    
+    &:before {
+      left: 39px;
+    }
+    
+    &:after {
+      left: 40px;
+    }
   }
 }

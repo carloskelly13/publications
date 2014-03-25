@@ -1,0 +1,18 @@
+<h1>Color</h1>
+<table class="inspector-table">
+  <tr>
+    <td class="inspector-column-label">
+      <span ng-hide="selectedObj.type === 'text'">fill</span>
+      <span ng-show="selectedObj.type === 'text'">text</span>
+    </td>
+    <td class="inspector-column-input inspector-column-input-no-units">
+      <input pub-hex-color-input class="input-text" ng-model="selectedObj.fill" type="text">
+    </td>
+  </tr>
+  <tr ng-hide="selectedObj.type === 'text'">
+    <td class="inspector-column-label">border</td>
+    <td class="inspector-column-input inspector-column-input-no-units">
+      <input pub-hex-color-input class="input-text" ng-model="selectedObj.stroke" type="text">
+    </td>
+  </tr>
+</table>

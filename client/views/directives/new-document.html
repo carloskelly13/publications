@@ -1,0 +1,24 @@
+<form ng-submit="newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
+  <div class="new-document-box">
+    <div class="message">Create New Document</div>
+    <fieldset class="fieldset-text">
+      <label for="name">Name</label>
+      <input class="input-text" type="text" ng-model="name" name="name" id="name" required>
+    </fieldset>
+    <fieldset class="fieldset-text">
+      <label for="width">Width</label>
+      <input class="input-text" type="text" ng-model="width" name="width" id="width" required>
+    </fieldset>
+    <fieldset class="fieldset-text">
+      <label for="height">Height</label>
+      <input class="input-text" type="text" ng-model="height" name="height" id="height" required>
+    </fieldset>
+
+    <div class="form-controls">
+      <div class="button-group">
+        <button class="button button-text" type="button" ng-click="newDocumentWindow()">Cancel</button>
+        <button class="button button-text" type="submit" ng-disabled="newDocumentForm.$invalid">Create</button>
+      </div>
+    </div>
+  </div>
+</form>

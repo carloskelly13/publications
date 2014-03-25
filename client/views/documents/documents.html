@@ -1,50 +1,26 @@
 <div class="app-nav">
-  <div class="app-nav-secondary-controls">
-    <div class="dropdown dropdown-button dropdown-left">
-      <button class="button button-text dropdown-toggle" data-toggle="dropdown">{{ user.name }}</button>
-      <div class="dropdown-menu">
-        <div class="menu-item-header">Publications</div>
-        <div class="menu-item" ng-click="aboutApp()">About Publications&#8230;</div>
-        <div class="menu-item" ng-click="logout()">Log Out</div>
-      </div>
-    </div>
+  <div class="app-nav-primary-controls">
+    <div class="app-nav-text">Documents</div>
   </div>
-  <div class="app-nav-controls">
+  <div class="app-nav-controls app-nav-controls-search">
     <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
   </div>
-  <div class="app-nav-logo"></div>
+  <div class="app-nav-secondary-controls">
+    <button class="button button-icon" data-icon="&#xe2aa;" ng-click="newDocumentWindow()"></button>
+    <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe21e;" ng-click=""></button>
+    <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe001;" ng-click="deleteDocument()"></button>
+    <button class="button button-icon" data-icon="&#xe174;" ng-click="aboutApp()"></button>
+    <!-- <button class="button button-icon" data-icon="&#xe52c;" ng-click="logout()"></button> -->
+  </div>
 </div>
-<div class="documents-list">
-  <table class="documents-table">
-    <thead>
-      <tr>
-        <td class="new-document-row" colspan="4" ng-click="newDocument()">
-          <span data-icon="&#xe2a9;"></span>
-        </td>
-      </tr>
-      <tr>
-        <th class="documents-table-column-name" data-sort="name">Name</th>
-        <th class="documents-table-column-date">Date Created</th>
-        <th class="documents-table-column-size">Size</th>
-        <th class="documents-table-column-controls"></th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr ng-repeat="doc in documents | filter: search | orderBy: 'modified' : true"
-          ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' );">
-        <td>{{ doc.name }}</td>
-        <td>{{ doc.modifiedStr }}</td>
-        <td>{{ doc.width }}&#8221;&#32;&#215;&#32;{{ doc.height }}</td>
-        <td class="documents-table-cell-controls">
-          <div class="button-group button-group-merge">
-            <button class="button button-text" ng-click="" ui-sref="pub.documents.document.views({ documentId: doc._id })">Edit</button>
-            <button class="button button-text" ng-click="">PDF</button>
-            <button class="button button-text button-red" ng-click="deleteDocument(doc)">Delete</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="documents-list" ng-click="docSelected(null)">
+  <div class="document-item"
+       pub-document-item
+       ng-repeat="doc in documents | filter: search | orderBy: 'modified' : true"
+       ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' );"
+       ng-click="docSelected(doc); $event.stopPropagation();"
+       ng-class="{ selected: selectedDoc === doc }" >
+  </div>
 </div>
+<div pub-modal-new-document class="app-cover" ng-show="newDocumentWindowVisible"></div>
 <div ui-view>

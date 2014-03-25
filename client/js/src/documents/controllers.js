@@ -20,26 +20,58 @@
 
   pub.controller('DocumentsController', [
     '$scope',
+    '$state',
     '$location',
     'documentServices',
     'authentication',
     'documents',
     'Restangular',
-    function($scope, $location, documentServices, authentication, documents, Restangular) {
+    function($scope, $state, $location, documentServices, authentication, documents, Restangular) {
       var documentsApi = Restangular.all('documents');
       $scope.updateAuthenticationStatus();
       $scope.documents = documents;
       $scope.dpi = 72;
+      $scope.newDocumentWindowVisible = false;
+      $scope.selectedDoc = null;
+      
+      $scope.docSelected = function(obj) {
+        if (obj === $scope.selectedDoc && obj !== null) {
+          $state.go('pub.documents.document.views', { documentId: $scope.selectedDoc._id });
+          $scope.selectedDoc = null;
+        } else {
+          $scope.selectedDoc = obj; 
+        }        
+      };
 
       $scope.newDocument = function() {
-        documentsApi.post(documentServices.newDocument($scope.user)).then(function(res) {
+        documentsApi.post({
+          _user: $scope.user._id,
+          name: $scope.name,
+          width: $scope.width,
+          height: $scope.height,
+          shapes: []
+        }).then(function(res) {
+          $scope.newDocumentWindowVisible = false;
           $scope.documents.push(res);
         });
       };
+      
 
-      $scope.deleteDocument = function(doc) {
-        doc.remove();
-        $scope.documents.splice(_.indexOf($scope.documents, doc), 1);
+      $scope.deleteDocument = function() {
+        $scope.selectedDoc.remove();
+        $scope.documents.splice(_.indexOf($scope.documents, $scope.selectedDoc), 1);
+        $scope.selectedDoc = null;
+      };
+      
+      $scope.newDocumentWindow = function() {
+        $scope.newDocumentWindowVisible = !$scope.newDocumentWindowVisible;
+      };
+      
+      $scope.documentIconSize = function(doc) {
+        var iconDpi = 15,
+          iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30),
+          iconHeight = (iconWidth / doc.width) * doc.height;
+        return 'width: ' + iconWidth + 'px; height: ' + iconHeight + 'px';
       };
 
     }
@@ -56,6 +88,7 @@
       $scope.selectedObj = null;
       $scope.showCanvasGrid = true;
       $scope.snapToGrid = true;
+      $scope.currentInspector = null;
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
@@ -67,6 +100,7 @@
       
       $scope.setZoomLevel = function(zoomLevel) {
         $scope.zoomLevel = zoomLevel;
+        $scope.toggleInspector(null);
       };
       
       $scope.toggleCanvasGrid = function() {
@@ -75,6 +109,14 @@
       
       $scope.toggleSnapToGrid = function() {
         $scope.snapToGrid = !$scope.snapToGrid;
+      };
+      
+      $scope.toggleInspector = function(inspector) {
+        if (inspector === $scope.currentInspector) {
+          $scope.currentInspector = null;
+        } else {
+          $scope.currentInspector = inspector;
+        }
       };
     }
   ]);
@@ -89,6 +131,7 @@
       
       $scope.addObject = function(objType) {
         $scope.doc.shapes.push(documentServices.newShape(objType));
+        $scope.toggleInspector(null);
       };
 
       $scope.showAllDocuments = function() {

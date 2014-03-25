@@ -16,12 +16,40 @@
 @lavander-light:     #ac92ec;
 @pinkrose-dark:      #d770ad;
 @pinkrose-light:     #ec87c0;
-@lightgray-dark:     #e6e9ed;
+@lightgray-dark:     #e6e9e9;
 @lightgray-light:    #f5f7f7;
-@mediumgray-dark:    #aab2bd;
+@mediumgray-dark:    #aab2b2;
 @mediumgray-light:   #ccd1d9;
 @darkgray-dark:      #434a54;
 @darkgray-light:     #656d78;
+@background-color:   #57585c;
+@navbar-color:       #313235;
+
+// Cool
+
+@aqua:  #7FDBFF;
+@blue:  #0074D9;
+@navy:  #001F3F;
+@teal:  #39CCCC;
+@green: #2ECC40;
+@olive: #3D9970;
+@lime:  #01FF70;
+
+// Warm
+
+@yellow:  #FFDC00;
+@orange:  #FF851B;
+@red:     #FF4136;
+@fuchsia: #F012BE;
+@purple:  #B10DC9;
+@maroon:  #85144B;
+
+// Gray Scale
+
+@white:  #fff;
+@silver: #ddd;
+@gray:   #aaa;
+@black:  #111;
 
 @app-nav-height: 40px;
 
@@ -29,31 +57,13 @@ strong {
   font-weight: 500;
 }
 
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('woff/proximanova-light-webfont.woff') format('woff');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('woff/proximanova-reg-webfont.woff') format('woff');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Proxima Nova';
-  src: url('woff/proximanova-sbold-webfont.woff') format('woff');
-  font-weight: 500;
-}
-
 .search-input-icon {
-  font-family: "streamline-30px" !important;
+  font-family: "streamline-24px" !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
   text-transform: none !important;
-  font-size: 20px;
+  font-size: 18px;
   speak: none;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
@@ -70,7 +80,7 @@ strong {
 
 .modal-box(@width, @height) {
   .rounded-corners(4px);
-  box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.1);
+  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1);
   position: absolute;
   height: @height;
   width: @width;
@@ -78,7 +88,7 @@ strong {
   padding: 0;
   top: 50%; left: 50%;
   background: #fff;
-  border: 1px solid @mediumgray-dark;
+  background: hsla(0, 0%, 100%, 0.85);
   overflow: hidden;
   z-index: 9000;
 }

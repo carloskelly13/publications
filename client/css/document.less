@@ -1,3 +1,7 @@
+.new-document-box {
+  .modal-box(400px, 300px);
+}
+
 .documents-list {
   height: inherit;
   overflow-x: hidden;
@@ -7,69 +11,58 @@
   width: 100%;
   z-index: 3;
 
-  table.documents-table {
-    border-collapse: collapse;
-    width: 100%;
+  .document-item {
+    .rounded-corners(4px);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: inline-block;
+    cursor: default;
+    margin: 1em;
+    padding: 0.5em;
+    text-align: center;
+    vertical-align: bottom;
+
+    &:hover {
+      background: hsla(0, 0%, 0%, 0.1);
+    }
     
-    .new-document-row {
-      cursor: pointer;
-      text-align: center;
-      
-      span {
-        font-size: 20px;
-        height: 20px;
-        display: inline-block;
-      }
-      
-      &:hover {
-        background: @bluejeans-dark;
-        color: #fff;
-      }
-      
-      &:active {
-        background: @bluejeans-light;
-        color: #fff;
+    &.selected {
+      background: @blue;
+      color: #fff;
+
+      .document-icon {
+        border-color: @navy;
       }
     }
 
-    .documents-table-column-name {
-      width: 40%;
-    }
+    .document-icon {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid @mediumgray-dark;
+      width: 85px;
+      height: 110px;
+      position: relative;
 
-    .documents-table-column-date {
-      width: 25%;
-    }
-
-    .documents-table-column-size {
-      width: 10%;
-    }
-
-    .documents-table-column-controls {
-      width: 25%;
-    }
-
-    tr {
-      border-bottom: 1px solid @mediumgray-light;
-      cursor: default;
-
-      td, th {
-        padding: 0 12px;
-        height: 41px;
-        vertical-align: middle;
-
-        &.documents-table-cell-controls {
-          text-align: right;
-          padding-right: 10px;
-        }
+      &.document-icon-horizontal {
+        width: 110px;
+        height: 80px;
       }
-      
-      th {
-        font-weight: 500;
-      }
+    }
 
-      td {
-        height: 50px;
-      }
+    .document-name,
+    .document-date {
+      display: block;
+    }
+
+    .document-name {
+      font-weight: 500;
+    }
+
+    .document-date {
+      font-size: 0.8em;
     }
   }
+
 }

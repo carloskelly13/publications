@@ -1,0 +1,69 @@
+<div>
+  <h1>New Object</h1>
+  <table class="new-object-table">
+    <tr>
+      <td ng-click="addObject('rect')"><span data-icon="&#xe522;"></span></td>
+      <td ng-click="addObject('ellipse')"><span data-icon="&#xe595;"></span></td>
+      <td ng-click="addObject('text')"><span data-icon="&#xe4f2;"></span></td>
+    </tr>
+  </table>
+</div>
+<div  ng-if="selectedObj">
+  <h1 class="border-top">Object Metrics</h1>
+  <table class="inspector-table">
+    <tr>
+      <td class="inspector-column-label">width</td>
+      <td class="inspector-column-input">
+        <input pub-unsigned-non-zero-float-input id="obj-width" class="input-text" ng-model="selectedObj.width" type="text">
+      </td>
+      <td class="inspector-column-unit">
+        <ng-pluralize count="selectedObj.width" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+      </td>
+    </tr>
+    <tr>
+      <td class="inspector-column-label">height</td>
+      <td class="inspector-column-input">
+        <input pub-unsigned-non-zero-float-input id="obj-height" class="input-text" ng-model="selectedObj.height" type="text">
+      </td>
+      <td class="inspector-column-unit">
+        <ng-pluralize count="selectedObj.height" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+      </td>
+    </tr>
+    <tr>
+      <td class="inspector-column-label">x</td>
+      <td class="inspector-column-input">
+        <input pub-signed-float-input id="obj-x" class="input-text" ng-model="selectedObj.x" type="text">
+      </td>
+      <td class="inspector-column-unit">
+        <ng-pluralize count="selectedObj.x" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+      </td>
+    </tr>
+    <tr>
+      <td class="inspector-column-label">y</td>
+      <td class="inspector-column-input">
+        <input pub-signed-float-input id="obj-y" class="input-text" ng-model="selectedObj.y" type="text">
+      </td>
+      <td class="inspector-column-unit">
+        <ng-pluralize count="selectedObj.y" when="{ '1': 'inch', 'other': 'inches' }"></ng-pluralize>
+      </td>
+    </tr>
+    <tr>
+      <td class="inspector-column-label">border</td>
+      <td class="inspector-column-input">
+        <input pub-unsigned-integer-input id="obj-stroke-width" class="input-text" ng-model="selectedObj.strokeWidth" type="text">
+      </td>
+      <td class="inspector-column-unit">
+        <ng-pluralize count="selectedObj.strokeWidth" when="{ '1': 'pixel', 'other': 'pixels' }"></ng-pluralize>
+      </td>
+    </tr>
+    <tr ng-if="selectedObj.type === 'rect'">
+      <td class="inspector-column-label">radius</td>
+      <td class="inspector-column-input">
+        <input pub-unsigned-integer-input id="obj-radius" class="input-text" ng-model="selectedObj.r" type="text">
+      </td>
+      <td class="inspector-column-unit">
+        <ng-pluralize count="selectedObj.r" when="{ '1': 'pixel', 'other': 'pixels' }"></ng-pluralize>
+      </td>
+    </tr>
+  </table>
+</div>

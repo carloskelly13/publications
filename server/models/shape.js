@@ -21,7 +21,12 @@ var shapeSchema = new Schema({
     stroke: { type: String },
     strokeWidth: { type: Number },
     fillOpacity: { type: Number },
-    strokeOpacity: { type: Number }
+    strokeOpacity: { type: Number },
+    text: { type: String },
+    fontSize: { type: String },
+    fontFamily: { type: String },
+    fontWeight: { type: Number },
+    fontStyle: { type: String }
 });
 
 module.exports = mongoose.model('Shape', shapeSchema);

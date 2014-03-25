@@ -3,7 +3,7 @@ html, body {
   background: @lightgray-light;
   color: @darkgray-dark;
   height: 100%;
-  font-family: 'Proxima Nova', Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
   font-size: 15px;
   max-height: 100%;
   overflow: hidden;
@@ -12,7 +12,7 @@ html, body {
 
 .app-nav {
   background: #fff;
-  border-bottom: 1px solid @mediumgray-light;
+  border-bottom: 1px solid @mediumgray-dark;
   height: @app-nav-height;
   text-align: left;
   position: absolute;
@@ -28,17 +28,52 @@ html, body {
   justify-content: flex-start;
   -webkit-flex-direction: row;
   flex-direction: row;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  .button {
+    color: @darkgray-dark;
+  }
+
+  .app-nav-text {
+    display: inline-block;
+    font-weight: 500;
+    line-height: 24px;
+    height: 24px;
+    vertical-align: middle;
+  }
 
   .app-nav-controls {
     -webkit-flex: 1 1 auto;
     flex: 1 1 auto;
-    padding: 0 6px;
+    padding: 0;
+
+    &.app-nav-controls-pull-right {
+      text-align: right;
+    }
+
+    &.app-nav-controls-search {
+      padding: 0 4px;
+    }
   }
 
+  .app-nav-primary-controls,
   .app-nav-secondary-controls {
     vertical-align: middle;
     text-align: center;
-    padding: 0 4px 0 8px;
+  }
+
+  .app-nav-primary-controls {
+    padding: 0 8px;
+  }
+
+  .app-nav-right-arrow {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: 1px;
   }
 
   .app-nav-logo {

@@ -17,9 +17,6 @@
       };
 
       $scope.aboutAppVisible = false;
-      $scope.newDocument = function() {
-        console.log('yo');
-      };
 
       $scope.aboutApp = function() {
         $scope.aboutAppVisible = !$scope.aboutAppVisible;
