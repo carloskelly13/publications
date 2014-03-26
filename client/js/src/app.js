@@ -17,8 +17,11 @@
     '$locationProvider',
     '$httpProvider',
     'RestangularProvider',
-    'authenticationProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, RestangularProvider, authenticationProvider) {
+    function($stateProvider,
+             $urlRouterProvider,
+             $locationProvider,
+             $httpProvider,
+             RestangularProvider) {
       $urlRouterProvider.otherwise('/documents');
 
       RestangularProvider.addElementTransformer('users', true, function(user) {

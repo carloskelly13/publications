@@ -1,0 +1,14 @@
+.modal-box(@width, @height) {
+  .rounded-corners(4px);
+  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1);
+  position: absolute;
+  height: @height;
+  width: @width;
+  margin: (-(@height / 2.0) - @app-nav-height) 0 0 -(@width / 2.0);
+  padding: 0;
+  top: 50%; left: 50%;
+  background: #fff;
+  background: hsla(0, 0%, 100%, 0.85);
+  overflow: hidden;
+  z-index: 9000;
+}

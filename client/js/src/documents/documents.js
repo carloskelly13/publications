@@ -7,7 +7,7 @@
 
   pub.config([
     '$stateProvider',
-    function($stateProvider, $stateParams) {
+    function($stateProvider) {
       $stateProvider
         .state('pub.documents', {
           url: '/documents',
@@ -35,7 +35,7 @@
                   return Restangular.one('documents', $stateParams.documentId).get();
                 }
               ]
-            } 
+            }
           })
             .state('pub.documents.document.views', {
               url: '/view',
