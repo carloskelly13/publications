@@ -10,6 +10,31 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+.app-footer {
+  background: @blue;
+  border-top: 1px solid darken(@blue, 10%);
+  bottom: 0;
+  height: @app-footer-height;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+
+  .app-footer-text {
+    color: #fff;
+    display: inline-block;
+    font-size: 0.85em;
+    font-weight: 500;
+    line-height: @app-footer-height;
+    padding: 0 8px;
+
+    &.app-footer-text-pull-right {
+      float: right;
+      font-weight: 400;
+    }
+  }
+}
+
 .app-nav {
   background: #fff;
   border-bottom: 1px solid @mediumgray-dark;
@@ -40,8 +65,8 @@ html, body {
   .app-nav-text {
     display: inline-block;
     font-weight: 500;
-    line-height: 24px;
-    height: 24px;
+    line-height: @app-nav-height;
+    height: @app-nav-height;
     vertical-align: middle;
   }
 
@@ -55,7 +80,7 @@ html, body {
     }
 
     &.app-nav-controls-search {
-      padding: 0 10px;
+      padding: 0 4px;
       height: 100%;
     }
   }
@@ -92,16 +117,12 @@ html, body {
 }
 
 .app-cover {
-  background: transparent;
+  background: hsla(0, 0%, 0%, 0.1);
   height: 100%;
   position: absolute;
   top: 0; left: 0;
   width: 100%;
   z-index: 8999;
-}
-
-.user-box {
-  .modal-box(400px, 420px);
 }
 
 .pub-logo-72 {

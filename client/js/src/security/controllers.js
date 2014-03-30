@@ -17,13 +17,19 @@
         }
       });
 
+      $scope.loginModalVisible = false;
+
+      $scope.loginModal = function() {
+        $scope.loginModalVisible = !$scope.loginModalVisible;
+      };
+
       $scope.login = function() {
 
         authentication.login({
           username: $scope.username,
           password: $scope.password
         },
-        function(res) {
+        function() {
           $state.go('pub.documents');
         },
         function(err) {

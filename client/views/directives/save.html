@@ -1,0 +1,10 @@
+<div class="modal-dialog modal-dialog-save">
+  <div class="modal-dialog-title-bar">
+    <span class="message">Do you want to save changes to {{ doc.name }}?</span>
+  </div>
+    <div class="modal-content">
+      <button class="button button-form button-form-submit" type="button" ng-click="updateDocument(true)">Save and Close</button>
+      <button class="button button-form button-form-slim button-form-destructive" type="button" ng-click="showAllDocuments()">Discard Changes</button>
+      <button class="button button-form button-form-slim" type="button" ng-click="saveModal()">Cancel</button>
+    </div>
+</div>

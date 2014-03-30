@@ -45,7 +45,7 @@
         return {
           responseError: function(response) {
             if (response.status === 401 || response.status === 403) {
-              $location.path('/login');
+              $location.path('/home');
               return $q.reject(response);
             } else {
               return $q.reject(response);

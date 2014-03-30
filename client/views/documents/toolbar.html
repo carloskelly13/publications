@@ -1,7 +1,6 @@
-<div class="app-nav">
+<div class="app-nav animation-fade-in">
   <div class="app-nav-primary-controls">
-    <button class="button button-text button-text-no-frame" 
-            ng-click="showAllDocuments()">
+    <button class="button button-text button-text-no-frame" ng-click="saveModal()">
       Documents
     </button>
     <div class="app-nav-right-arrow" data-icon="&#xe62c;"></div>
@@ -11,73 +10,73 @@
   </div>
   <div class="app-nav-controls app-nav-controls-pull-right">
     <div class="inspector-group">
-      <button class="button button-icon" 
-              data-icon="&#xe052;" 
+      <button class="button button-icon"
+              data-icon="&#xe052;"
               ng-click="toggleInspector('object')">
       </button>
-      <div pub-inspector-object 
-           class="inspector-view inspector-view-full-width" 
+      <div pub-inspector-object
+           class="inspector-view inspector-view-full-width"
            ng-if="currentInspector === 'object'">
       </div>
     </div>
     <div class="inspector-group">
-      <button class="button button-icon" 
-              data-icon="&#xe058;" 
+      <button class="button button-icon"
+              data-icon="&#xe058;"
               ng-click="toggleInspector('color')"
               ng-disabled="!selectedObj">
       </button>
-      <div pub-inspector-color 
-           class="inspector-view inspector-view-full-width" 
+      <div pub-inspector-color
+           class="inspector-view inspector-view-full-width"
            ng-if="currentInspector === 'color'">
       </div>
     </div>
     <div class="inspector-group">
-      <button class="button button-icon" 
-              data-icon="&#xe4e4;" 
+      <button class="button button-icon"
+              data-icon="&#xe4e4;"
               ng-click="toggleInspector('text')"
               ng-disabled="selectedObj.type !== 'text'">
       </button>
-      <div pub-inspector-text 
-           class="inspector-view inspector-view-full-width" 
+      <div pub-inspector-text
+           class="inspector-view inspector-view-full-width"
            ng-if="currentInspector === 'text'">
       </div>
     </div>
     <div class="inspector-group">
-      <button class="button button-icon" 
-              data-icon="&#xe002;" 
+      <button class="button button-icon"
+              data-icon="&#xe002;"
               ng-click="toggleInspector('zoom')">
       </button>
-      <div pub-inspector-zoom 
-           class="inspector-view inspector-view-half-width" 
+      <div pub-inspector-zoom
+           class="inspector-view inspector-view-half-width"
            ng-if="currentInspector === 'zoom'">
       </div>
     </div>
-    <button class="button button-icon" 
-            data-icon="&#xe055;" 
+    <button class="button button-icon"
+            data-icon="&#xe055;"
             ng-click=""
             ng-disabled="!selectedObj">
     </button>
-    <button class="button button-icon" 
-            data-icon="&#xe054;" 
+    <button class="button button-icon"
+            data-icon="&#xe054;"
             ng-click=""
             ng-disabled="!selectedObj">
     </button>
-    <button class="button button-icon" 
-            data-icon="&#xe02d;" 
+    <button class="button button-icon"
+            data-icon="&#xe02d;"
             ng-click=""
             ng-disabled="!selectedObj">
     </button>
-    <button class="button button-icon" 
-            data-icon="&#xe278;" 
+    <button class="button button-icon"
+            data-icon="&#xe278;"
             ng-click="">
     </button>
-    <button class="button button-icon" 
-            data-icon="&#xe24a;" 
+    <button class="button button-icon"
+            data-icon="&#xe24a;"
             ng-click="">
     </button>
-    <button class="button button-icon" 
-            data-icon="&#xe23d;" 
-            ng-click="updateDocument()">
+    <button class="button button-icon"
+            data-icon="&#xe23d;"
+            ng-click="updateDocument(false)">
     </button>
   </div>
 </div>

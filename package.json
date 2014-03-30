@@ -13,7 +13,7 @@
     "passport-local": "0.1.6",
     "bcrypt": "0.7.6",
     "ejs": "*",
-    "pdfkit": "~0.4.3"
+    "pdfkit": "~0.5.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

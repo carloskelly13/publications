@@ -12,8 +12,8 @@
     function($stateProvider) {
       $stateProvider
         .state('pub.login', {
-          url: '/login',
-          templateUrl: 'views/login/login.html',
+          url: '/home',
+          templateUrl: 'views/login/home.html',
           controller: 'LoginController'
         });
     }

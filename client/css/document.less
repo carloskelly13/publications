@@ -1,17 +1,14 @@
-.new-document-box {
-  .modal-box(400px, 300px);
-}
-
 .documents-list {
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  top: @app-nav-height; left: 0; bottom: 0; right: 0;
+  top: @app-nav-height * 2; left: 0; bottom: @app-footer-height; right: 0;
   width: 100%;
   z-index: 3;
 
   .document-item {
+    .animation(background, 250ms);
     .rounded-corners(4px);
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -27,7 +24,7 @@
     &:hover {
       background: hsla(0, 0%, 0%, 0.1);
     }
-    
+
     &.selected {
       background: @blue;
       color: #fff;

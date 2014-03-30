@@ -2,10 +2,11 @@
   'use strict';
 
   var pub = angular.module('pub.documents.controllers', []);
-  
+
   pub.value('zoomLevels', [ 0.5, 1, 1.5, 2, 2.5, 3 ]);
-  pub.value('objAnchors', { 
-    size: 10, 
+  pub.value('fonts', [{ name: 'Georgia' }, { name: 'Helvetica Neue' }]);
+  pub.value('objAnchors', {
+    size: 10,
     points: [
       { coordinate: 'nw', x: 0, y: 0 },
       { coordinate: 'n', x: 0.5, y: 0 },
@@ -31,16 +32,17 @@
       $scope.updateAuthenticationStatus();
       $scope.documents = documents;
       $scope.dpi = 72;
-      $scope.newDocumentWindowVisible = false;
+      $scope.newDocumentModalVisible = false;
+      $scope.deleteModalVisible = false;
       $scope.selectedDoc = null;
-      
+
       $scope.docSelected = function(obj) {
         if (obj === $scope.selectedDoc && obj !== null) {
           $state.go('pub.documents.document.views', { documentId: $scope.selectedDoc._id });
           $scope.selectedDoc = null;
         } else {
-          $scope.selectedDoc = obj; 
-        }        
+          $scope.selectedDoc = obj;
+        }
       };
 
       $scope.newDocument = function() {
@@ -51,27 +53,38 @@
           height: $scope.height,
           shapes: []
         }).then(function(res) {
-          $scope.newDocumentWindowVisible = false;
+          $scope.newDocumentModal();
           $scope.documents.push(res);
         });
       };
-      
+
+      $scope.downloadPdf = function() {
+        window.open('/documents/' + $scope.selectedDoc._id + '/pdf');
+      };
 
       $scope.deleteDocument = function() {
         $scope.selectedDoc.remove();
         $scope.documents.splice(_.indexOf($scope.documents, $scope.selectedDoc), 1);
         $scope.selectedDoc = null;
+        $scope.deleteModal();
       };
-      
-      $scope.newDocumentWindow = function() {
-        $scope.newDocumentWindowVisible = !$scope.newDocumentWindowVisible;
+
+      $scope.newDocumentModal = function() {
+        $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
+        $scope.name = null;
+        $scope.width = null;
+        $scope.height = null;
       };
-      
+
+      $scope.deleteModal = function() {
+        $scope.deleteModalVisible = !$scope.deleteModalVisible;
+      };
+
       $scope.documentIconSize = function(doc) {
         var iconDpi = 15,
           iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30),
           iconHeight = (iconWidth / doc.width) * doc.height;
-        return 'width: ' + iconWidth + 'px; height: ' + iconHeight + 'px';
+        return { width: iconWidth + 'px', height: iconHeight + 'px' };
       };
 
     }
@@ -89,28 +102,41 @@
       $scope.showCanvasGrid = true;
       $scope.snapToGrid = true;
       $scope.currentInspector = null;
+      $scope.saveModalVisible = false;
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
       };
-      
-      $scope.updateDocument = function() {
+
+      $scope.updateDocument = function(closeDocumentView) {
         $scope.doc.put();
+
+        if (closeDocumentView) {
+          $scope.showAllDocuments();
+        }
       };
-      
+
+      $scope.showAllDocuments = function() {
+        $state.go('pub.documents');
+      };
+
+      $scope.saveModal = function() {
+        $scope.saveModalVisible = !$scope.saveModalVisible;
+      };
+
       $scope.setZoomLevel = function(zoomLevel) {
         $scope.zoomLevel = zoomLevel;
         $scope.toggleInspector(null);
       };
-      
+
       $scope.toggleCanvasGrid = function() {
         $scope.showCanvasGrid = !$scope.showCanvasGrid;
       };
-      
+
       $scope.toggleSnapToGrid = function() {
         $scope.snapToGrid = !$scope.snapToGrid;
       };
-      
+
       $scope.toggleInspector = function(inspector) {
         if (inspector === $scope.currentInspector) {
           $scope.currentInspector = null;
@@ -120,26 +146,24 @@
       };
     }
   ]);
-  
+
   pub.controller('DocumentToolbarController', [
     '$scope',
     '$state',
     'documentServices',
     'zoomLevels',
-    function($scope, $state, documentServices, zoomLevels) {
+    'fonts',
+    function($scope, $state, documentServices, zoomLevels, fonts) {
       $scope.zoomLevels = zoomLevels;
-      
+      $scope.fonts = fonts;
+
       $scope.addObject = function(objType) {
         $scope.doc.shapes.push(documentServices.newShape(objType));
         $scope.toggleInspector(null);
       };
-
-      $scope.showAllDocuments = function() {
-        $state.go('pub.documents');
-      };
     }
   ]);
-  
+
   pub.controller('DocumentCanvasController', [
     '$scope',
     '$state',
@@ -147,15 +171,15 @@
     'objAnchors',
     function($scope, $state, documentServices, objAnchors) {
       $scope.objAnchors = objAnchors;
-        
+
       $scope.xAxisRange = function() {
         return _.range($scope.doc.width / 0.25);
       };
-      
+
       $scope.yAxisRange = function() {
         return _.range($scope.doc.height / 0.25);
       };
-      
+
       $scope.unitDivider = function() {
         if ($scope.zoomLevel > 1) {
           return 0.5;

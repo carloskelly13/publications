@@ -8,6 +8,7 @@
     '$location',
     'authentication',
     function($scope, $location, authentication) {
+      $scope.userModalVisible = false;
 
       $scope.updateAuthenticationStatus = function() {
         authentication.requestSecurityContext().then(function(securityContext) {
@@ -22,11 +23,16 @@
         $scope.aboutAppVisible = !$scope.aboutAppVisible;
       };
 
+      $scope.userModal = function() {
+        $scope.userModalVisible = !$scope.userModalVisible;
+      };
+
       $scope.logout = function() {
         $scope.updateAuthenticationStatus();
+        $scope.userModal();
 
         authentication.logout(function() {
-          $location.path('/login');
+          $location.path('/home');
         },
         function(err) {
           console.log(err);

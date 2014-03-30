@@ -124,6 +124,18 @@
     }
   });
 
+  pub.directive('pubModalSave', function() {
+    return {
+      templateUrl: '/views/directives/save.html'
+    }
+  });
+
+  pub.directive('pubModalDelete', function() {
+    return {
+      templateUrl: '/views/directives/delete.html'
+    }
+  });
+
   pub.directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'

@@ -45,7 +45,19 @@
 
 }
 
+.button-form-group {
+  width: 100%;
+  margin: 1em 0 0 0;
+
+  &:after {
+    clear: both;
+    content: ' ';
+    display: block;
+  }
+}
+
 .button {
+  .animation(all, 250ms);
   border: none;
   -webkit-font-smoothing: antialiased;
   background: transparent;
@@ -67,6 +79,63 @@
   zoom: 1;
   outline: none;
   margin: 0;
+
+  &.button-form {
+    .rounded-corners(4px);
+    font-weight: 500;
+    border: 1px solid @mediumgray-dark;
+    color: @darkgray-dark;
+    padding: 0;
+    height: 40px;
+    line-height: 39px;
+    width: 100%;
+    margin-top: 1em;
+
+    &:hover {
+      background: @blue;
+      border-color: @blue;
+      color: #fff;
+    }
+
+    &:active {
+      background: lighten(@blue, 10%);
+      border-color: lighten(@blue, 10%);
+      color: #fff;
+    }
+
+    &.button-form-submit {
+      &:hover {
+        background: darken(@green, 5%);
+        border-color: darken(@green, 5%);
+        color: #fff;
+      }
+
+      &:active {
+        background: @green;
+        border-color: @green;
+        color: #fff;
+      }
+    }
+
+    &.button-form-destructive {
+      &:hover {
+        background: @grapefruit-dark;
+        border-color: @grapefruit-dark;
+        color: #fff;
+      }
+
+      &:active {
+        background: @grapefruit-light;
+        border-color: @grapefruit-light;
+        color: #fff;
+      }
+    }
+
+    &.button-form-slim {
+      height: 30px;
+      line-height: 29px;
+    }
+  }
 
 
   &.button-text {
@@ -113,7 +182,6 @@
 
   &.button-icon {
    .rounded-corners(0);
-   .animation(color, 250ms);
     border: none;
     padding: 0 8px;
     font-size: 24px;
@@ -138,25 +206,18 @@
         color: @grapefruit-dark;
       }
     }
-
-    &.button-green {
-      &:hover {
-        color: @grass-light;
-      }
-
-      &:active {
-        color: @grass-dark;
-      }
-    }
   }
 
-  &:disabled, &.button-red:disabled, &.button-green:disabled {
-    color: @mediumgray-light;
+  &:disabled,
+  &.button-red:disabled,
+  &.button-form-submit:disabled,
+  &.button-form-destructive:disabled {
+    color: #ccc;
     cursor: default;
-    border-color: @mediumgray-dark;
+    border-color: #eee;
 
     &:hover, &:active {
-      border-color: @mediumgray-dark;
+      border-color: #eee;
       background: transparent;
       text-shadow: none;
       color: #ccc;
@@ -190,16 +251,17 @@
   margin: 0;
 
   &.input-text-search {
+    .rounded-corners(0);
+    color: @darkgray-dark;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    height: @app-nav-height;
+    font-size: 16px;
     text-align: center;
     width: 100%;
-    color: @darkgray-dark;
-    .rounded-corners(0);
-    border-top: none;
-    border-bottom: none;
-    border-color: hsla(0, 0%, 0%, 0.1);
-    background: hsla(0, 0%, 0%, 0.033);
-    height: 100%;
-    font-size: 16px;
+    position: relative;
+    top: @app-nav-height;
 
     &::-webkit-input-placeholder {
       .search-input-icon;
@@ -217,4 +279,69 @@
       .search-input-icon;
     }
   }
+}
+
+fieldset.label-input {
+  .rounded-corners(4px);
+  display: inline-block;
+  border: 1px solid @mediumgray-light;
+  margin: 0 0 1em 0;
+  padding: 5px;
+  text-align: left;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+
+  label {
+    border: none;
+    background: transparent;
+    color: @darkgray-light;
+    display: block;
+    font-size: 0.75em;
+    font-weight: 500;
+    margin: 0 0 3px 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  input {
+    .rounded-corners(0);
+    border: none;
+    background: transparent;
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+}
+
+.label-input-group {
+  width: 100%;
+
+  .label-input {
+    width: 50%;
+
+    &:first-child {
+      .rounded-corners(4px 0 0 4px);
+      float: left;
+      border-right: none;
+    }
+
+    &:last-child {
+      .rounded-corners(0 4px 4px 0);
+      float: right;
+    }
+  }
+
+  &:after {
+    clear: both;
+    content: ' ';
+    display: block;
+  }
+}
+
+.label-input-group {
+  display: block;
 }

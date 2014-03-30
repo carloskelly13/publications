@@ -65,7 +65,7 @@ exports.remove = function(req, res) {
       user.documents.remove(id);
       user.save(function(err) {
         if (err) res.json({ success: false });
-        DocumentModel.findById(id).remove(function(err, doc) {
+        DocumentModel.findById(id).remove(function() {
           res.json({ success: true });
         });
       });
@@ -74,22 +74,17 @@ exports.remove = function(req, res) {
 };
 
 exports.pdf = function(req, res) {
-    var id = req.route.params.id;
+  var id = req.route.params.id;
 
-    DocumentModel.findById(id, function(err, doc) {
-        if (_.isObject(doc)) {
-            var fileIdName = 'tmp/' + doc.id.toString() + '.pdf';
-            doc.pdf().write(fileIdName, function() {
-                res.set('Content-type', 'application/pdf');
-                res.download(fileIdName, 'document.pdf', function(err) {
-                     if (err) console.log(err);
-                     else
-                         fs.unlink(fileIdName, function(err) {
-                             if (err) console.log(err);
-                         });
-                 });
-            });
-        }
-        else res.json(null);
-    });
+  DocumentModel.findById(id, function(err, doc) {
+      if (_.isObject(doc)) {
+        var pdf = doc.pdf();
+        res.set('Content-type', 'application/pdf');
+        pdf.pipe(res);
+        pdf.end();
+
+      } else {
+        res.json({ error: 'PDF could not be generated.'});
+      }
+  });
 };

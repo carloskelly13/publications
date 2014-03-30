@@ -1,1 +1,27 @@
-Text
+<h1>Text</h1>
+<div class="inspector-segmented-control">
+  <label ng-class="{ active: selectedObj.textAlign === 'left' }">
+    <input name="font-style" type="radio" ng-model="selectedObj.textAlign" value="left">
+    <span class="label" data-icon="&#xe4f6;"></span>
+  </label>
+  <label ng-class="{ active: selectedObj.textAlign === 'center' }">
+    <input name="font-style" type="radio" ng-model="selectedObj.textAlign" value="center">
+    <span class="label" data-icon="&#xe4f5;"></span>
+  </label>
+  <label ng-class="{ active: selectedObj.textAlign === 'right' }">
+    <input name="font-style" type="radio" ng-model="selectedObj.textAlign" value="right">
+    <span class="label" data-icon="&#xe4f7;"></span>
+  </label>
+  <label ng-class="{ active: selectedObj.fontWeight === '600' }">
+    <input name="font-weight" type="checkbox" ng-model="selectedObj.fontWeight" ng-true-value="600" ng-false-value="400">
+    <span class="label" data-icon="&#xe4e1;"></span>
+  </label>
+  <label ng-class="{ active: selectedObj.fontStyle === 'italic' }">
+    <input name="font-style" type="checkbox" ng-model="selectedObj.fontStyle" ng-true-value="italic" ng-false-value="normal">
+    <span class="label" data-icon="&#xe4e6;"></span>
+  </label>
+</div>
+<div class="text-area-container">
+  <textarea class="inspector-text" ng-model="selectedObj.text" ng-style="{ fontFamily: selectedObj.fontFamily }"></textarea>
+</div>
+<!-- <select ng-model="selectedObj.fontFamily" required="true" ng-options="font.name as font.name for font in fonts"></select> -->

@@ -30,9 +30,7 @@
 
         logout: function(success, error) {
           securityContext.reset();
-          $http.get('/logout').success(function() {
-            success();
-          }).error(error);
+          $http.get('/logout').success(success).error(error);
         }
       };
 

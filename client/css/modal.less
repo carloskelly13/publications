@@ -1,14 +1,100 @@
-.modal-box(@width, @height) {
+@modal-line-color: hsla(0, 0%, 0%, 0.2);
+
+.modal-dialog {
+  .animation-expand-open;
   .rounded-corners(4px);
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1);
-  position: absolute;
-  height: @height;
-  width: @width;
-  margin: (-(@height / 2.0) - @app-nav-height) 0 0 -(@width / 2.0);
-  padding: 0;
-  top: 50%; left: 50%;
+  .center;
   background: #fff;
-  background: hsla(0, 0%, 100%, 0.85);
+  background: hsla(0, 0%, 100%, 0.95);
+  box-shadow: 0 0 0 1px @modal-line-color;
   overflow: hidden;
+  padding: 0;
   z-index: 9000;
+
+  &.modal-dialog-new-document {
+    width: 350px;
+  }
+
+  &.modal-dialog-login {
+    width: 350px;
+  }
+
+  &.modal-dialog-user {
+    width: 350px;
+  }
+
+  &.modal-dialog-save {
+    width: 350px;
+  }
+
+  &.modal-dialog-delete {
+    width: 350px;
+    background: fade(@grapefruit-dark, 95%);
+    box-shadow: 0 0 0 1px fade(darken(@grapefruit-dark, 10%), 90%);
+
+    .modal-dialog-title-bar {
+      color: #fff;
+    }
+
+    .button-form {
+      border-color: #fff;
+      border-color: hsla(0, 0%, 100%, 0.90);
+      color: #fff;
+      color: hsla(0, 0%, 100%, 0.90);
+
+      &:hover {
+        border-color: #fff;
+        border-color: hsla(0, 0%, 100%, 0.90);
+        background: #fff;
+        background: hsla(0, 0%, 100%, 0.90);
+        color: @grapefruit-dark;
+      }
+
+      &:active {
+        border-color: #fff;
+        border-color: hsla(0, 0%, 100%, 0.70);
+        background: #fff;
+        background: hsla(0, 0%, 100%, 0.70);
+        color: @grapefruit-dark;
+      }
+    }
+  }
+
+  .modal-dialog-title-bar {
+    display: block;
+    padding: 1.5em 1.5em 0 1.5em;
+    text-align: center;
+
+    .title {
+      font-size: 1.33em;
+      font-weight: 400;
+      letter-spacing: -0.2px;
+    }
+
+    .message {
+      font-size: 1.1em;
+      font-weight: 500;
+      letter-spacing: -0.1px;
+    }
+  }
+
+  .modal-content {
+    padding: 1.5em 2em;
+    text-align: center;
+  }
+
+  .modal-controls {
+    padding: 0.5em 0;
+    width: 100%;
+
+    .button {
+      float: right;
+      margin-right: 0.5em;
+
+      &:first-child {
+        float: left;
+        margin-left: 0.5em;
+      }
+    }
+  }
 }
