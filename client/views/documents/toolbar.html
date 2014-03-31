@@ -63,16 +63,18 @@
     </button>
     <button class="button button-icon"
             data-icon="&#xe02d;"
-            ng-click=""
+            ng-click="cutObj()"
             ng-disabled="!selectedObj">
     </button>
     <button class="button button-icon"
             data-icon="&#xe278;"
-            ng-click="">
+            ng-click="copyObj()"
+            ng-disabled="!selectedObj">
     </button>
     <button class="button button-icon"
             data-icon="&#xe24a;"
-            ng-click="">
+            ng-click="pasteObj()"
+            ng-disabled="!clipboard">
     </button>
     <button class="button button-icon"
             data-icon="&#xe23d;"

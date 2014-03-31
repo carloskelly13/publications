@@ -28,7 +28,7 @@
             abstract: true,
             templateUrl: '/views/documents/document.html',
             resolve: {
-              document: [
+              doc: [
                 'Restangular',
                 '$stateParams',
                 function(Restangular, $stateParams) {

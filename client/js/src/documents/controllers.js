@@ -94,18 +94,38 @@
     '$scope',
     '$state',
     'documentServices',
-    'document',
-    function($scope, $state, documentServices, document) {
+    'doc',
+    function($scope, $state, documentServices, doc) {
       $scope.zoomLevel = 1;
-      $scope.doc = document;
+      $scope.doc = doc;
       $scope.selectedObj = null;
       $scope.showCanvasGrid = true;
       $scope.snapToGrid = true;
       $scope.currentInspector = null;
       $scope.saveModalVisible = false;
+      $scope.clipboard = null;
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
+      };
+      
+      $scope.cutObj = function() {
+        $scope.clipboard = angular.copy($scope.selectedObj);
+        var objIdx = $scope.doc.shapes.indexOf($scope.selectedObj);
+        $scope.doc.shapes.splice(objIdx, 1);
+        $scope.selectedObj = null;
+      };
+      
+      $scope.copyObj = function() {
+        $scope.clipboard = angular.copy($scope.selectedObj);
+      };
+      
+      $scope.pasteObj = function() {
+        var duplicateObj = angular.copy($scope.clipboard);
+        duplicateObj._id = undefined;
+        duplicateObj.x += 0.25;
+        duplicateObj.y += 0.25;
+        $scope.doc.shapes.push(duplicateObj);
       };
 
       $scope.updateDocument = function(closeDocumentView) {

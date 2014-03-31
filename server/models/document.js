@@ -32,18 +32,18 @@ documentSchema.methods = {
     /**
      * Register Helvetica Neue Typefaces
      */
-    doc.registerFont('HELVETICA_NEUE_400_NORMAL', 'client/css/typefaces/HelveticaNeue.ttf');
-    doc.registerFont('HELVETICA_NEUE_600_NORMAL', 'client/css/typefaces/HelveticaNeueBold.ttf');
-    doc.registerFont('HELVETICA_NEUE_400_ITALIC', 'client/css/typefaces/HelveticaNeueItalic.ttf');
-    doc.registerFont('HELVETICA_NEUE_600_ITALIC', 'client/css/typefaces/HelveticaNeueBoldItalic.ttf');
+    doc.registerFont('HELVETICA_NEUE_NORMAL_NORMAL', 'client/css/typefaces/HelveticaNeue.ttf');
+    doc.registerFont('HELVETICA_NEUE_BOLD_NORMAL', 'client/css/typefaces/HelveticaNeueBold.ttf');
+    doc.registerFont('HELVETICA_NEUE_NORMAL_ITALIC', 'client/css/typefaces/HelveticaNeueItalic.ttf');
+    doc.registerFont('HELVETICA_NEUE_BOLD_ITALIC', 'client/css/typefaces/HelveticaNeueBoldItalic.ttf');
 
     /**
      * Register Georgia Typefaces
      */
-    doc.registerFont('GEORGIA_400_NORMAL', 'client/css/typefaces/Georgia.ttf');
-    doc.registerFont('GEORGIA_600_NORMAL', 'client/css/typefaces/GeorgiaBold.ttf');
-    doc.registerFont('GEORGIA_400_ITALIC', 'client/css/typefaces/GeorgiaItalic.ttf');
-    doc.registerFont('GEORGIA_600_ITALIC', 'client/css/typefaces/GeorgiaBoldItalic.ttf');
+    doc.registerFont('GEORGIA_NORMAL_NORMAL', 'client/css/typefaces/Georgia.ttf');
+    doc.registerFont('GEORGIA_BOLD_NORMAL', 'client/css/typefaces/GeorgiaBold.ttf');
+    doc.registerFont('GEORGIA_NORMAL_ITALIC', 'client/css/typefaces/GeorgiaItalic.ttf');
+    doc.registerFont('GEORGIA_BOLD_ITALIC', 'client/css/typefaces/GeorgiaBoldItalic.ttf');
 
     _.each(model.shapes, function(shape) {
       var obj;

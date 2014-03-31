@@ -27,7 +27,7 @@ var shapeSchema = new Schema({
     text: { type: String },
     fontSize: { type: String },
     fontFamily: { type: String },
-    fontWeight: { type: Number },
+    fontWeight: { type: String },
     fontStyle: { type: String },
     textAlign: { type: String }
 });
