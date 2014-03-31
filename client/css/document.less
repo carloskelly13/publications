@@ -8,33 +8,22 @@
   z-index: 3;
 
   .document-item {
-    .animation(background, 250ms);
+    .animation(all, 250ms);
     .rounded-corners(4px);
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
     display: inline-block;
-    cursor: default;
+    cursor: pointer;
     margin: 1em;
     padding: 0.5em;
     text-align: center;
     vertical-align: bottom;
 
-    &:hover {
-      background: hsla(0, 0%, 0%, 0.1);
-    }
-
-    &.selected {
-      background: @blue;
-      color: #fff;
-
-      .document-icon {
-        border-color: @navy;
-      }
-    }
 
     .document-icon {
+      .animation(all, 250ms);
       display: inline-block;
       background: #fff;
       border: 1px solid @mediumgray-dark;
@@ -48,13 +37,22 @@
       }
     }
 
+    &:hover {
+      background: @blue;
+      color: #fff;
+
+      .document-icon {
+        border-color: darken(@blue, 10%);
+      }
+    }
+
     .document-name,
     .document-date {
       display: block;
     }
 
     .document-name {
-      font-weight: 500;
+      font-weight: bold;
     }
 
     .document-date {

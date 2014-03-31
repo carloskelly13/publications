@@ -6,19 +6,18 @@
   </div>
   <div class="app-nav-secondary-controls">
     <button class="button button-icon" data-icon="&#xe2aa;" ng-click="newDocumentModal()"></button>
-    <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe21e;" ng-click="downloadPdf()"></button>
-    <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe001;" ng-click="deleteModal()"></button>
+<!--     <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe21e;" ng-click="downloadPdf()"></button>
+    <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe001;" ng-click="deleteModal()"></button> -->
     <button class="button button-icon" data-icon="&#xe174;" ng-click="userModal()"></button>
   </div>
 </div>
 <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
-<div class="documents-list" ng-click="docSelected(null)">
+<div class="documents-list">
   <div class="document-item"
        pub-document-item
        ng-repeat="doc in documents | filter: search | orderBy: 'modified' : true"
        ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' );"
-       ng-click="docSelected(doc); $event.stopPropagation();"
-       ng-class="{ selected: selectedDoc === doc }" >
+       ui-sref="pub.documents.document.views({ documentId: doc._id })">
   </div>
 </div>
 <div pub-modal-new-document class="app-cover animation-fade-in" ng-show="newDocumentModalVisible"></div>

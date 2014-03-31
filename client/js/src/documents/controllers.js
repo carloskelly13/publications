@@ -34,16 +34,6 @@
       $scope.dpi = 72;
       $scope.newDocumentModalVisible = false;
       $scope.deleteModalVisible = false;
-      $scope.selectedDoc = null;
-
-      $scope.docSelected = function(obj) {
-        if (obj === $scope.selectedDoc && obj !== null) {
-          $state.go('pub.documents.document.views', { documentId: $scope.selectedDoc._id });
-          $scope.selectedDoc = null;
-        } else {
-          $scope.selectedDoc = obj;
-        }
-      };
 
       $scope.newDocument = function() {
         documentsApi.post({
@@ -58,16 +48,16 @@
         });
       };
 
-      $scope.downloadPdf = function() {
-        window.open('/documents/' + $scope.selectedDoc._id + '/pdf');
-      };
+      // $scope.downloadPdf = function() {
+      //   window.open('/documents/' + $scope.selectedDoc._id + '/pdf');
+      // };
 
-      $scope.deleteDocument = function() {
-        $scope.selectedDoc.remove();
-        $scope.documents.splice(_.indexOf($scope.documents, $scope.selectedDoc), 1);
-        $scope.selectedDoc = null;
-        $scope.deleteModal();
-      };
+      // $scope.deleteDocument = function() {
+      //   $scope.selectedDoc.remove();
+      //   $scope.documents.splice(_.indexOf($scope.documents, $scope.selectedDoc), 1);
+      //   $scope.selectedDoc = null;
+      //   $scope.deleteModal();
+      // };
 
       $scope.newDocumentModal = function() {
         $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
@@ -108,18 +98,18 @@
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
       };
-      
+
       $scope.cutObj = function() {
         $scope.clipboard = angular.copy($scope.selectedObj);
         var objIdx = $scope.doc.shapes.indexOf($scope.selectedObj);
         $scope.doc.shapes.splice(objIdx, 1);
         $scope.selectedObj = null;
       };
-      
+
       $scope.copyObj = function() {
         $scope.clipboard = angular.copy($scope.selectedObj);
       };
-      
+
       $scope.pasteObj = function() {
         var duplicateObj = angular.copy($scope.clipboard);
         duplicateObj._id = undefined;
