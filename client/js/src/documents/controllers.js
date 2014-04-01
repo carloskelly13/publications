@@ -33,7 +33,6 @@
       $scope.documents = documents;
       $scope.dpi = 72;
       $scope.newDocumentModalVisible = false;
-      $scope.deleteModalVisible = false;
 
       $scope.newDocument = function() {
         documentsApi.post({
@@ -48,26 +47,11 @@
         });
       };
 
-      // $scope.downloadPdf = function() {
-      //   window.open('/documents/' + $scope.selectedDoc._id + '/pdf');
-      // };
-
-      // $scope.deleteDocument = function() {
-      //   $scope.selectedDoc.remove();
-      //   $scope.documents.splice(_.indexOf($scope.documents, $scope.selectedDoc), 1);
-      //   $scope.selectedDoc = null;
-      //   $scope.deleteModal();
-      // };
-
       $scope.newDocumentModal = function() {
         $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
         $scope.name = null;
         $scope.width = null;
         $scope.height = null;
-      };
-
-      $scope.deleteModal = function() {
-        $scope.deleteModalVisible = !$scope.deleteModalVisible;
       };
 
       $scope.documentIconSize = function(doc) {
@@ -94,6 +78,7 @@
       $scope.currentInspector = null;
       $scope.saveModalVisible = false;
       $scope.clipboard = null;
+      $scope.deleteModalVisible = false;
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
@@ -128,6 +113,26 @@
 
       $scope.showAllDocuments = function() {
         $state.go('pub.documents');
+      };
+      
+      $scope.downloadPdf = function() {
+        $scope.doc.put().then(function(obj) {
+          // console.log(obj);
+          // window.open('/documents/' + obj._id + '/pdf');
+        });
+      };
+      
+      $scope.deleteModal = function() {
+        $scope.deleteModalVisible = !$scope.deleteModalVisible;
+      };
+      
+      $scope.deleteDocument = function() {
+        _.remove($scope.documents, function(doc) {
+          return doc._id === $scope.doc._id;
+        });
+        $scope.doc.remove();
+        $scope.deleteModal();
+        $scope.showAllDocuments();
       };
 
       $scope.saveModal = function() {

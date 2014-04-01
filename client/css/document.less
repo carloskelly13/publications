@@ -45,6 +45,15 @@
         border-color: darken(@blue, 10%);
       }
     }
+    
+    &:active {
+      background: lighten(@blue, 10%);
+      color: #fff;
+    
+      .document-icon {
+        border-color: @blue;
+      }
+    }
 
     .document-name,
     .document-date {
