@@ -88,7 +88,8 @@ documentSchema.methods = {
           .text(shape.text, shape.x * dpi, shape.y * dpi, {
             width: shape.width * dpi,
             height: shape.height * dpi,
-            align: shape.textAlign
+            align: shape.textAlign,
+            lineGap: 5
           });
       }
 

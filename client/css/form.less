@@ -154,8 +154,9 @@
       background: lighten(@blue, 10%);
       border-color: lighten(@blue, 10%);
     }
-    
+
     &.button-text-zoom {
+      .rounded-corners(2px);
       padding: 0;
       border-color: @darkgray-dark;
       height: 24px;
@@ -166,13 +167,13 @@
       letter-spacing: -0.05em;
       vertical-align: middle;
       margin: 0 8px;
-      
+
       &:hover {
         background: transparent;
         border-color: @blue;
         color: @blue;
       }
-      
+
       &:active {
         background: transparent;
         border-color: lighten(@blue, 10%);
@@ -194,7 +195,7 @@
         background: transparent;
         color: @blue;
       }
-      
+
       &:active {
         background: transparent;
         color: lighten(@blue, 10%);
@@ -228,12 +229,12 @@
         color: @red-light;
       }
     }
-    
+
     &.button-green {
       &:hover {
         color: darken(@green, 5%);
       }
-    
+
       &:active {
         color: @green;
       }

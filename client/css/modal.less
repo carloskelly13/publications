@@ -1,5 +1,13 @@
 @modal-line-color: hsla(0, 0%, 0%, 0.2);
 
+.modal-blur {
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
 .modal-dialog {
   .animation-expand-open;
   .rounded-corners(4px);
@@ -10,22 +18,7 @@
   overflow: hidden;
   padding: 0;
   z-index: 9000;
-
-  &.modal-dialog-new-document {
-    width: 350px;
-  }
-
-  &.modal-dialog-login {
-    width: 350px;
-  }
-
-  &.modal-dialog-user {
-    width: 350px;
-  }
-
-  &.modal-dialog-save {
-    width: 350px;
-  }
+  width: 350px;
 
   &.modal-dialog-delete {
     width: 350px;

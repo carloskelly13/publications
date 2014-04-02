@@ -80,6 +80,7 @@
       $scope.saveModalVisible = false;
       $scope.clipboard = null;
       $scope.deleteModalVisible = false;
+      $scope.exportModalVisible = false;
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
@@ -115,16 +116,21 @@
       $scope.showAllDocuments = function() {
         $state.go('pub.documents');
       };
-      
+
       $scope.exportDocument = function() {
         $scope.doc.put().then(function() {
+          $scope.exportModal();
         });
       };
-      
+
       $scope.deleteModal = function() {
         $scope.deleteModalVisible = !$scope.deleteModalVisible;
       };
-      
+
+      $scope.exportModal = function() {
+        $scope.exportModalVisible = !$scope.exportModalVisible;
+      };
+
       $scope.deleteDocument = function() {
         _.remove($scope.documents, function(doc) {
           return doc._id === $scope.doc._id;
