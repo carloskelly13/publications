@@ -67,9 +67,10 @@
   pub.controller('DocumentController', [
     '$scope',
     '$state',
+    '$window',
     'documentServices',
     'doc',
-    function($scope, $state, documentServices, doc) {
+    function($scope, $state, $window, documentServices, doc) {
       $scope.zoomLevel = 1;
       $scope.doc = doc;
       $scope.selectedObj = null;
@@ -115,10 +116,8 @@
         $state.go('pub.documents');
       };
       
-      $scope.downloadPdf = function() {
-        $scope.doc.put().then(function(obj) {
-          // console.log(obj);
-          // window.open('/documents/' + obj._id + '/pdf');
+      $scope.exportDocument = function() {
+        $scope.doc.put().then(function() {
         });
       };
       

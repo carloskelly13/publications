@@ -154,6 +154,31 @@
       background: lighten(@blue, 10%);
       border-color: lighten(@blue, 10%);
     }
+    
+    &.button-text-zoom {
+      padding: 0;
+      border-color: @darkgray-dark;
+      height: 24px;
+      width: 50px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: -0.05em;
+      vertical-align: middle;
+      margin: 0 8px;
+      
+      &:hover {
+        background: transparent;
+        border-color: @blue;
+        color: @blue;
+      }
+      
+      &:active {
+        background: transparent;
+        border-color: lighten(@blue, 10%);
+        color: lighten(@blue, 10%);
+      }
+    }
 
     &.button-text-no-frame {
       .rounded-corners(0);
@@ -161,21 +186,18 @@
       padding: 0;
       height: 24px;
       line-height: 24px;
-      font-weight: 500;
-      color: @blue;
+      font-weight: bold;
       vertical-align: middle;
 
-      &.button-leftmost {
-        margin-left: 10px;
-      }
 
-      &:hover, &:active {
+      &:hover {
         background: transparent;
-        color: darken(@blue, 10%);
-      }
-
-      &:active {
         color: @blue;
+      }
+      
+      &:active {
+        background: transparent;
+        color: lighten(@blue, 10%);
       }
     }
   }
@@ -199,11 +221,21 @@
 
     &.button-red {
       &:hover {
-        color: @red-light;
+        color: @red;
       }
 
       &:active {
-        color: @red;
+        color: @red-light;
+      }
+    }
+    
+    &.button-green {
+      &:hover {
+        color: darken(@green, 5%);
+      }
+    
+      &:active {
+        color: @green;
       }
     }
   }

@@ -1,13 +1,9 @@
 <div class="app-nav">
-  <div class="app-nav-primary-controls">
-    <div class="app-nav-text">Documents</div>
-  </div>
+  <div class="app-nav-logo"></div>
   <div class="app-nav-controls">
   </div>
   <div class="app-nav-secondary-controls">
     <button class="button button-icon" data-icon="&#xe2aa;" ng-click="newDocumentModal()"></button>
-<!--     <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe21e;" ng-click="downloadPdf()"></button>
-    <button class="button button-icon" ng-disabled="!selectedDoc" data-icon="&#xe001;" ng-click="deleteModal()"></button> -->
     <button class="button button-icon" data-icon="&#xe174;" ng-click="userModal()"></button>
   </div>
 </div>
@@ -23,10 +19,4 @@
 <div pub-modal-new-document class="app-cover animation-fade-in" ng-show="newDocumentModalVisible"></div>
 <div pub-modal-user class="app-cover animation-fade-in" ng-show="userModalVisible"></div>
 <div ui-view></div>
-<div class="app-footer">
-  <div class="app-footer-text">
-    Publications
-  </div>
-  <div class="app-footer-text app-footer-text-pull-right">
-  </div>
-</div>
+<div class="app-footer"></div>

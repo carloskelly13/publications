@@ -8,7 +8,7 @@
   z-index: 3;
 
   .document-item {
-    .animation(all, 250ms);
+    .animation(color, 250ms);
     .rounded-corners(4px);
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -20,6 +20,7 @@
     padding: 0.5em;
     text-align: center;
     vertical-align: bottom;
+    border: none;
 
 
     .document-icon {
@@ -30,28 +31,23 @@
       width: 85px;
       height: 110px;
       position: relative;
-
-      &.document-icon-horizontal {
-        width: 110px;
-        height: 80px;
-      }
     }
 
     &:hover {
-      background: @blue;
-      color: #fff;
-
+      color: @blue;
+      
       .document-icon {
-        border-color: darken(@blue, 10%);
+        border-color: @blue;
       }
     }
     
     &:active {
-      background: lighten(@blue, 10%);
-      color: #fff;
-    
+      position: relative;
+      top: 1px;
+      color: darken(@blue, 10%);
+      
       .document-icon {
-        border-color: @blue;
+        border-color: darken(@blue, 10%);
       }
     }
 
