@@ -9,6 +9,7 @@
     'authentication',
     function($scope, $location, authentication) {
       $scope.userModalVisible = false;
+      $scope.userModalBacksideVisible = false;
 
       $scope.updateAuthenticationStatus = function() {
         authentication.requestSecurityContext().then(function(securityContext) {
@@ -22,6 +23,10 @@
       $scope.aboutApp = function() {
         $scope.aboutAppVisible = !$scope.aboutAppVisible;
       };
+      
+      $scope.userModalFlip = function() {
+        $scope.userModalBacksideVisible = !$scope.userModalBacksideVisible;
+      }
 
       $scope.userModal = function() {
         $scope.userModalVisible = !$scope.userModalVisible;

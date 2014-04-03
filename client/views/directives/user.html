@@ -1,10 +1,28 @@
-<div class="modal-dialog">
-  <div class="modal-dialog-title-bar">
-    <span class="title">{{ user.name }}</span>
-  </div>
-    <div class="modal-content">
-      <button class="button button-form button-form-slim" type="button" ng-click="">Change Password</button>
-      <button class="button button-form button-form-slim" type="button" ng-click="logout()">Log Out</button>
-      <button class="button button-form button-form-slim" type="button" ng-click="userModal()">Close</button>
+<div class="modal-dialog-flip-container" ng-class="{ 'modal-dialog-show-back' : userModalBacksideVisible }">
+  <div class="modal-dialog-flip-action">
+    <div class="modal-dialog modal-dialog-flip-front">
+      <div class="modal-dialog-title-bar">
+        <span class="title">{{ user.name }}</span>
+      </div>
+      <div class="modal-content">
+        <button class="button button-form button-form-slim" type="button" ng-click="userModalFlip()">Change Password</button>
+        <button class="button button-form button-form-slim" type="button" ng-click="logout()">Log Out</button>
+        <button class="button button-form button-form-slim" type="button" ng-click="userModal()">Close</button>
+      </div>
     </div>
+    <div class="modal-dialog modal-dialog-flip-back">
+      <div class="modal-content">
+        <fieldset class="label-input label-input-modal">
+          <label for="password">New Password</label>
+          <input class="input-text" type="text" ng-model="password" name="password" id="password" required>
+        </fieldset>
+        <fieldset class="label-input label-input-modal">
+          <label for="confirm-password">Confirm New Password</label>
+          <input class="input-text" type="text" ng-model="confirmPassword" name="confirm-password" id="confirm-password" required>
+        </fieldset>
+        <button class="button button-form" type="button" ng-click="">Change Password</button>
+        <button class="button button-form button-form-slim" type="button" ng-click="userModalFlip()">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>
