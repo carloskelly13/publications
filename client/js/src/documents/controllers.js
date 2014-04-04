@@ -32,6 +32,7 @@
       $scope.updateAuthenticationStatus();
       $scope.documents = documents;
       $scope.dpi = 72;
+      $scope.iconDpi = 15;
       $scope.newDocumentModalVisible = false;
 
       $scope.newDocument = function() {
@@ -60,7 +61,6 @@
           iconHeight = (iconWidth / doc.width) * doc.height;
         return { width: iconWidth + 'px', height: iconHeight + 'px' };
       };
-
     }
   ]);
 
@@ -115,6 +115,7 @@
 
       $scope.showAllDocuments = function() {
         $state.go('pub.documents');
+        console.log($scope.documents.getList());
       };
 
       $scope.exportDocument = function() {

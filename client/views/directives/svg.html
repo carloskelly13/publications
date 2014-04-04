@@ -1,0 +1,48 @@
+<svg ng-style="documentIconSize(doc)">
+  <g ng-repeat="shape in doc.shapes">
+    <g ng-switch="shape.type">
+      <g ng-switch-when="rect">
+        <rect ng-attr-x="{{ shape.x * iconDpi }}"
+              ng-attr-y="{{ shape.y * iconDpi }}"
+              ng-attr-rx="{{ shape.r * (iconDpi / dpi) }}"
+              ng-attr-ry="{{ shape.r * (iconDpi / dpi) }}"
+              ng-attr-height="{{ shape.height * iconDpi }}"
+              ng-attr-width="{{ shape.width * iconDpi }}"
+              ng-attr-fill="{{ shape.fill }}"
+              ng-attr-stroke="{{ shape.stroke }}"
+              ng-attr-stroke-width="{{ shape.strokeWidth  * (iconDpi / dpi) }}"
+              ng-attr-fill-opacity="{{ shape.fillOpacity }}"
+              ng-attr-stroke-opacity="{{ shape.strokeOpacity }}" />
+      </g>
+      <g ng-switch-when="ellipse">
+        <ellipse ng-attr-cx="{{ (shape.x * iconDpi) + (shape.width / 2.0 * iconDpi) }}"
+                 ng-attr-cy="{{ (shape.y * iconDpi) + (shape.height / 2.0 * iconDpi) }}"
+                 ng-attr-rx="{{ shape.width / 2.0 * iconDpi }}"
+                 ng-attr-ry="{{ shape.height / 2.0 * iconDpi }}"
+                 ng-attr-fill="{{ shape.fill }}"
+                 ng-attr-stroke="{{ shape.stroke }}"
+                 ng-attr-stroke-width="{{ shape.strokeWidth }}"
+                 ng-attr-fill-opacity="{{ shape.fillOpacity }}"
+                 ng-attr-stroke-opacity="{{ shape.strokeOpacity }}" />
+      </g>
+      <g ng-switch-when="text">
+        <foreignObject ng-attr-x="{{ shape.x * iconDpi }}"
+                       ng-attr-y="{{ shape.y * iconDpi }}"
+                       ng-attr-height="{{ shape.height * iconDpi }}"
+                       ng-attr-width="{{ shape.width * iconDpi }}"
+                       ng-click="svgObjectSelected(shape)">
+          <p class="text-box" ng-style="{
+            color: shape.color,
+            fontFamily: shape.fontFamily,
+            fontStyle: shape.fontStyle,
+            fontSize: (shape.fontSize * (iconDpi / dpi)) + 'px',
+            fontWeight: shape.fontWeight,
+            textAlign: shape.textAlign
+          }">
+            {{ shape.text }}
+          </p>
+        </foreignObject>
+      </g>
+    </g>
+  </g>
+</svg>

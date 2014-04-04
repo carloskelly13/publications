@@ -147,6 +147,12 @@
       templateUrl: '/views/directives/document-item.html'
     }
   });
+  
+  pub.directive('pubDocumentSvg', function() {
+    return {
+      templateUrl: '/views/directives/svg.html'
+    }
+  });
 
   pub.directive('pubInspectorObject', function() {
     return {

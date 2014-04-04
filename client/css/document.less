@@ -1,4 +1,5 @@
 .documents-list {
+  background: #dcdedf;
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -9,36 +10,25 @@
 
   .document-item {
     .animation(color, 250ms);
-    .rounded-corners(4px);
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
     display: inline-block;
     cursor: pointer;
-    margin: 1em;
-    padding: 0.5em;
+    margin: 0.5em;
+    padding: 1em;
     text-align: center;
     vertical-align: bottom;
-    border: none;
 
 
     .document-icon {
-      .animation(all, 250ms);
-      display: inline-block;
       background: #fff;
-      border: 1px solid @mediumgray-dark;
-      width: 85px;
-      height: 110px;
-      position: relative;
+      display: inline-block;
     }
 
     &:hover {
       color: @blue;
-      
-      .document-icon {
-        border-color: @blue;
-      }
     }
     
     &:active {
