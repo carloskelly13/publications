@@ -74,6 +74,29 @@
   .modal-content {
     padding: 1.5em 2em;
     text-align: center;
+    
+    .app-logo {
+      .retina-picture('pub-full-logo', 196px, 174px, block);
+      margin: 0 auto;
+    }
+    
+    .scrollable-content {
+      .rounded-corners(4px);
+      border: 1px solid @mediumgray-light;
+      height: 100px;
+      padding: 0.75em;
+      margin: 2em auto 1em auto;
+      overflow: scroll;
+      font-size: 0.9em;
+      
+      strong {
+        font-weight: bold;
+      }
+      
+      p {
+        margin-bottom: 1em;
+      }
+    }
   }
 
   .modal-controls {

@@ -3,12 +3,12 @@
     <div class="unit unit-top" ng-repeat="x in xAxisRange()"
                       ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 7) + 'px' }"
                       ng-if="(x / 4) % unitDivider() === 0 && x > 0">
-      {{ x / 4 }}
+      {{ x / 4 }}&rdquo;
     </div>
     <div class="unit unit-left" ng-repeat="y in yAxisRange()"
                       ng-style="{ top: (y * (dpi / 4.0) * zoomLevel + 15) + 'px' }"
                       ng-if="(y / 4) % unitDivider() === 0 && y > 0">
-      {{ y / 4 }}
+      {{ y / 4 }}&rdquo;
     </div>
     <svg ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
          ng-attr-height="{{ doc.height * dpi * zoomLevel }}"

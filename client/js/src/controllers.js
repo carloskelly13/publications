@@ -18,10 +18,10 @@
         });
       };
 
-      $scope.aboutAppVisible = false;
+      $scope.aboutModalVisible = false;
 
-      $scope.aboutApp = function() {
-        $scope.aboutAppVisible = !$scope.aboutAppVisible;
+      $scope.aboutModal = function() {
+        $scope.aboutModalVisible = !$scope.aboutModalVisible;
       };
       
       $scope.userModalFlip = function() {
