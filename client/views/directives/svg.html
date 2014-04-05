@@ -10,7 +10,7 @@
               ng-attr-width="{{ shape.width * iconDpi }}"
               ng-attr-fill="{{ shape.fill }}"
               ng-attr-stroke="{{ shape.stroke }}"
-              ng-attr-stroke-width="{{ shape.strokeWidth  * (iconDpi / dpi) }}"
+              ng-attr-stroke-width="{{ shape.strokeWidth * (iconDpi / dpi) }}"
               ng-attr-fill-opacity="{{ shape.fillOpacity }}"
               ng-attr-stroke-opacity="{{ shape.strokeOpacity }}" />
       </g>
@@ -21,7 +21,7 @@
                  ng-attr-ry="{{ shape.height / 2.0 * iconDpi }}"
                  ng-attr-fill="{{ shape.fill }}"
                  ng-attr-stroke="{{ shape.stroke }}"
-                 ng-attr-stroke-width="{{ shape.strokeWidth }}"
+                 ng-attr-stroke-width="{{ shape.strokeWidth * (iconDpi / dpi) }}"
                  ng-attr-fill-opacity="{{ shape.fillOpacity }}"
                  ng-attr-stroke-opacity="{{ shape.strokeOpacity }}" />
       </g>

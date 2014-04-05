@@ -110,12 +110,14 @@
 
         if (closeDocumentView) {
           $scope.showAllDocuments();
+          var idx = _.findIndex($scope.documents, { _id : $scope.doc._id });
+          $scope.documents[idx] = $scope.doc;
+          console.log($scope.documents[idx]);
         }
       };
 
       $scope.showAllDocuments = function() {
         $state.go('pub.documents');
-        console.log($scope.documents.getList());
       };
 
       $scope.exportDocument = function() {
