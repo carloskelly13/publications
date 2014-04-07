@@ -28,26 +28,22 @@
     }
 
     &:hover {
-      color: @blue;
+      color: lighten(@darkgray-dark, 20%);
     }
     
     &:active {
       position: relative;
       top: 1px;
-      color: darken(@blue, 10%);
-      
-      .document-icon {
-        border-color: darken(@blue, 10%);
-      }
     }
 
     .document-name,
     .document-date {
       display: block;
+      letter-spacing: -0.5px;
     }
 
     .document-name {
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .document-date {

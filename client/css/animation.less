@@ -113,3 +113,121 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
    opacity: 1;
  }
 }
+
+.animation-pub-logo {
+  animation-name: expandOpenLogo;
+  -webkit-animation-name: expandOpenLogo;
+
+  animation-duration: 1s;
+  -webkit-animation-duration: 1s;
+
+  animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
+
+  visibility: visible !important;
+}
+
+.animation-landing-fade {
+  animation-name: landingFade;
+  -webkit-animation-name: landingFade;
+
+  animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+
+  animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
+
+  visibility: visible !important;
+}
+
+.animation-landing-fade-2 {
+  animation-name: landingFade;
+  -webkit-animation-name: landingFade;
+
+  animation-duration: 3s;
+  -webkit-animation-duration: 3s;
+
+  animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
+
+  visibility: visible !important;
+}
+
+
+@keyframes expandOpenLogo {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.0;
+  }
+  40% {
+    transform: scale(0.5);
+    opacity: 0.0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes expandOpenLogo {
+ 0% {
+    -webkit-transform: scale(0.5);
+    opacity: 0.0;
+ }
+ 40% {
+    -webkit-transform: scale(0.5);
+    opacity: 0.0;
+ }
+ 100% {
+   -webkit-transform: scale(1);
+   opacity: 1;
+ }
+}
+
+@keyframes landingFade {
+  0% {
+    opacity: 0.0;
+  }
+  60% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes landingFade {
+ 0% {
+    opacity: 0.0;
+ }
+ 60% {
+    opacity: 0.0;
+ }
+ 100% {
+   opacity: 1;
+ }
+}
+
+@keyframes landingFade2 {
+  0% {
+    opacity: 0.0;
+  }
+  70% {
+    opacity: 0.0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes landingFade2 {
+ 0% {
+    opacity: 0.0;
+ }
+ 70% {
+    opacity: 0.0;
+ }
+ 100% {
+   opacity: 1;
+ }
+}

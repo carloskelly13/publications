@@ -1,3 +1,98 @@
-.pub-logo-72 {
-  margin: 1em auto 0.67em auto;
+section.landing-page {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  min-height: 100%;
 }
+
+.header {
+  .gradient(#fff, #eee);
+  width: 100%;
+  padding: 3em 0 1.5em;
+  text-align: center;
+  
+  .pub-logo {
+    .retina-picture('pub-logo-250-no-frame', 248px, 258px, block);
+    margin: 0 auto;
+  }
+}
+
+div.landing-page {
+  width: 850px;
+  margin: 0 auto;
+
+  h1 {
+    font-family: 'AvenirNext';
+    font-weight: 400;
+    font-size: 1.5em;
+    letter-spacing: -1px;
+    text-align: center;
+  }
+  
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: @lightgray-dark;
+  }
+  
+  .feature {
+    text-align: center;
+    letter-spacing: -0.5px;
+    margin: 3em 0;
+  
+    h2 {
+      font-weight: 400;
+      line-height: 2em;
+      font-size: 1.75em;
+      letter-spacing: -1px;
+    }
+    
+    p {
+      line-height: 2em;
+      font-size: 1.25em;
+    }
+  }
+  
+  .buttons-container {
+    margin: 3em 0;
+    text-align: center;
+    
+    .beta-only {
+      letter-spacing: -0.5px;
+      color: #999;
+    }
+    
+    .text-buttons {
+      margin-top: 0.75em;
+      
+      .button {
+        margin: 0 0.5em;
+        vertical-align: middle;
+      }
+      
+      .separator {
+        width: 1px;
+        height: 24px;
+        display: inline-block;
+        background: @mediumgray-light;
+        vertical-align: middle;
+      }
+    }
+  }
+  
+  .pub-screenshot {
+    .retina-picture('pub-beta-screenshot', 850px, 476px, inline-block);
+    margin: 0 auto 3em auto;
+  }
+  
+  .pub-screenshot-2 {
+    .retina-picture('pub-beta-screenshot-2', 850px, 433px, inline-block);
+    margin: 0 auto 3em auto;
+  }
+  
+  .pub-tech-logos {
+    .retina-picture('pub_tech_logos', 647px, 63px, inline-block);
+    margin: 2em auto;
+  }
+}
+

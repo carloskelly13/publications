@@ -90,6 +90,7 @@
     line-height: 39px;
     width: 100%;
     margin-top: 1em;
+    letter-spacing: -0.5px;
 
     &:hover {
       background: @blue;
@@ -144,6 +145,7 @@
     font-weight: 500;
     color: @darkgray-dark;
     font-family: @ui-font, Helvetica, sans-serif;
+    letter-spacing: -0.5px;
     
     &:hover {
       text-decoration: underline;
@@ -161,6 +163,12 @@
     padding: 4px 20px;
     color: @darkgray-dark;
     font-family: @ui-font, Helvetica, sans-serif;
+    letter-spacing: -0.5px;
+    
+    &.button-text-big {
+      font-size: 1.25em;
+      padding: 4px 25px;
+    }
 
 
     &:hover {
@@ -183,7 +191,7 @@
       font-size: 14px;
       font-family: @ui-font, Helvetica, sans-serif;
       font-weight: 400;
-      line-height: 22px;
+      line-height: 24px;
       letter-spacing: -0.05em;
       vertical-align: middle;
       margin: 0 8px;
@@ -214,11 +222,15 @@
       &:hover {
         background: transparent;
         color: @blue;
+        text-decoration: underline;
       }
 
       &:active {
         background: transparent;
         color: lighten(@blue, 10%);
+        text-decoration: underline;
+        position: relative;
+        top: 1px;
       }
     }
   }
@@ -302,6 +314,7 @@
   zoom: 1;
   outline: none;
   margin: 0;
+  letter-spacing: -0.5px;
 
   &.input-text-search {
     .rounded-corners(0);
@@ -315,6 +328,7 @@
     width: 100%;
     position: relative;
     top: @app-nav-height;
+    background: @lightgray-light;
 
     &::-webkit-input-placeholder {
       .search-input-icon;
@@ -330,6 +344,23 @@
 
     &:-moz-placeholder {
       .search-input-icon;
+    }
+  }
+}
+
+.button-group {
+  display: inline-block;
+
+  .button {
+    float: left;
+    
+    &:first-child {
+      .rounded-corners(4px 0 0 4px);
+      border-right: none;
+    }
+    
+    &:last-child {
+      .rounded-corners(0 4px 4px 0);
     }
   }
 }
