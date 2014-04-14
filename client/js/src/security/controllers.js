@@ -22,6 +22,18 @@
       $scope.loginModal = function() {
         $scope.loginModalVisible = !$scope.loginModalVisible;
       };
+      
+      $scope.createDefaultAccount = function() {
+        Restangular.all('users').createDefault().then(function(userJson) {
+          authentication.login({
+            username: userJson.name,
+            password: 'password'
+          },
+          function() {
+            $state.go('pub.documents');
+          });
+        });
+      }
 
       $scope.login = function() {
 

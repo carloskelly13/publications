@@ -15,6 +15,7 @@ var userSchema = new Schema({
     name: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
     modified: { type: Date, 'default': Date.now },
+    temporary: { type: Boolean },
     documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }]
 });
 

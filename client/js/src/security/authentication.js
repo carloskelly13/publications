@@ -21,11 +21,11 @@
           }
         },
 
-        login: function(user, success, error) {
-          $http.post('/login', user).success(function(user) {
+        login: function(user, success) {
+          Restangular.all('users').login(user).then(function(user) {
             success(user);
             securityContext.setAuthentication(user);
-          }).error(error);
+          });
         },
 
         logout: function(success, error) {

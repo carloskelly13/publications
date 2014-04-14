@@ -34,7 +34,7 @@
       $scope.dpi = 72;
       $scope.iconDpi = 15;
       $scope.newDocumentModalVisible = false;
-
+      
       $scope.newDocument = function() {
         documentsApi.post({
           _user: $scope.user._id,
@@ -47,6 +47,20 @@
           $scope.documents.push(res);
         });
       };
+      
+      $scope.updateUserAccount = function() {
+        $scope.user.name = $scope.userAccountForm.name || $scope.user.name;
+        $scope.user.oldPassword = $scope.userAccountForm.oldPassword || 'password';
+        $scope.user.newPassword = $scope.userAccountForm.password;
+        $scope.user.temporary = false;
+        $scope.user.put().then(function(response) {
+          if (!response.invalidPassword) {
+            $scope.userModal();
+            $scope.userModalFlip();
+          }
+        });
+        
+      };
 
       $scope.newDocumentModal = function() {
         $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
@@ -56,9 +70,9 @@
       };
 
       $scope.documentIconSize = function(doc) {
-        var iconDpi = 15,
-          iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30),
-          iconHeight = (iconWidth / doc.width) * doc.height;
+        var iconDpi = 15
+          , iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30)
+          , iconHeight = (iconWidth / doc.width) * doc.height
         return { width: iconWidth + 'px', height: iconHeight + 'px' };
       };
     }
@@ -112,7 +126,6 @@
           $scope.showAllDocuments();
           var idx = _.findIndex($scope.documents, { _id : $scope.doc._id });
           $scope.documents[idx] = $scope.doc;
-          console.log($scope.documents[idx]);
         }
       };
 
@@ -183,6 +196,24 @@
       $scope.addObject = function(objType) {
         $scope.doc.shapes.push(documentServices.newShape(objType));
         $scope.toggleInspector(null);
+      };
+      
+      $scope.swapObject = function(direction) {
+        var idx = $scope.doc.shapes.indexOf($scope.selectedObj)
+          , offset = (direction === 'up' ? 1 : -1)
+          , objA = $scope.doc.shapes[idx]
+          , objB = $scope.doc.shapes[idx + offset]
+          
+        $scope.doc.shapes[idx] = objB;
+        $scope.doc.shapes[idx + offset] = objA;
+      };
+      
+      $scope.moveUpButtonEnabled = function() {
+        return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) < $scope.doc.shapes.length - 1;
+      };
+      
+      $scope.moveDownButtonEnabled = function() {
+        return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) > 0;
       };
     }
   ]);

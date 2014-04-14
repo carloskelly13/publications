@@ -26,6 +26,8 @@
 
       RestangularProvider.addElementTransformer('users', true, function(user) {
         user.addRestangularMethod('current', 'get', 'current');
+        user.addRestangularMethod('createDefault', 'post', 'createDefault');
+        user.addRestangularMethod('login', 'post', 'login');
         return user;
       });
 

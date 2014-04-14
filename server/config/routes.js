@@ -5,9 +5,9 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var IndexController = require('../controllers/index'),
-  UserController = require('../controllers/user'),
-  DocumentController = require('../controllers/document');
+var IndexController = require('../controllers/index')
+  , UserController = require('../controllers/user')
+  , DocumentController = require('../controllers/document')
 
 var auth = function (req, res, next) {
   if (!req.isAuthenticated()) res.send(401);
@@ -19,13 +19,15 @@ module.exports = function (app, passport) {
   app.get('/', IndexController.index);
 
   // Application routes
-  app.post('/login', passport.authenticate('local'), function(req, res) { res.send(req.user); });
-  app.get('/logout', function(req, res){ req.logout(); res.json({}); });
+  app.get('/logout', UserController.logout);
 
   // User model routes
   app.get('/users/current', UserController.current);
   app.get('/users/:id?', auth, UserController.show);
+  app.put('/users/:id', auth, UserController.update);
   app.post('/users', UserController.create);
+  app.post('/users/createDefault', UserController.createDefault);
+  app.post('/users/login', passport.authenticate('local'), UserController.login);
 
   // Document model routes
   app.get('/documents', auth, DocumentController.index);
