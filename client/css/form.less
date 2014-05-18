@@ -148,13 +148,13 @@
     &:hover {
       text-decoration: underline;
     }
-    
+
     &:active {
       position: relative;
       top: 1px;
     }
   }
-  
+
   &.button-text {
     .rounded-corners(4px);
     border: 1px solid @mediumgray-dark;
@@ -218,13 +218,11 @@
       &:hover {
         background: transparent;
         color: @blue;
-        text-decoration: underline;
       }
 
       &:active {
         background: transparent;
         color: lighten(@blue, 10%);
-        text-decoration: underline;
         position: relative;
         top: 1px;
       }
@@ -312,18 +310,18 @@
   margin: 0;
 
   &.input-text-search {
-    .rounded-corners(0);
+    .animation(background, 0.25s);
+    .rounded-corners(24px);
     color: @darkgray-dark;
-    border-right: none;
-    border-left: none;
-    border-top: none;
-    height: @app-nav-height;
+    height: 28px;
     font-size: 16px;
     text-align: center;
-    width: 100%;
-    position: relative;
-    top: @app-nav-height;
-    background: @lightgray-light;
+    width: 90%;
+    background: #fff;
+
+    &:hover {
+      background: @lightgray-light;
+    }
 
     &::-webkit-input-placeholder {
       .search-input-icon;
@@ -348,12 +346,12 @@
 
   .button {
     float: left;
-    
+
     &:first-child {
       .rounded-corners(4px 0 0 4px);
       border-right: none;
     }
-    
+
     &:last-child {
       .rounded-corners(0 4px 4px 0);
     }

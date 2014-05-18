@@ -1,14 +1,18 @@
 <div>
   <h1>New Object</h1>
-  <table class="new-object-table">
-    <tr>
-      <td ng-click="addObject('rect')"><span data-icon="&#xe522;"></span></td>
-      <td ng-click="addObject('ellipse')"><span data-icon="&#xe595;"></span></td>
-      <td ng-click="addObject('text')"><span data-icon="&#xe4f2;"></span></td>
-    </tr>
-  </table>
+  <div class="inspector-segmented-control inspector-segmented-control-no-frame">
+    <label ng-click="addObject('rect')">
+      <span data-icon="&#xe522;"></span>
+    </label>
+    <label ng-click="addObject('ellipse')">
+      <span data-icon="&#xe595;"></span>
+    </label>
+    <label ng-click="addObject('text')">
+      <span data-icon="&#xe4f2;"></span>
+    </label>
+  </div>
 </div>
-<div  ng-if="selectedObj">
+<div ng-if="selectedObj">
   <h1 class="border-top">Object Metrics</h1>
   <table class="inspector-table">
     <tr>

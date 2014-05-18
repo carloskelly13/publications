@@ -19,7 +19,7 @@ html, body {
   position: fixed;
   width: 100%;
   z-index: 5;
-  
+
   .app-footer-content {
     padding: 0 8px;
     text-align: right;
@@ -54,6 +54,10 @@ html, body {
     color: @darkgray-dark;
   }
 
+  .button-text-no-frame {
+    margin: 0 8px;
+  }
+
   .app-nav-text {
     display: inline-block;
     font-weight: 500;
@@ -66,16 +70,8 @@ html, body {
   .app-nav-controls {
     -webkit-flex: 1 1 auto;
     flex: 1 1 auto;
+    text-align: center;
     padding: 0;
-
-    &.app-nav-controls-pull-right {
-      text-align: right;
-    }
-
-    &.app-nav-controls-search {
-      padding: 0 4px;
-      height: 100%;
-    }
   }
 
   .app-nav-primary-controls,
@@ -84,8 +80,12 @@ html, body {
     text-align: center;
   }
 
-  .app-nav-primary-controls {
-    padding: 0 8px 0 3px;
+  .app-nav-secondary-controls {
+    padding: 0 8px;
+
+    &.app-nav-secondary-controls-no-left-padding {
+      padding-left: 0;
+    }
   }
 
   .app-nav-right-arrow {

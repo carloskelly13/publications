@@ -48,9 +48,8 @@
   });
 
   pub.directive('pubResizable', function($document) {
-    return function(scope, element, attr) {
+    return function(scope, element) {
       var coordinate = scope.objAnchor.coordinate;
-      var selectedObj = scope.selectedObj;
       var eX = 0, eY = 0, oX = 0, oY = 0, oW = 0, oH = 0;
 
       element.on('mousedown', resizeStart);
@@ -93,7 +92,7 @@
             }
           }
         });
-      };
+      }
 
       function resizeEnd() {
         $document.unbind('mousemove', updateFrame);
@@ -147,7 +146,7 @@
       templateUrl: '/views/directives/document-item.html'
     }
   });
-  
+
   pub.directive('pubDocumentSvg', function() {
     return {
       templateUrl: '/views/directives/svg.html'

@@ -35,7 +35,7 @@
       $scope.dpi = 72;
       $scope.iconDpi = 15;
       $scope.newDocumentModalVisible = false;
-      
+
       $scope.newDocument = function() {
         documentsApi.post({
           _user: $scope.user._id,
@@ -186,21 +186,21 @@
         $scope.doc.shapes.push(documentServices.newShape(objType));
         $scope.toggleInspector(null);
       };
-      
+
       $scope.swapObject = function(direction) {
         var idx = $scope.doc.shapes.indexOf($scope.selectedObj)
           , offset = (direction === 'up' ? 1 : -1)
           , objA = $scope.doc.shapes[idx]
           , objB = $scope.doc.shapes[idx + offset]
-          
+
         $scope.doc.shapes[idx] = objB;
         $scope.doc.shapes[idx + offset] = objA;
       };
-      
+
       $scope.moveUpButtonEnabled = function() {
         return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) < $scope.doc.shapes.length - 1;
       };
-      
+
       $scope.moveDownButtonEnabled = function() {
         return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) > 0;
       };

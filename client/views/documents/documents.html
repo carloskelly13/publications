@@ -1,13 +1,13 @@
 <div class="app-nav">
   <div class="app-nav-logo"></div>
   <div class="app-nav-controls">
+    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
   </div>
   <div class="app-nav-secondary-controls">
     <button class="button button-text button-text-no-frame" ng-click="newDocumentModal()">New Document</button>
     <button class="button button-text button-text-no-frame" ng-click="userModal()">Settings</button>
   </div>
 </div>
-<input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
 <div class="documents-list">
   <div class="document-item"
        pub-document-item

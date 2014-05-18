@@ -10,9 +10,9 @@ section.landing-page {
   width: 100%;
   padding: 3em 0 1.5em;
   text-align: center;
-  
+
   .pub-logo {
-    .retina-picture('pub-full-logo', 240px, 174px, block);
+    .retina-picture('pub-full-logo-big', 319px, 232px, block);
     margin: 0 auto;
   }
 }
@@ -21,13 +21,12 @@ div.landing-page {
   text-align: center;
 
   h1 {
-    font-family: 'AvenirNext';
     font-weight: 400;
     font-size: 1.5em;
     letter-spacing: -1px;
     text-align: center;
   }
-  
+
   .divider {
     width: 80%;
     max-width: 850px;
@@ -35,53 +34,51 @@ div.landing-page {
     margin: 0 auto;
     background: @lightgray-dark;
   }
-  
+
   .feature {
     text-align: center;
-    letter-spacing: -0.5px;
     width: 80%;
     max-width: 850px;
     margin: 3em auto;
-  
+
     h2 {
       font-weight: 400;
       line-height: 2em;
       font-size: 1.75em;
-      letter-spacing: -1px;
     }
-    
+
     p {
       line-height: 2em;
       font-size: 1.25em;
+      color: @darkgray-light;
     }
   }
-  
+
   .buttons-container {
     margin: 3em 0;
     text-align: center;
-    
+
     .helper-text {
-      letter-spacing: -0.5px;
       color: #999;
       line-height: 24px;
       height: 24px;
       vertical-align: middle;
     }
-    
+
     .larger-text {
-      font-size: 16px;
-      
+      font-size: 20px;
+
       .button {
-        font-size: 16px;
+        font-size: 20px;
       }
     }
-    
+
     .text-buttons {
       .button {
         margin: 0 0.5em;
         vertical-align: middle;
       }
-      
+
       .separator {
         width: 1px;
         height: 24px;
@@ -91,17 +88,7 @@ div.landing-page {
       }
     }
   }
-  
-  .pub-screenshot {
-    .retina-picture('pub-beta-screenshot', 850px, 476px, inline-block);
-    margin: 0 auto 3em auto;
-  }
-  
-  .pub-screenshot-2 {
-    .retina-picture('pub-beta-screenshot-2', 850px, 433px, inline-block);
-    margin: 0 auto 3em auto;
-  }
-  
+
   .pub-tech-logos {
     .retina-picture('pub_tech_logos', 647px, 63px, inline-block);
     margin: 2em auto;

@@ -1,11 +1,6 @@
 <div class="app-nav animation-fade-in">
   <div class="app-nav-logo"></div>
-  <div class="app-nav-primary-controls">
-    <div class="app-nav-text">
-      {{ doc.name }}
-    </div>
-  </div>
-  <div class="app-nav-controls app-nav-controls-pull-right">
+  <div class="app-nav-controls">
     <div class="inspector-group">
       <button class="button button-icon"
               data-icon="&#xe052;"
@@ -65,7 +60,7 @@
     </button>
     <div class="inspector-group">
       <button class="button button-text button-text-zoom"
-              
+
               ng-click="toggleInspector('zoom')">
               {{ zoomLevel * 100}}%
       </button>
@@ -74,17 +69,19 @@
            ng-if="currentInspector === 'zoom'">
       </div>
     </div>
-    <button class="button button-icon button-red"
-            data-icon="&#xe25b;"
+  </div>
+  <div class="app-nav-secondary-controls app-nav-secondary-controls-no-left-padding">
+    <button class="button button-text button-text-no-frame"
             ng-click="deleteModal()">
+            Delete
     </button>
-    <button class="button button-icon button-green"
-            data-icon="&#xe26e;"
+    <button class="button button-text button-text-no-frame"
             ng-click="exportDocument()">
+            Save &amp; PDF
     </button>
-    <button class="button button-icon"
-            data-icon="&#xe262;"
+    <button class="button button-text button-text-no-frame"
             ng-click="saveModal()">
+            Documents
     </button>
   </div>
 </div>
