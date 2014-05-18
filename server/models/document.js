@@ -5,45 +5,35 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var mongoose = require('mongoose'),
-    PDFDocument = require('pdfkit'),
-    _ = require('lodash');
+var mongoose = require('mongoose')
+  , PDFDocument = require('pdfkit')
+  , _ = require('lodash')
 
-var Schema = mongoose.Schema,
-    ShapeModel = require('./shape');
+var Schema = mongoose.Schema
+  , ShapeModel = require('./shape')
 
 var documentSchema = new Schema({
-    _user: { type: Schema.Types.ObjectId, ref: 'User' },
-    name: { type: String, required: true, trim: true, unique: false },
-    width: { type: Number, required: true },
-    height: { type: Number, required: true },
-    modified: { type: Date, 'default': Date.now },
-    shapes: [ ShapeModel.schema ]
+  _user: { type: Schema.Types.ObjectId, ref: 'User' },
+  name: { type: String, required: true, trim: true, unique: false },
+  width: { type: Number, required: true },
+  height: { type: Number, required: true },
+  modified: { type: Date, 'default': Date.now },
+  shapes: [ ShapeModel.schema ]
 });
 
 documentSchema.methods = {
   pdf: function() {
-    var model = this,
-      dpi = 72,
-      doc = new PDFDocument({
-      size: [model.width * dpi, model.height * dpi]
-    });
+    var model = this
+      , dpi = 72
+      , doc = new PDFDocument({ size: [model.width * dpi, model.height * dpi] })
 
-    /**
-     * Register Helvetica Neue Typefaces
-     */
-    doc.registerFont('HELVETICA_NEUE_NORMAL_NORMAL', 'client/css/typefaces/HelveticaNeue.ttf');
-    doc.registerFont('HELVETICA_NEUE_BOLD_NORMAL', 'client/css/typefaces/HelveticaNeueBold.ttf');
-    doc.registerFont('HELVETICA_NEUE_NORMAL_ITALIC', 'client/css/typefaces/HelveticaNeueItalic.ttf');
-    doc.registerFont('HELVETICA_NEUE_BOLD_ITALIC', 'client/css/typefaces/HelveticaNeueBoldItalic.ttf');
-
-    /**
-     * Register Georgia Typefaces
-     */
-    doc.registerFont('GEORGIA_NORMAL_NORMAL', 'client/css/typefaces/Georgia.ttf');
-    doc.registerFont('GEORGIA_BOLD_NORMAL', 'client/css/typefaces/GeorgiaBold.ttf');
-    doc.registerFont('GEORGIA_NORMAL_ITALIC', 'client/css/typefaces/GeorgiaItalic.ttf');
-    doc.registerFont('GEORGIA_BOLD_ITALIC', 'client/css/typefaces/GeorgiaBoldItalic.ttf');
+    doc.registerFont('SOURCE_SANS_PRO_400', 'client/css/typefaces/SourceSansPro-Regular.ttf');
+    doc.registerFont('SOURCE_SANS_PRO_500', 'client/css/typefaces/SourceSansPro-Semibold.ttf');
+    doc.registerFont('SOURCE_SANS_PRO_600', 'client/css/typefaces/SourceSansPro-Bold.ttf');
+    
+    doc.registerFont('SOURCE_SERIF_PRO_400', 'client/css/typefaces/SourceSerifPro-Regular.ttf');
+    doc.registerFont('SOURCE_SERIF_PRO_500', 'client/css/typefaces/SourceSerifPro-Semibold.ttf');
+    doc.registerFont('SOURCE_SERIF_PRO_600', 'client/css/typefaces/SourceSerifPro-Bold.ttf');
 
     _.each(model.shapes, function(shape) {
       var obj;
@@ -78,7 +68,7 @@ documentSchema.methods = {
         }
 
       } else if (shape.type === 'text') {
-        var font = shape.fontFamily + '_' + shape.fontWeight + '_' + shape.fontStyle;
+        var font = shape.fontFamily + '_' + shape.fontWeight;
         font = font.replace(/ /g, '_');
         font = font.toUpperCase();
 

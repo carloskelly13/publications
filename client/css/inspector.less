@@ -26,7 +26,6 @@
 
 .inspector-table {
   width: 100%;
-  letter-spacing: -0.5px;
 
   tr {
     td {
@@ -176,32 +175,47 @@
   }
 }
 
+.inspector-text-picker, .input-text-font-size, .inspector-font-weight {
+  .rounded-corners(0);
+  border: none;
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+  box-sizing: border-box;
+  color: @darkgray-dark;
+  outline: none;
+  display: block;
+  font-size: 15px;
+  line-height: 40px;
+  height: 40px;
+  padding: 0 0.5em;
+  margin: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.inspector-font-weight {
+  font-family: @ui-font, Helvetica, sans-serif;
+  border-bottom: none;
+  border-right: none;
+  border-left: 1px solid hsla(0, 0%, 0%, 0.1);
+  width: 30%;
+}
+
 .inspector-text-font-metrics {
-  -webkit-align-items: center;
-  align-items: center;
-  align-content: center;
   display: -webkit-flex;
   display: flex;
+  -webkit-align-content: center;
+  align-content: center;
+  -webkit-align-items: center;
+  align-items: center;
   -webkit-justify-content: flex-start;
   justify-content: flex-start;
   -webkit-flex-direction: row;
   flex-direction: row;
-  
-  .inspector-text-picker, .input-text-font-size {
-    .rounded-corners(0);
-    border: none;
-    border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
-    box-sizing: border-box;
-    outline: none;
-    display: block;
-    font-size: 14px;
-    padding: 0.75em 0.5em;
-    margin: 0;
-    -webkit-appearance:none;
-    -moz-appearance:none;
-    appearance:none;
-  }
-  
+
   .inspector-text-picker {
     -webkit-flex: 1 1 auto;
     flex: 1 1 auto;

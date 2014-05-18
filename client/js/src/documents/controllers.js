@@ -4,7 +4,8 @@
   var pub = angular.module('pub.documents.controllers', []);
 
   pub.value('zoomLevels', [ 0.5, 1, 1.5, 2, 2.5, 3 ]);
-  pub.value('fonts', [{ name: 'Georgia' }, { name: 'Helvetica Neue' }]);
+  pub.value('fonts', [{ name: 'Source Serif Pro' }, { name: 'Source Sans Pro' }]);
+  pub.value('fontWeights', [{ weight: '400' }, { weight: '500' }, { weight: '600' }]);
   pub.value('objAnchors', {
     size: 10,
     points: [
@@ -46,20 +47,6 @@
           $scope.newDocumentModal();
           $scope.documents.push(res);
         });
-      };
-      
-      $scope.updateUserAccount = function() {
-        $scope.user.name = $scope.userAccountForm.name || $scope.user.name;
-        $scope.user.oldPassword = $scope.userAccountForm.oldPassword || 'password';
-        $scope.user.newPassword = $scope.userAccountForm.password;
-        $scope.user.temporary = false;
-        $scope.user.put().then(function(response) {
-          if (!response.invalidPassword) {
-            $scope.userModal();
-            $scope.userModalFlip();
-          }
-        });
-        
       };
 
       $scope.newDocumentModal = function() {
@@ -189,9 +176,11 @@
     'documentServices',
     'zoomLevels',
     'fonts',
-    function($scope, $state, documentServices, zoomLevels, fonts) {
+    'fontWeights',
+    function($scope, $state, documentServices, zoomLevels, fonts, fontWeights) {
       $scope.zoomLevels = zoomLevels;
       $scope.fonts = fonts;
+      $scope.fontWeights = fontWeights;
 
       $scope.addObject = function(objType) {
         $scope.doc.shapes.push(documentServices.newShape(objType));

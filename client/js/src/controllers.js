@@ -31,6 +31,19 @@
       $scope.userModal = function() {
         $scope.userModalVisible = !$scope.userModalVisible;
       };
+      
+      $scope.updateUserAccount = function(sender) {
+        $scope.user.name = sender.emailAddress || $scope.user.name;
+        $scope.user.oldPassword = sender.currentPassword || 'password';
+        $scope.user.newPassword = sender.newPassword;
+        $scope.user.temporary = false;
+        $scope.user.put().then(function(response) {
+          if (!response.invalidPassword) {
+            $scope.userModal();
+            $scope.userModalFlip();
+          }
+        });
+      };
 
       $scope.logout = function() {
         $scope.updateAuthenticationStatus();
