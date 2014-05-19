@@ -5,86 +5,61 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var fs = require('fs'),
-  _ = require('lodash');
-
-var DocumentModel = require('../models/document'),
-  UserModel = require('../models/user');
+var DocumentModel = require('../models/document')
+  , UserModel = require('../models/user')
 
 exports.index = function(req, res) {
-  if (!req.user) {
-    res.json([]);
-  } else {
-    DocumentModel.find({ _user: req.user._id }).exec(function(err, documents) {
-      res.json(documents || null);
-    });
-  }
-};
-
-exports.show = function(req, res) {
-  var id = req.route.params.id;
-
-  DocumentModel.findById(id, function(err, doc) {
-    if (_.isObject(doc)) res.json(doc);
-    else res.send(404);
+  DocumentModel.find({ _user: req.user._id }).exec(function(err, documents) {
+    res.json(documents || err);
   });
 };
 
-exports.update = function(req, res) {
-    var documentId = req.route.params.id,
-        documentData = req.body;
-    delete documentData._id;
+exports.show = function(req, res) {
+  res.json(req.doc);
+};
 
-    DocumentModel.findByIdAndUpdate(documentId, documentData, { upsert: true }, function(err, doc) {
-        if (_.isObject(doc)) res.json(doc);
-        else res.json(null);
-    });
+exports.update = function(req, res) {
+  var docId = req.doc._id;
+
+  DocumentModel.findByIdAndUpdate(docId, req.body, { upsert: true }, function(err, doc) {
+    res.json(doc || err);
+  });
 };
 
 exports.create = function(req, res) {
-  var documentData = req.body,
-    documentModel = new DocumentModel(documentData);
-
-  UserModel.findById(documentModel._user, function(err, user) {
-    user.documents.push(documentModel);
+  var newDoc = new DocumentModel(req.body)
+    
+  UserModel.findById(req.user._id, function(err, user) {
+    user.documents.push(newDoc);
     user.save(function() {
-      documentModel.save(function(err, doc) {
-        if (_.isObject(doc)) res.json(doc);
-        else res.json(null);
+      newDoc.save(function(err, doc) {
+        return res.json(doc || err);
       });
     });
   });
 };
 
 exports.remove = function(req, res) {
-  var id = req.route.params.id;
-
-  UserModel.findById(req.user._id, function(err, user) {
-    if (err) res.json({ success: false });
-    else {
-      user.documents.remove(id);
-      user.save(function(err) {
-        if (err) res.json({ success: false });
-        DocumentModel.findById(id).remove(function() {
+  var userId = req.user._id
+    
+  UserModel.findById(userId, function(err, user) {
+    user.documents.remove(req.doc);
+    user.save(function(err) {
+      if (err) {
+        res.json({ success: false });
+        
+      } else {
+        req.doc.remove(function() {
           res.json({ success: true });
         });
-      });
-    }
+      }
+    });
   });
 };
 
 exports.pdf = function(req, res) {
-  var id = req.route.params.id;
-
-  DocumentModel.findById(id, function(err, doc) {
-      if (_.isObject(doc)) {
-        var pdf = doc.pdf();
-        res.set('Content-type', 'application/pdf');
-        pdf.pipe(res);
-        pdf.end();
-
-      } else {
-        res.json({ error: 'PDF could not be generated.'});
-      }
-  });
+  var pdf = req.doc.pdf();
+  res.set('Content-type', 'application/pdf');
+  pdf.pipe(res);
+  pdf.end();
 };

@@ -6,10 +6,11 @@
   pub.controller('LoginController', [
     '$scope',
     '$state',
+    '$http',
     '$location',
     'Restangular',
     'authentication',
-    function($scope, $state, $location, Restangular, authentication) {
+    function($scope, $state, $http, $location, Restangular, authentication) {
 
       authentication.requestSecurityContext().then(function(securityContext) {
         if (securityContext.authenticated) {
@@ -23,10 +24,10 @@
         $scope.loginModalVisible = !$scope.loginModalVisible;
       };
       
-      $scope.createDefaultAccount = function() {
-        Restangular.all('users').createDefault().then(function(userJson) {
+      $scope.createAccount = function() {
+        $http.post('/users', {}, null).success(function(user) {
           authentication.login({
-            username: userJson.name,
+            username: user.name,
             password: 'password'
           },
           function() {
@@ -36,7 +37,6 @@
       }
 
       $scope.login = function() {
-
         authentication.login({
           username: $scope.username,
           password: $scope.password

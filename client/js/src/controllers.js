@@ -6,8 +6,9 @@
   pub.controller('AppController', [
     '$scope',
     '$location',
+    '$http',
     'authentication',
-    function($scope, $location, authentication) {
+    function($scope, $location, $http, authentication) {
       $scope.userModalVisible = false;
       $scope.userModalBacksideVisible = false;
 
@@ -26,7 +27,7 @@
       
       $scope.userModalFlip = function() {
         $scope.userModalBacksideVisible = !$scope.userModalBacksideVisible;
-      }
+      };
 
       $scope.userModal = function() {
         $scope.userModalVisible = !$scope.userModalVisible;
@@ -34,14 +35,17 @@
       
       $scope.updateUserAccount = function(sender) {
         $scope.user.name = sender.emailAddress || $scope.user.name;
-        $scope.user.oldPassword = sender.currentPassword || 'password';
+        $scope.user.currentPassword = sender.currentPassword || 'password';
         $scope.user.newPassword = sender.newPassword;
         $scope.user.temporary = false;
-        $scope.user.put().then(function(response) {
-          if (!response.invalidPassword) {
-            $scope.userModal();
-            $scope.userModalFlip();
-          }
+        
+        $http.put('/users/' + $scope.user._id, $scope.user, null).success(function(user) {
+          $scope.userModal();
+          $scope.userModalFlip();
+          
+          authentication.requestSecurityContext().then(function(securityContext) {
+            securityContext.setAuthentication(user);
+          });
         });
       };
 

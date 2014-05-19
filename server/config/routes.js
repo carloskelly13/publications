@@ -8,10 +8,14 @@
 var IndexController = require('../controllers/index')
   , UserController = require('../controllers/user')
   , DocumentController = require('../controllers/document')
+  , DocumentModel = require('../models/document')
 
 var auth = function (req, res, next) {
-  if (!req.isAuthenticated()) res.send(401);
-  else next();
+  if (!req.isAuthenticated()) {
+    res.send(401);
+  } else {
+    next();
+  }
 };
 
 module.exports = function (app, passport) {
@@ -20,23 +24,40 @@ module.exports = function (app, passport) {
 
   // Application routes
   app.get('/logout', UserController.logout);
-
-  // User model routes
+  app.post('/login', passport.authenticate('local'), UserController.login);
+  
   app.get('/users/current', UserController.current);
-  app.get('/users/:id?', auth, UserController.show);
   app.put('/users/:id', auth, UserController.update);
   app.post('/users', UserController.create);
-  app.post('/users/createDefault', UserController.createDefault);
-  app.post('/users/login', passport.authenticate('local'), UserController.login);
 
   // Document model routes
+  app.param('docId', function(req, res, next, id) {
+    if (req.user) {
+      DocumentModel.findById(id, function(err, doc) {
+        if (err || !doc) {
+          res.send(404);
+          
+        } else if (doc._user.toString() === req.user._id.toString()) {
+          req.doc = doc;
+          next();
+          
+        } else {
+          res.send(403);
+        }
+      });
+      
+    } else {
+      res.send(401);
+    }
+  });
+  
   app.get('/documents', auth, DocumentController.index);
-  app.get('/documents/:id', auth, DocumentController.show);
+  app.get('/documents/:docId', auth, DocumentController.show);
   app.post('/documents', auth, DocumentController.create);
-  app.put('/documents/:id', auth, DocumentController.update);
-  app.del('/documents/:id', auth, DocumentController.remove);
-  app.get('/documents/:id/pdf', auth, DocumentController.pdf);
+  app.put('/documents/:docId', auth, DocumentController.update);
+  app.delete('/documents/:docId', auth, DocumentController.remove);
+  app.get('/documents/:docId/pdf', auth, DocumentController.pdf);
 
   // 404 Error
-  app.use(function(req, res) { res.render('404'); });
+  app.use(function(req, res) { res.send(404); });
 };

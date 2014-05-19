@@ -7,22 +7,24 @@
     '$q',
     '$http',
     'securityContext',
-    'Restangular',
-    function($q, $http, securityContext, Restangular) {
+    function($q, $http, securityContext) {
 
       var authentication = {
         requestSecurityContext: function() {
           if (securityContext.authenticated) {
             return $q.when(securityContext);
           } else {
-            return Restangular.all('users').current().then(function(user) {
-              return securityContext.setAuthentication(user);
+            var deferred = $q.defer();
+            $http.get('/users/current', null).success(function(user) {
+              deferred.resolve(securityContext.setAuthentication(user));
             });
+            
+            return deferred.promise;
           }
         },
 
         login: function(user, success) {
-          Restangular.all('users').login(user).then(function(user) {
+          $http.post('/login', user, null).success(function(user) {
             success(user);
             securityContext.setAuthentication(user);
           });

@@ -5,40 +5,45 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var express = require('express'),
-    mongoose = require('mongoose'),
-    passport = require('passport'),
-    http = require('http'),
-    path = require('path');
+var express = require('express')
+  , logger = require('morgan')
+  , session = require('express-session')
+  , bodyParser = require('body-parser')
+  , methodOverride = require('method-override')
+  , cookieParser = require('cookie-parser')
+  , mongoose = require('mongoose')
+  , passport = require('passport')
+  , path = require('path')
     
 require('./server/config/passport')(passport);
 
 var app = express();
 
 // all environments
+app.use(cookieParser());
+app.use(session({
+  secret: '36bf03edbbc39b3ab6f89463e47639ca25fe8836e43bae065124fd7d26d9a804',
+  name: 'app.publications'
+}));
+
 app.set('port', process.env.PORT || 4000);
 app.set('views', __dirname + '/client');
 app.set('view engine', 'ejs');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.cookieParser('42ea7fd0c126a5accebee2ead923ef55'));
-app.use(express.session());
+app.use(bodyParser());
+app.use(methodOverride());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(app.router);
 app.use(express.static(path.join(__dirname, '/client')));
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+var env = process.env.NODE_ENV || 'development';
+if ('development' === env.toString()) {
+  app.use(logger('dev'));
 }
 
 require('./server/config/routes')(app, passport);
 
 mongoose.connect('mongodb://localhost/pub-ng');
 
-http.createServer(app).listen(app.get('port'), function(){
+app.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

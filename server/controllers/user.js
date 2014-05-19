@@ -5,51 +5,41 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var _ = require('lodash')
-  , bcrypt = require('bcrypt')
+var bcrypt = require('bcrypt')
   , UserModel = require('../models/user')
 
 exports.show = function(req, res) {
-  var id = req.route.params.id;
-
-  UserModel.findById(id, function(err, user) {
-    res.json(user || null);
-  });
-};
-
-exports.create = function(req, res) {
-  var userData = req.body,
-    userModel = new UserModel(userData);
-
-  userModel.save(function(err, user) {
-    res.json(user || null);
-  });
+  res.json(req.user);
 };
 
 exports.update = function(req, res) {
-  var userId = req.route.params.id
-    , userJson = req.body
+  var userJson = req.body
+    , user = req.user;
     
-  bcrypt.compare(userJson.oldPassword, userJson.password, function(err, isValid) {
-    if (isValid) {
-      delete userJson._id;
-      
-      bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(userJson.newPassword, salt, function(err, hash) {
-          userJson.password = hash;
-          UserModel.findByIdAndUpdate(userId,
-            userJson,
-            { upsert: true },
-            function(err, updatedUser) {
-            return res.json(updatedUser || {});
+  if (userJson._id.toString() === user._id.toString()) {
+    bcrypt.compare(userJson.currentPassword, userJson.password, function(err, isValid) {
+      if (isValid) {
+        delete userJson._id;
+        
+        bcrypt.genSalt(10, function(err, salt) {
+          bcrypt.hash(userJson.newPassword, salt, function(err, hash) {
+            userJson.password = hash;
+            
+            UserModel.findByIdAndUpdate(user._id, userJson, { upsert: true },
+              function(err, updatedUser) {
+                return res.json(updatedUser || err);
+              }
+            );
           });
         });
-      });
-      
-    } else {
-      res.json({ invalidPassword: true });
-    }
-  });
+        
+      } else {
+        res.send(403);
+      }
+    });
+  } else {
+    res.send(403);
+  }
 };
 
 exports.login = function(req, res) {
@@ -69,8 +59,7 @@ exports.logout = function(req, res) {
   res.json({});
 };
 
-exports.createDefault = function(req, res) {
-  
+exports.create = function(req, res) {
   bcrypt.genSalt(5, function(err, salt) {
     bcrypt.hash(new Date().toLocaleTimeString(), salt, function(err, nameHash) {
       var userModel = new UserModel({
@@ -87,6 +76,10 @@ exports.createDefault = function(req, res) {
 };
 
 exports.current = function(req, res) {
-  var user = req.user;
-  res.json(_.isObject(user) ? user : null);
+  if (req.user) {
+    res.json(req.user);
+    
+  } else {
+    res.send(401);
+  }
 };
