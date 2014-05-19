@@ -1,0 +1,25 @@
+<h1>Formatting &amp; Text</h1>
+<div class="inspector-text-font-metrics">
+  <select class="inspector-text-picker inspector-text-picker-font" ng-model="selectedObj.fontFamily" ng-style="{ fontFamily: selectedObj.fontFamily }" required="true" ng-options="font.name as font.name for font in fonts">
+  </select>
+  <input pub-unsigned-integer-input class="input-text input-text-font-size" name="fontSize" ng-model="selectedObj.fontSize" type="text">
+</div>
+<div class="inspector-segmented-control">
+  <label ng-class="{ active: selectedObj.textAlign === 'left' }">
+    <input name="font-style" type="radio" ng-model="selectedObj.textAlign" value="left">
+    <span class="label" data-icon="&#xe4f6;"></span>
+  </label>
+  <label ng-class="{ active: selectedObj.textAlign === 'center' }">
+    <input name="font-style" type="radio" ng-model="selectedObj.textAlign" value="center">
+    <span class="label" data-icon="&#xe4f5;"></span>
+  </label>
+  <label ng-class="{ active: selectedObj.textAlign === 'right' }">
+    <input name="font-style" type="radio" ng-model="selectedObj.textAlign" value="right">
+    <span class="label" data-icon="&#xe4f7;"></span>
+  </label>
+  <select class="inspector-font-weight" ng-model="selectedObj.fontWeight" required="true" ng-options="fontWeight.weight as fontWeight.weight for fontWeight in fontWeights">
+  </select>
+</div>
+<div class="text-area-container">
+  <textarea class="inspector-text" ng-model="selectedObj.text" ng-style="{ fontFamily: selectedObj.fontFamily }"></textarea>
+</div>

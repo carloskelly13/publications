@@ -13,8 +13,10 @@ results
 
 npm-debug.log
 node_modules
-public/javascripts/components
-public/stylesheets/style.css
-public/javascripts/dist/app.min.js
-views/index.ejs
-views/404.ejs
+client/js/_components
+client/js/src/_templates.js
+client/css/_style.css
+client/js/app.min.js
+client/js/app.dev.js
+client/index.ejs
+client/404.ejs

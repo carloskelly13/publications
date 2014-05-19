@@ -1,0 +1,97 @@
+section.landing-page {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  min-height: 100%;
+}
+
+.header {
+  .gradient(#fff, #eee);
+  width: 100%;
+  padding: 3em 0 1.5em;
+  text-align: center;
+
+  .pub-logo {
+    .retina-picture('pub-full-logo-big', 319px, 232px, block);
+    margin: 0 auto;
+  }
+}
+
+div.landing-page {
+  text-align: center;
+
+  h1 {
+    font-weight: 400;
+    font-size: 1.5em;
+    letter-spacing: -1px;
+    text-align: center;
+  }
+
+  .divider {
+    width: 80%;
+    max-width: 850px;
+    height: 1px;
+    margin: 0 auto;
+    background: @lightgray-dark;
+  }
+
+  .feature {
+    text-align: center;
+    width: 80%;
+    max-width: 850px;
+    margin: 3em auto;
+
+    h2 {
+      font-weight: 400;
+      line-height: 2em;
+      font-size: 1.75em;
+    }
+
+    p {
+      line-height: 2em;
+      font-size: 1.25em;
+      color: @darkgray-light;
+    }
+  }
+
+  .buttons-container {
+    margin: 3em 0;
+    text-align: center;
+
+    .helper-text {
+      color: #999;
+      line-height: 24px;
+      height: 24px;
+      vertical-align: middle;
+    }
+
+    .larger-text {
+      font-size: 20px;
+
+      .button {
+        font-size: 20px;
+      }
+    }
+
+    .text-buttons {
+      .button {
+        margin: 0 0.5em;
+        vertical-align: middle;
+      }
+
+      .separator {
+        width: 1px;
+        height: 24px;
+        display: inline-block;
+        background: @mediumgray-light;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .pub-tech-logos {
+    .retina-picture('pub_tech_logos', 647px, 63px, inline-block);
+    margin: 2em auto;
+  }
+}
+

@@ -1,0 +1,7 @@
+<h1>Zoom</h1>
+<div ng-repeat="level in zoomLevels" 
+  class="menu-item"
+  ng-click="setZoomLevel(level)"
+  ng-class="{ 'selected' : zoomLevel === level }">
+  {{level * 100}}%
+</div>

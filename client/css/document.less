@@ -1,0 +1,57 @@
+.documents-list {
+  background: #dcdedf;
+  height: inherit;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  top: @app-nav-height; left: 0; bottom: @app-footer-height; right: 0;
+  width: 100%;
+  z-index: 3;
+
+  .document-item {
+    .animation(color, 250ms);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0.5em;
+    padding: 1em;
+    text-align: center;
+    vertical-align: bottom;
+
+
+    .document-icon {
+      background: #fff;
+      display: inline-block;
+    }
+
+    &:hover {
+      color: lighten(@darkgray-dark, 20%);
+    }
+
+    &:active {
+      position: relative;
+      top: 1px;
+    }
+
+    .document-name,
+    .document-date {
+      display: block;
+      line-height: 1em;
+      margin: 0;
+    }
+
+    .document-name {
+      font-size: 1.05em;
+      line-height: 1.5em;
+    }
+
+    .document-date {
+      color: lighten(@darkgray-dark, 10%);
+      font-size: 0.85em;
+    }
+  }
+
+}

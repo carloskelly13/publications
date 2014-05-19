@@ -1,0 +1,27 @@
+<div class="app-nav">
+  <div class="app-nav-logo"></div>
+  <div class="app-nav-controls">
+    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
+  </div>
+  <div class="app-nav-secondary-controls">
+    <button class="button button-text button-text-no-frame" ng-click="newDocumentModal()">New Document</button>
+    <button class="button button-text button-text-no-frame" ng-click="userModal()">Settings</button>
+  </div>
+</div>
+<div class="documents-list">
+  <div class="document-item"
+       pub-document-item
+       ng-repeat="doc in documents | filter: search | orderBy: 'modified' : true"
+       ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' );"
+       ui-sref="pub.documents.document.views({ documentId: doc._id })">
+  </div>
+</div>
+<div pub-modal-new-document class="app-cover animation-fade-in" ng-show="newDocumentModalVisible"></div>
+<div pub-modal-user class="app-cover animation-fade-in" ng-show="userModalVisible"></div>
+<div pub-modal-about class="app-cover animation-fade-in" ng-show="aboutModalVisible"></div>
+<div ui-view></div>
+<div class="app-footer">
+  <div class="app-footer-content">
+    <button class="button button-text-link" ng-click="aboutModal()">About Publications&hellip;</button
+  </div>
+</div>

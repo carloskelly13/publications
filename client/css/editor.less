@@ -1,0 +1,64 @@
+.editor-view {
+  background: #dcdedf;
+  height: inherit;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  position: absolute;
+  top: @app-nav-height; right: 0; bottom: @app-footer-height; left: 0;
+  width: 100%;
+  z-index: 4;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+
+  .unit {
+    display: inline-block;
+    position: absolute;
+    font-size: 13px;
+    width: 36px;
+    color: @darkgray-dark;
+
+    &.unit-top {
+      top: 8px;
+      text-align: center;
+    }
+
+    &.unit-left {
+      left: -1px;
+      text-align: center;
+      -ms-transform:rotate(270deg);
+      -webkit-transform:rotate(270deg);
+      transform:rotate(270deg);
+    }
+  }
+
+
+  .canvas-svg {
+    margin: 25px 1em 1em 25px;
+
+    .text-box {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      display: block;
+      line-height: 1.2em;
+      margin: 0;
+      padding: 0;
+      letter-spacing: 0;
+    }
+  }
+
+  path {
+    fill: none;
+    stroke: hsla(0, 0%, 0%, 0.075);
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+
+    &.inch-mark {
+      stroke: fade(@aqua, 55%);
+    }
+  }
+}

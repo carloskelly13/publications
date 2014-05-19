@@ -1,0 +1,129 @@
+html, body {
+  -webkit-font-smoothing: antialiased;
+  background: #fff;
+  color: @darkgray-dark;
+  height: 100%;
+  font-family: @ui-font, Helvetica, sans-serif;
+  font-size: 15px;
+  max-height: 100%;
+  overflow: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+.app-footer {
+  background: darken(@lightgray-dark, 20%);
+  border-top: 1px solid darken(@lightgray-dark, 30%);
+  bottom: 0;
+  height: @app-footer-height;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+
+  .app-footer-content {
+    padding: 0 8px;
+    text-align: right;
+    line-height: @app-footer-height;
+  }
+}
+
+.app-nav {
+  background: #fff;
+  border-bottom: 1px solid @mediumgray-dark;
+  height: @app-nav-height;
+  text-align: left;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 5;
+  -webkit-align-items: center;
+  align-items: center;
+  align-content: center;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  .button {
+    color: @darkgray-dark;
+  }
+
+  .button-text-no-frame {
+    margin: 0 8px;
+  }
+
+  .app-nav-text {
+    display: inline-block;
+    font-weight: 500;
+    line-height: @app-nav-height;
+    height: @app-nav-height;
+    vertical-align: middle;
+    letter-spacing: -0.5px;
+  }
+
+  .app-nav-controls {
+    -webkit-flex: 1 1 auto;
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 0;
+  }
+
+  .app-nav-primary-controls,
+  .app-nav-secondary-controls {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .app-nav-secondary-controls {
+    padding: 0 8px;
+
+    &.app-nav-secondary-controls-no-left-padding {
+      padding-left: 0;
+    }
+  }
+
+  .app-nav-right-arrow {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: 1px;
+  }
+
+  .app-nav-logo {
+    .retina-picture('pub-logo-40', 41px, 40px, inline-block);
+  }
+}
+
+.app-content {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: inherit;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.app-cover {
+  background: hsla(0, 0%, 0%, 0.1);
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 8999;
+}
+
+.pub-logo-72 {
+  .retina-picture('pub-logo-72', 72px, 72px, block);
+  margin: 0 auto;
+}
+
+.pub-logo-128 {
+  .retina-picture('pub-logo-128', 128px, 128px, block);
+  margin: 0 auto;
+}
