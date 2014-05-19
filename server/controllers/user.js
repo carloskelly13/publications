@@ -6,6 +6,7 @@
  */
 
 var bcrypt = require('bcrypt')
+  , _ = require('lodash')
   , UserModel = require('../models/user')
 
 exports.show = function(req, res) {
@@ -16,30 +17,19 @@ exports.update = function(req, res) {
   var userJson = req.body
     , user = req.user;
     
-  if (userJson._id.toString() === user._id.toString()) {
-    bcrypt.compare(userJson.currentPassword, userJson.password, function(err, isValid) {
-      if (isValid) {
-        delete userJson._id;
-        
-        bcrypt.genSalt(10, function(err, salt) {
-          bcrypt.hash(userJson.newPassword, salt, function(err, hash) {
-            userJson.password = hash;
-            
-            UserModel.findByIdAndUpdate(user._id, userJson, { upsert: true },
-              function(err, updatedUser) {
-                return res.json(updatedUser || err);
-              }
-            );
-          });
-        });
-        
-      } else {
-        res.send(403);
-      }
-    });
-  } else {
-    res.send(403);
-  }
+  bcrypt.compare(userJson.currentPassword, user.password, function(err, isValid) {
+    if (isValid) {
+      var updateUser = _.extend(user, userJson);
+      delete updateUser.currentPassword;
+      
+      updateUser.save(function(err, user) {
+        return res.json(user || err);
+      });
+      
+    } else {
+      res.send(403);
+    }
+  });
 };
 
 exports.login = function(req, res) {
@@ -49,9 +39,11 @@ exports.login = function(req, res) {
 exports.logout = function(req, res) {
   var user = req.user;
   
-  UserModel.findById(user._id, function(err, userModel) {
-    if (userModel.temporary) {
-      userModel.remove();
+  UserModel.findById(user._id, function(err, user) {
+    if (!err && user) {
+      if (user.temporary) {
+        user.remove();
+      }
     }
   });
 

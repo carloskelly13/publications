@@ -5,7 +5,8 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var DocumentModel = require('../models/document')
+var _ = require('lodash')
+  , DocumentModel = require('../models/document')
   , UserModel = require('../models/user')
 
 exports.index = function(req, res) {
@@ -19,10 +20,10 @@ exports.show = function(req, res) {
 };
 
 exports.update = function(req, res) {
-  var docId = req.doc._id;
-
-  DocumentModel.findByIdAndUpdate(docId, req.body, { upsert: true }, function(err, doc) {
-    res.json(doc || err);
+  var updateDoc = _.extend(req.doc, req.body);
+  
+  updateDoc.save(function(err, doc) {
+    return res.json(doc || err);
   });
 };
 

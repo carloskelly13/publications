@@ -36,7 +36,7 @@
       $scope.updateUserAccount = function(sender) {
         $scope.user.name = sender.emailAddress || $scope.user.name;
         $scope.user.currentPassword = sender.currentPassword || 'password';
-        $scope.user.newPassword = sender.newPassword;
+        $scope.user.password = sender.newPassword;
         $scope.user.temporary = false;
         
         $http.put('/users/' + $scope.user._id, $scope.user, null).success(function(user) {

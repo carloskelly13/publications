@@ -7,6 +7,7 @@
 
 var IndexController = require('../controllers/index')
   , UserController = require('../controllers/user')
+  , UserModel = require('../models/user')
   , DocumentController = require('../controllers/document')
   , DocumentModel = require('../models/document')
 
@@ -26,8 +27,19 @@ module.exports = function (app, passport) {
   app.get('/logout', UserController.logout);
   app.post('/login', passport.authenticate('local'), UserController.login);
   
+  app.param('userId', function(req, res, next, id) {
+    UserModel.findById(id, function(err, user) {
+      if (err || !user) {
+        res.send(404);
+      } else {
+        req.user = user;
+        next();
+      }
+    });
+  });
+  
   app.get('/users/current', UserController.current);
-  app.put('/users/:id', auth, UserController.update);
+  app.put('/users/:userId', auth, UserController.update);
   app.post('/users', UserController.create);
 
   // Document model routes
