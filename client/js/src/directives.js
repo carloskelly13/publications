@@ -81,6 +81,26 @@
     }
   });
 
+  pub.directive('pubAlphaFloatInput', function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(value) {
+          var number = parseFloat(value);
+
+          if (!isNaN(number) && number <= 1 && number >= 0) {
+            ngModel.$setValidity('pubAlphaFloatInput', true);
+            return number;
+          } else {
+            ngModel.$setValidity('pubAlphaFloatInput', false);
+            return ngModel.$modelValue;
+          }
+        });
+      }
+    }
+  });
+
   pub.directive('pubModalAbout', function() {
     return {
       templateUrl: '/views/directives/about.html'
