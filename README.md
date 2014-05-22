@@ -1,6 +1,6 @@
 ### Publications
 
-Publications is an Angular-based page layout and screen design web application. It uses ExpressJS, AngularJS, d3, MongooseJS, MongoDB, Grunt and Bower. It is currently undergoing conversion to AngularJS and is very incomplete. Previous complete versions based on BackboneJS are tagged as 1.0.x.
+Publications 2.x is an Angular-based page layout and screen design web application. It uses ExpressJS, AngularJS, MongooseJS, MongoDB, Grunt and Bower.
 
 #### Getting Started
 
@@ -17,11 +17,6 @@ $ bower install
 Compile resources for development:
 ```
 $ grunt development
-```
-
-Compile, uglify and minify resources for production:
-```
-$ grunt producution
 ```
 
 Run the application:
