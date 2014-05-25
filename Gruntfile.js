@@ -66,6 +66,21 @@ module.exports = function(grunt) {
           'client/index.ejs' : 'client/index.template.html'
         }
       }
+    },
+
+    watch: {
+      css: {
+        files: 'client/css/*.less',
+        tasks: ['less']
+      },
+      scripts: {
+        files: 'client/js/src/**/*.js',
+        tasks: ['concat']
+      },
+      templates: {
+        files: ['client/views/**/*.html', 'client/views/*.html'],
+        tasks: ['html2js']
+      }
     }
   });
 

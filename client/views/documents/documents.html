@@ -9,10 +9,23 @@
   </div>
 </div>
 <div class="documents-list">
+  <div class="no-documents-banner" ng-if="documents.length === 0">
+    <figure id="document-icon"></figure>
+    <h1>No Documents</h1>
+    <h3>Create a new document to get started</h3>
+  </div>
+  <div class="sort-filters" ng-if="documents.length > 0">
+    <div class="button-group">
+      <button ng-class="{ 'button-sort-active' : sortFilter === 'name' }" class="button button-text" ng-click="updateSortFilter('name', false)">Name</button>
+      <button ng-class="{ 'button-sort-active' : sortFilter === 'modified' }" class="button button-text" ng-click="updateSortFilter('modified', true)">Created</button>
+      <button ng-class="{ 'button-sort-active' : sortFilter === 'size' && sortReverse }" class="button button-text" ng-click="updateSortFilter('size', true)">Largest</button>
+      <button ng-class="{ 'button-sort-active' : sortFilter === 'size' && !sortReverse }" class="button button-text" ng-click="updateSortFilter('size', false)">Smallest</button>
+    </div>
+  </div>
   <div class="document-item"
        pub-document-item
-       ng-repeat="doc in documents | filter: search | orderBy: 'modified' : true"
-       ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' );"
+       ng-repeat="doc in documents | filter: search | orderBy: sortFilter : sortReverse"
+       ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' ); doc.size = doc.height * doc.width;"
        ui-sref="pub.documents.document.views({ documentId: doc._id })">
   </div>
 </div>

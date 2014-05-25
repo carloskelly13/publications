@@ -67,7 +67,7 @@
   color: @darkgray-dark;
   cursor: pointer;
   display: inline-block;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   position: relative;
   text-align: center;
@@ -87,7 +87,7 @@
     font-family: @ui-font, Helvetica, sans-serif;
     padding: 0;
     height: 44px;
-    line-height: 44px;
+    line-height: 43px;
     width: 100%;
     margin-top: 1em;
 
@@ -133,7 +133,7 @@
 
     &.button-form-slim {
       height: 34px;
-      line-height: 34px;
+      line-height: 33px;
     }
   }
 
@@ -188,7 +188,7 @@
       font-size: 14px;
       font-family: @ui-font, Helvetica, sans-serif;
       font-weight: 400;
-      line-height: 24px;
+      line-height: 23px;
       vertical-align: middle;
       margin: 0 8px;
 
@@ -295,7 +295,7 @@
   color: @darkgray-dark;
   display: inline-block;
   font-family: @ui-font, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   padding: 4px;
   position: relative;
@@ -346,14 +346,17 @@
 
   .button {
     float: left;
+    border-radius: 0;
+    border-right-width: 0;
 
     &:first-child {
       .rounded-corners(4px 0 0 4px);
-      border-right: none;
+      border-right-width: 0;
     }
 
     &:last-child {
       .rounded-corners(0 4px 4px 0);
+      border-right-width: 1px;
     }
   }
 }
