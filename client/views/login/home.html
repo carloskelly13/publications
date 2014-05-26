@@ -1,57 +1,27 @@
-<section class="landing-page">
-  <div pub-modal-login class="app-cover animation-fade-in" ng-show="loginModalVisible"></div>
-  <div class="header">
-    <div class="landing-page">
-      <div class="pub-logo animation-pub-logo"></div>
+<section id="landing-page">
+  <section class="full-height-section" id="hero">
+    <div class="auth-bar animation-landing-fade">
+      <button class="button button-text button-text-no-frame" ng-click="loginModal()">Log In</button>
+      <span class="or">or</span>
+      <button class="button button-text button-text-no-frame" ng-click="createAccount()">Start using Publications</button>
     </div>
-  </div>
-  <div class="landing-page animation-landing-fade">
-    <h1>A web app for beautiful page layout and screen design.</h1>
-  </div>
-  <div class="landing-page animation-landing-fade-2">
-    <div class="buttons-container">
-      <div class="text-buttons">
-        <span class="larger-text">
-          <button class="button button-text button-text-no-frame" ng-click="loginModal()">Log In</button>
-          <span class="helper-text">or</span>
-          <button class="button button-text button-text-no-frame" ng-click="createAccount()">Start using Publications</button>
-        </span>
-        <div class="helper-text">Try out Publications now and create an account later if you want to keep your work.</div>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <div class="feature">
-      <h2>
+    <figure id="pub-logo-svg" class="animation-pub-logo"></figure>
+    <span id="scroll-helper" class="animation-landing-fade">
+      scroll to learn more
+    </span>
+  </section>
+  <section class="full-height-section" id="page-content">
+    <div class="page-content-wrapper">
+      <h1>
         Create beautiful, vivid documents
-      </h2>
+      </h1>
       <p>
         Publications includes all the tools to create beautiful documents with shapes and text. Shapes can be customized to have different fill colors, border colors, border width, radii, opacity and size. Publications now supports canvas zooming and object snap-to-grid alignment. Export your documents to scalable multi-layer PDFs that can be shared with anyone.
       </p>
+      <div class="pub-screenshot">
+        
+      </div>
     </div>
-    <div class="divider"></div>
-    <div class="feature">
-      <h2>
-        Sort, search and save documents
-      </h2>
-      <p>
-        Publications saves all your documents securely on the cloud. Easily view all your documents with full crisp and clear previews. Publications now lets you search and filter documents by name or date.
-      </p>
-    </div>
-    <div class="divider"></div>
-    <div class="feature">
-      <h2>
-        Full-stack JavaScript web app
-      </h2>
-      <p>
-        Publications is built using full-stack JavaScript technologies running on an ArchLinux cloud-based server. There are no additional plug-ins or downloads required to run Publications. Publications runs on the latest versions of Safari, Chrome and Opera for Mac and Windows.
-        <div class="pub-tech-logos"></div>
-      </p>
-    </div>
-    <div class="divider"></div>
-    <div class="feature">
-      <p>
-        Publications is designed and developed by Michael Kelly and Carlos Paelinck.
-      </p>
-    </div>
-  </div>
+  </section>
 </section>
+<div pub-modal-login class="app-cover animation-fade-in" ng-show="loginModalVisible"></div>

@@ -15,6 +15,7 @@
     "bootstrap": "~3.1.1",
     "jquery": "~2.1.0",
     "raphael": "~2.1.2",
-    "angular-animate": "~1.2.16"
+    "angular-animate": "~1.2.16",
+    "angular-scroll": "~0.5.7"
   }
 }
