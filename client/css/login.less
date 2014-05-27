@@ -3,15 +3,25 @@
   margin: auto;
   position: fixed;
   top: 0; right: 0; bottom: 50px; left: 0;
-  z-index: 1;
+  z-index: -1;
+  
+  @media screen and (max-width: 650px) {
+    background-size: 250px 179px;
+    width: 250px;
+    height: 179px;
+  }
 }
 
 .auth-bar {
-  position: fixed;
+  position: absolute;
   text-align: center;
   top: 2%;
   width: 100%;
   z-index: 1;
+  
+  @media screen and (max-width: 650px) {
+    display: none;
+  }
   
   .or {
     color: hsla(0, 0%, 100%, 0.7);
@@ -41,17 +51,22 @@
 }
 
 section#landing-page {
+  -webkit-overflow-scrolling: touch;
+  
   section.full-height-section {
     height: 100vh;
+    overflow: hidden;
   }
 
   section#hero {
     background: @blue-dark;
-    background-image: -moz-radial-gradient(center top, ellipse cover, @blue, @blue-dark 100%);
-    background-image: -webkit-radial-gradient(center top, ellipse cover, @blue, @blue-dark 100%);
-    background-image: -o-radial-gradient(center top, ellipse cover, @blue, @blue-dark 100%);
-    background-image: -ms-radial-gradient(center top, ellipse cover, @blue, @blue-dark 100%);
-    box-shadow: inset 0 -50px 50px -50px @blue-dark;
+    background-image: -moz-radial-gradient(center top, ellipse cover, @blue, darken(@blue-dark, 10%) 100%);
+    background-image: -webkit-radial-gradient(center top, ellipse cover, @blue, darken(@blue-dark, 10%) 100%);
+    background-image: -o-radial-gradient(center top, ellipse cover, @blue, darken(@blue-dark, 10%) 100%);
+    background-image: -ms-radial-gradient(center top, ellipse cover, @blue, darken(@blue-dark, 10%) 100%);
+    box-shadow: inset 0 -50px 50px -50px darken(@blue-dark, 20%);
+    position: relative;
+    z-index: -1;
     
     #scroll-helper {
       bottom: 2%;
@@ -62,39 +77,105 @@ section#landing-page {
       position: fixed;
       width: 100%;
       text-align: center;
-      z-index: 1;
+      z-index: -1;
     }
   }
   
-  section#page-content {
+  section.page-content {
     background: #fff;
     position: relative;
-    z-index: 2;
+    text-align: center;
+    
+    @media screen and (max-width: 650px) {
+      height: auto;
+    }
+    
+    &.page-content-about {
+      background: url('../img/pub-screenshot.png') no-repeat center 400px;
+      background-size: 100% auto;
+      
+      @media screen and (max-width: 650px) {
+        background: #fff;
+      }
+    }
+    
+    &.page-content-tech {
+      background-size: 656px 336px;
+      border-top: 1px hsla(0, 0%, 0%, 0.5) solid;
+      
+      @media screen and (max-width: 650px) {
+        border-top: 1px hsla(0, 0%, 0%, 0.25) solid;
+      }
+
+      .tech-logos {
+        .svg-picture('pub-tech-logos', 660px, 360px, block);
+        margin: 0 auto 4em auto;
+        
+        @media screen and (max-width: 650px) {
+          display: none;
+        }
+      }
+    }
     
     .page-content-wrapper {
-      padding: 5%;
-      max-width: 1024px;
+      padding: 3em 0;
       margin: 0 auto;
+      width: 100vw;
+    }
+    
+    .page-content-middle {
+      display: table-cell;
+      vertical-align: middle;
+      height: 100vh;
+      
+      @media screen and (max-width: 650px) {
+        display: block;
+        height: auto;
+      }
     }
     
     h1 {
       color: #434a54;
-      font-size: 3.5vw;
-      font-weight: 300;
-      padding: 0 0 0.5em 0;
+      font-size: 2em;
+      font-weight: 400;
+      letter-spacing: -1px;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 0 1.25em 0;
+      width: 90%;
+      
+      @media screen and (max-width: 930px) {
+        font-size: 1.8em;
+      }
+      
+      @media screen and (max-width: 650px) {
+        font-size: 1.5em;
+      }
+      
+      &.mobile-only {
+        display: none;
+        
+        @media screen and (max-width: 650px) {
+          display: block;
+        }
+      }
     }
     
     p {
       color: #656e78;
-      font-size: 2.25vw;
-      padding: 0 0 2em 0;
-    }
-    
-    .pub-screenshot {
-      background: url('../img/pub-screenshot.png') no-repeat center center;
-      background-size: 100% auto;
-      height: 918px; width: 653px;
-      border: 1px solid @darkgray-dark;
+      font-size: 1.3em;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 0 1.25em 0;
+      width: 90%;
+      
+      @media screen and (max-width: 930px) {
+        font-size: 1.2em;
+      }
+      
+      @media screen and (max-width: 650px) {
+        font-size: 1em;
+      }
     }
   }
 }

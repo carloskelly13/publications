@@ -2,7 +2,7 @@
   <span class="h1-button"
         ng-repeat="availableColor in availableColors"
         ng-click="switchColor(availableColor)"
-        ng-class="{ selected: selectedColor.toLowerCase() === availableColor.toLowerCase()}">
+        ng-class="{ selected: selectedColor.toLowerCase() == availableColor.toLowerCase()}">
     {{ availableColor.capitalize() }}
   </span>
 </h1>

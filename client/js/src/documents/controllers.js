@@ -105,22 +105,22 @@
       $scope.exportModalVisible = false;
       $scope.selectedColor = null;
       $scope.availableColors = [];
+      
+      $scope.switchColor = function(availableColor) {
+        $scope.selectedColor = availableColor.toLowerCase();
+      };
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
 
-        if (obj && obj.type === 'text') {
-          $scope.selectedColor = 'color';
+        if (obj && obj.type.toLowerCase() == 'text'.toLowerCase()) {
           $scope.availableColors = [ 'color' ];
 
         } else if (obj) {
-          $scope.selectedColor = 'fill';
           $scope.availableColors = [ 'fill', 'stroke' ];
-          
-        } else {
-          $scope.selectedColor = null;
-          $scope.availableColors = [];
         }
+        
+        $scope.selectedColor = $scope.availableColors[0];
       };
       
       $scope.cutObj = function() {
@@ -222,10 +222,6 @@
 
       $scope.updateColor = function(color) {
         $scope.selectedObj[$scope.selectedColor] = color;
-      };
-      
-      $scope.switchColor = function(availableColor) {
-        $scope.selectedColor = availableColor.toLowerCase();
       };
 
       $scope.addObject = function(objType) {
