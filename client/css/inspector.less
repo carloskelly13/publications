@@ -99,11 +99,32 @@
     font-weight: 500;
     line-height: 1em;
     padding: 0.75em 0;
-    letter-spacing: -0.5px;
     border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
 
     &.border-top {
       border-top: 1px solid hsla(0, 0%, 0%, 0.1);
+    }
+    
+    .h1-button {
+      .animation(all, 0.25s);
+      color: lighten(@darkgray-dark, 25%);
+      cursor: pointer;
+      
+      &:first-child {
+        margin-right: 0.33em;
+      }
+      
+      &:only-child {
+        margin-right: 0;
+      }
+      
+      &:hover {
+        color: @blue;
+      }
+    
+      &.selected {
+        color: @darkgray-dark;
+      }
     }
   }
 
@@ -248,13 +269,17 @@
   label {
     box-sizing: border-box;
     display: inline-block;
-    font-size: 24px;
-    line-height: 50px;
-    height: 40px;
     -webkit-flex: 1 1 auto;
     flex: 1 1 auto;
     text-align: center;
     cursor: pointer;
+
+    span {
+      font-size: 24px;
+      line-height: 45px;
+      height: 40px;
+      display: inline-block;
+    }
 
     &.active {
       background: @blue-dark;
@@ -273,6 +298,37 @@
 
     input {
       display: none;
+    }
+  }
+}
+
+.color-swatches {
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+  padding: 0.25em 0 0 0;
+  text-align: center;
+  
+  .color-swatch {
+    .rounded-corners(24px);
+    box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25);
+    cursor: pointer;
+    display: inline-block;
+    height: 24px;
+    margin: 0.25em;
+    width: 24px;
+  
+    &:hover {
+      box-shadow: inset 0 0 0 24px hsla(0, 0%, 0%, 0.25);
+    }
+  
+    &:active {
+      position: relative;
+      top: 1px;
+    }
+    
+    &.selected {
+      box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25),
+                  0 0 0 2px #fff,
+                  0 0 0 3px hsla(0, 0%, 0%, 0.6);
     }
   }
 }

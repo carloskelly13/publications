@@ -1,26 +1,35 @@
-<h1>Color</h1>
-<table class="inspector-table" ng-switch="selectedObj.type">
-  <tbody ng-switch-when="text">
+<h1>
+  <span class="h1-button"
+        ng-repeat="availableColor in availableColors"
+        ng-click="switchColor(availableColor)"
+        ng-class="{ selected: selectedColor.toLowerCase() == availableColor.toLowerCase()}">
+    {{ availableColor.capitalize() }}
+  </span>
+</h1>
+<div class="color-swatches">
+  <div ng-repeat="color in colors"
+       class="color-swatch"
+       style="background: {{ color }};"
+       ng-click="updateColor(color)"
+       ng-class="{ selected: selectedObj[selectedColor].toLowerCase() === color.toLowerCase()}">
+  </div>
+</div>
+<table class="inspector-table">
+  <tbody>
     <tr>
-      <td class="inspector-column-label">text</td>
+      <td class="inspector-column-label">color</td>
       <td class="inspector-column-input inspector-column-input-no-units">
-        <input pub-hex-color-input class="input-text" ng-model="selectedObj.color" type="text">
+        <input pub-hex-color-input
+               class="input-text"
+               ng-model="selectedObj[selectedColor]"
+               type="text">
+      </td>
+    </tr>
+    <tr ng-if="selectedObj.type !== 'text'">
+      <td class="inspector-column-label">opacity</td>
+      <td class="inspector-column-input inspector-column-input-no-units">
+        <input pub-alpha-float-input class="input-text" ng-model="selectedObj[selectedColor + 'Opacity']" type="text">
       </td>
     </tr>
   </tbody>
-  <tbody ng-switch-default>
-    <tr>
-      <td class="inspector-column-label">fill</td>
-      <td class="inspector-column-input inspector-column-input-no-units">
-        <input pub-hex-color-input class="input-text" ng-model="selectedObj.fill" type="text">
-      </td>
-    </tr>
-    <tr>
-      <td class="inspector-column-label">border</td>
-      <td class="inspector-column-input inspector-column-input-no-units">
-        <input pub-hex-color-input class="input-text" ng-model="selectedObj.stroke" type="text">
-      </td>
-    </tr>
-  </tbody>
-
 </table>

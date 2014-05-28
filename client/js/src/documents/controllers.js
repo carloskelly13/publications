@@ -19,6 +19,20 @@
       { coordinate: 'se', x: 1, y: 1 }
     ]
   });
+  pub.value('colors', [
+    '#f6f8fb', '#e7eaed',
+    '#cdd2d9', '#abb3bd',
+    '#656e78', '#434a54',
+    '#d94656', '#ea5569',
+    '#e85945', '#fa6f57',
+    '#f5bb4f', '#fecd5f',
+    '#8ec159', '#a2d36e',
+    '#3fbc9c', '#4fcfae',
+    '#42b0d9', '#55c2e8',
+    '#4e8bda', '#609eeb',
+    '#967dda', '#ac95eb',
+    '#d673ad', '#eb89c0'
+  ]);
 
   pub.controller('DocumentsController', [
     '$scope',
@@ -35,6 +49,13 @@
       $scope.dpi = 72;
       $scope.iconDpi = 15;
       $scope.newDocumentModalVisible = false;
+      $scope.sortFilter = 'name';
+      $scope.sortReverse = false;
+
+      $scope.updateSortFilter = function(sortFilter, sortReverse) {
+        $scope.sortFilter = sortFilter;
+        $scope.sortReverse = sortReverse;
+      };
 
       $scope.newDocument = function() {
         documentsApi.post({
@@ -82,11 +103,26 @@
       $scope.clipboard = null;
       $scope.deleteModalVisible = false;
       $scope.exportModalVisible = false;
+      $scope.selectedColor = null;
+      $scope.availableColors = [];
+      
+      $scope.switchColor = function(availableColor) {
+        $scope.selectedColor = availableColor.toLowerCase();
+      };
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
-      };
 
+        if (obj && obj.type.toLowerCase() == 'text'.toLowerCase()) {
+          $scope.availableColors = [ 'color' ];
+
+        } else if (obj) {
+          $scope.availableColors = [ 'fill', 'stroke' ];
+        }
+        
+        $scope.selectedColor = $scope.availableColors[0];
+      };
+      
       $scope.cutObj = function() {
         $scope.clipboard = angular.copy($scope.selectedObj);
         var objIdx = $scope.doc.shapes.indexOf($scope.selectedObj);
@@ -177,10 +213,16 @@
     'zoomLevels',
     'fonts',
     'fontWeights',
-    function($scope, $state, documentServices, zoomLevels, fonts, fontWeights) {
+    'colors',
+    function($scope, $state, documentServices, zoomLevels, fonts, fontWeights, colors) {
       $scope.zoomLevels = zoomLevels;
       $scope.fonts = fonts;
       $scope.fontWeights = fontWeights;
+      $scope.colors = colors;
+
+      $scope.updateColor = function(color) {
+        $scope.selectedObj[$scope.selectedColor] = color;
+      };
 
       $scope.addObject = function(objType) {
         $scope.doc.shapes.push(documentServices.newShape(objType));
