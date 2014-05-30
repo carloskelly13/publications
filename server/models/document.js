@@ -53,18 +53,24 @@ documentSchema.methods = {
             (shape.height / 2.0)  * dpi);
         }
 
-        obj.lineWidth(shape.strokeWidth)
-          .fillColor(shape.fill, shape.fillOpacity)
-          .strokeColor(shape.stroke, shape.strokeOpacity);
-
         if (shape.fillOpacity > 0 && shape.strokeWidth === 0) {
-          obj.fill();
+          obj.fillColor(shape.fill, shape.fillOpacity)
+            .fill();
 
         } else if (shape.fillOpacity === 0 && shape.strokeWidth > 0) {
-          obj.stroke();
+          obj.strokeColor(shape.stroke, shape.strokeOpacity)
+            .lineWidth(shape.strokeWidth)
+            .lineCap('square')
+            .lineJoin('miter')
+            .stroke();
 
         } else if (shape.fillOpacity > 0 && shape.strokeWidth > 0) {
-          obj.fillAndStroke();
+          obj.fillColor(shape.fill, shape.fillOpacity)
+            .strokeColor(shape.stroke, shape.strokeOpacity)
+            .lineWidth(shape.strokeWidth)
+            .lineCap('square')
+            .lineJoin('miter')
+            .fillAndStroke();
         }
 
       } else if (shape.type === 'text') {
