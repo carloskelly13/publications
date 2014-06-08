@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
+ * Publications
  * User Controller
- * Michael Kelly and Carlos Paelinck
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 var bcrypt = require('bcrypt')
@@ -34,7 +34,7 @@ exports.update = function(req, res) {
 };
 
 exports.login = function(req, res) {
-  res.send(req.user);
+  res.send(req.user || 401);
 };
 
 exports.logout = function(req, res) {

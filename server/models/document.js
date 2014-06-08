@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
+ * Publications
  * Document Model
- * Michael Kelly and Carlos Paelinck
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 var mongoose = require('mongoose')
@@ -30,7 +30,7 @@ documentSchema.methods = {
     doc.registerFont('SOURCE_SANS_PRO_400', 'client/css/typefaces/SourceSansPro-Regular.ttf');
     doc.registerFont('SOURCE_SANS_PRO_500', 'client/css/typefaces/SourceSansPro-Semibold.ttf');
     doc.registerFont('SOURCE_SANS_PRO_600', 'client/css/typefaces/SourceSansPro-Bold.ttf');
-    
+
     doc.registerFont('SOURCE_SERIF_PRO_400', 'client/css/typefaces/SourceSerifPro-Regular.ttf');
     doc.registerFont('SOURCE_SERIF_PRO_500', 'client/css/typefaces/SourceSerifPro-Semibold.ttf');
     doc.registerFont('SOURCE_SERIF_PRO_600', 'client/css/typefaces/SourceSerifPro-Bold.ttf');

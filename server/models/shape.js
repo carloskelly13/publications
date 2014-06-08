@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
+ * Publications
  * Shape Model
- * Michael Kelly and Carlos Paelinck
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 var mongoose = require('mongoose');

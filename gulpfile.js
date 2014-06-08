@@ -1,10 +1,17 @@
+
+/**
+ * Publications
+ * Gulp Configuration File
+ * 2014 Michael Kelly and Carlos Paelinck
+ */
+
 var concat = require('gulp-concat')
   , gulp = require('gulp')
   , html2js = require('gulp-html2js')
   , less = require('gulp-less')
   , path = require('path')
   , uglify = require('gulp-uglify')
-  
+
 var paths = {
   css: 'client/css/*.less',
   js: [ 'client/views/templates.js', 'client/js/src/**/*.js' ],

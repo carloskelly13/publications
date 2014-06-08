@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
+ * Publications
  * Document Controller
- * Michael Kelly and Carlos Paelinck
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 var _ = require('lodash')
@@ -21,7 +21,7 @@ exports.show = function(req, res) {
 
 exports.update = function(req, res) {
   var updateDoc = _.extend(req.doc, req.body);
-  
+
   updateDoc.save(function(err, doc) {
     return res.json(doc || err);
   });
@@ -29,7 +29,7 @@ exports.update = function(req, res) {
 
 exports.create = function(req, res) {
   var newDoc = new DocumentModel(req.body)
-    
+
   UserModel.findById(req.user._id, function(err, user) {
     user.documents.push(newDoc);
     user.save(function() {
@@ -42,13 +42,13 @@ exports.create = function(req, res) {
 
 exports.remove = function(req, res) {
   var userId = req.user._id
-    
+
   UserModel.findById(userId, function(err, user) {
     user.documents.remove(req.doc);
     user.save(function(err) {
       if (err) {
         res.json({ success: false });
-        
+
       } else {
         req.doc.remove(function() {
           res.json({ success: true });

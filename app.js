@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
- * Application Server
- * Michael Kelly and Carlos Paelinck
+ * Publications
+ * NodeJS Application Server
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 var express = require('express')
@@ -14,7 +14,7 @@ var express = require('express')
   , mongoose = require('mongoose')
   , passport = require('passport')
   , path = require('path')
-    
+
 require('./server/config/passport')(passport);
 
 var app = express();
@@ -23,7 +23,10 @@ var app = express();
 app.use(cookieParser());
 app.use(session({
   secret: '36bf03edbbc39b3ab6f89463e47639ca25fe8836e43bae065124fd7d26d9a804',
-  name: 'app.publications'
+  name: 'app.publications',
+  cookie: {
+    maxAge: 31536000000
+  }
 }));
 
 app.set('port', process.env.PORT || 4000);
