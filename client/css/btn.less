@@ -1,0 +1,51 @@
+.btn {
+  .animation(all, 150ms);
+  /* .rounded-corners(2px); */
+  
+  -webkit-font-smoothing: antialiased;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+
+  background: transparent;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  color: @color-text;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 13px;
+  padding: 4px 1px;
+  outline: none;
+  text-align: center;
+  text-rendering: optimizeLegibility;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  zoom: 1;
+  
+  &:hover {
+    color: @color-primary;
+  }
+  
+  &:active {
+    .touch-animation(0.95);
+    color: @color-primary-bright;
+  }
+  
+  &.btn-active {
+    border-bottom-color: @color-primary;
+    color: @color-primary;
+  }
+  
+  &.btn-light {
+    color: #fff;
+  }
+  
+  &.btn-small {
+    font-size: 13px;
+    padding: 2px 1px;
+    margin: 0 8px;
+  }
+}

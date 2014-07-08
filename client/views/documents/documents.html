@@ -4,8 +4,8 @@
     <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
   </div>
   <div class="app-nav-secondary-controls">
-    <button class="button button-text button-text-no-frame" ng-click="newDocumentModal()">New Document</button>
-    <button class="button button-text button-text-no-frame" ng-click="userModal()">Settings</button>
+    <button class="btn" ng-click="newDocumentModal()">New Document</button>
+    <button class="btn" ng-click="userModal()">Settings</button>
   </div>
 </div>
 <div class="documents-list">
@@ -16,10 +16,10 @@
   </div>
   <div class="sort-filters" ng-if="documents.length > 0">
     <div class="button-group">
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'name' }" class="button button-text" ng-click="updateSortFilter('name', false)">Name</button>
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'modified' }" class="button button-text" ng-click="updateSortFilter('modified', true)">Created</button>
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'size' && sortReverse }" class="button button-text" ng-click="updateSortFilter('size', true)">Largest</button>
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'size' && !sortReverse }" class="button button-text" ng-click="updateSortFilter('size', false)">Smallest</button>
+      <button ng-class="{ 'btn-active' : sortFilter === 'name' }" class="btn" ng-click="updateSortFilter('name', false)">Name</button>
+      <button ng-class="{ 'btn-active' : sortFilter === 'modified' }" class="btn" ng-click="updateSortFilter('modified', true)">Created</button>
+      <button ng-class="{ 'btn-active' : sortFilter === 'size' && sortReverse }" class="btn" ng-click="updateSortFilter('size', true)">Largest</button>
+      <button ng-class="{ 'btn-active' : sortFilter === 'size' && !sortReverse }" class="btn" ng-click="updateSortFilter('size', false)">Smallest</button>
     </div>
   </div>
   <div class="document-item"
@@ -35,6 +35,6 @@
 <div ui-view></div>
 <div class="app-footer">
   <div class="app-footer-content">
-    <button class="button button-text-link" ng-click="aboutModal()">About Publications&hellip;</button
+    <!-- <button class="btn btn-light btn-small" ng-click="aboutModal()">About Publications&hellip;</button -->
   </div>
 </div>

@@ -8,8 +8,7 @@
     'pub.security',
     'pub.services',
     'pub.directives',
-    'restangular',
-    'ngAnimate'
+    'restangular'
   ]);
 
   pub.config([

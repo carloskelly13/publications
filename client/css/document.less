@@ -1,5 +1,5 @@
 .documents-list {
-  background: #dcdedf;
+  background: #eceff1;
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -35,7 +35,7 @@
   }
 
   .sort-filters {
-    margin: 1.5em auto 0 auto;
+    margin: 1.25em auto 0 auto;
     text-align: center;
 
     .button {
@@ -48,7 +48,7 @@
   }
 
   .document-item {
-    .animation(color, 250ms);
+    .animation(all, 250ms);
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -72,8 +72,7 @@
     }
 
     &:active {
-      position: relative;
-      top: 1px;
+      .touch-animation(0.98);
     }
 
     .document-name,
