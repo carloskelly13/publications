@@ -4,7 +4,6 @@
     <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
   </div>
   <div class="app-nav-secondary-controls">
-    <button class="btn" ng-click="newDocumentModal()">New Document</button>
     <button class="btn" ng-click="userModal()">Settings</button>
   </div>
 </div>
@@ -14,13 +13,16 @@
     <h1>No Documents</h1>
     <h3>Create a new document to get started</h3>
   </div>
-  <div class="sort-filters" ng-if="documents.length > 0">
-    <div class="button-group">
+  <div class="sort-filters">
+    <span ng-if="documents.length > 0">
+      <label class="btn-label">Sort By</label>
       <button ng-class="{ 'btn-active' : sortFilter === 'name' }" class="btn" ng-click="updateSortFilter('name', false)">Name</button>
       <button ng-class="{ 'btn-active' : sortFilter === 'modified' }" class="btn" ng-click="updateSortFilter('modified', true)">Created</button>
       <button ng-class="{ 'btn-active' : sortFilter === 'size' && sortReverse }" class="btn" ng-click="updateSortFilter('size', true)">Largest</button>
       <button ng-class="{ 'btn-active' : sortFilter === 'size' && !sortReverse }" class="btn" ng-click="updateSortFilter('size', false)">Smallest</button>
-    </div>
+      <span class="divider"></span>
+    </span>
+    <button class="btn" ng-click="newDocumentModal()">New Document</button>
   </div>
   <div class="document-item"
        pub-document-item
