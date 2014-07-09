@@ -68,7 +68,7 @@
     }
 
     &:hover {
-      color: @blue-dark;
+      color: @color-primary;
     }
 
     &:active {
@@ -76,20 +76,26 @@
     }
 
     .document-name,
-    .document-date {
+    .document-date,
+    .document-size {
       display: block;
       line-height: 1em;
       margin: 0.5em;
     }
 
     .document-name {
-      font-size: 1em;
+      font-size: 14px;
       font-weight: 500;
     }
 
     .document-date {
       color: lighten(@darkgray-dark, 10%);
-      font-size: 0.85em;
+      font-size: 11px;
+    }
+
+    .document-size {
+      color: @color-primary;
+      font-size: 11px;
     }
   }
 

@@ -3,20 +3,20 @@
 
   var pub = angular.module('pub.documents.controllers', []);
 
-  pub.value('zoomLevels', [ 0.5, 1, 1.5, 2, 2.5, 3 ]);
-  pub.value('fonts', [{ name: 'Source Serif Pro' }, { name: 'Source Sans Pro' }]);
-  pub.value('fontWeights', [{ weight: '400' }, { weight: '500' }, { weight: '600' }]);
+  pub.value('zoomLevels', [0.5, 1, 1.5, 2, 2.5, 3]);
+  pub.value('fonts', [{name: 'Source Serif Pro'}, {name: 'Source Sans Pro'}]);
+  pub.value('fontWeights', [{weight: '400'}, {weight: '500'}, {weight: '600'}]);
   pub.value('objAnchors', {
     size: 10,
     points: [
-      { coordinate: 'nw', x: 0, y: 0 },
-      { coordinate: 'n', x: 0.5, y: 0 },
-      { coordinate: 'ne', x: 1, y: 0 },
-      { coordinate: 'w', x: 0, y: 0.5 },
-      { coordinate: 'e', x: 1, y: 0.5 },
-      { coordinate: 'sw', x: 0, y: 1 },
-      { coordinate: 's', x: 0.5, y: 1 },
-      { coordinate: 'se', x: 1, y: 1 }
+      {coordinate: 'nw', x: 0, y: 0},
+      {coordinate: 'n', x: 0.5, y: 0},
+      {coordinate: 'ne', x: 1, y: 0},
+      {coordinate: 'w', x: 0, y: 0.5},
+      {coordinate: 'e', x: 1, y: 0.5},
+      {coordinate: 'sw', x: 0, y: 1},
+      {coordinate: 's', x: 0.5, y: 1},
+      {coordinate: 'se', x: 1, y: 1}
     ]
   });
   pub.value('colors', [
@@ -71,11 +71,11 @@
       };
 
       $scope.newDocumentModal = function() {
-        $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
-        $scope.name = null;
-        $scope.width = null;
-        $scope.height = null;
-      };
+        $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible
+        $scope.name = null
+        $scope.width = null
+        $scope.height = null
+      }
 
       $scope.documentIconSize = function(doc) {
         var iconDpi = 15
@@ -105,7 +105,7 @@
       $scope.exportModalVisible = false;
       $scope.selectedColor = null;
       $scope.availableColors = [];
-      
+
       $scope.switchColor = function(availableColor) {
         $scope.selectedColor = availableColor.toLowerCase();
       };
@@ -114,15 +114,15 @@
         $scope.selectedObj = obj;
 
         if (obj && obj.type.toLowerCase() == 'text'.toLowerCase()) {
-          $scope.availableColors = [ 'color' ];
+          $scope.availableColors = ['color'];
 
         } else if (obj) {
-          $scope.availableColors = [ 'fill', 'stroke' ];
+          $scope.availableColors = ['fill', 'stroke'];
         }
-        
+
         $scope.selectedColor = $scope.availableColors[0];
       };
-      
+
       $scope.cutObj = function() {
         $scope.clipboard = angular.copy($scope.selectedObj);
         var objIdx = $scope.doc.shapes.indexOf($scope.selectedObj);
