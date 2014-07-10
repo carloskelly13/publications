@@ -1,7 +1,7 @@
 <div class="app-nav animation-fade-in">
   <div class="app-nav-logo"></div>
   <div class="app-nav-controls">
-    <div class="inspector-group">
+    <!-- <div class="inspector-group">
       <button class="button button-icon"
               data-icon="&#xe052;"
               ng-click="toggleInspector('object')">
@@ -57,8 +57,10 @@
             data-icon="&#xe24a;"
             ng-click="pasteObj()"
             ng-disabled="!clipboard">
-    </button>
-    <div class="inspector-group">
+    </button>-->
+  </div>
+  <div class="app-nav-secondary-controls app-nav-secondary-controls-no-left-padding">
+    <!-- <div class="inspector-group">
       <button class="button button-text button-text-zoom"
 
               ng-click="toggleInspector('zoom')">
@@ -68,9 +70,7 @@
            class="inspector-view inspector-view-half-width"
            ng-if="currentInspector === 'zoom'">
       </div>
-    </div>
-  </div>
-  <div class="app-nav-secondary-controls app-nav-secondary-controls-no-left-padding">
+    </div> -->
     <button class="btn"
             ng-click="deleteModal()">
             Delete

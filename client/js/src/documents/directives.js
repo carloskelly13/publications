@@ -176,4 +176,10 @@
       templateUrl: '/views/directives/inspectors/color.html'
     }
   });
+
+  pub.directive('pubInspector', function() {
+    return {
+      templateUrl: '/views/documents/inspector.html'
+    }
+  });
 }());
