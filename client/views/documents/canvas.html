@@ -1,115 +1,113 @@
 <div pub-inspector></div>
 <div class="editor-view" ng-click="toggleInspector(null)">
-  <div class="animation-expand-open-canvas">
-    <div class="unit unit-top" ng-repeat="x in xAxisRange()"
-                      ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 7) + 'px' }"
-                      ng-if="(x / 4) % unitDivider() === 0 && x > 0">
-      {{ x / 4 }}&rdquo;
-    </div>
-    <div class="unit unit-left" ng-repeat="y in yAxisRange()"
-                      ng-style="{ top: (y * (dpi / 4.0) * zoomLevel + 15) + 'px' }"
-                      ng-if="(y / 4) % unitDivider() === 0 && y > 0">
-      {{ y / 4 }}&rdquo;
-    </div>
-    <svg ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
-         ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
-         class="canvas-svg">
-      <g id="svg-background">
-        <rect ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
-              ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
-              x="0"
-              y="0"
-              fill="#fff"
-              fill-opacity="1.0"
-              stroke="hsla(0, 0%, 0%, 0.5)"
-              stroke-width="1px"
+  <div class="unit unit-top" ng-repeat="x in xAxisRange()"
+                    ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 7) + 'px' }"
+                    ng-if="(x / 4) % unitDivider() === 0 && x > 0">
+    {{ x / 4 }}&rdquo;
+  </div>
+  <div class="unit unit-left" ng-repeat="y in yAxisRange()"
+                    ng-style="{ top: (y * (dpi / 4.0) * zoomLevel + 15) + 'px' }"
+                    ng-if="(y / 4) % unitDivider() === 0 && y > 0">
+    {{ y / 4 }}&rdquo;
+  </div>
+  <svg ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
+       ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
+       class="canvas-svg">
+    <g id="svg-background">
+      <rect ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
+            ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
+            x="0"
+            y="0"
+            fill="#fff"
+            fill-opacity="1.0"
+            stroke="hsla(0, 0%, 0%, 0.5)"
+            stroke-width="1px"
+            ng-click="svgObjectSelected(null)" />
+    </g>
+    <g id="grid" ng-if="showCanvasGrid">
+        <path ng-repeat="x in xAxisRange()"
+              ng-attr-d="M{{(x * (dpi / 4.0) * zoomLevel) - 0.5}} 0 V{{(x * (dpi / 4.0) * zoomLevel) - 2.5}} {{ doc.height * dpi * zoomLevel }} Z"
+              ng-class="{ 'inch-mark' : (x % 4) === 0 }"
               ng-click="svgObjectSelected(null)" />
-      </g>
-      <g id="grid" ng-if="showCanvasGrid">
-          <path ng-repeat="x in xAxisRange()"
-                ng-attr-d="M{{(x * (dpi / 4.0) * zoomLevel) - 0.5}} 0 V{{(x * (dpi / 4.0) * zoomLevel) - 2.5}} {{ doc.height * dpi * zoomLevel }} Z"
-                ng-class="{ 'inch-mark' : (x % 4) === 0 }"
-                ng-click="svgObjectSelected(null)" />
-          <path ng-repeat="y in yAxisRange()"
-                ng-attr-d="M0 {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} H{{ doc.width * dpi * zoomLevel }} {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} Z"
-                ng-class="{ 'inch-mark' : (y % 4) === 0 }"
-                ng-click="svgObjectSelected(null)" />
+        <path ng-repeat="y in yAxisRange()"
+              ng-attr-d="M0 {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} H{{ doc.width * dpi * zoomLevel }} {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} Z"
+              ng-class="{ 'inch-mark' : (y % 4) === 0 }"
+              ng-click="svgObjectSelected(null)" />
 
-      </g>
-      <g ng-repeat="shape in doc.shapes">
-        <g ng-switch="shape.type">
-          <g ng-switch-when="rect">
-            <rect ng-attr-x="{{ shape.x * dpi * zoomLevel }}"
-                  ng-attr-y="{{ shape.y * dpi * zoomLevel }}"
-                  ng-attr-rx="{{ shape.r * zoomLevel }}"
-                  ng-attr-ry="{{ shape.r * zoomLevel }}"
-                  ng-attr-height="{{ shape.height * dpi * zoomLevel }}"
-                  ng-attr-width="{{ shape.width * dpi * zoomLevel }}"
-                  ng-attr-fill="{{ shape.fill }}"
-                  ng-attr-stroke="{{ shape.stroke }}"
-                  ng-attr-stroke-width="{{ shape.strokeWidth * zoomLevel }}"
-                  ng-attr-fill-opacity="{{ shape.fillOpacity }}"
-                  ng-attr-stroke-opacity="{{ shape.strokeOpacity }}"
-                  ng-click="svgObjectSelected(shape)" />
-          </g>
-          <g ng-switch-when="ellipse">
-            <ellipse ng-attr-cx="{{ (shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel) }}"
-                     ng-attr-cy="{{ (shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel) }}"
-                     ng-attr-rx="{{ shape.width / 2.0 * dpi * zoomLevel }}"
-                     ng-attr-ry="{{ shape.height / 2.0 * dpi * zoomLevel }}"
-                     ng-attr-fill="{{ shape.fill }}"
-                     ng-attr-stroke="{{ shape.stroke }}"
-                     ng-attr-stroke-width="{{ shape.strokeWidth * zoomLevel }}"
-                     ng-attr-fill-opacity="{{ shape.fillOpacity }}"
-                     ng-attr-stroke-opacity="{{ shape.strokeOpacity }}"
-                     ng-click="svgObjectSelected(shape)" />
-          </g>
-          <g ng-switch-when="text">
-            <foreignObject ng-attr-x="{{ shape.x * dpi * zoomLevel }}"
-                           ng-attr-y="{{ shape.y * dpi * zoomLevel }}"
-                           ng-attr-height="{{ shape.height * dpi * zoomLevel }}"
-                           ng-attr-width="{{ shape.width * dpi * zoomLevel }}"
-                           ng-click="svgObjectSelected(shape)">
-              <p class="text-box" ng-style="{
-                color: shape.color,
-                fontFamily: shape.fontFamily,
-                fontStyle: shape.fontStyle,
-                fontSize: (shape.fontSize * zoomLevel) + 'px',
-                fontWeight: shape.fontWeight,
-                textAlign: shape.textAlign
-              }">
-                {{ shape.text }}
-              </p>
-            </foreignObject>
-          </g>
+    </g>
+    <g ng-repeat="shape in doc.shapes">
+      <g ng-switch="shape.type">
+        <g ng-switch-when="rect">
+          <rect ng-attr-x="{{ shape.x * dpi * zoomLevel }}"
+                ng-attr-y="{{ shape.y * dpi * zoomLevel }}"
+                ng-attr-rx="{{ shape.r * zoomLevel }}"
+                ng-attr-ry="{{ shape.r * zoomLevel }}"
+                ng-attr-height="{{ shape.height * dpi * zoomLevel }}"
+                ng-attr-width="{{ shape.width * dpi * zoomLevel }}"
+                ng-attr-fill="{{ shape.fill }}"
+                ng-attr-stroke="{{ shape.stroke }}"
+                ng-attr-stroke-width="{{ shape.strokeWidth * zoomLevel }}"
+                ng-attr-fill-opacity="{{ shape.fillOpacity }}"
+                ng-attr-stroke-opacity="{{ shape.strokeOpacity }}"
+                ng-click="svgObjectSelected(shape)" />
+        </g>
+        <g ng-switch-when="ellipse">
+          <ellipse ng-attr-cx="{{ (shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel) }}"
+                   ng-attr-cy="{{ (shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel) }}"
+                   ng-attr-rx="{{ shape.width / 2.0 * dpi * zoomLevel }}"
+                   ng-attr-ry="{{ shape.height / 2.0 * dpi * zoomLevel }}"
+                   ng-attr-fill="{{ shape.fill }}"
+                   ng-attr-stroke="{{ shape.stroke }}"
+                   ng-attr-stroke-width="{{ shape.strokeWidth * zoomLevel }}"
+                   ng-attr-fill-opacity="{{ shape.fillOpacity }}"
+                   ng-attr-stroke-opacity="{{ shape.strokeOpacity }}"
+                   ng-click="svgObjectSelected(shape)" />
+        </g>
+        <g ng-switch-when="text">
+          <foreignObject ng-attr-x="{{ shape.x * dpi * zoomLevel }}"
+                         ng-attr-y="{{ shape.y * dpi * zoomLevel }}"
+                         ng-attr-height="{{ shape.height * dpi * zoomLevel }}"
+                         ng-attr-width="{{ shape.width * dpi * zoomLevel }}"
+                         ng-click="svgObjectSelected(shape)">
+            <p class="text-box" ng-style="{
+              color: shape.color,
+              fontFamily: shape.fontFamily,
+              fontStyle: shape.fontStyle,
+              fontSize: (shape.fontSize * zoomLevel) + 'px',
+              fontWeight: shape.fontWeight,
+              textAlign: shape.textAlign
+            }">
+              {{ shape.text }}
+            </p>
+          </foreignObject>
         </g>
       </g>
-      <g id="bounding-box" ng-if="selectedObj">
-        <rect ng-attr-x="{{ (selectedObj.x * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
-              ng-attr-y="{{ (selectedObj.y * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
-              ng-attr-height="{{ (selectedObj.height * dpi + selectedObj.strokeWidth) * zoomLevel }}"
-              ng-attr-width="{{ (selectedObj.width * dpi + selectedObj.strokeWidth) * zoomLevel }}"
+    </g>
+    <g id="bounding-box" ng-if="selectedObj">
+      <rect ng-attr-x="{{ (selectedObj.x * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
+            ng-attr-y="{{ (selectedObj.y * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
+            ng-attr-height="{{ (selectedObj.height * dpi + selectedObj.strokeWidth) * zoomLevel }}"
+            ng-attr-width="{{ (selectedObj.width * dpi + selectedObj.strokeWidth) * zoomLevel }}"
+            stroke="hsla(0, 0%, 0%, 0.5)"
+            stroke-width="1"
+            fill-opacity="0"
+            stroke-opacity="1"
+            cursor="move"
+            pub-draggable />
+      <g id="anchors">
+        <rect ng-repeat="objAnchor in objAnchors.points"
+              ng-attr-x="{{ ((selectedObj.x * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (objAnchors.size / 2.0) + ((selectedObj.width * dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.x) }}"
+              ng-attr-y="{{ ((selectedObj.y * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (objAnchors.size / 2.0) + ((selectedObj.height * dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.y) }}"
+              ng-attr-width="{{ objAnchors.size }}"
+              ng-attr-height="{{ objAnchors.size }}"
               stroke="hsla(0, 0%, 0%, 0.5)"
               stroke-width="1"
-              fill-opacity="0"
+              fill="#fff"
+              fill-opacity="1"
               stroke-opacity="1"
-              cursor="move"
-              pub-draggable />
-        <g id="anchors">
-          <rect ng-repeat="objAnchor in objAnchors.points"
-                ng-attr-x="{{ ((selectedObj.x * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (objAnchors.size / 2.0) + ((selectedObj.width * dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.x) }}"
-                ng-attr-y="{{ ((selectedObj.y * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (objAnchors.size / 2.0) + ((selectedObj.height * dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.y) }}"
-                ng-attr-width="{{ objAnchors.size }}"
-                ng-attr-height="{{ objAnchors.size }}"
-                stroke="hsla(0, 0%, 0%, 0.5)"
-                stroke-width="1"
-                fill="#fff"
-                fill-opacity="1"
-                stroke-opacity="1"
-                cursor="{{ objAnchor.coordinate }}-resize"
-                pub-resizable></rect>
-        </g>
+              cursor="{{ objAnchor.coordinate }}-resize"
+              pub-resizable></rect>
       </g>
-    </svg>
-  </div>
+    </g>
+  </svg>
 </div>

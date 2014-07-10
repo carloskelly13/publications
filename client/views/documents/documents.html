@@ -1,12 +1,12 @@
-<div class="app-nav">
+<!-- <div class="app-nav">
   <div class="app-nav-logo"></div>
   <div class="app-nav-controls">
-    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
+<input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
   </div>
-  <!-- <div class="app-nav-secondary-controls">
+   <div class="app-nav-secondary-controls">
     <button class="btn" ng-click="userModal()">Settings</button>
-  </div> -->
-</div>
+  </div>
+</div> -->
 <div class="documents-list">
   <div class="no-documents-banner" ng-if="documents.length === 0">
     <figure id="document-icon"></figure>
@@ -20,9 +20,9 @@
       <button ng-class="{ 'btn-active' : sortFilter === 'modified' }" class="btn" ng-click="updateSortFilter('modified', true)">Created</button>
       <button ng-class="{ 'btn-active' : sortFilter === 'size' && sortReverse }" class="btn" ng-click="updateSortFilter('size', true)">Largest</button>
       <button ng-class="{ 'btn-active' : sortFilter === 'size' && !sortReverse }" class="btn" ng-click="updateSortFilter('size', false)">Smallest</button>
-      <span class="divider"></span>
     </span>
-    <button class="btn" ng-click="newDocumentModal()">New Document</button>
+    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
+    <!-- <button class="btn" ng-click="newDocumentModal()">New Document</button> -->
   </div>
   <div class="document-item"
        pub-document-item

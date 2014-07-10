@@ -1,3 +1,8 @@
 <div class="inspector">
-
+  <div class="inspector-buttons">
+    <button class="btn btn-icon" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
+  </div>
 </div>

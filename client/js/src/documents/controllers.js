@@ -98,7 +98,7 @@
       $scope.selectedObj = null;
       $scope.showCanvasGrid = true;
       $scope.snapToGrid = true;
-      $scope.currentInspector = null;
+      $scope.currentInspector = 'shape';
       $scope.saveModalVisible = false;
       $scope.clipboard = null;
       $scope.deleteModalVisible = false;
@@ -197,11 +197,7 @@
       };
 
       $scope.toggleInspector = function(inspector) {
-        if (inspector === $scope.currentInspector) {
-          $scope.currentInspector = null;
-        } else {
-          $scope.currentInspector = inspector;
-        }
+        $scope.currentInspector = inspector;
       };
     }
   ]);
