@@ -220,11 +220,6 @@
         $scope.selectedObj[$scope.selectedColor] = color;
       };
 
-      $scope.addObject = function(objType) {
-        $scope.doc.shapes.push(documentServices.newShape(objType));
-        $scope.toggleInspector(null);
-      };
-
       $scope.swapObject = function(direction) {
         var idx = $scope.doc.shapes.indexOf($scope.selectedObj)
           , offset = (direction === 'up' ? 1 : -1)
@@ -252,6 +247,10 @@
     'objAnchors',
     function($scope, $state, documentServices, objAnchors) {
       $scope.objAnchors = objAnchors;
+
+      $scope.addObject = function(objType) {
+        $scope.doc.shapes.push(documentServices.newShape(objType));
+      };
 
       $scope.xAxisRange = function() {
         return _.range($scope.doc.width / 0.25);

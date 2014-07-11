@@ -1,8 +1,42 @@
 <div class="inspector">
   <div class="inspector-buttons">
-    <button class="btn btn-icon" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
-    <button class="btn btn-icon" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
-    <button class="btn btn-icon" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
-    <button class="btn btn-icon" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
+    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
+    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
+    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
+    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
+  </div>
+  <div class="inspector-content">
+    <div ng-if="currentInspector === 'shape'" class="inspector-content-shape">
+      <div class="inspector-controls-section">
+        <h1>New Object</h1>
+        <button class="btn btn-icon-text" ng-click="addObject('rect')">
+          <div class="icon">&#xe521;</div>
+          <div class="text">Rectangle</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="addObject('ellipse')">
+          <div class="icon">&#xe594;</div>
+          <div class="text">Ellipse</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="addObject('text')">
+          <div class="icon">&#xe4f1;</div>
+          <div class="text">Text</div>
+        </button>
+      </div>
+      <div ng-if="selectedObj" class="inspector-controls-section">
+        <h1>Shape Metrics</h1>
+      </div>
+    </div>
+
+    <div ng-if="currentInspector === 'color'" class="inspector-content-shape">
+      Color
+    </div>
+
+    <div ng-if="currentInspector === 'layers'" class="inspector-content-shape">
+      Layers
+    </div>
+
+    <div ng-if="currentInspector === 'document'" class="inspector-content-shape">
+      Document
+    </div>
   </div>
 </div>

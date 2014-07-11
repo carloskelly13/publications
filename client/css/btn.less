@@ -63,6 +63,34 @@
     margin: 0 8px;
   }
 
+  &.btn-icon-text {
+    margin: 4px;
+
+    .icon {
+      display: inline-block;
+      font-family: 'streamline-24px';
+      font-size: 20px;
+      font-style: normal !important;
+      font-weight: normal !important;
+      font-variant: normal !important;
+      line-height: 1;
+      margin: 0 3px 0 0;
+      padding: 0;
+      speak: none;
+      text-align: center;
+      text-transform: none !important;
+      vertical-align: middle;
+    }
+
+    .text {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+
   &.btn-icon {
     font-family: 'streamline-24px';
     font-size: 24px;
@@ -74,10 +102,15 @@
     line-height: 1;
     margin: 0;
     padding: 0;
+    width: 26px;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    &.btn-icon-small {
+      font-size: 20px;
+      width: 22px;
+    }
 
     &.btn-icon-active {
       color: @color-primary;
