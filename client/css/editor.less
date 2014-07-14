@@ -4,14 +4,25 @@
   overflow-x: scroll;
   overflow-y: scroll;
   position: absolute;
-  top: 0; right: 0; bottom: @app-footer-height; left: 20%;
-  width: 80%;
+  top: 0; right: 0; bottom: 0; left: 0%;
+  width: 100%;
   z-index: 4;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
   -webkit-overflow-scrolling: touch;
+
+  .canvas-container {
+    .animation(margin-left, 250ms);
+    margin: 0;
+    margin-left: 20%;
+    position: relative;
+
+    &.canvas-expanded {
+      margin-left: 40px;
+    }
+  }
 
   .unit {
     display: inline-block;
@@ -36,7 +47,7 @@
 
 
   .canvas-svg {
-    margin: 25px 1em 1em 25px;
+    margin: 25px;
 
     .text-box {
       -moz-user-select: none;

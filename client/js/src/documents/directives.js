@@ -153,30 +153,6 @@
     }
   });
 
-  pub.directive('pubInspectorObject', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/object.html'
-    }
-  });
-
-  pub.directive('pubInspectorZoom', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/zoom.html'
-    }
-  });
-
-  pub.directive('pubInspectorText', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/text.html'
-    }
-  });
-
-  pub.directive('pubInspectorColor', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/color.html'
-    }
-  });
-
   pub.directive('pubInspector', function() {
     return {
       templateUrl: '/views/documents/inspector.html'

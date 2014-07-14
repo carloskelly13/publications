@@ -1,11 +1,11 @@
-<div class="inspector">
-  <div class="inspector-buttons">
+<div class="inspector" ng-class="{'inspector-compact' : !showInspector}">
+  <div class="inspector-buttons" ng-class="{'inspector-visible': showInspectorControls}">
     <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
     <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
     <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
     <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
   </div>
-  <div class="inspector-content">
+  <div class="inspector-content" ng-class="{'inspector-visible': showInspectorControls}">
     <div ng-if="currentInspector === 'shape'" class="inspector-content-shape">
       <div class="inspector-controls-section">
         <h1>New Object</h1>
@@ -23,12 +23,64 @@
         </button>
       </div>
       <div ng-if="selectedObj" class="inspector-controls-section">
-        <h1>Shape Metrics</h1>
+        <h1>Metrics</h1>
+        <div class="txt-group txt-group-half-width txt-group-half-width-left">
+          <input pub-signed-float-input type="text" name="x" id="x" class="txt txt-mono" ng-model="selectedObj.x" />
+          <label class="txt-label" for="x">X</label>
+        </div>
+        <div class="txt-group txt-group-half-width">
+          <input pub-signed-float-input type="text" name="y" id="y" class="txt txt-mono" ng-model="selectedObj.y" />
+          <label class="txt-label" for="y">Y</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width-left">
+          <input pub-unsigned-non-zero-float-input type="text" name="width" id="width" class="txt txt-mono" ng-model="selectedObj.width" />
+          <label class="txt-label" for="width">Width</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width">
+          <input pub-unsigned-non-zero-float-input type="text" name="height" id="height" class="txt txt-mono" ng-model="selectedObj.height" />
+          <label class="txt-label" for="height">Height</label>
+        </div>
+      </div>
+      <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
+        <h1>Border</h1>
+        <div class="txt-group txt-group-half-width txt-group-half-width-left">
+          <input pub-unsigned-integer-input type="text" name="stroke-width" id="stroke-width" class="txt" ng-model="selectedObj.strokeWidth" />
+          <label class="txt-label" for="stroke-width">Width</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width" ng-if="selectedObj.type === 'rect'">
+          <input pub-unsigned-integer-input type="text" name="stroke-radius" id="stroke-radius" class="txt" ng-model="selectedObj.r" />
+          <label class="txt-label" for="stroke-radius">Radius</label>
+        </div>
       </div>
     </div>
-
     <div ng-if="currentInspector === 'color'" class="inspector-content-shape">
-      Color
+      <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
+        <h1>Fill</h1>
+        <div class="txt-group txt-group-half-width-block">
+          <input name="fill" id="fill" pub-hex-color-input class="txt txt-mono" ng-model="selectedObj.fill" type="text" />
+        </div>
+        <div class="color-group">
+          <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'fill')" ng-class="{ selected: selectedObj.fill.toLowerCase() === color.toLowerCase()}"></div>
+        </div>
+      </div>
+      <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
+        <h1>Stroke</h1>
+        <div class="txt-group txt-group-half-width-block">
+          <input name="stroke" id="stroke" pub-hex-color-input class="txt txt-mono" ng-model="selectedObj.stroke" type="text" />
+        </div>
+        <div class="color-group">
+          <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'stroke')" ng-class="{ selected: selectedObj.stroke.toLowerCase() === color.toLowerCase()}"></div>
+        </div>
+      </div>
+      <div ng-if="selectedObj && selectedObj.type === 'text'" class="inspector-controls-section">
+        <h1>Text</h1>
+        <div class="txt-group txt-group-half-width-block">
+          <input name="color" id="color" pub-hex-color-input class="txt txt-mono" ng-model="selectedObj.color" type="text" />
+        </div>
+        <div class="color-group">
+          <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'color')" ng-class="{ selected: selectedObj.color.toLowerCase() === color.toLowerCase()}"></div>
+        </div>
+      </div>
     </div>
 
     <div ng-if="currentInspector === 'layers'" class="inspector-content-shape">
@@ -38,5 +90,10 @@
     <div ng-if="currentInspector === 'document'" class="inspector-content-shape">
       Document
     </div>
+  </div>
+  <div class="inspector-footer">
+    <button class="btn btn-icon btn-icon-small" ng-click="toggleShowInspector()">
+      {{ showInspector ?  '&#xe2b6;' : '&#xe2b7;'}}
+    </button>
   </div>
 </div>

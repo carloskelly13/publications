@@ -103,24 +103,9 @@
       $scope.clipboard = null;
       $scope.deleteModalVisible = false;
       $scope.exportModalVisible = false;
-      $scope.selectedColor = null;
-      $scope.availableColors = [];
-
-      $scope.switchColor = function(availableColor) {
-        $scope.selectedColor = availableColor.toLowerCase();
-      };
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj;
-
-        if (obj && obj.type.toLowerCase() == 'text'.toLowerCase()) {
-          $scope.availableColors = ['color'];
-
-        } else if (obj) {
-          $scope.availableColors = ['fill', 'stroke'];
-        }
-
-        $scope.selectedColor = $scope.availableColors[0];
       };
 
       $scope.cutObj = function() {
@@ -209,16 +194,10 @@
     'zoomLevels',
     'fonts',
     'fontWeights',
-    'colors',
-    function($scope, $state, documentServices, zoomLevels, fonts, fontWeights, colors) {
+    function($scope, $state, documentServices, zoomLevels, fonts, fontWeights) {
       $scope.zoomLevels = zoomLevels;
       $scope.fonts = fonts;
       $scope.fontWeights = fontWeights;
-      $scope.colors = colors;
-
-      $scope.updateColor = function(color) {
-        $scope.selectedObj[$scope.selectedColor] = color;
-      };
 
       $scope.swapObject = function(direction) {
         var idx = $scope.doc.shapes.indexOf($scope.selectedObj)
@@ -243,29 +222,48 @@
   pub.controller('DocumentCanvasController', [
     '$scope',
     '$state',
+    '$timeout',
     'documentServices',
     'objAnchors',
-    function($scope, $state, documentServices, objAnchors) {
-      $scope.objAnchors = objAnchors;
+    'colors',
+    function($scope, $state, $timeout, documentServices, objAnchors, colors) {
+      $scope.objAnchors = objAnchors
+      $scope.showInspector = true
+      $scope.showInspectorControls = true
+      $scope.colors = colors
+
+      $scope.toggleShowInspector = function() {
+        if ($scope.showInspector) {
+          $scope.showInspectorControls = false
+          $timeout(function() {
+            $scope.showInspector = false
+          }, 125)
+        } else {
+          $scope.showInspector = true
+          $timeout(function() {
+            $scope.showInspectorControls = true
+          }, 125)
+        }
+      }
+
+      $scope.updateColor = function(color, property) {
+        $scope.selectedObj[property] = color
+      }
 
       $scope.addObject = function(objType) {
-        $scope.doc.shapes.push(documentServices.newShape(objType));
-      };
+        $scope.doc.shapes.push(documentServices.newShape(objType))
+      }
 
       $scope.xAxisRange = function() {
-        return _.range($scope.doc.width / 0.25);
-      };
+        return _.range($scope.doc.width / 0.25)
+      }
 
       $scope.yAxisRange = function() {
-        return _.range($scope.doc.height / 0.25);
-      };
+        return _.range($scope.doc.height / 0.25)
+      }
 
       $scope.unitDivider = function() {
-        if ($scope.zoomLevel > 1) {
-          return 0.5;
-        } else {
-          return 1;
-        }
+        return ($scope.zoomLevel > 1) ? 0.5 : 1
       }
     }
   ]);

@@ -6,19 +6,20 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "bcrypt": "0.7.6",
+    "body-parser": "^1.2.0",
+    "cookie-parser": "1.1.0",
+    "ejs": "*",
     "express": "~4.2.0",
     "express-session": "1.1.0",
-    "mongoose": "3.8.8",
     "lodash": "2.4.1",
+    "method-override": "^1.0.1",
+    "mongoose": "3.8.8",
+    "morgan": "^1.0.1",
     "passport": "0.2.0",
     "passport-local": "0.1.6",
-    "bcrypt": "0.7.6",
-    "ejs": "*",
-    "cookie-parser": "1.1.0",
-    "body-parser": "^1.2.0",
-    "method-override": "^1.0.1",
-    "morgan": "^1.0.1",
-    "pdfkit": "^0.6.2"
+    "pdfkit": "^0.6.2",
+    "serve-favicon": "^2.0.1"
   },
   "devDependencies": {
     "bower": "~1.2.8",

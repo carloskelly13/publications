@@ -1,0 +1,65 @@
+.txt {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+
+  box-sizing: border-box;
+  border: 1px solid @color-line-bright;
+  color: @color-text;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  margin: 0;
+  padding: 2px;
+  outline: none;
+  text-align: left;
+  text-rendering: optimizeLegibility;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  zoom: 1;
+
+  &.ng-invalid {
+    border-color: @color-err;
+
+    + .txt-label {
+      color: @color-err;
+    }
+  }
+}
+
+.txt-label {
+  display: inline-block;
+  font-size: 11px;
+  margin: 3px 0 0 0;
+  text-align: left;
+}
+
+.txt-group {
+  display: block;
+  margin: 0;
+  width: 100%;
+
+  .txt {
+    display: block;
+    width: 100%;
+  }
+
+  .txt-label {
+    display: block;
+    width: 100%;
+  }
+
+  &.txt-group-half-width-block {
+    width: 50%;
+  }
+
+  &.txt-group-half-width {
+    display: inline-block;
+    width: 48%;
+  }
+
+  &.txt-group-half-width-left {
+    margin-right: 1%;
+  }
+}

@@ -1,28 +1,68 @@
 .inspector {
+  .animation(width, 250ms);
   background: @color-background-bright;
   border-right: 1px solid @color-line-bright;
   height: inherit;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
   position: absolute;
-  top: 0; right: 0; bottom: @app-footer-height; left: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
   width: 20%;
   z-index: 5;
 
-  .inspector-buttons {
-    border-bottom: 1px solid @color-line-bright;
-    text-align: center;
+  &.inspector-compact {
+    width: 40px;
 
-    .btn-icon {
-      margin: 9px 5px 8px 5px;
+    .inspector-footer {
+      border-top-color: transparent;
     }
   }
 
+  .inspector-buttons,
   .inspector-content {
-    padding: 10px;
+    .animation(opacity, 125ms);
+    opacity: 0;
+    visibility: hidden;
+
+    &.inspector-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .inspector-buttons,
+  .inspector-footer {
+    height: 40px;
+    text-align: center;
+
+    .btn-icon {
+      height: 26px;
+      margin: 7px 5px 6px 5px;
+    }
+  }
+
+  .inspector-buttons {
+    border-bottom: 1px solid @color-line-bright;
+  }
+
+  .inspector-footer {
+    .animation(border, 400ms);
+    border-top: 1px solid @color-line-bright;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  .inspector-content {
+    height: inherit;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    width: 100%;
+    top: 40px; right: 0; left: 0; bottom: 40px;
 
     .inspector-controls-section {
-      margin: 0 0 25px 0;
+      padding: 0 10px;
+      margin: 15px 0 25px 0;
       text-align: left;
 
       .btn-icon-text {
@@ -30,6 +70,41 @@
         padding: 0;
         margin: 12px 0;
       }
+
+      .txt-group {
+        margin-top: 12px;
+      }
+
+      .color-group {
+        left: -1px;
+        margin: 12px 0 0 0;
+        position: relative;
+
+        .color-swatch {
+          box-shadow: inset 0 0 0 1px @color-background-bright, inset 0 0 0 2px hsla(0, 0%, 0%, 0.25);
+          display: inline-block;
+          height: 26px;
+          float: left;
+          margin: 0;
+          width: 16.6%;
+
+          &.selected, &:hover {
+            box-shadow: inset 0 0 0 3px hsla(0, 0%, 0%, 0.5);
+          }
+
+          &:active {
+            .touch-animation(0.95);
+          }
+        }
+
+        &:after {
+          content: " ";
+          clear: both;
+          display: block;
+        }
+      }
+
+
     }
 
     h1 {
