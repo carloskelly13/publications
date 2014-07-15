@@ -1,9 +1,9 @@
 <div class="inspector" ng-class="{'inspector-compact' : !showInspector}">
   <div class="inspector-buttons" ng-class="{'inspector-visible': showInspectorControls}">
-    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
-    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
-    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
-    <button class="btn btn-icon btn-icon-small" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
   </div>
   <div class="inspector-content" ng-class="{'inspector-visible': showInspectorControls}">
     <div ng-if="currentInspector === 'shape'" class="inspector-content-shape">
@@ -88,12 +88,33 @@
     </div>
 
     <div ng-if="currentInspector === 'document'" class="inspector-content-shape">
-      Document
+      <div class="inspector-controls-section">
+        <h1>Document</h1>
+        <button class="btn btn-icon-text" ng-click="">
+          <div class="icon">&#xe2f9;</div>
+          <div class="text">Save</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="">
+          <div class="icon">&#xe21d;</div>
+          <div class="text">Save &amp; Export PDF</div>
+        </button>
+      </div>
+      <div class="inspector-controls-section">
+        <h1>Layout</h1>
+        <button class="btn btn-icon-text" ng-click="toggleCanvasGrid()">
+          <div class="icon">{{ showCanvasGrid ?  '&#xe303;' : '&#xe594;'}}</div>
+          <div class="text">Show Canvas Grid</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="toggleSnapToGrid()">
+          <div class="icon">{{ snapToGrid ?  '&#xe303;' : '&#xe594;'}}</div>
+          <div class="text">Snap Objects to Grid</div>
+        </button>
+      </div>
     </div>
   </div>
   <div class="inspector-footer">
     <button class="btn btn-icon btn-icon-small" ng-click="toggleShowInspector()">
-      {{ showInspector ?  '&#xe2b6;' : '&#xe2b7;'}}
+
     </button>
   </div>
 </div>

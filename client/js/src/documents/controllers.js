@@ -93,99 +93,99 @@
     'documentServices',
     'doc',
     function($scope, $state, $window, documentServices, doc) {
-      $scope.zoomLevel = 1;
-      $scope.doc = doc;
-      $scope.selectedObj = null;
-      $scope.showCanvasGrid = true;
-      $scope.snapToGrid = true;
-      $scope.currentInspector = 'shape';
-      $scope.saveModalVisible = false;
-      $scope.clipboard = null;
-      $scope.deleteModalVisible = false;
-      $scope.exportModalVisible = false;
+      $scope.zoomLevel = 1
+      $scope.doc = doc
+      $scope.selectedObj = null
+      $scope.showCanvasGrid = true
+      $scope.snapToGrid = true
+      $scope.currentInspector = 'shape'
+      $scope.saveModalVisible = false
+      $scope.clipboard = null
+      $scope.deleteModalVisible = false
+      $scope.exportModalVisible = false
 
       $scope.svgObjectSelected = function(obj) {
-        $scope.selectedObj = obj;
-      };
+        $scope.selectedObj = obj
+      }
 
       $scope.cutObj = function() {
-        $scope.clipboard = angular.copy($scope.selectedObj);
-        var objIdx = $scope.doc.shapes.indexOf($scope.selectedObj);
-        $scope.doc.shapes.splice(objIdx, 1);
-        $scope.selectedObj = null;
-      };
+        $scope.clipboard = angular.copy($scope.selectedObj)
+        var objIdx = $scope.doc.shapes.indexOf($scope.selectedObj)
+        $scope.doc.shapes.splice(objIdx, 1)
+        $scope.selectedObj = null
+      }
 
       $scope.copyObj = function() {
-        $scope.clipboard = angular.copy($scope.selectedObj);
-      };
+        $scope.clipboard = angular.copy($scope.selectedObj)
+      }
 
       $scope.pasteObj = function() {
-        var duplicateObj = angular.copy($scope.clipboard);
-        duplicateObj._id = undefined;
-        duplicateObj.x += 0.25;
-        duplicateObj.y += 0.25;
-        $scope.doc.shapes.push(duplicateObj);
-      };
+        var duplicateObj = angular.copy($scope.clipboard)
+        duplicateObj._id = undefined
+        duplicateObj.x += 0.25
+        duplicateObj.y += 0.25
+        $scope.doc.shapes.push(duplicateObj)
+      }
 
       $scope.updateDocument = function(closeDocumentView) {
-        $scope.doc.put();
+        $scope.doc.put()
 
         if (closeDocumentView) {
-          $scope.showAllDocuments();
-          var idx = _.findIndex($scope.documents, { _id : $scope.doc._id });
-          $scope.documents[idx] = $scope.doc;
+          $scope.showAllDocuments()
+          var idx = _.findIndex($scope.documents, { _id : $scope.doc._id })
+          $scope.documents[idx] = $scope.doc
         }
-      };
+      }
 
       $scope.showAllDocuments = function() {
         $state.go('pub.documents');
-      };
+      }
 
       $scope.exportDocument = function() {
         $scope.doc.put().then(function() {
           $scope.exportModal();
-        });
-      };
+        })
+      }
 
       $scope.deleteModal = function() {
         $scope.deleteModalVisible = !$scope.deleteModalVisible;
-      };
+      }
 
       $scope.exportModal = function() {
         $scope.exportModalVisible = !$scope.exportModalVisible;
-      };
+      }
 
       $scope.deleteDocument = function() {
         _.remove($scope.documents, function(doc) {
-          return doc._id === $scope.doc._id;
-        });
-        $scope.doc.remove();
-        $scope.deleteModal();
-        $scope.showAllDocuments();
-      };
+          return doc._id === $scope.doc._id
+        })
+        $scope.doc.remove()
+        $scope.deleteModal()
+        $scope.showAllDocuments()
+      }
 
       $scope.saveModal = function() {
-        $scope.saveModalVisible = !$scope.saveModalVisible;
-      };
+        $scope.saveModalVisible = !$scope.saveModalVisible
+      }
 
       $scope.setZoomLevel = function(zoomLevel) {
         $scope.zoomLevel = zoomLevel;
         $scope.toggleInspector(null);
-      };
+      }
 
       $scope.toggleCanvasGrid = function() {
-        $scope.showCanvasGrid = !$scope.showCanvasGrid;
-      };
+        $scope.showCanvasGrid = !$scope.showCanvasGrid
+      }
 
       $scope.toggleSnapToGrid = function() {
-        $scope.snapToGrid = !$scope.snapToGrid;
-      };
+        $scope.snapToGrid = !$scope.snapToGrid
+      }
 
       $scope.toggleInspector = function(inspector) {
-        $scope.currentInspector = inspector;
-      };
+        $scope.currentInspector = inspector
+      }
     }
-  ]);
+  ])
 
   pub.controller('DocumentToolbarController', [
     '$scope',
