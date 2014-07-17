@@ -102,19 +102,19 @@
       <div class="inspector-controls-section">
         <h1>Layout</h1>
         <button class="btn btn-icon-text" ng-click="toggleCanvasGrid()">
-          <div class="icon">{{ showCanvasGrid ?  '&#xe303;' : '&#xe594;'}}</div>
-          <div class="text">Show Canvas Grid</div>
+          <div class="icon">&#xe05f;</div>
+          <div class="text">{{ showCanvasGrid ? 'Hide' : 'Show'}} Canvas Grid</div>
         </button>
         <button class="btn btn-icon-text" ng-click="toggleSnapToGrid()">
-          <div class="icon">{{ snapToGrid ?  '&#xe303;' : '&#xe594;'}}</div>
-          <div class="text">Snap Objects to Grid</div>
+          <div class="icon">&#xe03c;</div>
+          <div class="text">{{ snapToGrid ? 'Freeform Objects' : 'Snap Objects to Grid'}}</div>
         </button>
       </div>
     </div>
   </div>
   <div class="inspector-footer">
     <button class="btn btn-icon btn-icon-small" ng-click="toggleShowInspector()">
-
+      {{ showInspector ?  '&#xe2b6;' : '&#xe2b7;'}}
     </button>
   </div>
 </div>
