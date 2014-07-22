@@ -5,16 +5,16 @@
  * 2014 Michael Kelly and Carlos Paelinck
  */
 
-var express = require('express')
-  , logger = require('morgan')
-  , favicon = require('serve-favicon')
-  , session = require('express-session')
-  , bodyParser = require('body-parser')
-  , methodOverride = require('method-override')
-  , cookieParser = require('cookie-parser')
-  , mongoose = require('mongoose')
-  , passport = require('passport')
-  , path = require('path')
+var express = require('express'),
+  logger = require('morgan'),
+  favicon = require('serve-favicon'),
+  session = require('express-session'),
+  bodyParser = require('body-parser'),
+  methodOverride = require('method-override'),
+  cookieParser = require('cookie-parser'),
+  mongoose = require('mongoose'),
+  passport = require('passport'),
+  path = require('path')
 
 require('./server/config/passport')(passport)
 

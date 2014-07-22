@@ -5,12 +5,12 @@
  * 2014 Michael Kelly and Carlos Paelinck
  */
 
-var mongoose = require('mongoose')
-  , PDFDocument = require('pdfkit')
-  , _ = require('lodash')
+var mongoose = require('mongoose'),
+  PDFDocument = require('pdfkit'),
+  _ = require('lodash')
 
-var Schema = mongoose.Schema
-  , ShapeModel = require('./shape')
+var Schema = mongoose.Schema,
+  ShapeModel = require('./shape')
 
 var documentSchema = new Schema({
   _user: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -23,9 +23,9 @@ var documentSchema = new Schema({
 
 documentSchema.methods = {
   pdf: function() {
-    var model = this
-      , dpi = 72
-      , doc = new PDFDocument({ size: [model.width * dpi, model.height * dpi] })
+    var model = this,
+      dpi = 72,
+      doc = new PDFDocument({ size: [model.width * dpi, model.height * dpi] })
 
     doc.registerFont('SOURCE_SANS_PRO_400', 'client/css/typefaces/SourceSansPro-Regular.ttf');
     doc.registerFont('SOURCE_SANS_PRO_500', 'client/css/typefaces/SourceSansPro-Semibold.ttf');

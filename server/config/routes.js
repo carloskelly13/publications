@@ -5,11 +5,11 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var IndexController = require('../controllers/index')
-  , UserController = require('../controllers/user')
-  , UserModel = require('../models/user')
-  , DocumentController = require('../controllers/document')
-  , DocumentModel = require('../models/document')
+var IndexController = require('../controllers/index'),
+  UserController = require('../controllers/user'),
+  UserModel = require('../models/user'),
+  DocumentController = require('../controllers/document'),
+  DocumentModel = require('../models/document')
 
 var auth = function (req, res, next) {
   if (!req.isAuthenticated()) {

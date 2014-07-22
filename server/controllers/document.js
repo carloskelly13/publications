@@ -5,9 +5,9 @@
  * 2014 Michael Kelly and Carlos Paelinck
  */
 
-var _ = require('lodash')
-  , DocumentModel = require('../models/document')
-  , UserModel = require('../models/user')
+var _ = require('lodash'),
+  DocumentModel = require('../models/document'),
+  UserModel = require('../models/user')
 
 exports.index = function(req, res) {
   DocumentModel.find({ _user: req.user._id }).exec(function(err, documents) {

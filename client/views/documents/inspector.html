@@ -1,7 +1,6 @@
 <div class="inspector" ng-class="{'inspector-compact' : !showInspector}">
   <div class="inspector-buttons" ng-class="{'inspector-visible': showInspectorControls}">
     <button class="btn btn-icon" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
-    <button class="btn btn-icon" ng-click="toggleInspector('color')" ng-class="{ 'btn-icon-active' : currentInspector === 'color' }">&#xe065;</button>
     <button class="btn btn-icon" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
     <button class="btn btn-icon" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
   </div>
@@ -52,8 +51,6 @@
           <label class="txt-label" for="stroke-radius">Radius</label>
         </div>
       </div>
-    </div>
-    <div ng-if="currentInspector === 'color'" class="inspector-content-shape">
       <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
         <h1>Fill</h1>
         <div class="txt-group txt-group-half-width-block">

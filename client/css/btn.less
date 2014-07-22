@@ -114,14 +114,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    // &.btn-icon-small {
-    //   font-size: 20px;
-    //   width: 22px;
-    // }
-
     &.btn-icon-active {
       color: @color-primary;
       font-family: 'streamline-24px-filled-in';
     }
+  }
+  
+  &:disabled, &:disabled:hover {
+    color: #bbb;
   }
 }

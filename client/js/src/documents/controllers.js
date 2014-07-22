@@ -1,11 +1,11 @@
 (function() {
   'use strict';
 
-  var pub = angular.module('pub.documents.controllers', []);
+  var pub = angular.module('pub.documents.controllers', [])
 
-  pub.value('zoomLevels', [0.5, 1, 1.5, 2, 2.5, 3]);
-  pub.value('fonts', [{name: 'Source Serif Pro'}, {name: 'Source Sans Pro'}]);
-  pub.value('fontWeights', [{weight: '400'}, {weight: '500'}, {weight: '600'}]);
+  pub.value('zoomLevels', [0.5, 1, 1.5, 2, 2.5, 3])
+  pub.value('fonts', [{name: 'Source Serif Pro'}, {name: 'Source Sans Pro'}])
+  pub.value('fontWeights', [{weight: '400'}, {weight: '500'}, {weight: '600'}])
   pub.value('objAnchors', {
     size: 10,
     points: [
@@ -18,7 +18,8 @@
       {coordinate: 's', x: 0.5, y: 1},
       {coordinate: 'se', x: 1, y: 1}
     ]
-  });
+  })
+  
   pub.value('colors', [
     '#f6f8fb', '#e7eaed',
     '#cdd2d9', '#abb3bd',
@@ -32,7 +33,7 @@
     '#4e8bda', '#609eeb',
     '#967dda', '#ac95eb',
     '#d673ad', '#eb89c0'
-  ]);
+  ])
 
   pub.controller('DocumentsController', [
     '$scope',
@@ -43,19 +44,19 @@
     'documents',
     'Restangular',
     function($scope, $state, $location, documentServices, authentication, documents, Restangular) {
-      var documentsApi = Restangular.all('documents');
-      $scope.updateAuthenticationStatus();
-      $scope.documents = documents;
-      $scope.dpi = 72;
-      $scope.iconDpi = 15;
-      $scope.newDocumentModalVisible = false;
-      $scope.sortFilter = 'name';
-      $scope.sortReverse = false;
+      var documentsApi = Restangular.all('documents')
+      $scope.updateAuthenticationStatus()
+      $scope.documents = documents
+      $scope.dpi = 72
+      $scope.iconDpi = 15
+      $scope.newDocumentModalVisible = false
+      $scope.sortFilter = 'name'
+      $scope.sortReverse = false
 
       $scope.updateSortFilter = function(sortFilter, sortReverse) {
-        $scope.sortFilter = sortFilter;
-        $scope.sortReverse = sortReverse;
-      };
+        $scope.sortFilter = sortFilter
+        $scope.sortReverse = sortReverse
+      }
 
       $scope.newDocument = function() {
         documentsApi.post({
@@ -65,10 +66,10 @@
           height: $scope.height,
           shapes: []
         }).then(function(res) {
-          $scope.newDocumentModal();
-          $scope.documents.push(res);
-        });
-      };
+          $scope.newDocumentModal()
+          $scope.documents.push(res)
+        })
+      }
 
       $scope.newDocumentModal = function() {
         $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible
@@ -81,10 +82,10 @@
         var iconDpi = 15
           , iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30)
           , iconHeight = (iconWidth / doc.width) * doc.height
-        return { width: iconWidth + 'px', height: iconHeight + 'px' };
-      };
+        return { width: iconWidth + 'px', height: iconHeight + 'px' }
+      }
     }
-  ]);
+  ])
 
   pub.controller('DocumentController', [
     '$scope',
@@ -106,6 +107,10 @@
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj
+        
+        if (!obj && $scope.currentInspector === 'color') {
+          $scope.toggleInspector('shape')
+        }
       }
 
       $scope.cutObj = function() {
@@ -138,21 +143,21 @@
       }
 
       $scope.showAllDocuments = function() {
-        $state.go('pub.documents');
+        $state.go('pub.documents')
       }
 
       $scope.exportDocument = function() {
         $scope.doc.put().then(function() {
-          $scope.exportModal();
+          $scope.exportModal()
         })
       }
 
       $scope.deleteModal = function() {
-        $scope.deleteModalVisible = !$scope.deleteModalVisible;
+        $scope.deleteModalVisible = !$scope.deleteModalVisible
       }
 
       $scope.exportModal = function() {
-        $scope.exportModalVisible = !$scope.exportModalVisible;
+        $scope.exportModalVisible = !$scope.exportModalVisible
       }
 
       $scope.deleteDocument = function() {
@@ -195,29 +200,29 @@
     'fonts',
     'fontWeights',
     function($scope, $state, documentServices, zoomLevels, fonts, fontWeights) {
-      $scope.zoomLevels = zoomLevels;
-      $scope.fonts = fonts;
-      $scope.fontWeights = fontWeights;
+      $scope.zoomLevels = zoomLevels
+      $scope.fonts = fonts
+      $scope.fontWeights = fontWeights
 
       $scope.swapObject = function(direction) {
-        var idx = $scope.doc.shapes.indexOf($scope.selectedObj)
-          , offset = (direction === 'up' ? 1 : -1)
-          , objA = $scope.doc.shapes[idx]
-          , objB = $scope.doc.shapes[idx + offset]
+        var idx = $scope.doc.shapes.indexOf($scope.selectedObj),
+          offset = (direction === 'up' ? 1 : -1),
+          objA = $scope.doc.shapes[idx],
+          objB = $scope.doc.shapes[idx + offset]
 
-        $scope.doc.shapes[idx] = objB;
-        $scope.doc.shapes[idx + offset] = objA;
-      };
+        $scope.doc.shapes[idx] = objB
+        $scope.doc.shapes[idx + offset] = objA
+      }
 
       $scope.moveUpButtonEnabled = function() {
-        return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) < $scope.doc.shapes.length - 1;
-      };
+        return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) < $scope.doc.shapes.length - 1
+      }
 
       $scope.moveDownButtonEnabled = function() {
-        return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) > 0;
-      };
+        return $scope.selectedObj && $scope.doc.shapes.indexOf($scope.selectedObj) > 0
+      }
     }
-  ]);
+  ])
 
   pub.controller('DocumentCanvasController', [
     '$scope',
@@ -266,5 +271,5 @@
         return ($scope.zoomLevel > 1) ? 0.5 : 1
       }
     }
-  ]);
+  ])
 }());

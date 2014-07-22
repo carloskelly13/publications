@@ -5,18 +5,18 @@
  * 2014 Michael Kelly and Carlos Paelinck
  */
 
-var bcrypt = require('bcrypt')
-  , _ = require('lodash')
-  , UserModel = require('../models/user')
-  , DocumentModel = require('../models/document')
+var bcrypt = require('bcrypt'),
+  _ = require('lodash'),
+  UserModel = require('../models/user'),
+  DocumentModel = require('../models/document')
 
 exports.show = function(req, res) {
   res.json(req.user);
 };
 
 exports.update = function(req, res) {
-  var userJson = req.body
-    , user = req.user;
+  var userJson = req.body,
+    user = req.user;
 
   bcrypt.compare(userJson.currentPassword, user.password, function(err, isValid) {
     if (isValid) {
