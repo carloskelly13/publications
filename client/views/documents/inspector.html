@@ -51,31 +51,31 @@
           <label class="txt-label" for="stroke-radius">Radius</label>
         </div>
       </div>
-      <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
-        <h1>Fill</h1>
-        <div class="txt-group txt-group-half-width-block">
-          <input name="fill" id="fill" pub-hex-color-input class="txt txt-mono" ng-model="selectedObj.fill" type="text" />
+      <div ng-if="selectedObj" class="inspector-controls-section">
+        <h1>Color</h1>
+        <div ng-if="selectedObj.type !== 'text'">
+          <div class="txt-group txt-group-half-width txt-group-half-width-left">
+            <input name="fill" id="fill" pub-hex-color-input class="txt" ng-model="selectedObj.fill" type="text" />
+            <label class="txt-label" for="fill-opacity">Fill</label>
+          </div>
+          <div class="txt-group txt-group-half-width">
+            <input name="fill-opacity" id="fill-opacity" pub-alpha-float-input class="txt" ng-model="selectedObj.fillOpacity" type="text" />
+            <label class="txt-label" for="fill-opacity">Opacity</label>
+          </div>
+          <div class="txt-group txt-group-half-width txt-group-half-width-left">
+            <input name="stroke" id="stroke" pub-hex-color-input class="txt" ng-model="selectedObj.stroke" type="text" />
+            <label class="txt-label" for="stroke-opacity">Stroke</label>
+          </div>
+          <div class="txt-group txt-group-half-width">
+            <input name="stroke-opacity" id="stroke-opacity" pub-alpha-float-input class="txt" ng-model="selectedObj.strokeOpacity" type="text" />
+            <label class="txt-label" for="stroke-opacity">Opacity</label>
+          </div>
         </div>
-        <div class="color-group">
-          <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'fill')" ng-class="{ selected: selectedObj.fill.toLowerCase() === color.toLowerCase()}"></div>
-        </div>
-      </div>
-      <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
-        <h1>Stroke</h1>
-        <div class="txt-group txt-group-half-width-block">
-          <input name="stroke" id="stroke" pub-hex-color-input class="txt txt-mono" ng-model="selectedObj.stroke" type="text" />
-        </div>
-        <div class="color-group">
-          <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'stroke')" ng-class="{ selected: selectedObj.stroke.toLowerCase() === color.toLowerCase()}"></div>
-        </div>
-      </div>
-      <div ng-if="selectedObj && selectedObj.type === 'text'" class="inspector-controls-section">
-        <h1>Text</h1>
-        <div class="txt-group txt-group-half-width-block">
-          <input name="color" id="color" pub-hex-color-input class="txt txt-mono" ng-model="selectedObj.color" type="text" />
-        </div>
-        <div class="color-group">
-          <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'color')" ng-class="{ selected: selectedObj.color.toLowerCase() === color.toLowerCase()}"></div>
+        <div ng-if="selectedObj.type === 'text'">
+          <div class="txt-group txt-group-half-width txt-group-half-width-left">
+            <input name="color" id="color" pub-hex-color-input class="txt" ng-model="selectedObj.color" type="text" />
+            <label class="txt-label" for="stroke-opacity">Text</label>
+          </div>
         </div>
       </div>
     </div>
@@ -87,13 +87,17 @@
     <div ng-if="currentInspector === 'document'" class="inspector-content-shape">
       <div class="inspector-controls-section">
         <h1>Document</h1>
-        <button class="btn btn-icon-text" ng-click="">
+        <button class="btn btn-icon-text" ng-click="updateDocument(false)">
           <div class="icon">&#xe2f9;</div>
           <div class="text">Save</div>
         </button>
-        <button class="btn btn-icon-text" ng-click="">
+        <button class="btn btn-icon-text" ng-click="exportDocument()">
           <div class="icon">&#xe21d;</div>
           <div class="text">Save &amp; Export PDF</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="saveModal()">
+          <div class="icon">&#xe278;</div>
+          <div class="text">Documents</div>
         </button>
       </div>
       <div class="inspector-controls-section">
@@ -115,3 +119,7 @@
     </button>
   </div>
 </div>
+
+<!-- <div class="color-group">
+  <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'fill')" ng-class="{ selected: selectedObj.fill.toLowerCase() === color.toLowerCase()}"></div>
+</div> -->
