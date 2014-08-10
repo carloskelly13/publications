@@ -25,9 +25,9 @@ var shapeSchema = new Schema({
     opacity: { type: Number },
     strokeOpacity: { type: Number },
     text: { type: String },
-    fontSize: { type: String },
+    fontSize: { type: Number },
     fontFamily: { type: String },
-    fontWeight: { type: String },
+    fontWeight: { type: Number },
     fontStyle: { type: String },
     textAlign: { type: String }
 });

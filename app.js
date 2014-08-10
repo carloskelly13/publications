@@ -33,7 +33,10 @@ app.use(session({
 app.set('port', process.env.PORT || 4000)
 app.set('views', __dirname + '/client')
 app.set('view engine', 'ejs');
-app.use(bodyParser())
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+app.use(bodyParser.json())
 app.use(methodOverride())
 app.use(passport.initialize())
 app.use(passport.session())
@@ -51,4 +54,4 @@ mongoose.connect('mongodb://localhost/pub-ng')
 
 app.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'))
-});
+})

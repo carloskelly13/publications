@@ -1,11 +1,20 @@
-.txt {
+.txt, .picker {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+
+  background: #fff;
   box-sizing: border-box;
   border: 1px solid @color-line-bright;
+  border-radius: 0;
   color: @color-text;
   font-family: 'Sailec', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 13px;
@@ -18,6 +27,14 @@
   vertical-align: middle;
   white-space: nowrap;
   zoom: 1;
+
+  &:focus {
+    border-color: @color-primary;
+
+    + .txt-label {
+      color: @color-primary;
+    }
+  }
 
   &.ng-invalid {
     border-color: @color-err;
@@ -40,7 +57,7 @@
   margin: 0;
   width: 100%;
 
-  .txt {
+  .txt, .picker {
     display: block;
     width: 100%;
   }

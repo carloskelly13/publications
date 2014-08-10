@@ -78,10 +78,22 @@
           </div>
         </div>
       </div>
+      <div ng-if="selectedObj && selectedObj.type === 'text'" class="inspector-controls-section">
+        <h1>Text and Formatting</h1>
+        <div class="txt-group">
+          <select class="picker" id="typeface" ng-model="selectedObj.fontFamily" required="true" ng-options="font.name as font.name for font in fonts"></select>
+          <label class="txt-label" for="typeface">Typeface</label>
+        </div>
+      </div>
     </div>
 
     <div ng-if="currentInspector === 'layers'" class="inspector-content-shape">
-      Layers
+      <div class="inspector-layer"
+           ng-class="{'selected' : selectedObj === shape}"
+           ng-repeat="shape in doc.shapes"
+           ng-click="svgObjectSelected(shape)">
+        {{shape.type}}
+      </div>
     </div>
 
     <div ng-if="currentInspector === 'document'" class="inspector-content-shape">

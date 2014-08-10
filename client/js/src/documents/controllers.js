@@ -19,7 +19,7 @@
       {coordinate: 'se', x: 1, y: 1}
     ]
   })
-  
+
   pub.value('colors', [
     '#f6f8fb', '#e7eaed',
     '#cdd2d9', '#abb3bd',
@@ -107,7 +107,7 @@
 
       $scope.svgObjectSelected = function(obj) {
         $scope.selectedObj = obj
-        
+
         if (!obj && $scope.currentInspector === 'color') {
           $scope.toggleInspector('shape')
         }
@@ -231,11 +231,13 @@
     'documentServices',
     'objAnchors',
     'colors',
-    function($scope, $state, $timeout, documentServices, objAnchors, colors) {
+    'fonts',
+    function($scope, $state, $timeout, documentServices, objAnchors, colors, fonts) {
       $scope.objAnchors = objAnchors
       $scope.showInspector = true
       $scope.showInspectorControls = true
       $scope.colors = colors
+      $scope.fonts = fonts
 
       $scope.toggleShowInspector = function() {
         if ($scope.showInspector) {
