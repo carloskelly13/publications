@@ -11,6 +11,9 @@ pids
 logs
 results
 
+*.DS_Store
+.DS_Store
+
 npm-debug.log
 node_modules
 client/views/templates.js

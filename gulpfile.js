@@ -18,7 +18,7 @@ var concat = require('gulp-concat')
 
 var paths = {
   css: 'client/css/*.less',
-  js: ['client/views/templates.js', 'client/js/src/**/*.js'],
+  js: ['client/views/templates.js', 'client/js/_vendor/**/*.js', 'client/js/src/**/*.js'],
   templates: 'client/views/**/*.html'
 };
 

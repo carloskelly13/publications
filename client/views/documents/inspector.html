@@ -91,8 +91,21 @@
       <div class="inspector-layer"
            ng-class="{'selected' : selectedObj === shape}"
            ng-repeat="shape in doc.shapes"
-           ng-click="svgObjectSelected(shape)">
-        {{shape.type}}
+           ng-click="svgObjectSelected(shape)"
+           ng-switch="shape.type">
+        <div ng-switch-when="rect" class="icon" style="color: {{shape.fill}};">&#xe521;</div>
+        <div ng-switch-when="ellipse" class="icon" style="color: {{shape.fill}};">&#xe594;</div>
+        <div ng-switch-when="text" class="icon" style="color: {{shape.color}};">&#xe4f1;</div>
+        <div class="inspector-layer-controls">
+          <button class="btn btn-icon"
+                  ng-if="doc.shapes.indexOf(shape) !== 0">
+            &#xe519;
+          </button>
+          <button class="btn btn-icon"
+                  ng-if="doc.shapes.indexOf(shape) !== doc.shapes.length - 1">
+            &#xe514;
+          </button>
+        </div>
       </div>
     </div>
 
