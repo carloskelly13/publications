@@ -98,10 +98,12 @@
         <div ng-switch-when="text" class="icon" style="color: {{shape.color}};">&#xe4f1;</div>
         <div class="inspector-layer-controls">
           <button class="btn btn-icon"
+                  ng-click="shiftLayer(-1)"
                   ng-if="doc.shapes.indexOf(shape) !== 0">
             &#xe519;
           </button>
           <button class="btn btn-icon"
+                  ng-click="shiftLayer(1)"
                   ng-if="doc.shapes.indexOf(shape) !== doc.shapes.length - 1">
             &#xe514;
           </button>

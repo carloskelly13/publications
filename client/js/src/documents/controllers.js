@@ -178,6 +178,10 @@
         $scope.toggleInspector(null);
       }
 
+      $scope.shiftLayer = function(offset) {
+        $scope.doc.shapes.moveElement($scope.selectedObj, offset)
+      }
+
       $scope.toggleCanvasGrid = function() {
         $scope.showCanvasGrid = !$scope.showCanvasGrid
       }
