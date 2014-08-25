@@ -4,23 +4,22 @@
   </div>
   <form ng-submit="newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
     <div class="modal-content">
-      <fieldset class="label-input label-input-modal">
-        <label for="name">Name</label>
-        <input class="input-text" type="text" ng-model="name" name="name" id="name" required>
-      </fieldset>
-      <div class="label-input-group">
-        <fieldset class="label-input half-width">
-          <label for="width">Width (inches)</label>
-          <input pub-unsigned-non-zero-float-input class="input-text" type="text" ng-model="width" name="width" id="width" required>
-        </fieldset>
-        <fieldset class="label-input half-width">
-          <label for="height">Height (inches)</label>
-          <input pub-unsigned-non-zero-float-input class="input-text" type="text" ng-model="height" name="height" id="height" required>
-        </fieldset>
+      <div class="modal-fieldsets">
+        <div class="txt-group">
+          <input class="txt" type="text" ng-model="name" name="name" id="name" required>
+          <label class="txt-label" for="name">Name</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width-left">
+          <input pub-unsigned-non-zero-float-input class="txt" type="text" ng-model="width" name="width" id="width" required>
+          <label class="txt-label" for="width">Width (inches)</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width-right">
+          <input pub-unsigned-non-zero-float-input class="txt" type="text" ng-model="height" name="height" id="height" required>
+          <label class="txt-label" for="height">Height (inches)</label>
+        </div>
       </div>
-        <button class="button button-form button-form-submit" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
-        <button class="button button-form button-form-slim" type="button" ng-click="newDocumentModal()">Cancel</button>
-
+      <button class="btn" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
+      <button class="btn" type="button" ng-click="newDocumentModal()">Cancel</button>
     </div>
   </form>
 </div>

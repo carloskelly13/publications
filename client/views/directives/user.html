@@ -8,45 +8,47 @@
         </span>
       </div>
       <div class="modal-content">
-        <button class="button button-form button-form-slim" type="button" ng-click="userModalFlip()">
+        <button class="btn" type="button" ng-click="userModalFlip()">
           <span ng-if="user.temporary">Personalize and Create Account</span>
           <span ng-if="!user.temporary">Change Password</span>
         </button>
-        <button class="button button-form button-form-slim" type="button" ng-click="logout()">
+        <button class="btn" type="button" ng-click="logout()">
           <span ng-if="user.temporary">Exit Publications without Saving</span>
           <span ng-if="!user.temporary">Log Out</span>
         </button>
-        <button class="button button-form button-form-slim" type="button" ng-click="userModal()">Close</button>
+        <button class="btn" type="button" ng-click="userModal()">Close</button>
       </div>
     </div>
     <div class="modal-dialog modal-dialog-flip-back">
       <div class="modal-content">
         <form name="userAccountForm" role="form">
-          <div ng-if="user.temporary">
-            <fieldset class="label-input label-input-modal">
-              <label for="name">Email address</label>
-              <input autocomplete="off" class="input-text" type="text" ng-model="userAccountForm.emailAddress" name="name" id="name" required>
-            </fieldset>
+          <div class="modal-fieldsets">
+            <div ng-show="user.temporary">
+              <div class="txt-group">
+                <input autocomplete="off" class="txt" type="text" ng-model="userAccountForm.emailAddress" name="name" id="name" required>
+                <label class="txt-label" for="name">Email address</label>
+              </div>
+            </div>
+            <div ng-show="!user.temporary">
+              <div class="txt-group">
+                <input autocomplete="off" class="txt" type="password" ng-model="userAccountForm.currentPassword" name="current-password" id="current-password" required>
+                <label class="txt-label" for="current-password">Current Password</label>
+              </div>
+            </div>
+            <div class="txt-group">
+              <input class="txt" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required>
+              <label class="txt-label" for="new-password">New Password</label>
+            </div>
+            <div class="txt-group">
+              <input autocomplete="off" class="txt" type="password" ng-model="userAccountForm.confirmPassword" name="confirm-password" id="confirm-password" required>
+              <label class="txt-label" for="confirm-password">Confirm New Password</label>
+            </div>
           </div>
-          <div ng-if="!user.temporary">
-            <fieldset class="label-input label-input-modal">
-              <label for="current-password">Current Password</label>
-              <input autocomplete="off" class="input-text" type="password" ng-model="userAccountForm.currentPassword" name="current-password" id="current-password" required>
-            </fieldset>
-          </div>
-          <fieldset class="label-input label-input-modal">
-            <label for="new-password">New Password</label>
-            <input class="input-text" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required>
-          </fieldset>
-          <fieldset class="label-input label-input-modal">
-            <label for="confirm-password">Confirm New Password</label>
-            <input autocomplete="off" class="input-text" type="password" ng-model="userAccountForm.confirmPassword" name="confirm-password" id="confirm-password" required>
-          </fieldset>
-          <button class="button button-form" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">
+          <button class="btn" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">
             <span ng-if="user.temporary">Create Account</span>
             <span ng-if="!user.temporary">Change Password</span>
           </button>
-          <button class="button button-form button-form-slim" type="button" ng-click="userModalFlip()">Cancel</button>
+          <button class="btn" type="button" ng-click="userModalFlip()">Cancel</button>
         </form>
       </div>
     </div>

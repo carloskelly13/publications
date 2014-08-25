@@ -1,55 +1,23 @@
 @modal-line-color: hsla(0, 0%, 0%, 0.2);
 
-.modal-blur {
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
-}
-
 .modal-dialog {
   .animation-expand-open;
-  .rounded-corners(4px);
+  .rounded-corners(6px);
   .center;
   background: #fff;
-  background: hsla(0, 0%, 100%, 0.95);
-  box-shadow: 0 0 0 1px @modal-line-color, 0 5px 25px hsla(0, 0%, 0%, 0.15);
+  background: #fff;
+  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.33), 0 3px 40px hsla(0, 0%, 0%, 0.25);
   overflow: hidden;
   padding: 0;
   z-index: 9000;
-  width: 350px;
+  width: 450px;
 
-  &.modal-dialog-delete {
-    width: 350px;
-    background: fade(@red, 95%);
-    box-shadow: 0 0 0 1px fade(darken(@red, 10%), 90%), 0 5px 25px hsla(0, 0%, 0%, 0.15);
+  .modal-fieldsets {
+    margin-bottom: 12px;
+    text-align: left;
 
-    .modal-dialog-title-bar {
-      color: #fff;
-    }
-
-    .button-form {
-      border-color: #fff;
-      border-color: hsla(0, 0%, 100%, 0.90);
-      color: #fff;
-      color: hsla(0, 0%, 100%, 0.90);
-
-      &:hover {
-        border-color: #fff;
-        border-color: hsla(0, 0%, 100%, 0.90);
-        background: #fff;
-        background: hsla(0, 0%, 100%, 0.90);
-        color: @red-light;
-      }
-
-      &:active {
-        border-color: #fff;
-        border-color: hsla(0, 0%, 100%, 0.70);
-        background: #fff;
-        background: hsla(0, 0%, 100%, 0.70);
-        color: @red-light;
-      }
+    .txt-group {
+      margin-bottom: 12px;
     }
   }
 
@@ -100,63 +68,6 @@
         float: left;
         margin-left: 0.5em;
       }
-    }
-  }
-}
-
-.modal-dialog-flip-container {
-  margin: 20% auto 0 auto;
-  width: 350px;
-  -webkit-perspective: 1000;
-  perspective: 1000;
-
-
-  .modal-dialog-flip-action {
-    -webkit-transition: 0.6s;
-    transition: 0.6s;
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    position: relative;
-  }
-
-
-  .modal-dialog-flip-action,
-  .modal-dialog-flip-front,
-  .modal-dialog-flip-back {
-    width: 350px;
-    height: 250px;
-  }
-
-
-  .modal-dialog-flip-back {
-    .animation(height, 0.6s);
-  }
-
-  &.modal-dialog-show-back {
-    .modal-dialog-flip-action {
-      -webkit-transform: rotateY(180deg);
-      transform: rotateY(180deg);
-
-      .modal-dialog-flip-back {
-        height: 355px;
-      }
-    }
-  }
-
-  .modal-dialog {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    top: 0;
-    left: 0;
-    position: absolute;
-
-    &.modal-dialog-flip-front {
-      z-index: 9002;
-    }
-
-    &.modal-dialog-flip-back {
-      -webkit-transform: rotateY(180deg);
-      transform: rotateY(180deg);
     }
   }
 }

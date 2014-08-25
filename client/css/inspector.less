@@ -1,5 +1,5 @@
 .inspector {
-  .animation(width, 250ms);
+  .animation(all, 250ms);
   background: #fff;
   border-right: 1px solid @color-line-bright;
   height: inherit;
@@ -10,6 +10,8 @@
   z-index: 5;
 
   &.inspector-compact {
+    background: transparent;
+    border-color: transparent;
     width: 40px;
 
     .inspector-footer {
@@ -73,6 +75,10 @@
 
       .txt-group {
         margin-top: 12px;
+
+        &.txt-group-no-margin {
+          margin-top: 0;
+        }
       }
 
       .color-group {

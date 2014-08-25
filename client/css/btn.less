@@ -35,6 +35,7 @@
   outline: none;
   text-align: center;
   text-rendering: optimizeLegibility;
+  text-decoration: none;
   touch-action: manipulation;
   vertical-align: middle;
   white-space: nowrap;
@@ -62,6 +63,12 @@
     font-size: 13px;
     padding: 2px;
     margin: 0 8px;
+  }
+
+  &.btn-destructive {
+    &:hover, &:active {
+      color: @red-light;
+    }
   }
 
   &.btn-icon-text {

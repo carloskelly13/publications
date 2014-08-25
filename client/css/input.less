@@ -21,6 +21,7 @@
   margin: 0;
   padding: 2px;
   outline: none;
+  resize: none;
   text-align: left;
   text-rendering: optimizeLegibility;
   touch-action: manipulation;
@@ -41,6 +42,70 @@
 
     + .txt-label {
       color: @color-err;
+    }
+  }
+
+  &.txt-search {
+    background: transparent;
+    margin: 0 1em;
+    text-align: center;
+    width: 300px;
+
+    &::-webkit-input-placeholder {
+      .search-input-icon;
+    }
+
+    &::-moz-placeholder {
+      .search-input-icon;
+    }
+
+    &:-ms-input-placeholder {
+      .search-input-icon;
+    }
+
+    &:-moz-placeholder {
+      .search-input-icon;
+    }
+  }
+}
+
+.slider {
+  -webkit-appearance: none;
+  border-radius: 4px;
+  border: 1px solid @color-line-bright;
+  background: #fff;
+  height: 4px;
+  display: inline-block;
+  margin: 0;
+  width: 100%;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background: @color-line-bright;
+    border-radius: 14px;
+    box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.35);
+    height: 14px;
+    width: 14px;
+
+    &:hover {
+      background: @color-line;
+    }
+  }
+
+  + label {
+    margin-top: 0;
+  }
+
+  &:focus {
+    border-color: @color-primary-bright;
+    outline: none;
+
+    &::-webkit-slider-thumb {
+      background: @color-primary;
+    }
+
+    + label {
+      color: @color-primary;
     }
   }
 }
@@ -78,5 +143,9 @@
 
   &.txt-group-half-width-left {
     margin-right: 1%;
+  }
+
+  &.txt-group-half-width-right {
+    float: right;
   }
 }

@@ -1,32 +1,17 @@
-<!-- <div class="app-nav">
-  <div class="app-nav-logo"></div>
-  <div class="app-nav-controls">
-<input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
-  </div>
-   <div class="app-nav-secondary-controls">
-    <button class="btn" ng-click="userModal()">Settings</button>
-  </div>
-</div> -->
 <div class="documents-list">
+  <div class="documents-controls">
+    <button class="btn btn-icon" ng-click="newDocumentModal()">&#xe2a9;</button>
+    <input class="txt txt-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
+    <button class="btn btn-icon" ng-click="">&#xe174;</button>
+  </div>
   <div class="no-documents-banner" ng-if="documents.length === 0">
     <figure id="document-icon"></figure>
     <h1>No Documents</h1>
     <h3>Create a new document to get started</h3>
   </div>
-  <div class="sort-filters">
-    <span ng-if="documents.length > 0">
-      <label class="btn-label">Sort By</label>
-      <button ng-class="{ 'btn-active' : sortFilter === 'name' }" class="btn" ng-click="updateSortFilter('name', false)">Name</button>
-      <button ng-class="{ 'btn-active' : sortFilter === 'modified' }" class="btn" ng-click="updateSortFilter('modified', true)">Created</button>
-      <button ng-class="{ 'btn-active' : sortFilter === 'size' && sortReverse }" class="btn" ng-click="updateSortFilter('size', true)">Largest</button>
-      <button ng-class="{ 'btn-active' : sortFilter === 'size' && !sortReverse }" class="btn" ng-click="updateSortFilter('size', false)">Smallest</button>
-    </span>
-    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
-    <!-- <button class="btn" ng-click="newDocumentModal()">New Document</button> -->
-  </div>
   <div class="document-item"
        pub-document-item
-       ng-repeat="doc in documents | filter: search | orderBy: sortFilter : sortReverse"
+       ng-repeat="doc in documents | filter: search | orderBy: name"
        ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' ); doc.size = doc.height * doc.width;"
        ui-sref="pub.documents.document.views({ documentId: doc._id })">
   </div>
