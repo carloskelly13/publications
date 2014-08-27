@@ -72,8 +72,7 @@
 .slider {
   -webkit-appearance: none;
   border-radius: 4px;
-  border: 1px solid @color-line-bright;
-  background: #fff;
+  background: @color-line-bright;
   height: 4px;
   display: inline-block;
   margin: 0;
@@ -81,14 +80,15 @@
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none !important;
-    background: @color-line-bright;
+    background: #fff;
+    border: 1px solid @color-line-bright;
     border-radius: 14px;
-    box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.35);
+    box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.65);
     height: 14px;
     width: 14px;
 
     &:hover {
-      background: @color-line;
+      background: #eee;
     }
   }
 
@@ -97,12 +97,12 @@
   }
 
   &:focus {
-    border-color: @color-primary-bright;
+    background: @color-primary-bright;
     outline: none;
 
-    &::-webkit-slider-thumb {
-      background: @color-primary;
-    }
+    // &::-webkit-slider-thumb {
+    //   background: @color-primary;
+    // }
 
     + label {
       color: @color-primary;

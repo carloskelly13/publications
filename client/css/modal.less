@@ -2,15 +2,19 @@
 
 .modal-dialog {
   .animation-expand-open;
-  .rounded-corners(6px);
+  .rounded-corners(2px);
   .center;
   background: #fff;
   background: #fff;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.33), 0 3px 40px hsla(0, 0%, 0%, 0.25);
+  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25), 0 2px 0 hsla(0, 0%, 0%, 0.25), 0 3px 40px hsla(0, 0%, 0%, 0.25);
   overflow: hidden;
   padding: 0;
   z-index: 9000;
-  width: 450px;
+  width: 350px;
+
+  &.modal-dialog-wide {
+    width: 500px;
+  }
 
   .modal-fieldsets {
     margin-bottom: 12px;

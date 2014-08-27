@@ -1,6 +1,6 @@
 <div class="modal-dialog">
   <div class="modal-dialog-title-bar">
-    <span class="title">Create Document</span>
+    <span class="title">New Document</span>
   </div>
   <form ng-submit="newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
     <div class="modal-content">
@@ -18,8 +18,8 @@
           <label class="txt-label" for="height">Height (inches)</label>
         </div>
       </div>
-      <button class="btn" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
-      <button class="btn" type="button" ng-click="newDocumentModal()">Cancel</button>
+      <button class="btn btn-frame" type="submit" ng-disabled="newDocumentForm.$invalid">OK</button>
+      <button class="btn btn-frame" type="button" ng-click="newDocumentModal()">Cancel</button>
     </div>
   </form>
 </div>

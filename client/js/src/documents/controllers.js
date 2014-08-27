@@ -77,16 +77,17 @@
 
         $scope.newDocumentModal = function() {
           $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible
-          $scope.name = "New Document"
+          $scope.name = "Document"
           $scope.width = 8.5
           $scope.height = 11
         }
 
         $scope.documentIconSize = function(doc) {
-          var iconDpi = 15
-            , iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30)
-            , iconHeight = (iconWidth / doc.width) * doc.height
-          return { width: iconWidth + 'px', height: iconHeight + 'px' }
+          var iconDpi = 15,
+            iconWidth = Math.max(Math.min(doc.width * iconDpi, 200), 30),
+            iconHeight = (iconWidth / doc.width) * doc.height
+
+          return {width: iconWidth + 'px', height: iconHeight + 'px'}
         }
       }
     ])
