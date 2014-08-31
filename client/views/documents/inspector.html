@@ -1,6 +1,9 @@
 <div class="inspector">
   <div class="inspector-buttons">
-    <div class="app-wordmark"></div>
+    <div class="app-wordmark"></div><br>
+    <button class="btn btn-icon" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
+    <button class="btn btn-icon" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
   </div>
   <div class="inspector-content">
     <div ng-hide="currentInspector !== 'shape'" class="inspector-content-shape">
@@ -186,11 +189,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="inspector-footer">
-    <button class="btn btn-icon" ng-click="toggleInspector('document')" ng-class="{ 'btn-icon-active' : currentInspector === 'document' }">&#xe252;</button>
-    <button class="btn btn-icon" ng-click="toggleInspector('shape')" ng-class="{ 'btn-icon-active' : currentInspector === 'shape' }">&#xe052;</button>
-    <button class="btn btn-icon" ng-click="toggleInspector('layers')" ng-class="{ 'btn-icon-active' : currentInspector === 'layers' }">&#xe472;</button>
   </div>
 </div>
 
