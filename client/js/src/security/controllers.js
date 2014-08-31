@@ -60,6 +60,7 @@
       function($scope, $state, $http, securityContext, authentication) {
         $scope.user = securityContext.user
         $scope.userErrorModalVisible = false
+        $scope.currentUserTab = 'account'
 
         var clearUserForm = function() {
           $scope.userAccountForm.emailAddress = null
@@ -69,6 +70,10 @@
           $scope.changePasswordForm.newPassword = null
           $scope.changePasswordForm.currentPassword = null
           $scope.changePasswordForm.confirmPassword = null
+        }
+
+        $scope.toggleUserTab = function(newTab) {
+          $scope.currentUserTab = newTab
         }
 
         $scope.viewDocuments = function() {
