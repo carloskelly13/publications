@@ -1,6 +1,5 @@
 .inspector {
   .animation(all, 250ms);
-  background: #fff;
   border-right: 1px solid @color-line-bright;
   height: inherit;
   overflow: hidden;
@@ -8,28 +7,6 @@
   top: 0; right: 0; bottom: 0; left: 0;
   width: 20%;
   z-index: 5;
-
-  &.inspector-compact {
-    background: transparent;
-    border-color: transparent;
-    width: 40px;
-
-    .inspector-footer {
-      border-top-color: transparent;
-    }
-  }
-
-  .inspector-buttons,
-  .inspector-content {
-    .animation(opacity, 125ms);
-    opacity: 0;
-    visibility: hidden;
-
-    &.inspector-visible {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
 
   .inspector-buttons,
   .inspector-footer {
@@ -44,6 +21,13 @@
 
   .inspector-buttons {
     border-bottom: 1px solid @color-line-bright;
+    text-align: left;
+    
+    .app-wordmark {
+      .svg-picture('publications-wordmark-small', 110px, 18px, inline-block);
+      margin: 11px 0 0 8px;
+      vertical-align: middle;
+    }
   }
 
   .inspector-footer {

@@ -119,4 +119,10 @@
     }
   });
 
+  pub.directive('pubModalUserError', function() {
+    return {
+      templateUrl: '/views/directives/user-error.html'
+    }
+  })
+
 }());

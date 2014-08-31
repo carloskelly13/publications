@@ -75,6 +75,10 @@
           })
         }
 
+        $scope.viewUser = function() {
+          $state.go('pub.user')
+        }
+
         $scope.newDocumentModal = function() {
           $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible
           $scope.name = "Document"
@@ -110,7 +114,6 @@
         $scope.deleteModalVisible = false
         $scope.exportModalVisible = false
         $scope.showInspector = true
-        $scope.showInspectorControls = true
         $scope.zoomLevel = 1
 
 
@@ -165,20 +168,6 @@
 
         $scope.saveModal = function() {
           $scope.saveModalVisible = !$scope.saveModalVisible
-        }
-
-        $scope.toggleShowInspector = function() {
-          if ($scope.showInspector) {
-            $scope.showInspectorControls = false
-            $timeout(function() {
-              $scope.showInspector = false
-            }, 125)
-          } else {
-            $scope.showInspector = true
-            $timeout(function() {
-              $scope.showInspectorControls = true
-            }, 125)
-          }
         }
 
         $scope.toggleInspector = function(inspector) {

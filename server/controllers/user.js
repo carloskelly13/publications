@@ -11,26 +11,41 @@ var bcrypt = require('bcrypt'),
   DocumentModel = require('../models/document')
 
 exports.show = function(req, res) {
-  res.json(req.user);
+  if (req.user) {
+    UserModel.findById(req.user._id, function(err, user) {
+      if (err) {
+        res.send(401)
+      } else {
+        res.json(user)
+      }
+    })
+  } else {
+    res.send(401)
+  }
 };
 
 exports.update = function(req, res) {
-  var userJson = req.body,
-    user = req.user;
+  var userJson = req.body
 
-  bcrypt.compare(userJson.currentPassword, user.password, function(err, isValid) {
-    if (isValid) {
-      var updateUser = _.extend(user, userJson);
-      delete updateUser.currentPassword;
-
-      updateUser.save(function(err, user) {
-        return res.json(user || err);
-      });
-
+  UserModel.findById(req.user._id, function(err, user) {
+    if (err) {
+      res.send(401)
     } else {
-      res.send(403);
+      bcrypt.compare(userJson.currentPassword, user.password, function(err, isValid) {
+        if (isValid) {
+          var updateUser = _.extend(user, userJson)
+          delete updateUser.currentPassword
+
+          updateUser.save(function(err, user) {
+            return res.json(user || err)
+          })
+
+        } else {
+          res.send(422)
+        }
+      })
     }
-  });
+  })
 };
 
 exports.login = function(req, res) {
@@ -68,13 +83,4 @@ exports.create = function(req, res) {
       });
     });
   });
-};
-
-exports.current = function(req, res) {
-  if (req.user) {
-    res.json(req.user);
-
-  } else {
-    res.send(401);
-  }
 };

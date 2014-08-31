@@ -21,6 +21,36 @@ html, body {
   z-index: 6;
 }
 
+.app-controls {
+  margin: 1em 0 0.5em 0;
+  text-align: center;
+
+  .app-wordmark {
+    .svg-picture('publications-wordmark', 136px, 25px, inline-block);
+    float: left;
+    margin: 0 0 0 1.5em;
+    vertical-align: middle;
+  }
+
+  .btn-group {
+    float: right;
+    margin: 0 1.5em 0 0;
+  }
+
+  h1 {
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  &:after {
+    content: ' ';
+    clear: both;
+    display: block;
+  }
+}
+
 .app-content {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;

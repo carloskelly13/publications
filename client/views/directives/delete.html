@@ -1,6 +1,7 @@
 <div class="modal-dialog">
   <div class="modal-dialog-title-bar">
-    <span class="message">Are you sure you want to delete {{ doc.name }}? This action cannot be undone.</span>
+    <div class="title">Delete {{ doc.name }}</div>
+    <div class="message">Are you sure you want to delete {{ doc.name }}? This action cannot be undone.</div>
   </div>
     <div class="modal-content">
       <button class="btn btn-frame" type="button" ng-click="deleteDocument()">Delete Document</button>

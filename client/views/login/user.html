@@ -1,0 +1,49 @@
+<div class="user-view">
+  <div class="app-controls">
+    <div class="app-wordmark"></div>
+    <div class="btn-group">
+      <button class="btn btn-frame" type="button" ng-click="logout()">{{user.temporary ? 'Exit' : 'Log Out'}}</button>
+      <button class="btn btn-frame" type="button" ng-click="viewDocuments()">Documents</button>
+    </div>
+  </div>
+  <form name="userAccountForm" role="form" class="page-form" ng-show="user.temporary">
+    <h1>Create Account</h1>
+    <h2>Create a free Publications account to save documents and access them on any computer.</h2>
+    <div class="modal-fieldsets">
+      <div class="txt-group">
+        <input autocomplete="off" class="txt" type="email" ng-model="userAccountForm.emailAddress" name="name" id="name" required>
+        <label class="txt-label" for="name">Email address</label>
+      </div>
+      <div class="txt-group">
+        <input class="txt" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required>
+        <label class="txt-label" for="new-password">New Password</label>
+      </div>
+      <div class="txt-group">
+        <input autocomplete="off" class="txt" type="password" ng-model="userAccountForm.confirmPassword" name="confirm-password" id="confirm-password" required>
+        <label class="txt-label" for="confirm-password">Confirm New Password</label>
+      </div>
+    </div>
+    <button class="btn btn-frame" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
+  </form>
+  <form name="changePasswordForm" role="form" class="page-form" ng-hide="user.temporary">
+    <h1>Change Password</h1>
+    <h2>Update the password for the Publications account {{user.name}}.</h2>
+    <div class="modal-fieldsets">
+      <div class="txt-group">
+        <input autocomplete="off" class="txt" type="password" ng-model="changePasswordForm.currentPassword" name="current-password" id="current-password" required>
+        <label class="txt-label" for="current-password">Current Password</label>
+      </div>
+      <div class="txt-group">
+        <input class="txt" type="password" ng-model="changePasswordForm.newPassword" name="new-password" id="new-password" required>
+        <label class="txt-label" for="new-password">New Password</label>
+      </div>
+      <div class="txt-group">
+        <input autocomplete="off" class="txt" type="password" ng-model="changePasswordForm.confirmPassword" name="confirm-password" id="confirm-password" required>
+        <label class="txt-label" for="confirm-password">Confirm New Password</label>
+      </div>
+    </div>
+    <button class="btn btn-frame" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
+  </form>
+
+  <div pub-modal-user-error ng-show="userErrorModalVisible"></div>
+</div>

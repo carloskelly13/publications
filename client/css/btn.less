@@ -60,22 +60,24 @@
   }
 
   &.btn-frame {
+    background: #fff;
     border: 1px solid @color-line-bright;
     border-radius: 2px;
-    box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.5);
+    box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.1);
     cursor: default;
     margin: 0 6px;
     padding: 1px 18px;
 
     &:hover {
-      background: #eee;
-      color: @color-text;
+      background: @color-primary;
+      border-color: darken(@color-primary, 10%);
+      color: #fff;
     }
 
     &:active {
       .touch-animation(1);
-      background: @color-primary;
-      border-color: darken(@color-primary, 10%);
+      background: lighten(@color-primary, 7%);
+      border-color: @color-primary;
       color: #fff;
     }
   }

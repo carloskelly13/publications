@@ -1,0 +1,13 @@
+<div class="modal-dialog modal-dialog-wide">
+  <div class="modal-dialog-title-bar" ng-if="user.temporary">
+    <div class="title">Cannot Create Account</div>
+    <div class="message">The email address is already in use. Either log in or try a different email address.</div>
+  </div>
+  <div class="modal-dialog-title-bar" ng-if="!user.temporary">
+    <div class="title">Cannot Change Password</div>
+    <div class="message">Verify your current password is correct and try again.</div>
+  </div>
+    <div class="modal-content">
+      <button class="btn btn-frame" type="button" ng-click="closeUserErrorModal()">OK</button>
+    </div>
+</div>
