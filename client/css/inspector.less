@@ -1,7 +1,7 @@
 .inspector {
   .animation(all, 250ms);
   // background: #f5f5f5;
-  border-right: 1px solid @color-text-bright;
+  border-right: 1px solid @color-line;
   height: inherit;
   overflow: hidden;
   position: absolute;
@@ -20,7 +20,7 @@
   }
 
   .inspector-buttons {
-    border-bottom: 1px solid @color-text-bright;
+    background: #d5d5d5;
     text-align: center;
 
     .app-wordmark {
@@ -29,11 +29,10 @@
     }
 
     .btn-icon {
-      border-radius: 2px 2px 0 0;
+      border-radius: 2px;
       height: 36px;
       margin: 0 2px;
       position: relative;
-      top: 5px;
       width: 36px;
 
       &.btn-icon-active {
@@ -60,6 +59,7 @@
         display: block;
         padding: 0;
         margin: 12px 0;
+        text-align: left;
       }
 
       .txt-group {

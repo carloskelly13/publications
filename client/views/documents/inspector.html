@@ -7,22 +7,7 @@
   </div>
   <div class="inspector-content">
     <div ng-hide="currentInspector !== 'shape'" class="inspector-content-shape">
-      <div class="inspector-controls-section">
-        <h1>New Object</h1>
-        <button class="btn btn-icon-text" ng-click="addObject('rect')">
-          <div class="icon">&#xe521;</div>
-          <div class="text">Rectangle</div>
-        </button>
-        <button class="btn btn-icon-text" ng-click="addObject('ellipse')">
-          <div class="icon">&#xe594;</div>
-          <div class="text">Ellipse</div>
-        </button>
-        <button class="btn btn-icon-text" ng-click="addObject('text')">
-          <div class="icon">&#xe4f1;</div>
-          <div class="text">Text</div>
-        </button>
-      </div>
-      <div ng-if="selectedObj" class="inspector-controls-section">
+      <div ng-show="selectedObj" class="inspector-controls-section">
         <h1>Metrics</h1>
         <div class="txt-group txt-group-half-width txt-group-half-width-left">
           <input pub-signed-float-input type="text" name="x" id="x" class="txt txt-mono" ng-model="selectedObj.x" />
@@ -41,18 +26,18 @@
           <label class="txt-label" for="height">Height</label>
         </div>
       </div>
-      <div ng-if="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
+      <div ng-show="selectedObj && selectedObj.type !== 'text'" class="inspector-controls-section">
         <h1>Border</h1>
         <div class="txt-group txt-group-half-width txt-group-half-width-left">
           <input pub-unsigned-integer-input type="text" name="stroke-width" id="stroke-width" class="txt" ng-model="selectedObj.strokeWidth" />
           <label class="txt-label" for="stroke-width">Width</label>
         </div>
-        <div class="txt-group txt-group-half-width txt-group-half-width" ng-if="selectedObj.type === 'rect'">
+        <div class="txt-group txt-group-half-width txt-group-half-width" ng-show="selectedObj.type === 'rect'">
           <input pub-unsigned-integer-input type="text" name="stroke-radius" id="stroke-radius" class="txt" ng-model="selectedObj.r" />
           <label class="txt-label" for="stroke-radius">Radius</label>
         </div>
       </div>
-      <div ng-if="selectedObj" class="inspector-controls-section">
+      <div ng-show="selectedObj" class="inspector-controls-section">
         <h1>Color</h1>
         <div ng-if="selectedObj.type !== 'text'">
           <div class="txt-group txt-group-half-width txt-group-half-width-left">
@@ -72,14 +57,14 @@
             <label class="txt-label" for="stroke-opacity">Opacity</label>
           </div>
         </div>
-        <div ng-if="selectedObj.type === 'text'">
+        <div ng-show="selectedObj.type === 'text'">
           <div class="txt-group txt-group-half-width txt-group-half-width-left">
             <input name="color" id="color" pub-hex-color-input class="txt" ng-model="selectedObj.color" type="text" />
             <label class="txt-label" for="stroke-opacity">Text</label>
           </div>
         </div>
       </div>
-      <div ng-if="selectedObj && selectedObj.type === 'text'" class="inspector-controls-section">
+      <div ng-show="selectedObj && selectedObj.type === 'text'" class="inspector-controls-section">
         <h1>Text and Formatting</h1>
         <div class="txt-group">
           <textarea class="txt" id="txt-content" ng-model="selectedObj.text"></textarea>
@@ -131,10 +116,10 @@
           <div class="icon">&#xe2f9;</div>
           <div class="text">Save</div>
         </button>
-        <button class="btn btn-icon-text" ng-click="exportDocument()">
-          <div class="icon">&#xe21d;</div>
-          <div class="text">Export PDF</div>
-        </button>
+        <a class="btn btn-icon-text" href="/documents/{{ doc._id }}/pdf" target="_blank" download="{{ doc.name }}.pdf">
+          <div class="icon">&#xe223;</div>
+          <div class="text">Download PDF</div>
+        </a>
         <button class="btn btn-icon-text" ng-click="deleteModal()">
           <div class="icon">&#xe2c4;</div>
           <div class="text">Delete</div>
@@ -145,14 +130,22 @@
         </button>
       </div>
       <div class="inspector-controls-section">
-        <h1>Name</h1>
-        <div class="txt-group">
-          <input name="doc-name" id="doc-name" class="txt" ng-model="doc.name" type="text" required />
-          <!-- <label class="txt-label" for="doc-name">Name</label> -->
-        </div>
+        <h1>New</h1>
+        <button class="btn btn-icon-text" ng-click="addObject('rect')">
+          <div class="icon">&#xe521;</div>
+          <div class="text">Rectangle</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="addObject('ellipse')">
+          <div class="icon">&#xe594;</div>
+          <div class="text">Ellipse</div>
+        </button>
+        <button class="btn btn-icon-text" ng-click="addObject('text')">
+          <div class="icon">&#xe4f1;</div>
+          <div class="text">Text</div>
+        </button>
       </div>
       <div class="inspector-controls-section">
-        <h1>Edit Objects</h1>
+        <h1>Edit</h1>
         <button class="btn btn-icon-text" ng-click="cutObj()" ng-disabled="!selectedObj">
           <div class="icon">&#xe02e;</div>
           <div class="text">Cut</div>
@@ -169,6 +162,21 @@
           <div class="icon">&#xe2d3;</div>
           <div class="text">Remove</div>
         </button>
+      </div>
+      <div class="inspector-controls-section">
+        <h1>Properties</h1>
+        <div class="txt-group">
+          <input name="doc-name" id="doc-name" class="txt" ng-model="doc.name" type="text" required />
+          <label class="txt-label" for="doc-name">Name</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width-left">
+          <input pub-unsigned-non-zero-float-input type="text" name="doc-width" id="doc-width" class="txt txt-mono" ng-model="doc.width" />
+          <label class="txt-label" for="doc-width">Width</label>
+        </div>
+        <div class="txt-group txt-group-half-width txt-group-half-width">
+          <input pub-unsigned-non-zero-float-input type="text" name="doc-height" id="doc-height" class="txt txt-mono" ng-model="doc.height" />
+          <label class="txt-label" for="doc-height">Height</label>
+        </div>
       </div>
       <div class="inspector-controls-section">
         <h1>Layout</h1>

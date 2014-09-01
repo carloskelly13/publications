@@ -135,12 +135,6 @@
     }
   })
 
-  pub.directive('pubModalExport', function() {
-    return {
-      templateUrl: '/views/directives/export.html'
-    }
-  })
-  
   pub.directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'
