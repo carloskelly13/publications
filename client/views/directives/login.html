@@ -4,17 +4,18 @@
   </div>
   <form ng-submit="login()" name="loginForm" role="form" class="form form-vertical">
     <div class="modal-content">
-      <fieldset class="label-input label-input-modal">
-        <label for="username">Email Address</label>
-        <input class="input-text" type="text" ng-model="username" name="username" id="username" required>
-      </fieldset>
-      <fieldset class="label-input label-input-modal">
-        <label for="password">Password</label>
-        <input class="input-text" type="password" ng-model="password" name="password" id="password" required>
-      </fieldset>
-      <button class="button button-form button-form-submit" type="submit" ng-disabled="loginForm.$invalid">Log In</button>
-      <button class="button button-form button-form-slim" type="button" ng-click="loginModal()">Cancel</button>
-
+      <div class="modal-fieldsets">
+        <fieldset class="txt-group">
+          <input class="txt" type="email" ng-model="username" name="username" id="username" required>
+          <label class="txt-label" for="username">Email Address</label>
+        </fieldset>
+        <fieldset class="txt-group">
+          <input class="txt" type="password" ng-model="password" name="password" id="password" required>
+          <label class="txt-label" for="password">Password</label>
+        </fieldset>
+      </div>
+      <button class="btn btn-frame" type="submit" ng-disabled="loginForm.$invalid">Log In</button>
+      <button class="btn btn-frame" type="button" ng-click="loginModal()">Cancel</button>
     </div>
   </form>
 </div>
