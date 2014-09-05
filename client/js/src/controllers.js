@@ -5,10 +5,11 @@
 
   pub.controller('AppController', [
     '$scope',
+    '$state',
     '$location',
     '$http',
     'authentication',
-    function($scope, $location, $http, authentication) {
+    function($scope, $state, $location, $http, authentication) {
 
       $scope.updateAuthenticationStatus = function() {
         authentication.requestSecurityContext().then(function(securityContext) {
@@ -21,7 +22,7 @@
         $scope.updateAuthenticationStatus();
 
         authentication.logout(function() {
-          $location.path('/home');
+          $state.go('pub.home')
         },
         function(err) {
           console.log(err);

@@ -11,9 +11,15 @@
       '$stateProvider',
       function($stateProvider) {
         $stateProvider
-          .state('pub.login', {
+          .state('pub.home', {
             url: '/home',
             templateUrl: 'views/login/home.html',
+            controller: 'HomeController'
+          })
+
+          .state('pub.login', {
+            url: '/login',
+            templateUrl: 'views/login/login.html',
             controller: 'LoginController'
           })
 

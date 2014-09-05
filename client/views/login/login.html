@@ -1,0 +1,26 @@
+<div class="landing">
+  <div class="landing-header">
+    <div class="app-wordmark" ui-sref="pub.home"></div>
+    <div class="landing-header-btns">
+    </div>
+  </div>
+  <h3>Log in to Publications</h3>
+  <h4>If you don&rsquo;t have an account, <button ng-click="createAccount()" class="btn btn-frame">test drive Publications</button> with the option to sign up later.</h4>
+  <form ng-submit="login()" name="loginForm" role="form" class="full-page-form">
+    <div class="full-page-form-content">
+      <fieldset class="txt-group">
+        <input class="txt" type="email" ng-model="username" name="username" id="username" required>
+        <label class="txt-label" for="username">Email Address</label>
+      </fieldset>
+      <fieldset class="txt-group">
+        <input class="txt" type="password" ng-model="password" name="password" id="password" required>
+        <label class="txt-label" for="password">Password</label>
+      </fieldset>
+      <div class="form-btns">
+        <button class="btn btn-frame" type="submit" ng-disabled="loginForm.$invalid">Log In</button>
+        <button class="btn btn-frame" type="button" ui-sref="pub.home">Cancel</button>
+      </div>
+    </div>
+  </form>
+  <div class="landing-rule"></div>
+</div>

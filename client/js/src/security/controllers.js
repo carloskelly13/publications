@@ -3,7 +3,7 @@
 
   angular.module('pub.security.controllers', [])
 
-    .controller('LoginController', [
+    .controller('HomeController', [
       '$scope',
       '$state',
       '$http',
@@ -23,18 +23,15 @@
         $scope.loginModal = function() {
           $scope.loginModalVisible = !$scope.loginModalVisible
         }
+      }
+    ])
 
-        $scope.createAccount = function() {
-          $http.post('/users', {}, null).success(function(user) {
-            authentication.login({
-              username: user.name,
-              password: 'password'
-            },
-            function() {
-              $state.go('pub.documents')
-            })
-          })
-        }
+    .controller('LoginController', [
+      '$scope',
+      '$state',
+      '$http',
+      'authentication',
+      function($scope, $state, $http, authentication) {
 
         $scope.login = function() {
           authentication.login({
@@ -45,7 +42,19 @@
             $state.go('pub.documents')
           },
           function(err) {
-            console.log(err);
+            $state.go('pub.login')
+          })
+        }
+
+        $scope.createAccount = function() {
+          $http.post('/users', {}, null).success(function(user) {
+            authentication.login({
+              username: user.name,
+              password: 'password'
+            },
+            function() {
+              $state.go('pub.documents')
+            })
           })
         }
       }
