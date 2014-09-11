@@ -14,7 +14,7 @@
   background: #fff;
   box-sizing: border-box;
   border: 1px solid @color-line-bright;
-  border-radius: 0;
+  border-radius: 2px;
   color: @color-text;
   font-family: 'Sailec', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 13px;
@@ -75,7 +75,6 @@
     background: #fff;
     border: 1px solid @color-line-bright;
     border-radius: 14px;
-    box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.1);
     height: 14px;
     width: 14px;
 
@@ -91,10 +90,6 @@
   &:focus {
     background: @color-primary-bright;
     outline: none;
-
-    // &::-webkit-slider-thumb {
-    //   background: @color-primary;
-    // }
 
     + label {
       color: @color-primary;
