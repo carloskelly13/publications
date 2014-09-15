@@ -32,8 +32,10 @@
       '$http',
       'authentication',
       function($scope, $state, $http, authentication) {
+        $scope.submitted = false
+        $scope.authSuccess = null
 
-        $scope.login = function() {
+        $scope.submit = function() {
           authentication.login({
             username: $scope.username,
             password: $scope.password
@@ -42,7 +44,7 @@
             $state.go('pub.documents')
           },
           function(err) {
-            $state.go('pub.login')
+            $scope.authSuccess = false
           })
         }
 

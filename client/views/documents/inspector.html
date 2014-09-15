@@ -116,10 +116,10 @@
           <div class="icon">&#xe2f9;</div>
           <div class="text">Save</div>
         </button>
-        <a class="btn btn-icon-text" href="/documents/{{ doc._id }}/pdf" target="_blank" download="{{ doc.name }}.pdf">
+        <button class="btn btn-icon-text" ng-click="downloadPdf()">
           <div class="icon">&#xe223;</div>
           <div class="text">Download PDF</div>
-        </a>
+        </button>
         <button class="btn btn-icon-text" ng-click="deleteModal()">
           <div class="icon">&#xe2c4;</div>
           <div class="text">Delete</div>

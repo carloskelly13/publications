@@ -131,12 +131,6 @@
           $state.go('pub.documents')
         }
 
-        $scope.exportDocument = function() {
-          $scope.doc.put().then(function() {
-            $scope.exportModal()
-          })
-        }
-
         $scope.shiftLayer = function(offset) {
           $scope.doc.shapes.moveElement($scope.selectedObj, offset)
         }
@@ -151,6 +145,12 @@
 
         $scope.deleteModal = function() {
           $scope.deleteModalVisible = !$scope.deleteModalVisible
+        }
+
+        $scope.downloadPdf = function() {
+          $scope.doc.put().then(function() {
+            $window.open('/documents/' + $scope.doc._id + '/pdf', '_blank')
+          })
         }
 
         $scope.exportModal = function() {
