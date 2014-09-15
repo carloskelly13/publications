@@ -3,11 +3,43 @@
     <div class="app-wordmark"></div>
     <h1>a web app for page layout and screen design</h1>
   </div>
-  <div class="bar full-width">
-    <div class="login-content">
-      hi
+  <div class="auth-bar">
+    <button class="btn btn-frame" ui-sref="pub.login">Log In to Publications</button>
+    <div class="sign-up-txt">If you don&rsquo;t have an account, <button ng-click="createAccount()" class="btn">test drive Publications</button> with the option to sign up later.</div>
+  </div>
+  <div class="content-sections">
+    <div class="content-section">
+      <div class="picture">
+        <div class="picture-paper"></div>
+      </div>
+      <div class="text">
+        <h1>Create beautiful, vivid documents</h1>
+        <p>Publications includes all the tools to create beautiful documents with shapes and text. Shapes can be customized to have different fill colors, border colors, border width, radii, opacity and size. Publications now supports canvas zooming and object snap-to-grid alignment.</p>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="text">
+        <h1>Cloud-based web app</h1>
+        <p>Publications saves all your documents securely on the cloud. Publications now lets you search documents by name or date. Export your documents to scalable multi-layer PDFs that can be shared with anyone.</p>
+      </div>
+      <div class="picture">
+        <div class="picture-cloud"></div>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="picture">
+        <div class="picture-speedometer"></div>
+      </div>
+      <div class="text">
+        <h1>Accelerated Performance</h1>
+        <p>Publications is a full-stack JavaScript app built with NodeJS and AngularJS. There are no downloads or plug-ins to install to use Publications. It uses SVG-based graphics which look crisp on both standard and HiDPI displays.</p>
+      </div>
+    </div>
+    <div class="content-section">
+      <div class="text text-full">
+        <p class="about-text">Publications developed and designed by Michael Kelly and Carlos Paelinck.</p>
+      </div>
     </div>
   </div>
 </div>
 <div pub-modal-login class="app-cover animation-fade-in" ng-show="loginModalVisible"></div>
-<!-- <button class="btn" ui-sref="pub.login">Log In&nbsp;&nbsp;/&nbsp;&nbsp;Test Drive</button> -->

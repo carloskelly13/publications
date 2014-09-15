@@ -10,7 +10,7 @@
   z-index: 5;
 
   .inspector-buttons {
-    height: 75px;
+    height: 83px;
     text-align: center;
 
     .btn-icon {
@@ -21,11 +21,10 @@
 
   .inspector-buttons {
     border-bottom: 1px solid #d0d0d0;
-    box-shadow: 0 0 4px hsla(0, 0%, 0%, 0.1);
     text-align: center;
 
     .app-wordmark {
-      .svg-picture('publications-wordmark-small', 110px, 18px, inline-block);
+      .retina-picture('publications-wordmark', 144px, 25px, inline-block);
       margin: 10px 0 0 0;
     }
 
@@ -37,8 +36,8 @@
       width: 36px;
 
       &.btn-icon-active {
-        color: #fff;
-        background: @color-text-bright;
+        border: 1px solid @color-primary;
+        color: @color-primary;
       }
     }
   }
@@ -49,7 +48,7 @@
     overflow-y: scroll;
     position: absolute;
     width: 100%;
-    top: 76px; right: 0; left: 0; bottom: 0;
+    top: 83px; right: 0; left: 0; bottom: 0;
 
     .inspector-controls-section {
       padding: 0 10px;
