@@ -121,59 +121,35 @@
     return {
       templateUrl: '/views/directives/new-document.html'
     }
-  });
+  })
 
   pub.directive('pubModalSave', function() {
     return {
       templateUrl: '/views/directives/save.html'
     }
-  });
+  })
 
   pub.directive('pubModalDelete', function() {
     return {
       templateUrl: '/views/directives/delete.html'
     }
-  });
-
-  pub.directive('pubModalExport', function() {
-    return {
-      templateUrl: '/views/directives/export.html'
-    }
-  });
+  })
 
   pub.directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'
     }
-  });
+  })
 
   pub.directive('pubDocumentSvg', function() {
     return {
       templateUrl: '/views/directives/svg.html'
     }
-  });
+  })
 
-  pub.directive('pubInspectorObject', function() {
+  pub.directive('pubInspector', function() {
     return {
-      templateUrl: '/views/directives/inspectors/object.html'
+      templateUrl: '/views/documents/inspector.html'
     }
-  });
-
-  pub.directive('pubInspectorZoom', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/zoom.html'
-    }
-  });
-
-  pub.directive('pubInspectorText', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/text.html'
-    }
-  });
-
-  pub.directive('pubInspectorColor', function() {
-    return {
-      templateUrl: '/views/directives/inspectors/color.html'
-    }
-  });
+  })
 }());

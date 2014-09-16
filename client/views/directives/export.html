@@ -1,9 +1,0 @@
-<div class="modal-dialog">
-  <div class="modal-dialog-title-bar">
-    <span class="message">Changes to {{ doc.name }} have been saved.</span>
-  </div>
-    <div class="modal-content">
-      <a class="button button-form button-form-submit" type="button" ng-click="exportModal()" href="/documents/{{ doc._id }}/pdf" target="_blank" download="{{ doc.name }}.pdf">Export to PDF</a>
-      <button class="button button-form button-form-slim" type="button" ng-click="exportModal()">Close</button>
-    </div>
-</div>

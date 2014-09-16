@@ -1,100 +1,71 @@
 html, body {
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background: #fff;
   color: @darkgray-dark;
   height: 100%;
-  font-family: @ui-font, Helvetica, sans-serif;
+  font-family: 'Sailec', Helvetica, sans-serif;
+  font-weight: 400;
   font-size: 15px;
   text-rendering: optimizeLegibility;
 }
 
 .app-footer {
-  background: darken(@lightgray-dark, 20%);
-  border-top: 1px solid darken(@lightgray-dark, 30%);
+  background: @color-primary;
   bottom: 0;
   height: @app-footer-height;
   left: 0;
   position: fixed;
   width: 100%;
-  z-index: 5;
-
-  .app-footer-content {
-    padding: 0 8px;
-    text-align: right;
-    line-height: @app-footer-height;
+  z-index: 6;
+  
+  @media (max-width: 767px) {
+    height: 0;
+    display: none;
   }
 }
 
-.app-nav {
-  background: #fff;
-  border-bottom: 1px solid @mediumgray-dark;
-  height: @app-nav-height;
-  text-align: left;
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  z-index: 5;
-  -webkit-align-items: center;
-  align-items: center;
-  align-content: center;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+.app-controls {
+  margin: 1em 0 0.5em 0;
+  text-align: center;
 
-  .button {
-    color: @darkgray-dark;
-  }
-
-  .button-text-no-frame {
-    margin: 0 8px;
-  }
-
-  .app-nav-text {
-    display: inline-block;
-    font-weight: 500;
-    line-height: @app-nav-height;
-    height: @app-nav-height;
+  .app-wordmark {
+    .retina-picture('publications-wordmark', 144px, 25px, inline-block);
+    float: left;
+    margin: 0 0 0 1.5em;
     vertical-align: middle;
-    letter-spacing: -0.5px;
-  }
-
-  .app-nav-controls {
-    -webkit-flex: 1 1 auto;
-    flex: 1 1 auto;
-    text-align: center;
-    padding: 0;
-  }
-
-  .app-nav-primary-controls,
-  .app-nav-secondary-controls {
-    vertical-align: middle;
-    text-align: center;
-  }
-
-  .app-nav-secondary-controls {
-    padding: 0 8px;
-
-    &.app-nav-secondary-controls-no-left-padding {
-      padding-left: 0;
+    
+    @media all and (max-width: 767px) {
+      float: none;
+      display: block;
+      margin: 0;
+      background-position: center center;
+      width: 100%;
     }
   }
 
-  .app-nav-right-arrow {
-    display: inline-block;
-    vertical-align: middle;
-    position: relative;
-    top: 1px;
+  .btn-group {
+    float: right;
+    margin: 0 1.5em 0 0;
+    
+    @media all and (max-width: 767px) {
+      float: none;
+      display: block;
+      margin: 1em 0;
+    }
   }
 
-  .app-nav-logo {
-    .svg-picture('pub-logo-40', 41px, 40px, inline-block);
+  h1 {
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  &:after {
+    content: ' ';
+    clear: both;
+    display: block;
   }
 }
 
@@ -107,8 +78,8 @@ html, body {
 }
 
 .app-cover {
-  background: hsla(0, 0%, 0%, 0.1);
   height: 100%;
+  background: hsla(0, 0%, 0%, 0.6);
   position: absolute;
   top: 0; left: 0;
   width: 100%;

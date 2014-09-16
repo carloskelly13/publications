@@ -1,5 +1,5 @@
-<div class="editor-view" ng-click="toggleInspector(null)">
-  <div class="animation-expand-open-canvas">
+<div class="editor-view">
+  <div class="canvas-container" ng-class="{'canvas-expanded' : !showInspector}">
     <div class="unit unit-top" ng-repeat="x in xAxisRange()"
                       ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 7) + 'px' }"
                       ng-if="(x / 4) % unitDivider() === 0 && x > 0">
@@ -33,7 +33,7 @@
                 ng-attr-d="M0 {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} H{{ doc.width * dpi * zoomLevel }} {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} Z"
                 ng-class="{ 'inch-mark' : (y % 4) === 0 }"
                 ng-click="svgObjectSelected(null)" />
-    
+
       </g>
       <g ng-repeat="shape in doc.shapes">
         <g ng-switch="shape.type">

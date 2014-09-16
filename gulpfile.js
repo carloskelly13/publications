@@ -1,13 +1,24 @@
+
+/**
+ * Publications
+ * Gulp Configuration File
+ * 2014 Michael Kelly and Carlos Paelinck
+ */
+
+function logError(err) {
+  console.log(err);
+}
+
 var concat = require('gulp-concat')
   , gulp = require('gulp')
   , html2js = require('gulp-html2js')
   , less = require('gulp-less')
   , path = require('path')
   , uglify = require('gulp-uglify')
-  
+
 var paths = {
   css: 'client/css/*.less',
-  js: [ 'client/views/templates.js', 'client/js/src/**/*.js' ],
+  js: ['client/views/templates.js', 'client/js/_vendor/**/*.js', 'client/js/src/**/*.js'],
   templates: 'client/views/**/*.html'
 };
 
@@ -15,6 +26,8 @@ gulp.task('less', function() {
   return gulp.src('client/css/_style.less')
     .pipe(less({
       paths: [ path.join(__dirname, 'less', 'includes') ]
+    }).on('error', function(err) {
+      logError(err);
     }))
     .pipe(gulp.dest('client/css/'));
 });
@@ -24,6 +37,8 @@ gulp.task('templates', function() {
     .pipe(html2js({
       moduleName: 'pub',
       useStrict: true
+    }).on('error', function(err) {
+      logError(err);
     }))
     .pipe(concat('templates.js'))
     .pipe(gulp.dest('client/views/'));
@@ -43,10 +58,10 @@ gulp.task('js-prod', function() {
 })
 
 gulp.task('watch', function() {
-  gulp.watch(paths.css, [ 'less' ]);
-  gulp.watch(paths.templates, [ 'templates', 'js' ]);
-  gulp.watch(paths.js, [ 'js' ]);
+  gulp.watch(paths.css, ['less']);
+  gulp.watch(paths.templates, ['templates', 'js']);
+  gulp.watch(paths.js, ['js']);
 });
 
-gulp.task('default', [ 'less', 'templates', 'js', 'watch' ]);
-gulp.task('production', [ 'less', 'templates', 'js-prod' ]);
+gulp.task('default', ['less', 'templates', 'js', 'watch']);
+gulp.task('production', ['less', 'templates', 'js-prod']);

@@ -311,16 +311,19 @@
 
   &.input-text-search {
     .animation(background, 0.25s);
-    .rounded-corners(24px);
+    .rounded-corners(2px);
+
+    background: transparent;
     color: @darkgray-dark;
+    font-size: 14px;
     height: 28px;
-    font-size: 16px;
+    margin: 0 0 0 1em;
     text-align: center;
-    width: 90%;
-    background: #fff;
+    width: 220px;
+    vertical-align: middle;
 
     &:hover {
-      background: @lightgray-light;
+      background: #fff;
     }
 
     &::-webkit-input-placeholder {

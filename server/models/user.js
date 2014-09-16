@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
+ * Publications
  * User Model
- * Michael Kelly and Carlos Paelinck
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 var bcrypt = require('bcrypt'),
@@ -41,7 +41,7 @@ userSchema.methods = {
       cb(null, isValid);
     });
   },
-  
+
   toJSON: function() {
     var obj = this.toObject();
     delete obj.password;

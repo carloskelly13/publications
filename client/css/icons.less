@@ -9,7 +9,17 @@
     url("woff/streamline-24px.svg#streamline-24px") format("svg");
   font-weight: normal;
   font-style: normal;
+}
 
+@font-face {
+  font-family: "streamline-24px-filled-in";
+  src:url("woff/streamline-24px-filled-in.eot");
+  src:url("woff/streamline-24px-filled-in.eot?#iefix") format("embedded-opentype"),
+    url("woff/streamline-24px-filled-in.woff") format("woff"),
+    url("woff/streamline-24px-filled-in.ttf") format("truetype"),
+    url("woff/streamline-24px-filled-in.svg#streamline-24px-filled-in") format("svg");
+  font-weight: normal;
+  font-style: normal;
 }
 
 [data-icon]:before {
@@ -20,7 +30,20 @@
   font-variant: normal !important;
   text-transform: none !important;
   speak: none;
-  line-height: 23px;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-icon-fill]:before {
+  font-family: "streamline-24px-filled-in" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -28,6 +51,19 @@
 [class^="icon-"]:before,
 [class*=" icon-"]:before {
   font-family: "streamline-24px" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-fill"]:before,
+[class*=" icon-fill"]:before {
+  font-family: "streamline-24px-filled-in" !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;

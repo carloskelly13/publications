@@ -1,10 +1,10 @@
 .editor-view {
-  background: #dcdedf;
+  background: @color-background;
   height: inherit;
   overflow-x: scroll;
   overflow-y: scroll;
   position: absolute;
-  top: @app-nav-height; right: 0; bottom: @app-footer-height; left: 0;
+  top: 0; right: 0; bottom: @app-footer-height; left: 0%;
   width: 100%;
   z-index: 4;
   -moz-user-select: none;
@@ -12,6 +12,25 @@
   -ms-user-select: none;
   user-select: none;
   -webkit-overflow-scrolling: touch;
+  
+  @media all and (max-width: 767px) {
+    bottom: 0;
+  }
+
+  .canvas-container {
+    .animation(margin-left, 250ms);
+    margin: 0;
+    margin-left: 20%;
+    position: relative;
+    
+    @media (max-width: 767px) {
+      margin-left: 0;
+    }
+
+    &.canvas-expanded {
+      margin-left: 40px;
+    }
+  }
 
   .unit {
     display: inline-block;
@@ -36,7 +55,7 @@
 
 
   .canvas-svg {
-    margin: 25px 1em 1em 25px;
+    margin: 25px;
 
     .text-box {
       -moz-user-select: none;

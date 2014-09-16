@@ -1,40 +1,23 @@
-<div class="app-nav">
-  <div class="app-nav-logo"></div>
-  <div class="app-nav-controls">
-    <input class="input-text input-text-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
-  </div>
-  <div class="app-nav-secondary-controls">
-    <button class="button button-text button-text-no-frame" ng-click="newDocumentModal()">New Document</button>
-    <button class="button button-text button-text-no-frame" ng-click="userModal()">Settings</button>
-  </div>
-</div>
 <div class="documents-list">
-  <div class="no-documents-banner" ng-if="documents.length === 0">
-    <figure id="document-icon"></figure>
-    <h1>No Documents</h1>
-    <h3>Create a new document to get started</h3>
-  </div>
-  <div class="sort-filters" ng-if="documents.length > 0">
-    <div class="button-group">
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'name' }" class="button button-text" ng-click="updateSortFilter('name', false)">Name</button>
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'modified' }" class="button button-text" ng-click="updateSortFilter('modified', true)">Created</button>
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'size' && sortReverse }" class="button button-text" ng-click="updateSortFilter('size', true)">Largest</button>
-      <button ng-class="{ 'button-sort-active' : sortFilter === 'size' && !sortReverse }" class="button button-text" ng-click="updateSortFilter('size', false)">Smallest</button>
+  <div class="app-controls">
+    <div class="app-wordmark"></div>
+    <input class="txt txt-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
+    <div class="btn-group">
+      <button ng-hide="documents.length === 0" class="btn btn-frame" ng-click="newDocumentModal()">New</button>
+      <button class="btn btn-frame" ng-click="viewUser()">{{user.temporary ? 'Create Account' : 'Settings'}}</button>
     </div>
+  </div>
+  <div class="no-documents-banner" ng-if="documents.length === 0">
+    <h1>No Documents</h1>
+    <button class="btn btn-frame" ng-click="newDocumentModal()">Create a new document</button>
   </div>
   <div class="document-item"
        pub-document-item
-       ng-repeat="doc in documents | filter: search | orderBy: sortFilter : sortReverse"
+       ng-repeat="doc in documents | filter: search | orderBy: name"
        ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' ); doc.size = doc.height * doc.width;"
        ui-sref="pub.documents.document.views({ documentId: doc._id })">
   </div>
 </div>
 <div pub-modal-new-document class="app-cover animation-fade-in" ng-show="newDocumentModalVisible"></div>
-<div pub-modal-user class="app-cover animation-fade-in" ng-show="userModalVisible"></div>
-<div pub-modal-about class="app-cover animation-fade-in" ng-show="aboutModalVisible"></div>
 <div ui-view></div>
-<div class="app-footer">
-  <div class="app-footer-content">
-    <button class="button button-text-link" ng-click="aboutModal()">About Publications&hellip;</button
-  </div>
-</div>
+<div class="app-footer"></div>

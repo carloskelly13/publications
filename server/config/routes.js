@@ -5,11 +5,11 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var IndexController = require('../controllers/index')
-  , UserController = require('../controllers/user')
-  , UserModel = require('../models/user')
-  , DocumentController = require('../controllers/document')
-  , DocumentModel = require('../models/document')
+var IndexController = require('../controllers/index'),
+  UserController = require('../controllers/user'),
+  UserModel = require('../models/user'),
+  DocumentController = require('../controllers/document'),
+  DocumentModel = require('../models/document')
 
 var auth = function (req, res, next) {
   if (!req.isAuthenticated()) {
@@ -37,8 +37,8 @@ module.exports = function (app, passport) {
       }
     });
   });
-  
-  app.get('/users/current', UserController.current);
+
+  app.get('/users/current', UserController.show);
   app.put('/users/:userId', auth, UserController.update);
   app.post('/users', UserController.create);
 
@@ -48,21 +48,21 @@ module.exports = function (app, passport) {
       DocumentModel.findById(id, function(err, doc) {
         if (err || !doc) {
           res.send(404);
-          
+
         } else if (doc._user.toString() === req.user._id.toString()) {
           req.doc = doc;
           next();
-          
+
         } else {
           res.send(403);
         }
       });
-      
+
     } else {
       res.send(401);
     }
   });
-  
+
   app.get('/documents', auth, DocumentController.index);
   app.get('/documents/:docId', auth, DocumentController.show);
   app.post('/documents', auth, DocumentController.create);

@@ -2,6 +2,25 @@ String.prototype.capitalize = function() {
   return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };
 
+Array.prototype.moveElement = function(element, offset) {
+  var idx = this.indexOf(element)
+
+  if (idx === -1) {
+    return
+  }
+
+  var newIdx = idx + offset
+
+  if (newIdx < 0) {
+    newIdx = 0
+  } else if (newIdx > this.length) {
+    newIdx = this.length
+  }
+
+  this.splice(idx, 1)
+  this.splice(newIdx, 0, element)
+};
+
 (function(){
   'use strict';
 

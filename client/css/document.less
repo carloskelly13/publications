@@ -1,54 +1,40 @@
 .documents-list {
-  background: #dcdedf;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
   position: absolute;
-  top: @app-nav-height; left: 0; bottom: @app-footer-height; right: 0;
+  top: 0; left: 0; bottom: @app-footer-height; right: 0;
   width: 100%;
   z-index: 3;
-
-  .no-documents-banner {
-    .center;
-    text-align: center;
-
-    #document-icon {
-      .svg-picture('document-icon', 207px, 207px, block);
-      margin: 0 auto;
-    }
-
-    h1 {
-      color: hsla(0, 0%, 0%, 0.2);
-      font-size: 2em;
-      font-weight: 300;
-      margin: 0.5em 0 0 0;
-      letter-spacing: -0.5px;
-    }
-
-    h3 {
-      color: hsla(0, 0%, 0%, 0.2);
-      font-size: 1.25em;
-      margin: 0;
-      letter-spacing: -0.5px;
-    }
-
+  
+  @media all and (max-width: 767px) {
+    bottom: 0;
   }
 
-  .sort-filters {
-    margin: 1.5em auto 0 auto;
+  .no-documents-banner {
+    .center-top;
     text-align: center;
 
-    .button {
-      &.button-sort-active {
-        background: @blue-dark;
-        border-color: @blue-dark;
-        color: #fff;
-      }
+    h1 {
+      color: hsla(0, 0%, 0%, 0.4);
+      font-size: 1.5em;
+      font-weight: 400;
+      margin: 0 0 0.67em 0;
+      letter-spacing: -0.5px;
+      vertical-align: middle;
+    }
+
+    .btn {
+      font-size: 16px;
+      padding: 4px 24px;
+      vertical-align: middle;
     }
   }
 
   .document-item {
-    .animation(color, 250ms);
+    .animation(all, 250ms);
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -59,6 +45,14 @@
     padding: 1em;
     text-align: center;
     vertical-align: bottom;
+    
+    @media all and (max-width: 767px) {
+      background: #f5f5f5;
+      border-top: 1px solid @color-line-bright;
+      display: block;
+      margin: 0;
+      padding: 1em 0 0.5em;
+    }
 
 
     .document-icon {
@@ -68,29 +62,34 @@
     }
 
     &:hover {
-      color: @blue-dark;
+      color: @color-primary;
     }
 
     &:active {
-      position: relative;
-      top: 1px;
+      .touch-animation(0.98);
     }
 
     .document-name,
-    .document-date {
+    .document-date,
+    .document-size {
       display: block;
       line-height: 1em;
       margin: 0.5em;
     }
 
     .document-name {
-      font-size: 1em;
+      font-size: 14px;
       font-weight: 500;
     }
 
     .document-date {
       color: lighten(@darkgray-dark, 10%);
-      font-size: 0.85em;
+      font-size: 11px;
+    }
+
+    .document-size {
+      color: @color-primary;
+      font-size: 11px;
     }
   }
 

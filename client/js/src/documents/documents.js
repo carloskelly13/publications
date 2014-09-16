@@ -21,10 +21,11 @@
               }
             ]
           }
-        })
+        })        
           .state('pub.documents.document', {
             url: '/:documentId',
             controller: 'DocumentController',
+            parent: 'pub.documents',
             abstract: true,
             templateUrl: '/views/documents/document.html',
             resolve: {
@@ -40,10 +41,6 @@
             .state('pub.documents.document.views', {
               url: '/view',
               views: {
-                'document-toolbar' : {
-                  controller: 'DocumentToolbarController',
-                  templateUrl: '/views/documents/toolbar.html',
-                },
                 'document-canvas' : {
                   controller: 'DocumentCanvasController',
                   templateUrl: '/views/documents/canvas.html',

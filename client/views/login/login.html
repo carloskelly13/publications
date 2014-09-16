@@ -1,0 +1,31 @@
+<div class="home home-login">
+  <div class="hero">
+    <div class="app-wordmark-medium" ui-sref="pub.home"></div>
+  </div>
+  <div class="content-sections">
+    <form ng-submit="submit()" shake-that submitted="submitted" auth-success="authSuccess" name="loginForm" role="form" class="content-section content-section-center">
+      <h1>Log in to Publications</h1>
+      <div class="full-page-form">
+        <div class="full-page-form-content">
+          <fieldset class="txt-group">
+            <input class="txt" type="email" ng-model="username" name="username" id="username" required>
+            <label class="txt-label" for="username">Email Address</label>
+          </fieldset>
+          <fieldset class="txt-group">
+            <input class="txt" type="password" ng-model="password" name="password" id="password" required>
+            <label class="txt-label" for="password">Password</label>
+          </fieldset>
+          <div class="form-btns">
+            <button class="btn btn-frame" type="submit" ng-disabled="loginForm.$invalid">Log In</button>
+            <button class="btn btn-frame" type="button" ui-sref="pub.home">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="content-section">
+      <div class="text text-full">
+        <p class="about-text">Publications developed and designed by Michael Kelly and Carlos Paelinck.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var pub = angular.module('pub.directives', []);
+  var pub = angular.module('pub.directives', ['ngAnimate']);
 
   pub.directive('pubHexColorInput', function() {
     return {
@@ -118,5 +118,44 @@
       templateUrl: '/views/directives/user.html'
     }
   });
+
+  pub.directive('pubModalUserError', function() {
+    return {
+      templateUrl: '/views/directives/user-error.html'
+    }
+  })
+
+  pub.directive('shakeThat', ['$animate', function($animate) {
+    return {
+      require: '^form',
+      scope: {
+        submit: '&',
+        submitted: '=',
+        authSuccess: '='
+      },
+      link: function(scope, element, attrs, form) {
+        element.on('submit', function() {
+          scope.$apply(function() {
+            if (form.$valid) {
+              return scope.submit()
+            }
+            scope.submitted = true
+            $animate.addClass(element, 'shake', function() {
+              $animate.removeClass(element, 'shake')
+            })
+          })
+        })
+
+        scope.$watch('authSuccess', function() {
+          if (scope.authSuccess === false) {
+            $animate.addClass(element, 'shake', function() {
+              $animate.removeClass(element, 'shake')
+              scope.authSuccess = null
+            })
+          }
+        })
+      }
+    }
+  }])
 
 }());

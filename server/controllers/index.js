@@ -1,8 +1,8 @@
 
 /**
- * Publications JS API
+ * Publications
  * Index Controller
- * Michael Kelly and Carlos Paelinck
+ * 2014 Michael Kelly and Carlos Paelinck
  */
 
 exports.index = function(req, res) {

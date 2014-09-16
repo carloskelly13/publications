@@ -11,10 +11,15 @@ pids
 logs
 results
 
+*.DS_Store
+.DS_Store
+
 npm-debug.log
 node_modules
-client/js/_components
 client/views/templates.js
+client/js/_components
+client/js/src/_templates.js
 client/css/_style.css
 client/js/app.min.js
 client/404.ejs
+client/js/app.dev.js
