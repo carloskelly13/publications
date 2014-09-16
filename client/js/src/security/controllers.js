@@ -44,6 +44,7 @@
             $state.go('pub.documents')
           },
           function(err) {
+            $scope.password = null
             $scope.authSuccess = false
           })
         }

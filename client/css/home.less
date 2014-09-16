@@ -4,10 +4,23 @@
     text-align: center;
     width: 70%;
 
+    @media all and (max-width: 767px) {
+      width: 90%;
+    }
 
     .app-wordmark {
       .retina-picture('publications-full-logo', 214px, 147px, inline-block);
       margin: 5em auto 0;
+      vertical-align: middle;
+
+      @media all and (max-width: 767px) {
+        margin: 3em auto 0;
+      }
+    }
+
+    .app-wordmark-medium {
+      .retina-picture('pub-wordmark-medium', 242px, 39px, inline-block);
+      margin: 3em auto 0;
       vertical-align: middle;
     }
 
@@ -16,6 +29,10 @@
       font-size: 1.1em;
       margin: 1em auto 3em;
       text-transform: uppercase;
+
+      @media all and (max-width: 767px) {
+        margin: 0 auto 2em;
+      }
     }
   }
 
@@ -26,6 +43,11 @@
     text-align: center;
     width: 70%;
     max-width: 750px;
+
+    @media all and (max-width: 767px) {
+      padding: 1em 5% 3em;
+      width: 90%;
+    }
 
     .btn-frame {
       font-size: 15px;
@@ -51,10 +73,15 @@
 
     .content-section {
       border-bottom: 1px solid @color-line-ultra-bright;
-      margin: 5em auto;
+      margin: 3em auto;
       padding: 0 1.25em 5em;
       width: 70%;
       max-width: 750px;
+
+      @media all and (max-width: 767px) {
+        padding: 0 5% 3em;
+        width: 90%;
+      }
 
 
       &.content-section-center {
@@ -98,10 +125,19 @@
         .picture-speedometer {
           .svg-picture('home-speedometer', 147px, 104px, inline-block);
         }
+
+        @media all and (max-width: 767px) {
+          display: none;
+        }
       }
 
       .text {
         width: 60%;
+
+        @media all and (max-width: 767px) {
+          width: 100%;
+          text-align: center;
+        }
 
         &.text-full {
           width: 100%;
