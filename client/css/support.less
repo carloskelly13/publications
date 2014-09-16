@@ -26,6 +26,22 @@
 
 @ui-font: 'Helvetica Neue';
 
+.mobile-only-b {
+  display: none !important;
+  
+  @media (max-width: 767px) {
+    display: block !important;
+  }
+}
+
+.mobile-only-ib {
+  display: none !important;
+
+  @media (max-width: 767px) {
+    display: inline-block !important;
+  }
+}
+
 .center {
   margin: auto;
   position: absolute;
@@ -49,6 +65,11 @@
   line-height: 18px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  @media all and (max-width: 767px) {
+    font-size: 18px;
+    line-height: 20px;
+  }
 }
 
 .rounded-corners (@radius) {

@@ -23,6 +23,19 @@
         $scope.loginModal = function() {
           $scope.loginModalVisible = !$scope.loginModalVisible
         }
+        
+        $scope.createAccount = function() {
+          console.log('hi')
+          $http.post('/users', {}, null).success(function(user) {
+            authentication.login({
+              username: user.name,
+              password: 'password'
+            },
+            function() {
+              $state.go('pub.documents')
+            })
+          })
+        }
       }
     ])
 
@@ -46,18 +59,6 @@
           function(err) {
             $scope.password = null
             $scope.authSuccess = false
-          })
-        }
-
-        $scope.createAccount = function() {
-          $http.post('/users', {}, null).success(function(user) {
-            authentication.login({
-              username: user.name,
-              password: 'password'
-            },
-            function() {
-              $state.go('pub.documents')
-            })
           })
         }
       }

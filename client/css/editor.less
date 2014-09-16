@@ -12,12 +12,20 @@
   -ms-user-select: none;
   user-select: none;
   -webkit-overflow-scrolling: touch;
+  
+  @media all and (max-width: 767px) {
+    bottom: 0;
+  }
 
   .canvas-container {
     .animation(margin-left, 250ms);
     margin: 0;
     margin-left: 20%;
     position: relative;
+    
+    @media (max-width: 767px) {
+      margin-left: 0;
+    }
 
     &.canvas-expanded {
       margin-left: 40px;
