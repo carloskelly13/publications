@@ -143,7 +143,7 @@
         $scope.downloadPdf = function() {
           $scope.doc.put().then(function() {
             var documentPdfRoute = '/documents/' + $scope.doc._id + '/pdf';
-            window.open(documentPdfRoute, '_blank', '');
+            $window.location = documentPdfRoute;
           });
         };
 
