@@ -31,7 +31,7 @@
               securityContext: [
                 'authentication',
                 function(authentication) {
-                  return authentication.requestSecurityContext()
+                  return authentication.requestSecurityContext();
                 }
               ]
             }

@@ -12,34 +12,34 @@
         var authentication = {
           requestSecurityContext: function() {
             if (securityContext.authenticated) {
-              return $q.when(securityContext)
+              return $q.when(securityContext);
 
             } else {
-              var deferred = $q.defer()
+              var deferred = $q.defer();
               $http.get('/users/current', null).success(function(user) {
-                deferred.resolve(securityContext.setAuthentication(user))
+                deferred.resolve(securityContext.setAuthentication(user));
               })
 
-              return deferred.promise
+              return deferred.promise;
             }
           },
 
           login: function(user, success, error) {
             $http.post('/login', user, null)
               .success(function(user) {
-                success(user)
-                securityContext.setAuthentication(user)
+                success(user);
+                securityContext.setAuthentication(user);
               })
-              .error(error)
+              .error(error);
           },
 
           logout: function(success, error) {
-            securityContext.reset()
-            $http.get('/logout').success(success).error(error)
+            securityContext.reset();
+            $http.get('/logout').success(success).error(error);
           }
         }
 
-        return authentication
+        return authentication;
       }
-    ])
+    ]);
 }());

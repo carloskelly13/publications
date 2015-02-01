@@ -117,39 +117,21 @@
     }
   });
 
-  pub.directive('pubModalNewDocument', function() {
-    return {
-      templateUrl: '/views/directives/new-document.html'
-    }
-  })
-
-  pub.directive('pubModalSave', function() {
-    return {
-      templateUrl: '/views/directives/save.html'
-    }
-  })
-
-  pub.directive('pubModalDelete', function() {
-    return {
-      templateUrl: '/views/directives/delete.html'
-    }
-  })
-
   pub.directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'
     }
-  })
+  });
 
   pub.directive('pubDocumentSvg', function() {
     return {
       templateUrl: '/views/directives/svg.html'
     }
-  })
+  });
 
   pub.directive('pubInspector', function() {
     return {
       templateUrl: '/views/documents/inspector.html'
     }
-  })
+  });
 }());

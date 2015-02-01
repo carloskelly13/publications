@@ -21,7 +21,7 @@
               }
             ]
           }
-        })        
+        })
           .state('pub.documents.document', {
             url: '/:documentId',
             controller: 'DocumentController',
@@ -48,5 +48,5 @@
               }
             });
     }
-  ])
+  ]);
 }());
