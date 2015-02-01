@@ -100,6 +100,22 @@
       }
     }
   });
+  
+  pub.directive('modalDialog', function() {
+    return {
+      restrict: 'A',
+      scope: {
+        show: '='
+      },
+      replace: true,
+      transclude: true,
+      link: function(scope, element, attrs) {
+        scope.hideModal = function() {
+          scope.show = false;
+        };
+      }
+    }
+  });
 
   pub.directive('pubModalAbout', function() {
     return {

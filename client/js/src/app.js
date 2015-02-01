@@ -8,7 +8,8 @@
     'pub.security',
     'pub.services',
     'pub.directives',
-    'restangular'
+    'restangular',
+    'ui.bootstrap'
   ]);
 
   pub.config([

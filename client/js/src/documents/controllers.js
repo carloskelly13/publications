@@ -81,9 +81,9 @@
 
         $scope.newDocumentModal = function() {
           $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible
-          $scope.name = "Document"
-          $scope.width = 8.5
-          $scope.height = 11
+          $scope.name = ""
+          $scope.width = ""
+          $scope.height = ""
         }
 
         $scope.documentIconSize = function(doc) {
@@ -149,7 +149,8 @@
 
         $scope.downloadPdf = function() {
           $scope.doc.put().then(function() {
-            $window.open('/documents/' + $scope.doc._id + '/pdf', '_blank')
+            var documentPdfRoute = '/documents/' + $scope.doc._id + '/pdf'
+            window.open(documentPdfRoute, '_blank', '')
           })
         }
 

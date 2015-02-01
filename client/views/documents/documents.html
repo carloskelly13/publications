@@ -3,7 +3,28 @@
     <div class="app-wordmark"></div>
     <input class="txt txt-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
     <div class="btn-group">
-      <button ng-hide="documents.length === 0" class="btn btn-frame" ng-click="newDocumentModal()">New</button>
+      <div class="dropdown" dropdown is-open="newDocumentModalVisible">
+        <button class="btn btn-frame dropdown-toggle" dropdown-toggle>New</button>
+        <div class="dropdown-menu new-document animation-fade-in" role="menu" ng-click="$event.stopPropagation()">
+          <form ng-submit="newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
+            <div class="form-text-inputs">
+              <div class="txt-group">
+                <input class="txt" type="text" ng-model="name" name="name" id="name" required>
+                <label class="txt-label" for="name">Name</label>
+              </div>
+              <div class="txt-group txt-group-half-width txt-group-half-width-left">
+                <input pub-unsigned-non-zero-float-input class="txt" type="text" ng-model="width" name="width" id="width" required>
+                <label class="txt-label" for="width">Width (inches)</label>
+              </div>
+              <div class="txt-group txt-group-half-width txt-group-half-width-right">
+                <input pub-unsigned-non-zero-float-input class="txt" type="text" ng-model="height" name="height" id="height" required>
+                <label class="txt-label" for="height">Height (inches)</label>
+              </div>
+            </div>
+            <button class="btn btn-frame full-btn" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
+          </form>
+        </div>
+      </div>
       <button class="btn btn-frame" ng-click="viewUser()">{{user.temporary ? 'Create Account' : 'Settings'}}</button>
     </div>
   </div>
@@ -18,6 +39,5 @@
        ui-sref="pub.documents.document.views({ documentId: doc._id })">
   </div>
 </div>
-<div pub-modal-new-document class="app-cover animation-fade-in" ng-show="newDocumentModalVisible"></div>
 <div ui-view></div>
 <div class="app-footer"></div>
