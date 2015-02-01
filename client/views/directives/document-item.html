@@ -1,4 +1,11 @@
-<figure pub-document-svg class="document-icon" ng-style="documentIconSize(doc)"></figure>
+<div class="dropdown" dropdown>
+  <figure pub-document-svg class="document-icon dropdown-toggle" dropdown-toggle ng-style="documentIconSize(doc)"></figure>
+  <div class="dropdown-menu document-item-menu animation-fade-in" role="menu">
+    <button class="btn btn-frame full-btn" type="button" ui-sref="pub.documents.document.views({ documentId: doc._id })">Edit</button>
+    <a class="btn btn-frame full-btn" href="documents/{{doc._id}}/pdf" target="_blank">Download PDF</a>
+    <button class="btn btn-frame full-btn" type="button" ng-click="deleteDocument(doc)">Delete</button>
+  </div>
+</div>
 <div class="document-name">
   {{doc.name}}
 </div>

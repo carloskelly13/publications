@@ -65,9 +65,9 @@
         $scope.newDocument = function() {
           documentsApi.post({
             _user: $scope.user._id,
-            name: $scope.name,
-            width: $scope.width,
-            height: $scope.height,
+            name: $scope.newName,
+            width: $scope.newWidth,
+            height: $scope.newHeight,
             shapes: []
           }).then(function(res) {
             $scope.newDocumentModal()
@@ -81,9 +81,16 @@
 
         $scope.newDocumentModal = function() {
           $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
-          $scope.name = "";
-          $scope.width = "";
-          $scope.height = "";
+          $scope.newName = '';
+          $scope.newWidth = '';
+          $scope.newHeight = '';
+        };
+
+        $scope.deleteDocument = function(sender) {
+          _.remove($scope.documents, function(doc) {
+            return doc._id === sender._id;
+          })
+          sender.remove();
         };
 
         $scope.documentIconSize = function(doc) {
@@ -145,15 +152,6 @@
             var documentPdfRoute = '/documents/' + $scope.doc._id + '/pdf';
             $window.location = documentPdfRoute;
           });
-        };
-
-        $scope.deleteDocument = function() {
-          _.remove($scope.documents, function(doc) {
-            return doc._id === $scope.doc._id;
-          })
-          $scope.doc.remove();
-          $scope.deleteModal();
-          $scope.showAllDocuments();
         };
 
         $scope.toggleInspector = function(inspector) {

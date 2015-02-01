@@ -66,26 +66,27 @@
     cursor: default;
     margin: 0 6px;
     padding: 1px 18px;
-    
+
     @media all and (max-width: 767px) {
       font-size: 16px;
       padding: 1px 20px;
     }
 
     &:hover {
-      background: @color-primary;
+      background: @color-primary !important;
       border-color: darken(@color-primary, 10%);
       color: #fff;
     }
 
     &:active {
       .touch-animation(1);
-      background: lighten(@color-primary, 7%);
+      background: lighten(@color-primary, 7%) !important;
       border-color: @color-primary;
       color: #fff;
     }
-    
+
     &.full-btn {
+      background-color: transparent;
       border-radius: 0;
       border: none !important;
       border-top: 1px solid @color-line-bright !important;
