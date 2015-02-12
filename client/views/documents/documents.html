@@ -4,8 +4,8 @@
     <input class="txt txt-search" type="text" ng-model="search.$" placeholder="&#xe01f;">
     <div class="btn-group">
       <div class="dropdown" dropdown is-open="newDocumentModalVisible">
-        <button class="btn btn-frame dropdown-toggle" dropdown-toggle>New</button>
-        <div class="dropdown-menu new-document animation-fade-in" role="menu" ng-click="$event.stopPropagation()">
+        <button class="btn dropdown-toggle" dropdown-toggle>New</button>
+        <div class="dropdown-menu new-document" role="menu" ng-click="$event.stopPropagation()">
           <form ng-submit="newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
             <div class="form-text-inputs">
               <div class="txt-group">
@@ -21,21 +21,23 @@
                 <label class="txt-label" for="height">Height (inches)</label>
               </div>
             </div>
-            <button class="btn btn-frame full-btn" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
+            <button class="btn btn-full-width" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
           </form>
         </div>
       </div>
-      <button class="btn btn-frame" ng-click="viewUser()">{{user.temporary ? 'Create Account' : 'Settings'}}</button>
+      <button class="btn" ng-click="viewUser()">{{user.temporary ? 'Create Account' : 'Settings'}}</button>
+      <button class="btn" type="button" ng-click="logout()">{{user.temporary ? 'Exit' : 'Log Out'}}</button>
     </div>
   </div>
-  <div class="no-documents-banner" ng-if="documents.length === 0">
-    <h1>No Documents</h1>
-    <button class="btn btn-frame" ng-click="newDocumentModal()">Create a new document</button>
-  </div>
-  <div class="document-item"
-       pub-document-item
-       ng-repeat="doc in documents | filter: search | orderBy: name"
-       ng-init="doc.modifiedStr = ( doc.modified | date: 'EEEE MMMM d, yyyy' ); doc.size = doc.height * doc.width;">
+  <div class="documents-list-container">
+    <div class="no-documents-banner" ng-if="documents.length === 0">
+      <h1>No Documents</h1>
+    </div>
+    <div class="document-item"
+         pub-document-item
+         ng-repeat="doc in documents | filter: search | orderBy: name"
+         ng-init="doc.modifiedStr = ( doc.modified | date: 'd MMM yyyy' ); doc.size = doc.height * doc.width;">
+    </div>
   </div>
 </div>
 <div ui-view></div>

@@ -1,152 +1,153 @@
 <div class="user-view">
   <div class="app-controls">
     <div class="app-wordmark"></div>
+    <button class="btn" ng-class="{active: currentUserTab === 'account'}" ng-click="toggleUserTab('account')">{{user.temporary ? 'Create Account' : 'Change Password'}}</button>
+    <button class="btn" ng-class="{active: currentUserTab === 'about'}" ng-click="toggleUserTab('about')">About Publications</button>
     <div class="btn-group">
-      <button class="btn btn-frame" type="button" ng-click="logout()">{{user.temporary ? 'Exit' : 'Log Out'}}</button>
-      <button class="btn btn-frame" type="button" ng-click="viewDocuments()">Documents</button>
+      <button class="btn" type="button" ng-click="viewDocuments()">Documents</button>
     </div>
   </div>
-  <button class="btn btn-header" ng-class="{active: currentUserTab === 'account'}" ng-click="toggleUserTab('account')">{{user.temporary ? 'Create Account' : 'Change Password'}}</button>
-  <button class="btn btn-header" ng-class="{active: currentUserTab === 'about'}" ng-click="toggleUserTab('about')">About Publications</button>
-  <div ng-show="currentUserTab === 'account'">
-    <form name="userAccountForm" role="form" class="page-form" ng-show="user.temporary">
-      <h2>Create a free Publications account to save documents and access them on any computer.</h2>
-      <div class="modal-fieldsets">
-        <div class="txt-group">
-          <input autocomplete="off" class="txt" type="email" ng-model="userAccountForm.emailAddress" name="name" id="name" required>
-          <label class="txt-label" for="name">Email address</label>
+  <div class="user-view-container">
+    <div ng-show="currentUserTab === 'account'">
+      <form name="userAccountForm" role="form" class="page-form" ng-show="user.temporary">
+        <h2>Create a free Publications account to save documents and access them on any computer.</h2>
+        <div class="modal-fieldsets">
+          <div class="txt-group">
+            <input autocomplete="off" class="txt" type="email" ng-model="userAccountForm.emailAddress" name="name" id="name" required>
+            <label class="txt-label" for="name">Email address</label>
+          </div>
+          <div class="txt-group">
+            <input class="txt" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required>
+            <label class="txt-label" for="new-password">New Password</label>
+          </div>
+          <div class="txt-group">
+            <input autocomplete="off" class="txt" type="password" ng-model="userAccountForm.confirmPassword" name="confirm-password" id="confirm-password" required>
+            <label class="txt-label" for="confirm-password">Confirm New Password</label>
+          </div>
         </div>
-        <div class="txt-group">
-          <input class="txt" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required>
-          <label class="txt-label" for="new-password">New Password</label>
+        <button class="btn" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
+      </form>
+      <form name="changePasswordForm" role="form" class="page-form" ng-hide="user.temporary">
+        <h2>Update the password for the Publications account {{user.name}}.</h2>
+        <div class="modal-fieldsets">
+          <div class="txt-group">
+            <input autocomplete="off" class="txt" type="password" ng-model="changePasswordForm.currentPassword" name="current-password" id="current-password" required>
+            <label class="txt-label" for="current-password">Current Password</label>
+          </div>
+          <div class="txt-group">
+            <input class="txt" type="password" ng-model="changePasswordForm.newPassword" name="new-password" id="new-password" required>
+            <label class="txt-label" for="new-password">New Password</label>
+          </div>
+          <div class="txt-group">
+            <input autocomplete="off" class="txt" type="password" ng-model="changePasswordForm.confirmPassword" name="confirm-password" id="confirm-password" required>
+            <label class="txt-label" for="confirm-password">Confirm New Password</label>
+          </div>
         </div>
-        <div class="txt-group">
-          <input autocomplete="off" class="txt" type="password" ng-model="userAccountForm.confirmPassword" name="confirm-password" id="confirm-password" required>
-          <label class="txt-label" for="confirm-password">Confirm New Password</label>
-        </div>
-      </div>
-      <button class="btn btn-frame" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
-    </form>
-    <form name="changePasswordForm" role="form" class="page-form" ng-hide="user.temporary">
-      <h2>Update the password for the Publications account {{user.name}}.</h2>
-      <div class="modal-fieldsets">
-        <div class="txt-group">
-          <input autocomplete="off" class="txt" type="password" ng-model="changePasswordForm.currentPassword" name="current-password" id="current-password" required>
-          <label class="txt-label" for="current-password">Current Password</label>
-        </div>
-        <div class="txt-group">
-          <input class="txt" type="password" ng-model="changePasswordForm.newPassword" name="new-password" id="new-password" required>
-          <label class="txt-label" for="new-password">New Password</label>
-        </div>
-        <div class="txt-group">
-          <input autocomplete="off" class="txt" type="password" ng-model="changePasswordForm.confirmPassword" name="confirm-password" id="confirm-password" required>
-          <label class="txt-label" for="confirm-password">Confirm New Password</label>
-        </div>
-      </div>
-      <button class="btn btn-frame" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
-    </form>
-  </div>
-  <div class="page-form" ng-show="currentUserTab === 'about'">
-    <h2>Publications is designed and developed by Michael Kelly and Carlos Paelinck.</h2>
-    <div class="app-licenses">
-      <h3>AngularJS</h3>
-      <p>
-        The MIT License
-        <br>
-        Copyright (c) 2010-2014 Google, Inc. <<a href="http://angularjs.org" target="_blank">http://angularjs.org</a>>
-        <br><br>
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-        <br><br>
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
-        <br><br>
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-      </p>
-      <h3>ExpressJS</h3>
-      <p>
-        The MIT License
-        <br>
-        Copyright (c) 2009-2014 TJ Holowaychuk. <<a href="mailto:tj@vision-media.ca" target="_blank">tj@vision-media.ca</a>>
-        <br><br>
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-        <br><br>
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
-        <br><br>
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-      </p>
-      <h3>PDFKit</h3>
-      <p>
-        The MIT License
-        <br>
-        Copyright (c) 2009 jdpace.
-        <br><br>
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-        <br><br>
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
-        <br><br>
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-      </p>
-      <h3>MongooseJS</h3>
-      <p>
-        The MIT License
-        <br>
-        Copyright (c) 2010 LearnBoost. <<a href="mailto:dev@learnboost.com" target="_blank">dev@learnboost.com</a>>
-        <br><br>
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-        <br><br>
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
-        <br><br>
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-      </p>
+        <button class="btn" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
+      </form>
     </div>
+    <div class="page-form" ng-show="currentUserTab === 'about'">
+      <h2>Publications is designed and developed by Michael Kelly and Carlos Paelinck.</h2>
+      <div class="app-licenses">
+        <h3>AngularJS</h3>
+        <p>
+          The MIT License
+          <br>
+          Copyright (c) 2010-2014 Google, Inc. <<a href="http://angularjs.org" target="_blank">http://angularjs.org</a>>
+          <br><br>
+          Permission is hereby granted, free of charge, to any person obtaining a copy
+          of this software and associated documentation files (the "Software"), to deal
+          in the Software without restriction, including without limitation the rights
+          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+          copies of the Software, and to permit persons to whom the Software is
+          furnished to do so, subject to the following conditions:
+          <br><br>
+          The above copyright notice and this permission notice shall be included in
+          all copies or substantial portions of the Software.
+          <br><br>
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+          THE SOFTWARE.
+        </p>
+        <h3>ExpressJS</h3>
+        <p>
+          The MIT License
+          <br>
+          Copyright (c) 2009-2014 TJ Holowaychuk. <<a href="mailto:tj@vision-media.ca" target="_blank">tj@vision-media.ca</a>>
+          <br><br>
+          Permission is hereby granted, free of charge, to any person obtaining a copy
+          of this software and associated documentation files (the "Software"), to deal
+          in the Software without restriction, including without limitation the rights
+          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+          copies of the Software, and to permit persons to whom the Software is
+          furnished to do so, subject to the following conditions:
+          <br><br>
+          The above copyright notice and this permission notice shall be included in
+          all copies or substantial portions of the Software.
+          <br><br>
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+          THE SOFTWARE.
+        </p>
+        <h3>PDFKit</h3>
+        <p>
+          The MIT License
+          <br>
+          Copyright (c) 2009 jdpace.
+          <br><br>
+          Permission is hereby granted, free of charge, to any person obtaining a copy
+          of this software and associated documentation files (the "Software"), to deal
+          in the Software without restriction, including without limitation the rights
+          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+          copies of the Software, and to permit persons to whom the Software is
+          furnished to do so, subject to the following conditions:
+          <br><br>
+          The above copyright notice and this permission notice shall be included in
+          all copies or substantial portions of the Software.
+          <br><br>
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+          THE SOFTWARE.
+        </p>
+        <h3>MongooseJS</h3>
+        <p>
+          The MIT License
+          <br>
+          Copyright (c) 2010 LearnBoost. <<a href="mailto:dev@learnboost.com" target="_blank">dev@learnboost.com</a>>
+          <br><br>
+          Permission is hereby granted, free of charge, to any person obtaining a copy
+          of this software and associated documentation files (the "Software"), to deal
+          in the Software without restriction, including without limitation the rights
+          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+          copies of the Software, and to permit persons to whom the Software is
+          furnished to do so, subject to the following conditions:
+          <br><br>
+          The above copyright notice and this permission notice shall be included in
+          all copies or substantial portions of the Software.
+          <br><br>
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+          THE SOFTWARE.
+        </p>
+      </div>
+    </div>
+    <div pub-modal-user-error ng-show="userErrorModalVisible"></div>
   </div>
-  <div pub-modal-user-error ng-show="userErrorModalVisible"></div>
 </div>
 <div class="app-footer"></div>

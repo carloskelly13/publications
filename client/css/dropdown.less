@@ -8,9 +8,7 @@
 		}
 
 		.btn.dropdown-toggle {
-			background: @color-primary !important;
-			border-color: darken(@color-primary, 10%) !important;
-			color: #fff !important;
+			color: darken(@color-primary, 10%) !important;
 		}
 	}
 
@@ -19,18 +17,23 @@
 	}
 
 	.dropdown-menu {
-		border-radius: 2px;
+		border-radius: 4px;
 		background: #fff;
 		background: hsla(0, 0%, 100%, 0.95);
 		background-clip: padding-box;
 		border: 1px solid @color-line;
+		box-shadow: 0 1px 25px hsla(0, 0%, 0%, 0.15);
 		display: none;
 		float: left;
-		margin-top: 12px;
+		margin-top: 6px;
 		left: 0;
 		top: 100%;
 		position: absolute;
 		z-index: 9000;
+
+		&.padded-menu {
+			padding: 4px 0;
+		}
 
  		&:after, &:before {
 			bottom: 100%;
@@ -68,11 +71,34 @@
 			width: 160px;
 			left: 50%;
 			margin-left: -80px;
+		}
 
-			.full-btn {				
-				&:first-child {
-					border-top: none !important;
-				}
+		.dropdown-menu-item {
+			color: @darkgray-dark;
+			cursor: pointer;
+			background: transparent;
+			border: none;
+			display: block;
+			font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-size: 15px;
+			margin: 0;
+			padding: 0.33em 0;
+			text-align: left;
+			text-indent: 10px;
+			text-decoration: none;
+			width: 100%;
+
+			&:hover {
+				background: @color-primary !important;
+				color: #fff;
+			}
+		}
+
+		.btn.full-btn {
+			border-radius: 0 0 3px 3px;
+
+			&:disabled {
+				background: transparent !important;
 			}
 		}
 

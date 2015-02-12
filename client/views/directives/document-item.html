@@ -1,17 +1,14 @@
 <div class="dropdown" dropdown>
   <figure pub-document-svg class="document-icon dropdown-toggle" dropdown-toggle ng-style="documentIconSize(doc)"></figure>
-  <div class="dropdown-menu document-item-menu animation-fade-in" role="menu">
-    <button class="btn btn-frame full-btn" type="button" ui-sref="pub.documents.document.views({ documentId: doc._id })">Edit</button>
-    <a class="btn btn-frame full-btn" href="documents/{{doc._id}}/pdf" target="_blank">Download PDF</a>
-    <button class="btn btn-frame full-btn" type="button" ng-click="deleteDocument(doc)">Delete</button>
+  <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+    <button class="dropdown-menu-item" type="button" ui-sref="pub.documents.document.views({ documentId: doc._id })">Edit</button>
+    <a class="dropdown-menu-item" href="documents/{{doc._id}}/pdf" target="_blank">Download PDF</a>
+    <button class="dropdown-menu-item" type="button" ng-click="deleteDocument(doc)">Delete</button>
   </div>
 </div>
 <div class="document-name">
   {{doc.name}}
 </div>
-<div class="document-date">
-  {{doc.modifiedStr}}
-</div>
-<div class="document-size">
-  {{doc.width}}&#8221;&#32;&#215;&#32;{{doc.height}}&#8221;
+<div class="document-info">
+  {{doc.modifiedStr}}&#32;&mdash;&#32;{{doc.width}}&#8221;&#32;&#215;&#32;{{doc.height}}&#8221;
 </div>

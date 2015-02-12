@@ -117,6 +117,15 @@
     }
   });
 
+  pub.directive('pubColorPicker', function() {
+    return {
+      scope: {
+        color: '='
+      },
+      templateUrl: '/views/directives/color-picker.html'
+    }
+  });
+
   pub.directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'

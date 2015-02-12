@@ -1,6 +1,10 @@
+.documents-list-container {
+  padding-top: 3em;
+}
+
 .documents-list {
   -webkit-overflow-scrolling: touch;
-  background: #fff;
+  background: #e0e0e0;
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -41,10 +45,11 @@
     user-select: none;
     display: inline-block;
     cursor: pointer;
-    margin: 0.5em;
-    padding: 1em;
+    margin: 0em;
+    padding: 1em 2%;
     text-align: center;
     vertical-align: bottom;
+    width: 21%;
 
     @media all and (max-width: 767px) {
       background: #f5f5f5;
@@ -57,7 +62,8 @@
 
     .document-icon {
       background: #fff;
-      border: 1px @mediumgray-dark solid;
+      box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.15), 0 1px 1px hsla(0, 0%, 0%, 0.15);
+      // border: 1px @mediumgray-dark solid;
       display: inline-block;
     }
 
@@ -70,27 +76,20 @@
     // }
 
     .document-name,
-    .document-date,
-    .document-size {
+    .document-info {
       display: block;
       line-height: 1em;
-      margin: 0.5em;
+      margin: 0.5em 0 0 0;
     }
 
     .document-name {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 400;
     }
 
-    .document-date {
+    .document-info {
       color: lighten(@darkgray-dark, 10%);
       font-size: 11px;
     }
-
-    .document-size {
-      color: @color-primary;
-      font-size: 11px;
-    }
   }
-
 }

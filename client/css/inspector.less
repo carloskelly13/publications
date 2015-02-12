@@ -1,14 +1,15 @@
 .inspector {
   .animation(all, 250ms);
   background: #fff;
-  border-right: 1px solid @color-line;
+  background: hsla(0, 0%, 100%, 0.93);
+  box-shadow: 0 0 2px hsla(0, 0%, 0%, 0.5);
   height: inherit;
   overflow: hidden;
   position: absolute;
   top: 0; right: 0; bottom: @app-footer-height; left: 0;
   width: 20%;
   z-index: 5;
-  
+
   @media (max-width: 767px) {
     display: none;
   }
