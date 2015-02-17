@@ -40,21 +40,17 @@
       <div ng-show="selectedObj" class="inspector-controls-section">
         <h1>Color</h1>
         <div ng-if="selectedObj.type !== 'text'">
-          <div class="txt-group txt-group-half-width txt-group-half-width-left">
-            <div pub-color-picker color="selectedObj.fill"></div>
+          <div class="txt-group txt-group-half-width txt-group-half-width-left force-return">
+            <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>
             <label class="txt-label" for="fill-opacity">Fill</label>
           </div>
-          <div class="txt-group txt-group-half-width">
+          <!-- <div class="txt-group txt-group-half-width">
             <input name="fill-opacity" id="fill-opacity" pub-alpha-float-input class="txt" ng-model="selectedObj.fillOpacity" type="text" />
             <label class="txt-label" for="fill-opacity">Opacity</label>
-          </div>
-          <div class="txt-group txt-group-half-width txt-group-half-width-left">
-            <input name="stroke" id="stroke" pub-hex-color-input class="txt" ng-model="selectedObj.stroke" type="text" />
+          </div> -->
+          <div class="txt-group txt-group-half-width txt-group-half-width-left force-return">
+            <div pub-color-picker class="color-picker-container" colors="colors" property="stroke" selected-obj="selectedObj" color="selectedObj.stroke"></div>
             <label class="txt-label" for="stroke-opacity">Stroke</label>
-          </div>
-          <div class="txt-group txt-group-half-width">
-            <input name="stroke-opacity" id="stroke-opacity" pub-alpha-float-input class="txt" ng-model="selectedObj.strokeOpacity" type="text" />
-            <label class="txt-label" for="stroke-opacity">Opacity</label>
           </div>
         </div>
         <div ng-show="selectedObj.type === 'text'">

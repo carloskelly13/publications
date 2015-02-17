@@ -22,18 +22,36 @@
     })
 
     .value('colors', [
-      '#f6f8fb', '#e7eaed',
-      '#cdd2d9', '#abb3bd',
-      '#656e78', '#434a54',
-      '#d94656', '#ea5569',
-      '#e85945', '#fa6f57',
-      '#f5bb4f', '#fecd5f',
-      '#8ec159', '#a2d36e',
-      '#3fbc9c', '#4fcfae',
-      '#42b0d9', '#55c2e8',
-      '#4e8bda', '#609eeb',
-      '#967dda', '#ac95eb',
-      '#d673ad', '#eb89c0'
+      '#fff',
+      '#f5f5f5',
+      '#e0e0e0',
+      '#bdbdbd',
+      '#9e9e9e',
+      '#757575',
+      '#616161',
+      '#424242',
+      '#212121',
+      '#000',
+      '#d50000',
+      '#f44336',
+      '#e91e63',
+      '#9c27b0',
+      '#ba68c8',
+      '#7e57c2',
+      '#3f51b5',
+      '#2196f3',
+      '#90caf9',
+      '#03A9f4',
+      '#00bcd4',
+      '#009688',
+      '#4caf50',
+      '#8bc34a',
+      '#aeea00',
+      '#ffeb3b',
+      '#ffc107',
+      '#ff9800',
+      '#ff5722',
+      '#795548'
     ])
 
     .controller('DocumentsController', [
@@ -110,7 +128,8 @@
       '$timeout',
       'documentServices',
       'doc',
-      function($scope, $state, $window, $timeout, documentServices, doc) {
+      'colors',
+      function($scope, $state, $window, $timeout, documentServices, doc, colors) {
         $scope.doc = doc;
         $scope.selectedObj = null;
         $scope.showCanvasGrid = true;
@@ -119,7 +138,7 @@
         $scope.clipboard = null;
         $scope.showInspector = true;
         $scope.zoomLevel = 1;
-
+        $scope.colors = colors;
 
         $scope.updateDocument = function(closeDocumentView) {
           $scope.doc.put();
@@ -189,10 +208,6 @@
           duplicateObj.x += 0.25;
           duplicateObj.y += 0.25;
           $scope.doc.shapes.push(duplicateObj);
-        };
-
-        $scope.updateColor = function(color, property) {
-          $scope.selectedObj[property] = color;
         };
 
         $scope.addObject = function(objType) {

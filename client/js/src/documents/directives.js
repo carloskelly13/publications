@@ -120,9 +120,17 @@
   pub.directive('pubColorPicker', function() {
     return {
       scope: {
-        color: '='
+        color: '=',
+        colors: '=',
+        selectedObj: '=',
+        property: '@'
       },
-      templateUrl: '/views/directives/color-picker.html'
+      templateUrl: '/views/directives/color-picker.html',
+      link: function(scope, element, attrs) {
+        scope.updateColor = function(color) {
+          scope.selectedObj[scope.property] = color;
+        };
+      }
     }
   });
 

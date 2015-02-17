@@ -1,1 +1,17 @@
-<input name="fill" id="fill" pub-hex-color-input class="txt" ng-model="color" type="text" />
+<!-- <input name="fill" id="fill" pub-hex-color-input class="txt" ng-model="color" type="text" /> -->
+<div class="dropdown" dropdown>
+  <div class="swatch-button" style="background: {{color}};" dropdown-toggle></div>
+  <div class="dropdown-menu color-picker" role="menu" ng-click="$event.stopPropagation()">
+    <div ng-repeat="c in colors track by $index" class="color-swatch" style="background: {{c}};" ng-click="updateColor(c, color);"></div>
+    <div class="color-picker-txt-inputs">
+      <div class="txt-group txt-group-half-width txt-group-half-width-left">
+        <input name="opacity" id="opacity" pub-alpha-float-input class="txt" ng-model="selectedObj[property + 'Opacity']" type="text" />
+        <label class="txt-label" for="opacity">Opacity</label>
+      </div>
+      <div class="txt-group txt-group-half-width">
+        <input name="{{property}}" id="{{property}}" pub-hex-input class="txt" ng-model="selectedObj[property]" type="text" />
+        <label class="txt-label" for="{{property}}">{{property}}</label>
+      </div>
+    </div>
+  </div>
+</div>
