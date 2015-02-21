@@ -9,7 +9,7 @@ Array.prototype.moveElement = function(element, offset) {
     return;
   }
 
-  var newIdx = idx + offset
+  var newIdx = idx + offset;
 
   if (newIdx < 0) {
     newIdx = 0;

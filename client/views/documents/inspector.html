@@ -42,21 +42,17 @@
         <div ng-if="selectedObj.type !== 'text'">
           <div class="txt-group txt-group-half-width txt-group-half-width-left force-return">
             <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>
-            <label class="txt-label" for="fill-opacity">Fill</label>
+            <label class="txt-label">Fill</label>
           </div>
-          <!-- <div class="txt-group txt-group-half-width">
-            <input name="fill-opacity" id="fill-opacity" pub-alpha-float-input class="txt" ng-model="selectedObj.fillOpacity" type="text" />
-            <label class="txt-label" for="fill-opacity">Opacity</label>
-          </div> -->
           <div class="txt-group txt-group-half-width txt-group-half-width-left force-return">
             <div pub-color-picker class="color-picker-container" colors="colors" property="stroke" selected-obj="selectedObj" color="selectedObj.stroke"></div>
-            <label class="txt-label" for="stroke-opacity">Stroke</label>
+            <label class="txt-label">Stroke</label>
           </div>
         </div>
         <div ng-show="selectedObj.type === 'text'">
           <div class="txt-group txt-group-half-width txt-group-half-width-left">
-            <input name="color" id="color" pub-hex-color-input class="txt" ng-model="selectedObj.color" type="text" />
-            <label class="txt-label" for="stroke-opacity">Text</label>
+            <div pub-color-picker class="color-picker-container" colors="colors" property="color" selected-obj="selectedObj" color="selectedObj.color"></div>
+            <label class="txt-label">Text</label>
           </div>
         </div>
       </div>

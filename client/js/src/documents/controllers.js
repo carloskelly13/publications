@@ -54,15 +54,7 @@
       '#795548'
     ])
 
-    .controller('DocumentsController', [
-      '$scope',
-      '$state',
-      '$location',
-      'Restangular',
-      'documentServices',
-      'authentication',
-      'documents',
-      'fonts',
+    .controller('DocumentsController',
       function($scope, $state, $location, Restangular, documentServices, authentication, documents, fonts) {
         var documentsApi = Restangular.all('documents');
 
@@ -119,16 +111,9 @@
           return {width: iconWidth + 'px', height: iconHeight + 'px'};
         };
       }
-    ])
+    )
 
-    .controller('DocumentController', [
-      '$scope',
-      '$state',
-      '$window',
-      '$timeout',
-      'documentServices',
-      'doc',
-      'colors',
+    .controller('DocumentController',
       function($scope, $state, $window, $timeout, documentServices, doc, colors) {
         $scope.doc = doc;
         $scope.selectedObj = null;
@@ -214,12 +199,9 @@
           $scope.doc.shapes.push(documentServices.newShape(objType));
         };
       }
-    ])
+    )
 
-    .controller('DocumentCanvasController', [
-      '$scope',
-      'documentServices',
-      'objAnchors',
+    .controller('DocumentCanvasController',
       function($scope, documentServices, objAnchors) {
         $scope.objAnchors = objAnchors;
 
@@ -235,5 +217,5 @@
           return ($scope.zoomLevel > 1) ? 0.5 : 1;
         };
       }
-    ])
+    )
 }());
