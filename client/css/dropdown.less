@@ -66,9 +66,9 @@
 			left: 50%;
 			margin-left: -125px;
 		}
-
+		
+		&.typeface-picker,
 		&.color-picker {
-			width: 200%;
 			left: 0%;
 			margin-left: 0;
 			padding: 2px 0;
@@ -76,6 +76,14 @@
 			&:after, &:before {
 				left: 14%;
 			}
+		}
+		
+		&.typeface-picker {
+  		width: 100%;
+		}
+
+		&.color-picker {
+  		width: 200%;
 
 			.color-swatch {
 				border-radius: 0;
@@ -112,7 +120,7 @@
 			background: transparent;
 			border: none;
 			display: block;
-			font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-family: 'Karla', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 			font-size: 15px;
 			margin: 0;
 			padding: 0.33em 0;
@@ -124,6 +132,10 @@
 			&:hover {
 				background: @color-primary !important;
 				color: #fff;
+			}
+			
+			.download-menu-item-text {
+  			width: 90%;
 			}
 		}
 

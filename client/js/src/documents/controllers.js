@@ -3,7 +3,7 @@
 
   angular.module('pub.documents.controllers', [])
 
-    .value('fonts', [{name: 'Source Serif Pro'}, {name: 'Source Sans Pro'}])
+    .value('typefaces', ['Source Serif Pro', 'Source Sans Pro'])
 
     .value('fontWeights', [{weight: '400'}, {weight: '500'}, {weight: '600'}])
 
@@ -22,40 +22,23 @@
     })
 
     .value('colors', [
-      '#fff',
-      '#f5f5f5',
-      '#e0e0e0',
-      '#bdbdbd',
-      '#9e9e9e',
-      '#757575',
-      '#616161',
-      '#424242',
-      '#212121',
-      '#000',
-      '#d50000',
-      '#f44336',
-      '#e91e63',
-      '#9c27b0',
-      '#ba68c8',
-      '#7e57c2',
-      '#3f51b5',
-      '#2196f3',
-      '#90caf9',
-      '#03A9f4',
-      '#00bcd4',
-      '#009688',
-      '#4caf50',
-      '#8bc34a',
-      '#aeea00',
-      '#ffeb3b',
-      '#ffc107',
-      '#ff9800',
-      '#ff5722',
-      '#795548'
+      '#fff', '#f5f5f5', '#e0e0e0', '#bdbdbd', '#9e9e9e', '#757575',
+      '#616161', '#424242', '#212121', '#000', '#d50000', '#f44336',
+      '#e91e63', '#9c27b0', '#ba68c8', '#7e57c2', '#3f51b5', '#2196f3',
+      '#90caf9', '#03A9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a',
+      '#aeea00', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548'
     ])
 
-    .controller('DocumentsController',
-      function($scope, $state, $location, Restangular, documentServices, authentication, documents, fonts) {
+    .controller('DocumentsController', [
+      '$scope', 
+      '$state', 
+      '$location', 
+      'Restangular', 
+      'documentServices', 
+      'authentication', 
+      'documents', 
+      'typefaces',
+      function($scope, $state, $location, Restangular, documentServices, authentication, documents, typefaces) {
         var documentsApi = Restangular.all('documents');
 
         $scope.updateAuthenticationStatus();
@@ -65,8 +48,8 @@
         $scope.newDocumentModalVisible = false;
         $scope.sortFilter = 'name';
         $scope.sortReverse = false;
-        $scope.fonts = fonts;
-
+        $scope.typefaces = typefaces;
+                        
         $scope.updateSortFilter = function(sortFilter, sortReverse) {
           $scope.sortFilter = sortFilter;
           $scope.sortReverse = sortReverse;
@@ -111,9 +94,24 @@
           return {width: iconWidth + 'px', height: iconHeight + 'px'};
         };
       }
-    )
+    ])
+    
+    .controller('DocumentsIndexController', [
+      '$scope', 
+      '$state',
+      function($scope, $state) {
+        
+      }
+    ])
 
-    .controller('DocumentController',
+    .controller('DocumentController', [
+      '$scope', 
+      '$state', 
+      '$window', 
+      '$timeout', 
+      'documentServices', 
+      'doc', 
+      'colors',
       function($scope, $state, $window, $timeout, documentServices, doc, colors) {
         $scope.doc = doc;
         $scope.selectedObj = null;
@@ -136,7 +134,7 @@
         };
 
         $scope.showAllDocuments = function() {
-          $state.go('pub.documents');
+          $state.go('pub.documents.index');
         };
 
         $scope.shiftLayer = function(offset) {
@@ -199,9 +197,12 @@
           $scope.doc.shapes.push(documentServices.newShape(objType));
         };
       }
-    )
+    ])
 
-    .controller('DocumentCanvasController',
+    .controller('DocumentCanvasController', [
+      '$scope', 
+      'documentServices', 
+      'objAnchors',
       function($scope, documentServices, objAnchors) {
         $scope.objAnchors = objAnchors;
 
@@ -217,5 +218,5 @@
           return ($scope.zoomLevel > 1) ? 0.5 : 1;
         };
       }
-    )
+    ])
 }());

@@ -22,6 +22,12 @@
             ]
           }
         })
+          .state('pub.documents.index', {
+            url: '/all',
+            controller: 'DocumentsIndexController',
+            templateUrl: 'views/documents/list.html'
+          })
+        
           .state('pub.documents.document', {
             url: '/:documentId',
             controller: 'DocumentController',

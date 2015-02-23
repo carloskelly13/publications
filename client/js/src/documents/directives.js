@@ -1,9 +1,9 @@
 (function() {
   'use strict';
 
-  var pub = angular.module('pub.documents.directives', []);
+  angular.module('pub.documents.directives', [])
 
-  pub.directive('pubDraggable', function($document) {
+  .directive('pubDraggable', function($document) {
     return function(scope, element) {
       var eX = 0, eY = 0, oX = 0, oY = 0;
 
@@ -45,9 +45,9 @@
         eX = eY = oX = oY = 0;
       }
     }
-  });
+  })
 
-  pub.directive('pubResizable', function($document) {
+  .directive('pubResizable', function($document) {
     return function(scope, element) {
       var coordinate = scope.objAnchor.coordinate;
       var eX = 0, eY = 0, oX = 0, oY = 0, oW = 0, oH = 0;
@@ -115,9 +115,9 @@
         eX = eY = oX = oY = oW = oH = 0;
       }
     }
-  });
+  })
 
-  pub.directive('pubColorPicker', function() {
+  .directive('pubColorPicker', function() {
     return {
       scope: {
         color: '=',
@@ -132,21 +132,36 @@
         };
       }
     }
-  });
+  })
+  
+  .directive('pubTypefacePicker', function() {
+    return {
+      scope: {
+        typefaces: '=',
+        selectedObj: '='
+      },
+      templateUrl: '/views/directives/typeface-picker.html',
+      link: function(scope, element, attrs) {
+        scope.updateTypeface = function(typeface) {
+          scope.selectedObj.fontFamily = typeface;
+        }
+      }
+    }
+  })
 
-  pub.directive('pubDocumentItem', function() {
+  .directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'
     }
-  });
+  })
 
-  pub.directive('pubDocumentSvg', function() {
+  .directive('pubDocumentSvg', function() {
     return {
       templateUrl: '/views/directives/svg.html'
     }
-  });
+  })
 
-  pub.directive('pubInspector', function() {
+  .directive('pubInspector', function() {
     return {
       templateUrl: '/views/documents/inspector.html'
     }

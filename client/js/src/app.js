@@ -23,7 +23,7 @@
              $locationProvider,
              $httpProvider,
              RestangularProvider) {
-      $urlRouterProvider.otherwise('/documents');
+      $urlRouterProvider.otherwise('/documents/all');
 
       RestangularProvider.setRestangularFields({
         id: '_id'

@@ -14,7 +14,7 @@
 
         authentication.requestSecurityContext().then(function(securityContext) {
           if (securityContext.authenticated) {
-            $state.go('pub.documents');
+            $state.go('pub.documents.index');
           }
         })
 
@@ -32,7 +32,7 @@
               password: 'password'
             },
             function() {
-              $state.go('pub.documents')
+              $state.go('pub.documents.index')
             })
           })
         }
@@ -54,7 +54,7 @@
             password: $scope.password
           },
           function() {
-            $state.go('pub.documents')
+            $state.go('pub.documents.index')
           },
           function(err) {
             $scope.password = null
@@ -90,7 +90,7 @@
         }
 
         $scope.viewDocuments = function() {
-          $state.go('pub.documents')
+          $state.go('pub.documents.index')
         }
 
         $scope.closeUserErrorModal = function() {

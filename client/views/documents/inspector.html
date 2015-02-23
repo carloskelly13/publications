@@ -63,7 +63,7 @@
           <label class="txt-label" for="txt-content">Content</label>
         </div>
         <div class="txt-group">
-          <select class="picker" id="typeface" ng-model="selectedObj.fontFamily" required="true" ng-options="font.name as font.name for font in fonts"></select>
+          <div pub-typeface-picker typefaces="typefaces" selected-obj="selectedObj"></div>
           <label class="txt-label" for="typeface">Typeface</label>
         </div>
         <div class="txt-group txt-group-half-width txt-group-half-width-left">
@@ -112,10 +112,6 @@
           <div class="icon">&#xe223;</div>
           <div class="text">Download PDF</div>
         </button>
-<!--         <button class="btn btn-icon-text" ng-click="deleteModal()">
-          <div class="icon">&#xe2c4;</div>
-          <div class="text">Delete</div>
-        </button> -->
         <button class="btn btn-icon-text" ng-click="updateDocument(true)">
           <div class="icon">&#xe278;</div>
           <div class="text">Documents</div>
@@ -191,7 +187,3 @@
     </div>
   </div>
 </div>
-
-<!-- <div class="color-group">
-  <div ng-repeat="color in colors" class="color-swatch" style="background: {{ color }};" ng-click="updateColor(color, 'fill')" ng-class="{ selected: selectedObj.fill.toLowerCase() === color.toLowerCase()}"></div>
-</div> -->
