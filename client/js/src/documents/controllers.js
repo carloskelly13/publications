@@ -49,34 +49,15 @@
         $scope.sortFilter = 'name';
         $scope.sortReverse = false;
         $scope.typefaces = typefaces;
+        $scope.documentsApi = documentsApi;
                         
         $scope.updateSortFilter = function(sortFilter, sortReverse) {
           $scope.sortFilter = sortFilter;
           $scope.sortReverse = sortReverse;
         };
 
-        $scope.newDocument = function() {
-          documentsApi.post({
-            _user: $scope.user._id,
-            name: $scope.newName,
-            width: $scope.newWidth,
-            height: $scope.newHeight,
-            shapes: []
-          }).then(function(res) {
-            $scope.newDocumentModal()
-            $scope.documents.push(res)
-          });
-        };
-
         $scope.viewUser = function() {
           $state.go('pub.user');
-        };
-
-        $scope.newDocumentModal = function() {
-          $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
-          $scope.newName = '';
-          $scope.newWidth = '';
-          $scope.newHeight = '';
         };
 
         $scope.deleteDocument = function(sender) {
@@ -100,7 +81,31 @@
       '$scope', 
       '$state',
       function($scope, $state) {
+        $scope.selectedDoc = null;
+
+        $scope.newDocument = function() {
+          $scope.documentsApi.post({
+            _user: $scope.user._id,
+            name: $scope.newName,
+            width: $scope.newWidth,
+            height: $scope.newHeight,
+            shapes: []
+          }).then(function(res) {
+            $scope.newDocumentModal()
+            $scope.documents.push(res)
+          });
+        };
         
+        $scope.documentIconSelected = function(sender) {
+	        $scope.selectedDoc = sender;
+        };
+        
+        $scope.newDocumentModal = function() {
+          $scope.newDocumentModalVisible = !$scope.newDocumentModalVisible;
+          $scope.newName = '';
+          $scope.newWidth = '';
+          $scope.newHeight = '';
+        };
       }
     ])
 

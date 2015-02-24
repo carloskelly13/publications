@@ -25,7 +25,7 @@
           .state('pub.documents.index', {
             url: '/all',
             controller: 'DocumentsIndexController',
-            templateUrl: 'views/documents/list.html'
+            templateUrl: 'views/documents/index.html'
           })
         
           .state('pub.documents.document', {

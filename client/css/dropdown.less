@@ -8,7 +8,7 @@
 		}
 
 		.btn.dropdown-toggle {
-			color: darken(@color-primary, 10%) !important;
+			color: #fff !important;
 		}
 	}
 
@@ -18,14 +18,13 @@
 
 	.dropdown-menu {
 		border-radius: 4px;
-		background: #fff;
-		background: hsla(0, 0%, 100%, 0.95);
+		background: hsla(238, 5%, 25%, 0.98);
 		background-clip: padding-box;
-		border: 1px solid @color-line;
+		border: 1px solid hsla(238, 5%, 20%, 0.95);
 		box-shadow: 0 1px 25px hsla(0, 0%, 0%, 0.15);
 		display: none;
 		float: left;
-		margin-top: 6px;
+		margin-top: 9px;
 		left: 0;
 		top: 100%;
 		position: absolute;
@@ -49,14 +48,14 @@
 
 		&:after {
 			border-color: transparent;
-			border-bottom-color: #fff;
+			border-bottom-color: hsla(238, 5%, 25%, 0.98);
 			border-width: 10px;
 			margin-left: -10px;
 		}
 
 		&:before {
 			border-color: transparent;
-			border-bottom-color: @color-line;
+			border-bottom-color: hsla(238, 5%, 20%, 0.95);
 			border-width: 11px;
 			margin-left: -11px;
 		}
@@ -115,13 +114,13 @@
 		}
 
 		.dropdown-menu-item {
-			color: @darkgray-dark;
+			color: #eee;
 			cursor: pointer;
 			background: transparent;
 			border: none;
 			display: block;
-			font-family: 'Karla', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-			font-size: 15px;
+			font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-size: 13px;
 			margin: 0;
 			padding: 0.33em 0;
 			text-align: left;

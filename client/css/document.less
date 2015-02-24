@@ -4,7 +4,7 @@
 
 .documents-list {
   -webkit-overflow-scrolling: touch;
-  background: #e0e0e0;
+  background: #404147;
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -59,21 +59,23 @@
       padding: 1em 0 0.5em;
     }
 
-
     .document-icon {
+      border-radius: 2px;
       background: #fff;
-      box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.15), 0 1px 1px hsla(0, 0%, 0%, 0.15);
-      // border: 1px @mediumgray-dark solid;
+      box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.75);
       display: inline-block;
+      overflow: hidden;
     }
-
-    &:hover {
-      color: @color-primary;
+    
+    &.document-item-active {
+      .document-icon {
+        box-shadow: 0 0 0 2px #000, 0 0 0 6px @color-primary;
+      }
+      
+      .document-name {
+        color: @color-primary;
+      }
     }
-
-    // &:active {
-    //   .touch-animation(0.98);
-    // }
 
     .document-name,
     .document-info {
@@ -84,11 +86,12 @@
 
     .document-name {
       font-size: 15px;
-      font-weight: 400;
+      font-weight: 300;
+      color: #eee;
     }
 
     .document-info {
-      color: lighten(@darkgray-dark, 10%);
+      color: #ccc;
       font-size: 11px;
     }
   }

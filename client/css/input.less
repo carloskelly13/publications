@@ -11,15 +11,15 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 
-  background: transparent;
+	background: hsla(0, 0%, 0%, 0.1);
   box-sizing: border-box;
-  border: 1px solid @color-line-bright;
+  border: none;
   border-radius: 2px;
-  color: @color-text;
-  font-family: 'Karla', 'Helvetica Neue', Helvetica, sans-serif;
-  font-size: 15px;
+  color: #ccc;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 14px;
   margin: 0;
-  padding: 2px;
+  padding: 3px;
   outline: none;
   resize: none;
   text-align: left;
@@ -34,17 +34,22 @@
   }
 
   &:focus {
-    border-color: @color-primary;
-
+    background: hsla(0, 0%, 0%, 0.2);
+    
     + .txt-label {
-      color: @color-primary;
+      color: #fff;
     }
   }
 
   &.txt-search {
-    margin: 0 1em;
+	.animation(background, 333ms);
+	background: hsla(0, 0%, 0%, 0.1);
+	color: hsla(0, 0%, 100%, 0.75);
+	display: block;
+	font-size: 15px;
+    margin: 2em auto;
     text-align: center;
-    width: 300px;
+    width: 40%;
 
     @media all and (max-width: 767px) {
       border-left: none;
@@ -68,6 +73,10 @@
 
     &:-moz-placeholder {
       .search-input-icon;
+    }
+    
+    &:focus, &:active {
+	    background: hsla(0, 0%, 0%, 0.2);
     }
   }
 }
@@ -114,6 +123,7 @@
   margin: 3px 0 0 0;
   text-align: left;
   text-transform: capitalize;
+  color: #999;
 }
 
 .txt-group {
