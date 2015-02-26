@@ -47,6 +47,7 @@
          pub-document-item
          ng-class="{'document-item-active' : selectedDoc === doc}"
          ng-click="documentIconSelected(doc); $event.stopPropagation();"
+         ng-dblclick="openDocument(doc)"
          ng-repeat="doc in documents | filter: search | orderBy: name"
          ng-init="doc.modifiedStr = ( doc.modified | date: 'd MMM yyyy' ); doc.size = doc.height * doc.width;">
     </div>

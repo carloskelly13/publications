@@ -80,7 +80,8 @@
     .controller('DocumentsIndexController', [
       '$scope', 
       '$state',
-      function($scope, $state) {
+      '$location',
+      function($scope, $state, $location) {
         $scope.selectedDoc = null;
 
         $scope.newDocument = function() {
@@ -98,6 +99,12 @@
         
         $scope.documentIconSelected = function(sender) {
 	        $scope.selectedDoc = sender;
+        };
+        
+        $scope.openDocument = function(doc) {
+          $state.go('pub.documents.document.view', {
+            documentId: doc._id
+          });          
         };
         
         $scope.newDocumentModal = function() {
@@ -124,7 +131,7 @@
         $scope.snapToGrid = true;
         $scope.currentInspector = 'document';
         $scope.clipboard = null;
-        $scope.showInspector = true;
+        $scope.showInspector = false;
         $scope.zoomLevel = 1;
         $scope.colors = colors;
 
@@ -167,6 +174,7 @@
 
         $scope.svgObjectSelected = function(obj) {
           $scope.selectedObj = obj;
+          $scope.showInspector = obj !== null;
 
           if (!obj && $scope.currentInspector === 'color') {
             $scope.toggleInspector('shape');

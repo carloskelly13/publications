@@ -44,7 +44,7 @@
               ]
             }
           })
-            .state('pub.documents.document.views', {
+            .state('pub.documents.document.view', {
               url: '/view',
               views: {
                 'document-canvas' : {

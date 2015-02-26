@@ -1,5 +1,5 @@
 <div class="editor-view">
-  <div class="canvas-container" ng-class="{'canvas-expanded' : !showInspector}">
+  <div class="canvas-container" ng-class="{'canvas-expanded' : showInspector}">
     <div class="unit unit-top" ng-repeat="x in xAxisRange()"
                       ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 7) + 'px' }"
                       ng-if="(x / 4) % unitDivider() === 0 && x > 0">

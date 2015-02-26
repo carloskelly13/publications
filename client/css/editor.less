@@ -1,5 +1,5 @@
 .editor-view {
-  background: #e0e0e0;
+  background: #404147;
   height: inherit;
   overflow-x: scroll;
   overflow-y: scroll;
@@ -18,18 +18,19 @@
   }
 
   .canvas-container {
-    .animation(margin-left, 250ms);
-    margin: 0;
-    margin-left: 20%;
+//     .animation(margin, 250ms);
+    margin: 85px 0 0 5px;
     position: relative;
 
     @media (max-width: 767px) {
       margin-left: 0;
     }
 
+/*
     &.canvas-expanded {
-      margin-left: 40px;
+      margin-top: 90px;
     }
+*/
   }
 
   .unit {
@@ -37,7 +38,7 @@
     position: absolute;
     font-size: 13px;
     width: 36px;
-    color: @darkgray-dark;
+    color: #ccc;
 
     &.unit-top {
       top: 8px;

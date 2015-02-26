@@ -1,2 +1,10 @@
-<div pub-inspector></div>
+<!-- <div pub-inspector></div> -->
+<div class="app-controls">
+  <div class="app-wordmark"></div>
+  <div class="btn-group">
+    <button class="btn" ng-click="updateDocument(false)">Save</button>
+    <button class="btn" ng-click="updateDocument(true)">Documents</button>
+  </div>
+</div>
+<div class="editor-toolbar"></div>
 <div ui-view="document-canvas"></div>
