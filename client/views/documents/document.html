@@ -1,10 +1,52 @@
 <!-- <div pub-inspector></div> -->
 <div class="app-controls">
   <div class="app-wordmark"></div>
+  <div class="app-name">
+    {{doc.name}}
+    </div>
   <div class="btn-group">
     <button class="btn" ng-click="updateDocument(false)">Save</button>
     <button class="btn" ng-click="updateDocument(true)">Documents</button>
   </div>
 </div>
-<div class="editor-toolbar"></div>
+<div class="editor-toolbar">
+  <div class="editor-toolbar-container">
+    <div ng-if="selectedObj && (selectedObj.type === 'rect' || selectedObj.type === 'ellipse')">
+      <div class="txt-control">
+        <input pub-signed-float-input type="text" name="x" id="x" class="txt" ng-model="selectedObj.x" />
+        <label class="txt-label" for="x">X</label>
+      </div>
+      <div class="txt-control">
+        <input pub-signed-float-input type="text" name="y" id="y" class="txt txt-mono" ng-model="selectedObj.y" />
+        <label class="txt-label" for="y">Y</label>
+      </div>
+      <div class="txt-control">
+        <input pub-unsigned-non-zero-float-input type="text" name="width" id="width" class="txt" ng-model="selectedObj.width" />
+        <label class="txt-label" for="width">Width</label>
+      </div>
+      <div class="txt-control">
+        <input pub-unsigned-non-zero-float-input type="text" name="height" id="height" class="txt" ng-model="selectedObj.height" />
+        <label class="txt-label" for="height">Height</label>
+      </div>
+      <div class="spacer"></div>
+      <div class="txt-control">
+        <input pub-unsigned-integer-input type="text" name="stroke-width" id="stroke-width" class="txt" ng-model="selectedObj.strokeWidth" />
+        <label class="txt-label" for="stroke-width">Stroke</label>
+      </div>
+      <div class="txt-control" ng-if="selectedObj.type === 'rect'">
+        <input pub-unsigned-integer-input type="text" name="stroke-radius" id="stroke-radius" class="txt" ng-model="selectedObj.r" />
+        <label class="txt-label" for="stroke-radius">Radius</label>
+      </div>
+      <div class="spacer"></div>
+      <div class="txt-control">
+        <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>
+        <label class="txt-label">Fill</label>
+      </div>
+      <div class="txt-control">
+        <div pub-color-picker class="color-picker-container" colors="colors" property="stroke" selected-obj="selectedObj" color="selectedObj.stroke"></div>
+        <label class="txt-label">Stroke</label>
+      </div>
+    </div>
+  </div>
+</div>
 <div ui-view="document-canvas"></div>
