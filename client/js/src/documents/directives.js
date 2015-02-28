@@ -160,10 +160,4 @@
       templateUrl: '/views/directives/svg.html'
     }
   })
-
-  .directive('pubInspector', function() {
-    return {
-      templateUrl: '/views/documents/inspector.html'
-    }
-  });
 }());

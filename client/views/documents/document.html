@@ -6,12 +6,58 @@
     </div>
   <div class="btn-group">
     <div class="dropdown" dropdown>
-      <button class="btn" dropdown-toggle>New Object</button>
+      <button class="btn" dropdown-toggle>New</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <button class="dropdown-menu-item" type="button" ng-click="addObject('rect')">Rectangle</button>
         <button class="dropdown-menu-item" type="button" ng-click="addObject('ellipse')">Ellipse</button>
         <button class="dropdown-menu-item" type="button" ng-click="addObject('text')">Text Box</button>
-
+      </div>
+    </div>
+    <div class="dropdown" dropdown>
+      <button class="btn" dropdown-toggle>Edit</button>
+      <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+        <button class="dropdown-menu-item" type="button" ng-click="cutObj()" ng-disabled="!selectedObj">Cut</button>
+        <button class="dropdown-menu-item" type="button" ng-click="copyObj()" ng-disabled="!selectedObj">Copy</button>
+        <button class="dropdown-menu-item" type="button" ng-click="pasteObj()" ng-disabled="!clipboard">Paste</button>
+        <div class="dropdown-menu-spacer"></div>
+        <button class="dropdown-menu-item" type="button" ng-click="deleteObj()" ng-disabled="!selectedObj">Remove Object</button>
+      </div>
+    </div>
+    <div class="dropdown" dropdown>
+      <button class="btn" dropdown-toggle>View</button>
+      <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+        <div class="dropdown-menu-header">Zoom</div>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(0.5)">
+          50%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 0.5"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(0.75)">
+          75%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 0.75"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(1)">
+          100%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 1"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(1.25)">
+          125%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 1.25"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(1.5)">
+          150%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 1.5"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(2)">
+          200%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 2"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="setZoomLevel(3)">
+          300%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 3"></span>
+        </button>
+        <div class="dropdown-menu-spacer"></div>
+        <button class="dropdown-menu-item" type="button" ng-click="toggleCanvasGrid()">{{ showCanvasGrid ? 'Hide' : 'Show'}} Canvas Grid</button>
+        <button class="dropdown-menu-item" type="button" ng-click="toggleSnapToGrid()">{{ snapToGrid ? 'Freeform Objects' : 'Snap Objects to Grid'}}</button>
       </div>
     </div>
     <button class="btn" ng-click="updateDocument(false)">Save</button>

@@ -134,6 +134,8 @@
         $scope.showInspector = false;
         $scope.zoomLevel = 1;
         $scope.colors = colors;
+        
+        console.log($scope.unitMarksHorizontal);
 
         $scope.updateDocument = function(closeDocumentView) {
           $scope.doc.put();
@@ -212,6 +214,10 @@
         
         $scope.changeTextAlign = function(textAlign) {
           $scope.selectedObj.textAlign = textAlign;
+        };
+        
+        $scope.setZoomLevel = function(zoomLevel) {
+          $scope.zoomLevel = zoomLevel;
         };
       }
     ])

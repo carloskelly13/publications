@@ -1,15 +1,17 @@
 <div class="editor-view">
   <div class="canvas-container" ng-class="{'canvas-expanded' : showInspector}">
     <div class="unit unit-top" ng-repeat="x in xAxisRange()"
-                      ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 7) + 'px' }"
+                      ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 28) + 'px' }"
                       ng-if="(x / 4) % unitDivider() === 0 && x > 0">
       {{ x / 4 }}&rdquo;
     </div>
     <div class="unit unit-left" ng-repeat="y in yAxisRange()"
-                      ng-style="{ top: (y * (dpi / 4.0) * zoomLevel + 15) + 'px' }"
+                      ng-style="{ top: (y * (dpi / 4.0) * zoomLevel - 3) + 'px' }"
                       ng-if="(y / 4) % unitDivider() === 0 && y > 0">
       {{ y / 4 }}&rdquo;
     </div>
+    <div class="unit-mark horizontal" ng-repeat="x in xAxisRange()" ng-style="{left: (x * zoomLevel *  dpi / 4) + 25 + 'px'}" ng-class="{'inch' : (x / 4) % unitDivider() === 0 && x > 0}"></div>
+    <div class="unit-mark vertical" ng-repeat="y in yAxisRange()" ng-style="{top: (y * zoomLevel *  dpi / 4) + 25 + 'px'}" ng-class="{'inch' : (y / 4) % unitDivider() === 0 && y > 0}"></div>
     <svg ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
          ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
          class="canvas-svg">

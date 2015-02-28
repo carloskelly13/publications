@@ -19,7 +19,7 @@
 
   .canvas-container {
 //     .animation(margin, 250ms);
-    margin: 90px 0 0 10px;
+    margin: 52px 0 0 10px;
     position: relative;
 
     @media (max-width: 767px) {
@@ -36,21 +36,50 @@
   .unit {
     display: inline-block;
     position: absolute;
-    font-size: 13px;
+    font-size: 11px;
     width: 36px;
     color: #ccc;
 
     &.unit-top {
-      top: 8px;
-      text-align: center;
+      top: 2px;
+      text-align: left;
     }
 
     &.unit-left {
-      left: -1px;
-      text-align: center;
+      left: -7px;
+      text-align: left;
       -ms-transform:rotate(270deg);
       -webkit-transform:rotate(270deg);
       transform:rotate(270deg);
+    }
+  }
+  
+  .unit-mark {
+    background: #999;
+    
+    &.horizontal {
+      position: absolute;
+      width: 1px;
+      height: 10px;
+      top: 15px;
+      
+      &.inch {
+        height: 18px;
+        top: 7px;
+      }
+    }
+    
+    &.vertical {
+      position: absolute;
+      width: 10px;
+      height: 1px;
+      left: 15px;
+      
+      &.inch {
+        width: 18px;
+        height: 1px;
+        left: 7px;
+      }
     }
   }
 
