@@ -1,6 +1,6 @@
 .editor-toolbar {
+//   .animation(top, 250ms);
   background: hsla(238, 4%, 37%, 0.98);
-//   border-top: 1px #404147 solid;
   padding: 0;
   height: 40px;
   position: fixed;
@@ -8,6 +8,12 @@
   top: 40px;
   width: 100%;
   z-index: 9004;
+  
+/*
+  &.active {
+    top: 40px;
+  }
+*/
   
   .editor-toolbar-container {
     .animation(opacity, 250ms);
@@ -18,6 +24,11 @@
       display: inline-block;
       width: 15px;
       height: 1px;
+    }
+    
+    .txt-control-group {
+      position: relative;
+      display: inline-block;
     }
     
     .txt-control {
@@ -40,6 +51,21 @@
         display: inline-block;
         width: 50px;
         padding: 1px 2px;
+        height: 17px;
+        
+        &.txt-typeface {
+          height: 17px;
+          width: 120px;
+          font-size: 13px;
+          line-height: 15px;
+          cursor: default;
+        }
+      }
+      
+      .btn-spacer {
+        display: inline-block;
+        width: 2px;
+        height: 1px;
       }
       
       .color-picker-container {        

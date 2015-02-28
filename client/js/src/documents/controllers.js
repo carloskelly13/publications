@@ -209,6 +209,10 @@
         $scope.addObject = function(objType) {
           $scope.doc.shapes.push(documentServices.newShape(objType));
         };
+        
+        $scope.changeTextAlign = function(textAlign) {
+          $scope.selectedObj.textAlign = textAlign;
+        };
       }
     ])
 

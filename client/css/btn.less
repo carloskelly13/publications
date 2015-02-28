@@ -164,6 +164,22 @@
     
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
+      
+    &.btn-toolbar-icon {
+      border-radius: 2px;
+      background: hsla(0, 0%, 0%, 0.2);
+      padding: 0 2px;
+      margin: 0;
+      font-size: 15px;
+      height: 17px;
+      line-height: 13px;
+      
+      &.btn-toolbar-icon-active {
+        background: #bfbfd0;
+        color: @color-text;
+      }
+    }
   }
 
   &:disabled, &:disabled:hover {
@@ -172,5 +188,34 @@
     &.btn-frame {
       background: #f5f5f5 !important;
     }
+  }
+}
+
+.btn-toolbar-icon-group {
+  margin: 3px 0 0 0;
+  
+  .btn-toolbar-icon {
+    border-radius: 0 !important;
+    float: left;
+    padding: 0 6px !important;
+    width: 33px;
+    
+    &:first-child {
+      border-radius: 2px 0 0 2px !important;
+    }
+    
+    &:last-child {
+      border-radius: 0 2px 2px 0 !important;
+    }
+  }
+  
+  &:after {
+    clear: both;
+    display: block;
+    content: ' ';
+  }
+  
+  + .txt-label {
+    margin: 1px 0 0 0 !important;
   }
 }
