@@ -134,9 +134,8 @@
         $scope.showInspector = false;
         $scope.zoomLevel = 1;
         $scope.colors = colors;
+        $scope.editingText = false;
         
-        console.log($scope.unitMarksHorizontal);
-
         $scope.updateDocument = function(closeDocumentView) {
           $scope.doc.put();
 
@@ -177,9 +176,16 @@
         $scope.svgObjectSelected = function(obj) {
           $scope.selectedObj = obj;
           $scope.showInspector = obj !== null;
+          $scope.editingText = false;
 
           if (!obj && $scope.currentInspector === 'color') {
             $scope.toggleInspector('shape');
+          }
+        };
+        
+        $scope.selectedObjDblClick = function() {
+          if ($scope.selectedObj.type === 'text') {
+            $scope.editingText = true;  
           }
         };
 

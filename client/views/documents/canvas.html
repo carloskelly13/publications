@@ -71,7 +71,8 @@
                            ng-attr-height="{{ shape.height * dpi * zoomLevel }}"
                            ng-attr-width="{{ shape.width * dpi * zoomLevel }}"
                            ng-click="svgObjectSelected(shape)">
-              <p class="text-box" ng-style="{
+              <p class="text-box" 
+                ng-style="{
                 color: shape.color,
                 fontFamily: shape.fontFamily,
                 fontStyle: shape.fontStyle,
@@ -95,6 +96,7 @@
               fill-opacity="0"
               stroke-opacity="1"
               cursor="move"
+              ng-dblclick="selectedObjDblClick()"
               pub-draggable />
         <g id="anchors">
           <rect ng-repeat="objAnchor in objAnchors.points"
@@ -109,6 +111,21 @@
                 stroke-opacity="1"
                 cursor="{{ objAnchor.coordinate }}-resize"
                 pub-resizable></rect>
+          <foreignObject ng-attr-x="{{ selectedObj.x * dpi * zoomLevel }}"
+                         ng-attr-y="{{ selectedObj.y * dpi * zoomLevel }}"
+                         ng-attr-height="{{ selectedObj.height * dpi * zoomLevel }}"
+                         ng-attr-width="{{ selectedObj.width * dpi * zoomLevel }}"
+                         ng-if="editingText">
+            <textarea class="editing-text-area" 
+                ng-model="selectedObj.text" ng-style="{
+                  fontFamily: selectedObj.fontFamily,
+                  fontStyle: selectedObj.fontStyle,
+                  fontSize: (selectedObj.fontSize * zoomLevel) + 'px',
+                  fontWeight: selectedObj.fontWeight,
+                  textAlign: selectedObj.textAlign
+                }">
+            </textarea>                         
+          </foreignObject>
         </g>
       </g>
     </svg>

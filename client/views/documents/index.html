@@ -3,7 +3,7 @@
   <div class="btn-group">
     <div class="dropdown" dropdown is-open="newDocumentModalVisible">
       <button class="btn dropdown-toggle" dropdown-toggle>New</button>
-      <div class="dropdown-menu new-document" role="menu" ng-click="$event.stopPropagation()">
+      <div class="dropdown-menu document-item-menu padded-menu new-document" role="menu" ng-click="$event.stopPropagation()">
         <form ng-submit="newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
           <div class="form-text-inputs">
             <div class="txt-group">
@@ -19,14 +19,14 @@
               <label class="txt-label" for="height">Height (inches)</label>
             </div>
           </div>
-          <button class="btn btn-full-width" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
+          <button class="dropdown-menu-item" type="submit" ng-disabled="newDocumentForm.$invalid">Create Document</button>
         </form>
       </div>
     </div>
     <form action="{{ 'documents/' + selectedDoc._id + '/pdf'}}" target="_blank" style="display: inline-block;">
       <button class="btn" type="submit" ng-disabled="selectedDoc == null">PDF</button> 
     </form>
-    <button class="btn" ng-disabled="selectedDoc == null">Delete</button> 
+    <button class="btn" ng-disabled="selectedDoc == null" ng-click="deleteDocument(selectedDoc)">Delete</button> 
     <div class="dropdown" dropdown>
       <button class="btn" dropdown-toggle>{{user.name}}</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
