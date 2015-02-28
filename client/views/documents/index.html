@@ -23,10 +23,11 @@
         </form>
       </div>
     </div>
+    <button class="btn" ng-disabled="selectedDoc === null" ng-click="openDocument(selectedDoc)">Edit</button>
     <form action="{{ 'documents/' + selectedDoc._id + '/pdf'}}" target="_blank" style="display: inline-block;">
-      <button class="btn" type="submit" ng-disabled="selectedDoc == null">PDF</button> 
+      <button class="btn" type="submit" ng-disabled="selectedDoc === null">PDF</button> 
     </form>
-    <button class="btn" ng-disabled="selectedDoc == null" ng-click="deleteDocument(selectedDoc)">Delete</button> 
+    <button class="btn" ng-disabled="selectedDoc === null" ng-click="deleteDocument(selectedDoc)">Delete</button> 
     <div class="dropdown" dropdown>
       <button class="btn" dropdown-toggle>{{user.name}}</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
