@@ -32,14 +32,15 @@
       <button class="btn" type="submit" ng-disabled="selectedDoc === null">PDF</button> 
     </form>
     <button class="btn" ng-disabled="selectedDoc === null" ng-click="deleteDocument(selectedDoc)">Delete</button> 
-    <div class="dropdown" dropdown>
-      <button class="btn" dropdown-toggle>{{user.name}}</button>
-      <div class="dropdown-menu document-item-menu padded-menu" role="menu">
-        <button class="dropdown-menu-item" type="button" ng-click="logout()">Log Out</button>
-      </div>
-    </div>
+    
 <!--       <button class="btn" ng-click="viewUser()">{{user.temporary ? 'Create Account' : user.name}}</button> -->
 <!--       <button class="btn btn-icon" type="button" ng-click="logout()">&#xe2ca;</button> -->
+  </div>
+  <div class="dropdown dropdown-float-right" dropdown>
+    <button class="btn" dropdown-toggle>{{user.name}}</button>
+    <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+      <button class="dropdown-menu-item" type="button" ng-click="logout()">Log Out</button>
+    </div>
   </div>
 </div>
 <div class="documents-list"  ng-click="documentIconSelected(null)">

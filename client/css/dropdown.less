@@ -1,6 +1,15 @@
 .dropdown {
 	display: inline-block;
 	position: relative;
+	
+	&.dropdown-float-right {
+  	float: right;
+  	margin: 9px 1.5em 0 0;
+  	
+  	.btn {
+    	margin: 0;
+  	}
+	}
 
 	&.open {
 		.dropdown-menu {
