@@ -11,7 +11,8 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 
-	background: hsla(0, 0%, 0%, 0.2);
+	background: hsla(0, 0%, 100%, 0.1);
+	box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.2);
   box-sizing: border-box;
   border: none;
   border-radius: 2px;
@@ -40,14 +41,31 @@
       color: #fff;
     }
   }
+  
+  &.light {
+    color: @color-text;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.2);
+    
+    &:focus {
+      background: transparent;
+    
+    + .txt-label {
+      color: #666;
+    }
+  }
+  }
 
   &.txt-search {
-	.animation(background, 333ms);
+// 	.animation(background, 333ms);
 	background: hsla(0, 0%, 0%, 0.1);
-	color: hsla(0, 0%, 100%, 0.75);
+	box-shadow: none;
+	color: @color-text;
+// 	color: hsla(0, 0%, 100%, 0.75);
+//   box-shadow: inset 0 0 0 1px #999;
 	display: block;
 	font-size: 15px;
-    margin: 2em auto;
+    margin: 1.5em auto 2em auto;
     text-align: center;
     width: 40%;
 
@@ -76,7 +94,7 @@
     }
     
     &:focus, &:active {
-	    background: hsla(0, 0%, 0%, 0.2);
+// 	    background: hsla(0, 0%, 0%, 0.2);
     }
   }
 }

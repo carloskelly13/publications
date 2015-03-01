@@ -3,7 +3,7 @@
   <div class="app-wordmark"></div>
   <div class="app-name">
     {{doc.name}}
-    </div>
+  </div>
   <div class="btn-group">
     <div class="dropdown" dropdown>
       <button class="btn" dropdown-toggle>New</button>
@@ -87,11 +87,9 @@
       <div class="txt-control-group" ng-if="selectedObj.type === 'text'">
         <div class="txt-control">
           <div pub-typeface-picker typefaces="typefaces" selected-obj="selectedObj"></div>
-          <label class="txt-label" for="typeface">Typeface</label>
         </div>
         <div class="txt-control">
           <input pub-unsigned-integer-input type="text" name="font-size" id="font-size" class="txt" ng-model="selectedObj.fontSize" />
-          <label class="txt-label" for="font-size">Size</label>
         </div>
         <div class="txt-control">
           <div class="btn-toolbar-icon-group">
@@ -99,7 +97,6 @@
             <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'center'}" ng-click="changeTextAlign('center')">&#xe4f4;</button>
             <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'right'}" ng-click="changeTextAlign('right')">&#xe4f6;</button>
           </div>          
-          <label class="txt-label">Alignment</label>
         </div>
       </div>
       <div class="txt-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
@@ -113,7 +110,6 @@
       <div class="spacer"></div>
       <div class="txt-control" ng-if="selectedObj.type === 'text'">
         <div pub-color-picker class="color-picker-container" colors="colors" property="color" selected-obj="selectedObj" color="selectedObj.color"></div>
-        <label class="txt-label">Text</label>
       </div>
       <div class="txt-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
         <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>

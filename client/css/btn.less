@@ -47,7 +47,6 @@
   }
 
   &:active {
-//     .touch-animation(0.95);
     color: #fff;
     cursor: pointer;
   }
@@ -168,22 +167,23 @@
       
     &.btn-toolbar-icon {
       border-radius: 2px;
-      background: hsla(0, 0%, 0%, 0.2);
+      background: hsla(0, 0%, 100%, 0.1);
       padding: 0 2px;
       margin: 0;
       font-size: 15px;
-      height: 17px;
+      height: 15px;
       line-height: 13px;
       
       &.btn-toolbar-icon-active {
-        background: #ccccd7;
-        color: @color-text;
+        background: hsla(0, 0%, 100%, 0.3);
+        color: #fff;
+//         color: @color-text;
       }
     }
   }
 
   &:disabled, &:disabled:hover {
-    color: hsla(0, 0%, 0%, 0.25);
+    color: hsla(0, 0%, 100%, 0.15);
 
     &.btn-frame {
       background: #f5f5f5 !important;
@@ -193,20 +193,16 @@
 
 .btn-toolbar-icon-group {
   margin: 3px 0 0 0;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.3);
+  overflow: hidden;
   
   .btn-toolbar-icon {
     border-radius: 0 !important;
     float: left;
     padding: 0 6px !important;
     width: 33px;
-    
-    &:first-child {
-      border-radius: 2px 0 0 2px !important;
-    }
-    
-    &:last-child {
-      border-radius: 0 2px 2px 0 !important;
-    }
+    left: -1px;
   }
   
   &:after {
@@ -216,6 +212,6 @@
   }
   
   + .txt-label {
-    margin: 1px 0 0 0 !important;
+    margin: 2px 0 0 0 !important;
   }
 }

@@ -1,12 +1,12 @@
 .documents-list-container {
   padding-top: 3em;
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 
 .documents-list {
   -webkit-overflow-scrolling: touch;
-  background: #404147;
+  background: #ccc;
   height: inherit;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -48,7 +48,7 @@
     display: inline-block;
     cursor: pointer;
     margin: 0em;
-    padding: 1em 2%;
+    padding: 1em 2% 2.5em;
     text-align: center;
     vertical-align: bottom;
     width: 21%;
@@ -64,14 +64,14 @@
     .document-icon {
       border-radius: 2px;
       background: #fff;
-      box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.75);
+      box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.15);
       display: inline-block;
       overflow: hidden;
     }
     
     &.document-item-active {
       .document-icon {
-        box-shadow: 0 0 0 2px #404147, 0 0 0 6px @color-primary;
+        box-shadow: 0 0 0 2px #ccc, 0 0 0 6px @color-primary;
       }
       
 /*
@@ -91,11 +91,11 @@
     .document-name {
       font-size: 14px;
       font-weight: 500;
-      color: #eee;
+      color: @color-text;
     }
 
     .document-info {
-      color: #ccc;
+      color: @color-text;
       font-size: 11px;
     }
   }

@@ -18,13 +18,13 @@
 
 	.dropdown-menu {
 		border-radius: 4px;
-		background: hsla(238, 5%, 25%, 0.98);
+		background: hsla(0, 0%, 100%, 0.98);
 		background-clip: padding-box;
-		border: 1px solid hsla(238, 5%, 20%, 0.95);
-		box-shadow: 0 1px 25px hsla(0, 0%, 0%, 0.33);
+// 		border: 1px solid hsla(238, 5%, 20%, 0.95);
+		box-shadow: 0 1px 25px hsla(0, 0%, 0%, 0.25);
 		display: none;
 		float: left;
-		margin-top: 9px;
+		margin-top: 12px;
 		left: 0;
 		top: 100%;
 		position: absolute;
@@ -48,17 +48,19 @@
 
 		&:after {
 			border-color: transparent;
-			border-bottom-color: hsla(238, 5%, 25%, 0.98);
+			border-bottom-color: hsla(0, 0%, 100%, 0.98);
 			border-width: 10px;
 			margin-left: -10px;
 		}
 
+/*
 		&:before {
 			border-color: transparent;
-			border-bottom-color: hsla(238, 5%, 20%, 0.95);
+			border-bottom-color: hsla(0, 0%, 70%, 0.95);
 			border-width: 11px;
 			margin-left: -11px;
 		}
+*/
 
 		&.new-document {
 			width: 250px !important;
@@ -84,15 +86,15 @@
 
 			.color-swatch {
 				border-radius: 2px;
-				box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25), inset 0 0 0 2px hsla(0, 0%, 100%, 0.65), inset 0 0 0 3px hsla(0, 0%, 0%, 0.5);
+				box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.33), inset 0 0 0 2px hsla(0, 0%, 100%, 1), inset 0 0 0 3px hsla(0, 0%, 0%, 0.33);
 				display: inline-block;
-				width: 18%;
+				width: 16%;
 				height: 20px;
-				margin: 2px 1%;
+				margin: 4px 2%;
 				float: left;
 
 				&:hover {
-				box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25), inset 0 0 0 2px @color-primary, inset 0 0 0 3px hsla(0, 0%, 0%, 0.5);
+				box-shadow: 0 0 0 1px @color-primary, inset 0 0 0 2px @color-primary, inset 0 0 0 3px hsla(0, 0%, 0%, 0.33);
 				}
 			}
 
@@ -116,15 +118,15 @@
 		}
 		
 		.dropdown-menu-spacer {
-  		width: 92%;
-  		margin: 6px 4%;
+  		width: 98%;
+  		margin: 6px 1%;
   		height: 1px;
-  		background: hsla(0, 0%, 100%, 0.2);
+  		background: hsla(0, 0%, 0%, 0.1);
 		}
 		
 		.dropdown-menu-header {
   		display: block;
-  		color: #777;
+  		color: #999;
   		font-weight: 500;
   		font-size: 11px;
   		text-align: left;
@@ -134,7 +136,7 @@
 		}
 
 		.dropdown-menu-item {
-			color: #eee;
+			color: @color-text;
 			cursor: pointer;
 			background: transparent;
 			border: none;
@@ -166,7 +168,7 @@
 			
 			&:disabled {
   			cursor: not-allowed;
-  		  color: #5e5e5e;
+  		  color: #ccc;
   			
   			&:hover {
     			background: transparent !important;
