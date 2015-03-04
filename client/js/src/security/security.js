@@ -17,12 +17,6 @@
             controller: 'HomeController'
           })
 
-          .state('pub.login', {
-            url: '/login',
-            templateUrl: 'views/login/login.html',
-            controller: 'LoginController'
-          })
-
           .state('pub.user', {
             url: '/user',
             templateUrl: 'views/login/user.html',

@@ -45,6 +45,30 @@
     float: right;
     margin: 11px 1.5em 0 0;
   }
+  
+  &.btn-frame-big {
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    padding: 1em 0;
+    margin: 0 0 1em 0 !important;
+    background: hsla(0, 0%, 100%, 0.25);
+    color: hsla(0, 0, 100%, 0.8);
+    
+    &.thin {
+      padding: 0.65em 0;
+    }
+    
+    &:hover {
+      background: hsla(0, 0%, 100%, 0.35);
+      color: #fff;
+    }
+    
+    &:disabled, &:disabled:hover {
+      background: hsla(0, 0%, 100%, 0.05);
+      cursor: not-allowed;
+    }
+  }
 
   &:hover {
     color: #fff;
@@ -62,7 +86,15 @@
   }
 
   &.btn-light {
-    color: #fff;
+    color: @color-text;
+    
+    &:hover {
+      color: @color-primary;
+    }
+    
+    &:disabled, &:disabled:hover {
+      color: #ccc;
+    }
   }
   
   &.btn-dark {

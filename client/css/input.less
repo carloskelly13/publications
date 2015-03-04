@@ -1,4 +1,5 @@
 .txt, .picker {
+  .animation(all, 250ms);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-box-sizing: border-box;
@@ -11,16 +12,15 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
 
-	background: hsla(0, 0%, 100%, 0.1);
-	box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.2);
+  background: transparent;
   box-sizing: border-box;
   border: none;
-  border-radius: 2px;
-  color: #ccc;
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.25);
+  color: #eee;
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
   font-size: 14px;
   margin: 0;
-  padding: 3px;
+  padding: 3px 0;
   outline: none;
   resize: none;
   text-align: left;
@@ -29,13 +29,60 @@
   vertical-align: middle;
   white-space: nowrap;
   zoom: 1;
+  
+  &.frame {
+    border: 1px solid hsla(0, 0%, 100%, 0.35);
+    padding: 3px;
+    border-radius: 2px;
+    
+    &:focus {
+      border-color: hsla(0, 0%, 100%, 0.9);
+    }
+  }
+  
+  &.big {
+    box-shadow: none;
+    font-weight: 300;
+    font-size: 22px;
+    padding: 6px 0;
+    
+    &::-webkit-input-placeholder {
+      color: hsla(0, 0%, 100%, 0.15)
+    }
+
+    &::-moz-placeholder {
+      color: hsla(0, 0%, 100%, 0.15)
+    }
+
+    &:-ms-input-placeholder {
+      color: hsla(0, 0%, 100%, 0.15)
+    }
+
+    &:-moz-placeholder {
+      color: hsla(0, 0%, 100%, 0.15)
+    }
+  
+    + label {
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    &.big-dark {
+      border-color: #999;
+      color: #777;
+      
+      &:focus {
+        border-color: #777;
+      }
+    }
+  }
 
   @media all and (max-width: 767px) {
     font-size: 16px;
   }
 
-  &:focus {
-    background: hsla(0, 0%, 0%, 0.3);
+  &:focus {    
+    border-color: hsla(0, 0%, 100%, 0.9);
     
     + .txt-label {
       color: #fff;
@@ -46,9 +93,16 @@
     color: @color-text;
     background: transparent;
     box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.2);
+    padding: 3px;
+    border-radius: 2px;
+    
+    + .txt-label {
+      color: #999;
+    }
     
     &:focus {
       background: transparent;
+      box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.3);
     
     + .txt-label {
       color: #666;
@@ -57,25 +111,10 @@
   }
 
   &.txt-search {
-// 	.animation(background, 333ms);
-	background: hsla(0, 0%, 0%, 0.1);
-	box-shadow: none;
-	color: @color-text;
-// 	color: hsla(0, 0%, 100%, 0.75);
-//   box-shadow: inset 0 0 0 1px #999;
-	display: block;
-	font-size: 15px;
-    margin: 1.5em auto 2em auto;
+    width: 50%;
     text-align: center;
-    width: 40%;
-
-    @media all and (max-width: 767px) {
-      border-left: none;
-      border-right: none;
-      border-radius: 0;
-      margin: 1em 0 0;
-      width: 100%;
-    }
+    margin: 1em auto 2.25em auto;
+    display: block;
 
     &::-webkit-input-placeholder {
       .search-input-icon;
@@ -91,10 +130,6 @@
 
     &:-moz-placeholder {
       .search-input-icon;
-    }
-    
-    &:focus, &:active {
-// 	    background: hsla(0, 0%, 0%, 0.2);
     }
   }
 }
@@ -136,12 +171,13 @@
 }
 
 .txt-label {
+  .animation(all, 250ms);
   display: inline-block;
   font-size: 11px;
   margin: 3px 0 0 0;
   text-align: left;
   text-transform: capitalize;
-  color: #999;
+  color: hsla(0, 0%, 100%, 0.6);
 }
 
 .txt-group {
@@ -213,16 +249,34 @@
 }
 
 .full-page-form {
-  margin: 2em auto;
+  margin: 3em auto 2em auto;
   text-align: left;
-  width: 70%;
+  width: 40%;
+  
+  h2 {
+    color: #cfd6e4;
+    margin: 0 0 2em 0;
+  }
+  
+  @media all and (max-width: 767px) {
+    width: 100%;
+    
+    .txt, .btn {
+      text-align: center;
+      border-radius: 0 !important;
+      
+      + label {
+        text-align: center;
+      }
+    }
+  }
 
   .full-page-form-content {
     text-align: left;
 
     .txt-group {
       margin-bottom: 1em;
-      width: 45%;
+      width: 100%;
     }
 
     .form-btns {
