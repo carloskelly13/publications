@@ -34,46 +34,14 @@
       '$state', 
       '$location', 
       'Restangular', 
-      'documentServices', 
-      'authentication', 
-      'documents', 
-      'typefaces',
-      function($scope, $state, $location, Restangular, documentServices, authentication, documents, typefaces) {
+      'authentication',
+      'documents',
+      function($scope, $state, $location, Restangular, authentication, documents) {
         var documentsApi = Restangular.all('documents');
-
         $scope.updateAuthenticationStatus();
+        $scope.documentsApi = documentsApi;
         $scope.documents = documents;
         $scope.dpi = 72;
-        $scope.iconDpi = 15;
-        $scope.newDocumentModalVisible = false;
-        $scope.sortFilter = 'name';
-        $scope.sortReverse = false;
-        $scope.typefaces = typefaces;
-        $scope.documentsApi = documentsApi;
-                        
-        $scope.updateSortFilter = function(sortFilter, sortReverse) {
-          $scope.sortFilter = sortFilter;
-          $scope.sortReverse = sortReverse;
-        };
-
-        $scope.viewUser = function() {
-          $state.go('pub.user');
-        };
-
-        $scope.deleteDocument = function(sender) {
-          _.remove($scope.documents, function(doc) {
-            return doc._id === sender._id;
-          })
-          sender.remove();
-        };
-
-        $scope.documentIconSize = function(doc) {
-          var iconDpi = 15,
-            iconWidth = Math.max(Math.min(doc.width * iconDpi, 160), 30),
-            iconHeight = (iconWidth / doc.width) * doc.height;
-
-          return {width: iconWidth + 'px', height: iconHeight + 'px'};
-        };
       }
     ])
     
@@ -81,8 +49,13 @@
       '$scope', 
       '$state',
       '$location',
-      function($scope, $state, $location) {
+      'documentServices', 
+      'typefaces',
+      function($scope, $state, $location, documentServices, typefaces) {
         $scope.selectedDoc = null;
+        $scope.iconDpi = 15;
+        $scope.newDocumentModalVisible = false;
+        $scope.typefaces = typefaces;
 
         $scope.newDocument = function() {
           $scope.documentsApi.post({
@@ -113,6 +86,25 @@
           $scope.newWidth = '';
           $scope.newHeight = '';
         };
+        
+        $scope.documentIconSize = function(doc) {
+          var iconDpi = 15,
+            iconWidth = Math.max(Math.min(doc.width * iconDpi, 160), 30),
+            iconHeight = (iconWidth / doc.width) * doc.height;
+
+          return {width: iconWidth + 'px', height: iconHeight + 'px'};
+        };
+        
+        $scope.viewUser = function() {
+          $state.go('pub.user');
+        };
+
+        $scope.deleteDocument = function(sender) {
+          _.remove($scope.documents, function(doc) {
+            return doc._id === sender._id;
+          })
+          sender.remove();
+        };
       }
     ])
 
@@ -129,7 +121,6 @@
         $scope.selectedObj = null;
         $scope.showCanvasGrid = true;
         $scope.snapToGrid = true;
-        $scope.currentInspector = 'document';
         $scope.clipboard = null;
         $scope.showInspector = false;
         $scope.zoomLevel = 1;
@@ -162,25 +153,10 @@
           $scope.snapToGrid = !$scope.snapToGrid;
         };
 
-        $scope.downloadPdf = function() {
-          $scope.doc.put().then(function() {
-            var documentPdfRoute = '/documents/' + $scope.doc._id + '/pdf';
-            $window.location = documentPdfRoute;
-          });
-        };
-
-        $scope.toggleInspector = function(inspector) {
-          $scope.currentInspector = inspector;
-        };
-
         $scope.svgObjectSelected = function(obj) {
           $scope.selectedObj = obj;
           $scope.showInspector = obj !== null;
           $scope.editingText = false;
-
-          if (!obj && $scope.currentInspector === 'color') {
-            $scope.toggleInspector('shape');
-          }
         };
         
         $scope.selectedObjDblClick = function() {
