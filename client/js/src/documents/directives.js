@@ -116,6 +116,78 @@
       }
     }
   })
+  
+  .directive('shapeRectangle', function() {
+    return {
+      scope: {
+        shape: '=',
+        zoomLevel: '=',
+        selectedObj: '='
+      },
+      template: '<rect ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
+                'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
+                'ng-attr-rx="{{shape.r * zoomLevel}}"' +
+                'ng-attr-ry="{{shape.r * zoomLevel}}"' +
+                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' + 
+                'ng-attr-width="{{shape.width * dpi * zoomLevel}}"' +
+                'ng-attr-fill="{{shape.fill}}"' +
+                'ng-attr-stroke="{{shape.stroke}}"' +
+                'ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"' +
+                'ng-attr-fill-opacity="{{shape.fillOpacity}}"' +
+                'ng-attr-stroke-opacity="{{shape.strokeOpacity}}"' +
+                '/>',
+      link: function(scope, element, attrs) {
+        scope.dpi = 72;
+      }
+    }
+  })
+  
+  .directive('shapeEllipse', function() {
+    return {
+      scope: {
+        shape: '=',
+        zoomLevel: '=',
+        selectedObj: '='
+      },
+      template: '<ellipse ng-attr-cx="{{(shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel)}}"' +
+                'ng-attr-cy="{{(shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel)}}"' +
+                'ng-attr-rx="{{shape.width / 2.0 * dpi * zoomLevel}}"' +
+                'ng-attr-ry="{{shape.height / 2.0 * dpi * zoomLevel}}"' +
+                'ng-attr-fill="{{shape.fill}}"' +
+                'ng-attr-stroke="{{shape.stroke}}"' +
+                'ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"' +
+                'ng-attr-fill-opacity="{{shape.fillOpacity}}"' +
+                'ng-attr-stroke-opacity="{{shape.strokeOpacity}}"' +
+                '/>',
+      link: function(scope, element, attrs) {
+        scope.dpi = 72;
+      }
+    }
+  })
+
+  .directive('shapeText', function() {
+    return {
+      scope: {
+        shape: '=',
+        zoomLevel: '=',
+        selectedObj: '='
+      },
+      template: '<foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
+                'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
+                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' + 
+                'ng-attr-width="{{shape.width * dpi * zoomLevel}}">' +
+                '<p ng-style="{color: shape.color,' + 
+                'fontFamily: shape.fontFamily,' + 
+                'fontStyle: shape.fontStyle,' +
+                'fontSize: (shape.fontSize * zoomLevel) + \'px\',' + 
+                'fontWeight: shape.fontWeight,' + 
+                'textAlign: shape.textAlign }">{{shape.text}}</p>' +
+                '</foreignObject>',
+      link: function(scope, element, attrs) {
+        scope.dpi = 72;
+      }
+    }
+  })
 
   .directive('pubColorPicker', function() {
     return {
