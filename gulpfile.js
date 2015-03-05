@@ -2,19 +2,19 @@
 /**
  * Publications
  * Gulp Configuration File
- * 2014 Michael Kelly and Carlos Paelinck
+ * 2015 Michael Kelly and Carlos Paelinck
  */
 
 function logError(err) {
   console.log(err);
 }
 
-var concat = require('gulp-concat')
-  , gulp = require('gulp')
-  , html2js = require('gulp-html2js')
-  , less = require('gulp-less')
-  , path = require('path')
-  , uglify = require('gulp-uglify')
+var concat = require('gulp-concat'),
+  gulp = require('gulp'),
+  html2js = require('gulp-html2js'),
+  less = require('gulp-less'),
+  path = require('path'),
+  uglify = require('gulp-uglify');
 
 var paths = {
   css: 'client/css/*.less',
@@ -28,6 +28,7 @@ gulp.task('less', function() {
       paths: [ path.join(__dirname, 'less', 'includes') ]
     }).on('error', function(err) {
       logError(err);
+      this.emit('end');
     }))
     .pipe(gulp.dest('client/css/'));
 });
@@ -39,6 +40,7 @@ gulp.task('templates', function() {
       useStrict: true
     }).on('error', function(err) {
       logError(err);
+      this.emit('end');
     }))
     .pipe(concat('templates.js'))
     .pipe(gulp.dest('client/views/'));
