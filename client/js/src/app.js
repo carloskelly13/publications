@@ -16,15 +16,18 @@
     '$stateProvider',
     '$urlRouterProvider',
     '$locationProvider',
+    '$injector',
     '$httpProvider',
     'RestangularProvider',
     function($stateProvider,
              $urlRouterProvider,
              $locationProvider,
+             $injector,
              $httpProvider,
              RestangularProvider) {
+      
       $urlRouterProvider.otherwise('/documents/all');
-
+      
       RestangularProvider.setRestangularFields({
         id: '_id'
       });
@@ -37,17 +40,15 @@
           abstract: true
         });
 
-      $httpProvider.interceptors.push(function($q, $location) {
+      $httpProvider.interceptors.push(function($q, $location, $injector) {
         return {
           responseError: function(response) {
             if (response.status === 401 || response.status === 403) {
-              if ($location.path() !== '/login') {
-                $location.path('/home');
-              }
-
+              $injector.get('$state').transitionTo('pub.home');
               return $q.reject(response);
             } else {
-              return $q.reject(response);
+              $injector.get('$state').transitionTo('pub.documents.all');
+              return $q.then(response);
             }
           }
         }

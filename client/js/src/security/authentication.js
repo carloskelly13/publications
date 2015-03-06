@@ -11,6 +11,7 @@
 
         var authentication = {
           requestSecurityContext: function() {
+            debugger;
             if (securityContext.authenticated) {
               return $q.when(securityContext);
 
