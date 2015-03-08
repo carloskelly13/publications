@@ -124,6 +124,9 @@
         zoomLevel: '=',
         selectedObj: '='
       },
+      restrict: 'E',
+      type: 'svg',
+      replace: true,
       template: '<rect ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
                 'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
                 'ng-attr-rx="{{shape.r * zoomLevel}}"' +
@@ -149,6 +152,9 @@
         zoomLevel: '=',
         selectedObj: '='
       },
+      restrict: 'E',
+      type: 'svg',
+      replace: true,
       template: '<ellipse ng-attr-cx="{{(shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel)}}"' +
                 'ng-attr-cy="{{(shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel)}}"' +
                 'ng-attr-rx="{{shape.width / 2.0 * dpi * zoomLevel}}"' +
@@ -172,6 +178,9 @@
         zoomLevel: '=',
         selectedObj: '='
       },
+      restrict: 'E',
+      type: 'svg',
+      replace: true,
       template: '<foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
                 'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
                 'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' + 

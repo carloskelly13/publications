@@ -36,12 +36,14 @@
       'Restangular', 
       'authentication',
       'documents',
-      function($scope, $state, $location, Restangular, authentication, documents) {
+      'typefaces',
+      function($scope, $state, $location, Restangular, authentication, documents, typefaces) {
         var documentsApi = Restangular.all('documents');
         $scope.updateAuthenticationStatus();
         $scope.documentsApi = documentsApi;
         $scope.documents = documents;
         $scope.dpi = 72;
+        $scope.typefaces = typefaces;
       }
     ])
     
@@ -50,12 +52,10 @@
       '$state',
       '$location',
       'documentServices', 
-      'typefaces',
-      function($scope, $state, $location, documentServices, typefaces) {
+      function($scope, $state, $location, documentServices) {
         $scope.selectedDoc = null;
         $scope.iconDpi = 15;
         $scope.newDocumentModalVisible = false;
-        $scope.typefaces = typefaces;
 
         $scope.newDocument = function() {
           $scope.documentsApi.post({

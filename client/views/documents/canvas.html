@@ -22,7 +22,9 @@
     </div>
     <svg ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
       ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
-      class="canvas-svg">
+      class="canvas-svg"
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1">
       <g id="svg-background">
         <rect ng-attr-height="{{doc.height * dpi * zoomLevel}}"
           ng-attr-width="{{doc.width * dpi * zoomLevel}}"
@@ -46,24 +48,24 @@
       </g>
       <g ng-repeat="shape in doc.shapes">
         <g ng-switch="shape.type">
-          <g shape-rectangle 
+          <shape-rectangle 
             ng-switch-when="rect" 
             ng-click="svgObjectSelected(shape)" 
             shape="shape" 
             zoom-level="zoomLevel">
-          </g>
-          <g shape-ellipse 
+          </shape-rectangle>
+          <shape-ellipse 
             ng-switch-when="ellipse" 
             ng-click="svgObjectSelected(shape)" 
             shape="shape" 
             zoom-level="zoomLevel">
-          </g>
-          <g shape-text 
+          </shape-ellipse>
+          <shape-text 
             ng-switch-when="text" 
             ng-click="svgObjectSelected(shape)" 
             shape="shape" 
             zoom-level="zoomLevel">
-          </g>
+          </shape-text>
         </g>
       </g>
       <g id="bounding-box" ng-if="selectedObj">
