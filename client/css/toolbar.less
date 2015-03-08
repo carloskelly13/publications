@@ -1,65 +1,48 @@
 .editor-toolbar {
   .animation(top, 350ms);
-  background: #2d3a4c;
+  background: #fff;
   padding: 0;
   height: 25px;
   position: fixed;
   text-align: center;
-  top: 0;
+  top: 41px;
   width: 100%;
-  z-index: 9004;
-  border-bottom: 1px solid hsla(0, 0%, 100%, 0.25);
-  
-  &.active {
-    top: 40px;
-  }
+  z-index: 9003;
+  border-bottom: 1px solid #aaa;
+  box-shadow: 0 0 2px hsla(0, 0%, 0%, 0.15);
   
   .editor-toolbar-container {
-    margin: -6px 0 0 0;
-    .animation(opacity, 250ms);
     padding: 0 1.5em;
-    text-align: left;
+    text-align: center;
+    height: inherit;
     
     .spacer {
       display: inline-block;
       width: 15px;
       height: 1px;
-    }
-    
-    .txt-control-group {
-      position: relative;
-      display: inline-block;
-    }
-    
-    .txt-control {
-      position: relative;
-      display: inline-block;
-      vertical-align: middle;
-      margin: 0 5px 0 0;
       
-      label {
-        display: inline-block;
-        font-size: 10px;
-        margin-right: 2px;
-        text-transform: uppercase;
-        height: 10px;
-        margin: 0 0 0 1px;
+      &.mini {
+        width: 5px;
       }
+    }
+    
+    .toolbar-control-group {
+      display: inline-block;
+      margin: 0;
+      height: inherit;  
+      vertical-align: top;
+    }
+    
+    .toolbar-control {
+      background: #fff;
+      display: inline-block;
+      margin: 0;
+      height: inherit;  
+      vertical-align: top;
       
-      .txt {
-        font-size: 13px;
-        display: inline-block;
-        width: 50px;
-        padding: 1px 2px;
-        height: 17px;
-        
-        &.txt-typeface {
-          height: 17px;
-          width: 120px;
-          font-size: 13px;
-          line-height: 15px;
-          cursor: default;
-        }
+      .dropdown {
+        height: inherit;
+        vertical-align: top;
       }
       
       .btn-spacer {
@@ -70,26 +53,23 @@
       
       .color-picker-container {  
         display: inline-block;
+        height: inherit;
+        vertical-align: top;
               
         .dropdown {
           display: block;
-          height: 17px;
-          margin: 4px 0 2px;
+          height: inherit;
         }
     
         .swatch-button {
           position: relative;
-          top: 2px;
-          box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25), inset 0 0 0 2px hsla(0, 0%, 100%, 0.85), inset 0 0 0 3px hsla(0, 0%, 0%, 0.5);
-          border-radius: 2px;
+          box-shadow: inset 0 0 0 1px #fff;
+          border-left: 1px solid #ccc;
+          border-right: 1px solid #ccc;
           display: inline-block;
-          width: 40px;
+          width: 30px;
           height: inherit;
-        }
-        
-        + label {
-            position: relative;
-            top: -2px;
+          vertical-align: top;
         }
       }
     }

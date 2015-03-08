@@ -1,8 +1,5 @@
-<div class="app-controls" ng-class="{'no-border' : showInspector}">
+<div class="app-controls app-controls-editor">
   <div class="app-wordmark"></div>
-  <div class="app-name">
-    {{doc.name}}
-  </div>
   <div class="btn-group">
     <div class="dropdown" dropdown>
       <button class="btn" dropdown-toggle>New</button>
@@ -60,64 +57,78 @@
       </div>
     </div>
     <button class="btn" ng-click="updateDocument(false)">Save</button>
+    <button class="btn" ng-click="updateDocument(true)">Documents</button>
   </div>
-  <button class="btn btn-float-right" ng-click="updateDocument(true)">All Documents</button>
 </div>
 <div class="editor-toolbar" ng-class="{'active' : showInspector}">
-  <div class="editor-toolbar-container">
-    <div ng-if="selectedObj">
-      <div class="txt-control">
-        <input pub-signed-float-input type="text" name="x" id="x" class="txt frame" ng-model="selectedObj.x" />
-        <label class="txt-label" for="x">X</label>
+  <div class="editor-toolbar-container" ng-if="selectedObj">
+    <div class="toolbar-control">
+      <input pub-signed-float-input type="text" name="x" id="x" class="txt txt-toolbar" ng-model="selectedObj.x" />
+      <label class="txt-label" for="x">
+        <span class="label-unit">in</span>&nbsp;x
+       </label>
+    </div>
+    <div class="toolbar-control">
+      <input pub-signed-float-input type="text" name="y" id="y" class="txt txt-toolbar" ng-model="selectedObj.y" />
+      <label class="txt-label" for="y">
+        <span class="label-unit">in</span>&nbsp;y
+      </label>
+    </div>
+    <div class="toolbar-control">
+      <input pub-unsigned-non-zero-float-input type="text" name="width" id="width" class="txt txt-toolbar" ng-model="selectedObj.width" />
+      <label class="txt-label" for="width">
+        <span class="label-unit">in</span>&nbsp;width
+      </label>
+    </div>
+    <div class="toolbar-control">
+      <input pub-unsigned-non-zero-float-input type="text" name="height" id="height" class="txt txt-toolbar" ng-model="selectedObj.height" />
+      <label class="txt-label" for="height">
+        <span class="label-unit">in</span>&nbsp;height
+      </label>
+    </div>
+    <div class="spacer"></div>
+    <div class="toolbar-control-group" ng-if="selectedObj.type === 'text'">
+      <div class="toolbar-control">
+        <div pub-typeface-picker class="typeface-picker" typefaces="typefaces" selected-obj="selectedObj"></div>
       </div>
-      <div class="txt-control">
-        <input pub-signed-float-input type="text" name="y" id="y" class="txt txt-mono frame" ng-model="selectedObj.y" />
-        <label class="txt-label" for="y">Y</label>
+      <div class="toolbar-control">
+        <input pub-unsigned-integer-input type="text" name="font-size" id="font-size" class="txt txt-toolbar integer" ng-model="selectedObj.fontSize" />
+        <label class="txt-label" for="font-size">
+        <span class="label-unit">pt</span>
+      </label>
       </div>
-      <div class="txt-control">
-        <input pub-unsigned-non-zero-float-input type="text" name="width" id="width" class="txt frame" ng-model="selectedObj.width" />
-        <label class="txt-label" for="width">Width</label>
+      <div class="toolbar-control">
+        <div class="btn-toolbar-icon-group">
+          <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'left'}" ng-click="changeTextAlign('left')">&#xe4f5;</button>
+          <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'center'}" ng-click="changeTextAlign('center')">&#xe4f4;</button>
+          <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'right'}" ng-click="changeTextAlign('right')">&#xe4f6;</button>
+        </div>          
       </div>
-      <div class="txt-control">
-        <input pub-unsigned-non-zero-float-input type="text" name="height" id="height" class="txt frame" ng-model="selectedObj.height" />
-        <label class="txt-label" for="height">Height</label>
-      </div>
-      <div class="spacer"></div>
-      <div class="txt-control-group" ng-if="selectedObj.type === 'text'">
-        <div class="txt-control">
-          <div pub-typeface-picker typefaces="typefaces" selected-obj="selectedObj"></div>
-        </div>
-        <div class="txt-control">
-          <input pub-unsigned-integer-input type="text" name="font-size" id="font-size" class="txt frame" ng-model="selectedObj.fontSize" />
-        </div>
-        <div class="txt-control">
-          <div class="btn-toolbar-icon-group">
-            <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'left'}" ng-click="changeTextAlign('left')">&#xe4f5;</button>
-            <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'center'}" ng-click="changeTextAlign('center')">&#xe4f4;</button>
-            <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'right'}" ng-click="changeTextAlign('right')">&#xe4f6;</button>
-          </div>          
-        </div>
-      </div>
-      <div class="txt-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
-        <input pub-unsigned-integer-input type="text" name="stroke-width" id="stroke-width" class="txt frame" ng-model="selectedObj.strokeWidth" />
-        <label class="txt-label" for="stroke-width">Stroke</label>
-      </div>
-      <div class="txt-control" ng-if="selectedObj.type === 'rect'">
-        <input pub-unsigned-integer-input type="text" name="stroke-radius" id="stroke-radius" class="txt  frame" ng-model="selectedObj.r" />
-        <label class="txt-label" for="stroke-radius">Radius</label>
-      </div>
-      <div class="spacer"></div>
-      <div class="txt-control" ng-if="selectedObj.type === 'text'">
-        <div pub-color-picker class="color-picker-container" colors="colors" property="color" selected-obj="selectedObj" color="selectedObj.color"></div>
-      </div>
-      <div class="txt-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
-        <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>
-        <label class="txt-label">Fill</label>
-      </div>
-      <div class="txt-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
-        <div pub-color-picker class="color-picker-container" colors="colors" property="stroke" selected-obj="selectedObj" color="selectedObj.stroke"></div>
-        <label class="txt-label">Stroke</label>
-      </div>
+    </div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
+      <input pub-unsigned-integer-input type="text" name="stroke-width" id="stroke-width" class="txt txt-toolbar integer" ng-model="selectedObj.strokeWidth" />
+      <label class="txt-label" for="stroke-width">
+        <span class="label-unit">pt</span>&nbsp;stroke
+      </label>
+    </div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect'">
+      <input pub-unsigned-integer-input type="text" name="stroke-radius" id="stroke-radius" class="txt  txt-toolbar integer" ng-model="selectedObj.r" />
+      <label class="txt-label" for="stroke-radius">
+        <span class="label-unit">pt</span>&nbsp;radius
+      </label>
+    </div>
+    <div class="spacer"></div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'text'">
+      <div pub-color-picker class="color-picker-container" colors="colors" property="color" selected-obj="selectedObj" color="selectedObj.color"></div>
+    </div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
+      <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>
+      <label class="txt-label">fill</label>
+    </div>
+    <div class="spacer mini" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'"></div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
+      <div pub-color-picker class="color-picker-container" colors="colors" property="stroke" selected-obj="selectedObj" color="selectedObj.stroke"></div>
+      <label class="txt-label">stroke</label>
     </div>
   </div>
 </div>

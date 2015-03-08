@@ -4,12 +4,12 @@
     <div ng-repeat="c in colors track by $index" class="color-swatch" style="background: {{c}};" ng-click="updateColor(c, color);"></div>
     <div class="color-picker-txt-inputs">
       <div class="txt-group txt-group-half-width txt-group-half-width-left" ng-if="property !== 'color'">
-        <input name="opacity" id="opacity" pub-alpha-float-input class="txt light" ng-model="selectedObj[property + 'Opacity']" type="text" />
+        <input name="opacity" id="opacity" pub-alpha-float-input class="txt frame" ng-model="selectedObj[property + 'Opacity']" type="text" />
         <label class="txt-label" for="opacity">Opacity</label>
       </div>
       <div class="txt-group txt-group-half-width">
-        <input name="{{property}}" id="{{property}}" pub-hex-input class="txt light" ng-model="selectedObj[property]" type="text" />
-        <label class="txt-label" for="{{property}}">HEX</label>
+        <input name="{{property}}" id="{{property}}" pub-hex-input class="txt frame" ng-model="selectedObj[property]" type="text" />
+        <label class="txt-label" for="{{property}}">Hexadecimal</label>
       </div>
     </div>
   </div>

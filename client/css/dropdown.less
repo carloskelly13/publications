@@ -3,8 +3,8 @@
 	position: relative;
 	
 	&.dropdown-float-right {
+  	margin: 0 1.5em 0 0;
   	float: right;
-  	margin: 9px 1.5em 0 0;
   	
   	.btn {
     	margin: 0;
@@ -17,7 +17,7 @@
 		}
 
 		.btn.dropdown-toggle {
-			color: #fff !important;
+			color: @color-primary !important;
 		}
 	}
 
@@ -29,7 +29,7 @@
 		border-radius: 4px;
 		background: hsla(0, 0%, 100%, 0.98);
 		background-clip: padding-box;
-// 		border: 1px solid hsla(238, 5%, 20%, 0.95);
+		border: 1px solid hsla(0, 0%, 0%, 0.3);
 		box-shadow: 0 1px 25px hsla(0, 0%, 0%, 0.25);
 		display: none;
 		float: left;
@@ -62,14 +62,12 @@
 			margin-left: -10px;
 		}
 
-/*
 		&:before {
 			border-color: transparent;
-			border-bottom-color: hsla(0, 0%, 70%, 0.95);
+			border-bottom-color: hsla(0, 0%, 0%, 0.25);
 			border-width: 11px;
 			margin-left: -11px;
 		}
-*/
 
 		&.new-document {
 			width: 250px !important;
@@ -88,12 +86,16 @@
       
       &:after, &:before {
         left: auto;
-        right: 10%;
+        right: 20px;
+      }
+      
+      &:before {
+        right: 19px;
       }
 		}
 		
 		&.color-picker {
-  		left: -200%;
+  		left: -270%;
 		}
 		
 		&.typeface-picker {
@@ -106,15 +108,15 @@
 
 			.color-swatch {
 				border-radius: 2px;
-				box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.33), inset 0 0 0 2px hsla(0, 0%, 100%, 1), inset 0 0 0 3px hsla(0, 0%, 0%, 0.33);
+				box-shadow: 0 0 0 1px #bbb, inset 0 0 0 1px #fff, inset 0 0 0 2px hsla(0, 0%, 0%, 0.25);
 				display: inline-block;
 				width: 16%;
-				height: 20px;
+				height: 18px;
 				margin: 4px 2%;
 				float: left;
 
 				&:hover {
-				box-shadow: 0 0 0 1px @color-primary, inset 0 0 0 2px @color-primary, inset 0 0 0 3px hsla(0, 0%, 0%, 0.33);
+					box-shadow: 0 0 0 1px @color-primary, inset 0 0 0 1px #fff, inset 0 0 0 2px hsla(0, 0%, 0%, 0.25);
 				}
 			}
 

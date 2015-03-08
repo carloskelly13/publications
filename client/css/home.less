@@ -2,7 +2,7 @@
   .hero {
     margin: 0 auto;
     text-align: center;
-    width: 70%;
+    width: 100%;
 
     @media all and (max-width: 767px) {
       width: 90%;
@@ -10,7 +10,7 @@
     
     .app-wordmark-medium {
       .retina-picture('pub-wordmark-medium', 242px, 39px, inline-block);
-      margin: 10% auto 0;
+      margin: 3em auto 0;
       vertical-align: middle;
 
       @media all and (max-width: 767px) {
@@ -19,12 +19,18 @@
     }
 
     h1 {
-      color: hsla(0, 0%, 100%, 0.8);
+      color: @color-primary;
       font-size: 1em;
-      margin: 1em auto 1.5em;
+      margin: 1em auto;
       font-weight: 400;
+      width: 40%;
       font-family: 'Sailec', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       text-transform: uppercase;
+      
+      &.info-text {
+        color: @color-text;
+        text-transform: none;
+      }
       
       strong {
         font-weight: 500;
@@ -39,9 +45,13 @@
   
   .sign-up-txt, .sign-up-txt a {
     margin: 1em 0;
-    color: #a9afba;
+    color: @color-text;
+  }
+  
+  .sign-up-txt a {
+    color: @color-primary;
     
-    a:hover {
+    &:hover {
       color: #cfd6e4;
     }
   }
@@ -59,12 +69,12 @@
   }
   
   .credits {
-    border-top: 1px solid hsla(0, 0%, 100%, 0.2);
-    width: 50%;
+    border-top: 1px solid #ddd;
+    width: 40%;
     margin: 0 auto;
     padding: 1em 0;
-    color: #a9afba;
-    text-align: center;
+    color: #aaa;
+    text-align: left;
     font-size: 0.9em;
     
     @media all and (max-width: 767px) {

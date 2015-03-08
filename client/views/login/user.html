@@ -1,18 +1,20 @@
 <div class="home home-login">
   <div class="hero">
     <div class="app-wordmark-medium"></div>
+    <h1 class="info-text">
+      {{user.temporary ? 'Create a free Publications account to save documents and access them on any computer.' : 'Update the password for your Publications account.'}}
+    </h1>
   </div>
   <div class="content-sections">
-    <form name="userAccountForm" role="form" class="form" ng-show="user.temporary">
+    <form name="userAccountForm" role="form" class="form" ng-if="user.temporary">
       <div class="full-page-form">
         <div class="full-page-form-content">
-          <h2>Create a free Publications account to save documents and access them on any computer.</h2>
           <div class="txt-group">
-            <input autocomplete="off" class="txt big" type="email" ng-model="userAccountForm.emailAddress" name="name" id="name" required placeholder="example@email.com">
+            <input autocomplete="off" class="txt big bottom-frame" type="email" ng-model="userAccountForm.emailAddress" name="name" id="name" required placeholder="example@email.com">
             <label class="txt-label" for="name">Email address</label>
           </div>
           <div class="txt-group">
-            <input class="txt big" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required placeholder="• • • • • • • •">
+            <input class="txt big bottom-frame" type="password" ng-model="userAccountForm.newPassword" name="new-password" id="new-password" required placeholder="• • • • • • • •">
             <label class="txt-label" for="new-password">New Password</label>
           </div>
           <div class="txt-group">
@@ -20,7 +22,7 @@
             <label class="txt-label" for="confirm-password">Confirm New Password</label>
           </div>
           <div class="form-btns">
-            <button class="btn btn-frame-big thin" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
+            <button class="btn btn-frame-big" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
             <button class="btn btn-frame-big thin" type="button" ui-sref="pub.documents.index">
               Cancel
             </button>
@@ -28,24 +30,23 @@
         </div>
       </div>
     </form>
-    <form name="changePasswordForm" role="form" class="form" ng-hide="user.temporary">
+    <form name="changePasswordForm" role="form" class="form" ng-if="!user.temporary">
       <div class="full-page-form">
         <div class="full-page-form-content">
-          <h2>Update the password for your Publications account.</h2>
           <div class="txt-group">
-            <input autocomplete="off" class="txt big" type="password" ng-model="changePasswordForm.currentPassword" name="current-password" id="current-password" required placeholder="• • • • • • • •">
+            <input autocomplete="off" class="txt big bottom-frame" type="password" ng-model="changePasswordForm.currentPassword" name="current-password" id="current-password" required placeholder="• • • • • • • •">
             <label class="txt-label" for="current-password">Current Password</label>
           </div>
           <div class="txt-group">
-            <input class="txt big" type="password" ng-model="changePasswordForm.newPassword" name="new-password" id="new-password" required placeholder="• • • • • • • •">
+            <input class="txt big bottom-frame" type="password" ng-model="changePasswordForm.newPassword" name="new-password" id="new-password" required placeholder="• • • • • • • •">
             <label class="txt-label" for="new-password">New Password</label>
           </div>
           <div class="txt-group">
-            <input autocomplete="off" class="txt big" type="password" ng-model="changePasswordForm.confirmPassword" name="confirm-password" id="confirm-password" required placeholder="• • • • • • • •">
+            <input autocomplete="off" class="txt big bottom-frame" type="password" ng-model="changePasswordForm.confirmPassword" name="confirm-password" id="confirm-password" required placeholder="• • • • • • • •">
             <label class="txt-label" for="confirm-password">Confirm New Password</label>
           </div>
           <div class="form-btns">
-            <button class="btn btn-frame-big thin" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
+            <button class="btn btn-frame-big" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
             <button class="btn btn-frame-big thin" type="button" ui-sref="pub.documents.index">
               Cancel
             </button>
