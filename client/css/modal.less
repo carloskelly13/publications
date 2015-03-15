@@ -1,84 +1,18 @@
-@modal-line-color: hsla(0, 0%, 0%, 0.2);
-
-.modal-dialog {
-  .animation-expand-open;
-  .rounded-corners(2px);
-  .center;
-  background: #fff;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25);
-  overflow: hidden;
-  padding: 0;
-  z-index: 9000;
-  width: 350px;
-
-  &.modal-dialog-wide {
-    width: 500px;
+md-dialog {
+  box-shadow: 0 1px 5px hsla(0, 0%, 0%, 0.25);
+  
+  h2 {
+    font-weight: 500;
+    font-size: 15px;
   }
   
-  @media all and (max-width: 767px) {
-    height: 100%;
-    top: 0;
-    width: 100%;
-    
-    &.modal-dialog-wide {
-      width: 100%;
-    }
+  p {
+    font-size: 15px;
   }
-
-  .modal-fieldsets {
-    margin-bottom: 12px;
-    text-align: left;
-
-    .txt-group {
-      margin-bottom: 12px;
-    }
-  }
-
-  .modal-dialog-title-bar {
-    display: block;
-    padding: 1.5em 1.5em 0 1.5em;
-    text-align: left;
-
-    .title {
-      font-size: 1em;
-      font-weight: 500;
-      margin: 0 0 0.5em 0;
-    }
-
-    .message {
-      font-size: 0.95em;
-    }
-  }
-
-  .modal-content {
-    padding: 1.5em;
-    text-align: left;
-
-    .app-logo {
-      .svg-picture('pub-full-logo', 210px, 160px, block);
-      margin: 0 auto 1.5em auto;
-    }
-
-    p {
-      margin: 1em 0;
-      font-size: 1em;
-
-      &.strong {
-        font-size: 1.1em;
-      }
-    }
-
-    .btn {
-      margin: 0 1em 0 0;
-
-      &:last-child {
-        float: right;
-        margin-right: 0;
-      }
-
-      &:only-child {
-        float: none;
-      }
-    }
+  
+  .md-button {
+    padding: 3px 16px;
+    font-weight: 400;
+    text-transform: capitalize;
   }
 }

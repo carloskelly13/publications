@@ -153,6 +153,7 @@
             .title('Do you want to save the changes made to ' + $scope.doc.name + '?')
             .content('Your changes will be lost if you don’t save them.')
             .ok('Save')
+            .clickOutsideToClose(false)
             .cancel('Don’t Save')
             .targetEvent(event);
             
@@ -214,6 +215,7 @@
           duplicateObj.x += 0.25;
           duplicateObj.y += 0.25;
           $scope.doc.shapes.push(duplicateObj);
+          $scope.svgObjectSelected(duplicateObj);
         };
 
         $scope.addObject = function(objType) {
