@@ -17,7 +17,7 @@ var concat = require('gulp-concat'),
   uglify = require('gulp-uglify');
 
 var paths = {
-  css: 'client/css/*.less',
+  css: ['client/css/*.less'],
   js: ['client/views/templates.js', 'client/js/_vendor/**/*.js', 'client/js/src/**/*.js'],
   templates: 'client/views/**/*.html'
 };

@@ -1,7 +1,7 @@
 <div class="dropdown" dropdown>
-  <div class="swatch-button" style="background: {{color}};" dropdown-toggle></div>
+  <div class="swatch-button" ng-style="{'background' : color}" dropdown-toggle></div>
   <div class="dropdown-menu color-picker" role="menu" ng-click="$event.stopPropagation()">
-    <div ng-repeat="c in colors track by $index" class="color-swatch" style="background: {{c}};" ng-click="updateColor(c, color);"></div>
+    <div ng-repeat="c in colors track by $index" class="color-swatch" ng-style="{'background' : c}" ng-click="updateColor(c, color);"></div>
     <div class="color-picker-txt-inputs">
       <div class="txt-group txt-group-half-width txt-group-half-width-left" ng-if="property !== 'color'">
         <input name="opacity" id="opacity" pub-alpha-float-input class="txt frame" ng-model="selectedObj[property + 'Opacity']" type="text" />

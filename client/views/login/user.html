@@ -22,10 +22,8 @@
             <label class="txt-label" for="confirm-password">Confirm New Password</label>
           </div>
           <div class="form-btns">
-            <button class="btn btn-frame-big" type="button" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
-            <button class="btn btn-frame-big thin" type="button" ui-sref="pub.documents.index">
-              Cancel
-            </button>
+            <md-button class="md-primary pub-md-button-big" ng-click="updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</md-button>
+            <md-button class="md-primary pub-md-button-big" type="button" ui-sref="pub.documents.index">Cancel</md-button>
           </div>
         </div>
       </div>
@@ -46,10 +44,8 @@
             <label class="txt-label" for="confirm-password">Confirm New Password</label>
           </div>
           <div class="form-btns">
-            <button class="btn btn-frame-big" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
-            <button class="btn btn-frame-big thin" type="button" ui-sref="pub.documents.index">
-              Cancel
-            </button>
+            <md-button class="md-primary pub-md-button-big" type="button" ng-click="updateUserAccount(changePasswordForm)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</md-button>
+            <md-button class="md-primary pub-md-button-big" type="button" ui-sref="pub.documents.index">Cancel</md-button>
           </div>
         </div>
       </div>

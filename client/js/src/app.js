@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  var pub = angular.module('pub', [
+  angular.module('pub', [
     'ui.router',
     'pub.controllers',
     'pub.documents',
@@ -9,10 +9,11 @@
     'pub.services',
     'pub.directives',
     'restangular',
-    'ui.bootstrap'
-  ]);
+    'ui.bootstrap',
+    'ngMaterial'
+  ])
 
-  pub.config([
+  .config([
     '$stateProvider',
     '$urlRouterProvider',
     '$locationProvider',
@@ -54,9 +55,9 @@
         }
       });
     }
-  ]);
+  ])
 
-  pub.run([
+  .run([
     '$state',
     '$rootScope',
     '$stateParams',

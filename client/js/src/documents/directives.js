@@ -117,7 +117,7 @@
     }
   })
   
-  .directive('shapeRectangle', function() {
+  .directive('pubShapeRectangle', function() {
     return {
       scope: {
         shape: '=',
@@ -145,7 +145,7 @@
     }
   })
   
-  .directive('shapeEllipse', function() {
+  .directive('pubShapeEllipse', function() {
     return {
       scope: {
         shape: '=',
@@ -171,7 +171,7 @@
     }
   })
 
-  .directive('shapeText', function() {
+  .directive('pubShapeText', function() {
     return {
       scope: {
         shape: '=',

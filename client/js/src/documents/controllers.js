@@ -112,11 +112,14 @@
       '$scope', 
       '$state', 
       '$window', 
-      '$timeout', 
+      '$timeout',
+      '$mdToast',
+      '$mdDialog',
+      '$animate',
       'documentServices', 
       'doc', 
       'colors',
-      function($scope, $state, $window, $timeout, documentServices, doc, colors) {
+      function($scope, $state, $window, $timeout, $mdToast, $mdDialog, $animate, documentServices, doc, colors) {
         $scope.doc = doc;
         $scope.selectedObj = null;
         $scope.showCanvasGrid = true;
@@ -134,7 +137,30 @@
             var idx = _.findIndex($scope.documents, { _id : $scope.doc._id });
             $scope.documents[idx] = $scope.doc;
             $scope.showAllDocuments();
+          } else {
+            $mdToast.show($mdToast.simple()
+              .content($scope.doc.name + ' saved.')
+              .action('OK')
+              .hideDelay(2000)
+              .highlightAction(false)
+              .position('top right')
+            );
           }
+        };
+        
+        $scope.viewAllDocuments = function(event) {
+          var confirmDialog = $mdDialog.confirm()
+            .title('Do you want to save the changes made to ' + $scope.doc.name + '?')
+            .content('Your changes will be lost if you don’t save them.')
+            .ok('Save')
+            .cancel('Don’t Save')
+            .targetEvent(event);
+            
+          $mdDialog.show(confirmDialog).then(function() {
+            $scope.updateDocument(true);
+          }, function() {
+            $scope.showAllDocuments();
+          });
         };
 
         $scope.showAllDocuments = function() {

@@ -12,6 +12,19 @@
   vertical-align: middle;
 }
 
+.pub-md-button-big {
+  color: @color-primary !important;
+  font-size: 16px;
+  height: 40px;
+  margin: 0 0 0.5em 0;
+  text-transform: capitalize;
+  width: 100%;
+  
+  &:disabled, &:disabled:hover {
+    color: #cecfd3 !important;
+  }
+}
+
 .btn {
   .animation(all, 150ms);
 
@@ -26,7 +39,7 @@
   color: @color-text;
   cursor: pointer;
   display: inline-block;
-  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: 'Sailec', 'Helvetica Neue', Helvetica, sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;

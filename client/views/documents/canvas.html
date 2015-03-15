@@ -48,24 +48,24 @@
       </g>
       <g ng-repeat="shape in doc.shapes">
         <g ng-switch="shape.type">
-          <shape-rectangle 
+          <pub-shape-rectangle 
             ng-switch-when="rect" 
             ng-click="svgObjectSelected(shape)" 
             shape="shape" 
             zoom-level="zoomLevel">
-          </shape-rectangle>
-          <shape-ellipse 
+          </pub-shape-rectangle>
+          <pub-shape-ellipse 
             ng-switch-when="ellipse" 
             ng-click="svgObjectSelected(shape)" 
             shape="shape" 
             zoom-level="zoomLevel">
-          </shape-ellipse>
-          <shape-text 
+          </pub-shape-ellipse>
+          <pub-shape-text 
             ng-switch-when="text" 
             ng-click="svgObjectSelected(shape)" 
             shape="shape" 
             zoom-level="zoomLevel">
-          </shape-text>
+          </pub-shape-text>
         </g>
       </g>
       <g id="bounding-box" ng-if="selectedObj">
