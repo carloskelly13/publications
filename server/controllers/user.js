@@ -5,7 +5,7 @@
  * 2014 Michael Kelly and Carlos Paelinck
  */
 
-var bcrypt = require('bcrypt'),
+var bcrypt = require('bcryptjs'),
   _ = require('lodash'),
   UserModel = require('../models/user'),
   DocumentModel = require('../models/document')

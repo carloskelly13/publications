@@ -5,7 +5,7 @@
  * 2014 Michael Kelly and Carlos Paelinck
  */
 
-var bcrypt = require('bcrypt'),
+var bcrypt = require('bcryptjs'),
     mongoose = require('mongoose');
 
 var Schema = mongoose.Schema,
