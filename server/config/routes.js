@@ -5,7 +5,8 @@
  * Michael Kelly and Carlos Paelinck
  */
 
-var IndexController = require('../controllers/index'),
+var cors = require('cors'), 
+  IndexController = require('../controllers/index'),
   UserController = require('../controllers/user'),
   UserModel = require('../models/user'),
   DocumentController = require('../controllers/document'),
@@ -21,12 +22,14 @@ var auth = function (req, res, next) {
 
 module.exports = function (app, passport) {
   // Index routes
+  app.options('*', cors());
+
   app.get('/', IndexController.index);
 
   // Application routes
   app.get('/logout', UserController.logout);
   app.post('/login', passport.authenticate('local'), UserController.login);
-  
+
   app.param('userId', function(req, res, next, id) {
     UserModel.findById(id, function(err, user) {
       if (err || !user) {
