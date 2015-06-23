@@ -1,0 +1,90 @@
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fff;
+  color: @darkgray-dark;
+  height: 100%;
+  font-family: 'NeueHaasUnicaPro', 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+}
+
+.app-footer {
+  background: @pub-primary;
+  bottom: 0;
+  height: @app-footer-height;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 6;
+
+  @media (max-width: 767px) {
+    height: 0;
+    display: none;
+  }
+}
+
+.app-controls {
+  .animation(all, 250ms);
+  background: #fff;
+  display: table-cell;
+  vertical-align: middle;
+  border-bottom: 1px solid #aaa;
+  padding: 0;
+  height: 40px;
+  position: fixed;
+  text-align: left;
+  width: 100%;
+  z-index: 9003;
+  box-shadow: 0 0 2px hsla(0, 0%, 0%, 0.15);
+  .valign-container-space-between;
+
+  &.app-controls-editor {
+    border: none;
+    box-shadow: none;
+  }
+
+  .app-wordmark {
+    .retina-picture('pub-v4-logo-40x28', 40px, 28px, inline-block);
+    margin: 0 0 0 10px;
+  }
+
+  .btn-group {
+    display: inline-block;
+    padding-right: 31px;
+  }
+
+  &:after {
+    content: ' ';
+    clear: both;
+    display: block;
+  }
+}
+
+.app-content {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: inherit;
+  z-index: 1;
+}
+
+.app-cover {
+  height: 100%;
+  background: hsla(0, 0%, 0%, 0.6);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 8999;
+}
+
+.pub-logo-72 {
+  .retina-picture('pub-logo-72', 72px, 72px, block);
+  margin: 0 auto;
+}
+
+.pub-logo-128 {
+  .retina-picture('pub-logo-128', 128px, 128px, block);
+  margin: 0 auto;
+}
