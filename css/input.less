@@ -33,6 +33,40 @@
   white-space: nowrap;
   zoom: 1;
 
+  &.txt-light {
+    background: #ccf6f3;
+    border-bottom: none;
+    border-radius: 2px;
+    color: darken(@pub-secondary, 15%);
+    height: 32px;
+    line-height: 32px;
+    font-weight: 500;
+    padding: 0 12px;
+
+    @txt-light-placeholder-color: darken(@pub-secondary, 5%);
+
+    &::-webkit-input-placeholder {
+      color: @txt-light-placeholder-color;
+    }
+
+    &::-moz-placeholder {
+      color: @txt-light-placeholder-color;
+    }
+
+    &:-ms-input-placeholder {
+      color: @txt-light-placeholder-color;
+    }
+
+    &:-moz-placeholder {
+      color: @txt-light-placeholder-color;
+    }
+
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px #ccf6f3 inset;
+      -webkit-text-fill-color: darken(@pub-secondary, 15%) !important;
+    }
+  }
+
   &.picker-typeface {
     background: #fff;
     border-radius: 0;

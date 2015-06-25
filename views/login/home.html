@@ -34,5 +34,11 @@
   <div class="hero">
     <div class="publications-logo"></div>
   </div>
-
+  <div class="hero-bar">
+    <form ng-submit="submit()" shake-that submitted="submitted" auth-success="authSuccess" name="loginForm" role="form" class="form">
+      <input class="txt txt-light" type="email" ng-model="username" name="username" id="username" required placeholder="user@email.com">
+      <input class="txt txt-light" type="password" ng-model="password" name="password" id="password" required placeholder="• • • • • • • •">
+      <button class="btn" type="submit" ng-disabled="loginForm.$invalid">Log In</button>
+    </form>
+  </div>
 </div>
