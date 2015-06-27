@@ -2,7 +2,7 @@
   <div class="app-wordmark"></div>
   <div class="btn-group">
     <div class="dropdown" dropdown>
-      <button class="btn" dropdown-toggle>New</button>
+      <button class="btn btn-toolbar" dropdown-toggle>New</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('rect')">Rectangle</button>
         <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('ellipse')">Ellipse</button>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="dropdown" dropdown>
-      <button class="btn" dropdown-toggle>Edit</button>
+      <button class="btn btn-toolbar" dropdown-toggle>Edit</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <button class="dropdown-menu-item" type="button" ng-click="documentController.cutObj()" ng-disabled="!selectedObj">Cut</button>
         <button class="dropdown-menu-item" type="button" ng-click="documentController.copyObj()" ng-disabled="!selectedObj">Copy</button>
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="dropdown" dropdown>
-      <button class="btn" dropdown-toggle>View</button>
+      <button class="btn btn-toolbar" dropdown-toggle>View</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <div class="dropdown-menu-header">Zoom</div>
         <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(0.5)">
@@ -59,8 +59,8 @@
         <button class="dropdown-menu-item" type="button" ng-click="documentController.toggleSnapToGrid()">{{ snapToGrid ? 'Freeform Objects' : 'Snap Objects to Grid'}}</button>
       </div>
     </div>
-    <button class="btn" ng-click="documentController.updateDocument()">Save</button>
-    <button class="btn" ng-click="documentController.viewAllDocuments($event)">Documents</button>
+    <button class="btn btn-toolbar" ng-click="documentController.updateDocument()">Save</button>
+    <button class="btn btn-toolbar" ng-click="documentController.viewAllDocuments($event)">Documents</button>
   </div>
 </div>
 <div class="editor-toolbar" ng-class="{'active' : showInspector}">

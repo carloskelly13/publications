@@ -1,4 +1,6 @@
 (function(){
+  'use strict';
+
   var pub = angular.module('pub.documents', [
     'pub.documents.controllers',
     'pub.documents.services',
@@ -49,10 +51,10 @@
             .state('pub.documents.document.view', {
               url: '/view',
               views: {
-                'document-canvas' : {
+                'document-canvas': {
                   controller: 'DocumentCanvasController',
                   controllerAs: 'documentCanvasController',
-                  templateUrl: '/views/documents/canvas.html',
+                  templateUrl: '/views/documents/canvas.html'
                 }
               }
             });

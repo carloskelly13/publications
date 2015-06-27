@@ -19,7 +19,7 @@
               if (!!securityContext.token()) {
                 $http.get(appConfig.apiUrl + '/users/current', {
                   headers: {
-                    'Authorization' : 'Bearer ' + securityContext.token()
+                    'Authorization': 'Bearer ' + securityContext.token()
                   }
                 }).success(function(user) {
                   deferred.resolve(securityContext.setAuthentication(user));
@@ -42,11 +42,11 @@
 
           login: function(user, success, error) {
             $http.post(appConfig.apiUrl + '/login', user, null)
-              .success(function(user) {
-                securityContext.setAuthentication(user);
+              .success(function(loggedInUser) {
+                securityContext.setAuthentication(loggedInUser);
 
-                if (user.token) {
-                  Restangular.setDefaultHeaders({'Authorization' : 'Bearer ' + user.token});
+                if (loggedInUser.token) {
+                  Restangular.setDefaultHeaders({'Authorization': 'Bearer ' + loggedInUser.token});
                 } else {
                   securityContext.reset();
                 }
@@ -59,7 +59,7 @@
           logout: function() {
             securityContext.reset();
           }
-        }
+        };
 
         return authentication;
       }

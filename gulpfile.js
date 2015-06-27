@@ -1,4 +1,4 @@
-
+'use strict';
 /**
  * Publications
  * Gulp Configuration File
@@ -56,8 +56,8 @@ gulp.task('js-prod', function() {
   return gulp.src(paths.js)
     .pipe(uglify({mangle: false}))
     .pipe(concat('app.min.js'))
-    .pipe(gulp.dest('js/'))
-})
+    .pipe(gulp.dest('js/'));
+});
 
 gulp.task('watch', function() {
   gulp.watch(paths.css, ['less']);

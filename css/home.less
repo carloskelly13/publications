@@ -1,19 +1,24 @@
 .home {
   .hero {
+    background: darken(@pub-primary, 20%);
     margin: 0 auto;
-    padding: 3em 0;
+    padding: 3em 0 2.5em;
     text-align: center;
     width: 100%;
 
     .publications-logo {
-      .retina-picture('pub-v4-logo-215x150', 215px, 150px, inline-block);
+      .retina-picture('pub-v5-327x53-w', 327px, 53px, inline-block);
     }
   }
 
   .hero-bar {
-    background: @pub-secondary;
+    background: @pub-primary;
     padding: 1em 0;
     text-align: center;
     width: 100%;
+
+    .btn, .txt {
+      vertical-align: middle;
+    }
   }
 }

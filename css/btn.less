@@ -103,6 +103,38 @@
     color: #fff;
   }
 
+  &.btn-frame-light {
+    background: #fff;
+    border: none;
+    border-radius: 2px;
+    box-sizing: border-box;
+    color: #1560C0;
+    font-weight: 500;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 24px;
+
+    &:hover {
+      background: #1560C0;
+      color: #fff;
+    }
+
+    &:active {
+      background: lighten(#1560c0, 10%);
+      color: #fff;
+    }
+
+    &:disabled {
+      background-color: hsla(0, 0%, 0%, 0.05);
+      color: hsla(0, 0, 0%, 0.15);
+      cursor: not-allowed;
+
+      &:hover {
+        color: hsla(0, 0%, 0%, 0.15);
+      }
+    }
+  }
+
   &.btn-light {
     color: @color-text;
 
@@ -229,6 +261,18 @@
       &.btn-toolbar-icon-active {
         color: @color-primary;
       }
+    }
+  }
+
+  &.btn-toolbar {
+    color: #fff;
+    font-weight: 500;
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+
+    &:disabled, &:disabled:hover {
+      color: hsla(0, 0%, 0%, 0.15) !important;
     }
   }
 

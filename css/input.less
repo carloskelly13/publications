@@ -34,16 +34,16 @@
   zoom: 1;
 
   &.txt-light {
-    background: #ccf6f3;
+    background: #E2F5FE;
     border-bottom: none;
     border-radius: 2px;
-    color: darken(@pub-secondary, 15%);
+    color: @color-text;
     height: 32px;
     line-height: 32px;
     font-weight: 500;
     padding: 0 12px;
 
-    @txt-light-placeholder-color: darken(@pub-secondary, 5%);
+    @txt-light-placeholder-color: lighten(@color-text-bright, 10%);
 
     &::-webkit-input-placeholder {
       color: @txt-light-placeholder-color;
@@ -62,8 +62,16 @@
     }
 
     &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 1000px #ccf6f3 inset;
-      -webkit-text-fill-color: darken(@pub-secondary, 15%) !important;
+      -webkit-box-shadow: 0 0 0 1000px #E2F5FE inset;
+      -webkit-text-fill-color: #1560c0 !important;
+
+      &:focus {
+        -webkit-box-shadow: 0 0 0 1000px #fff inset;
+      }
+    }
+
+    &:focus {
+      background: #fff;
     }
   }
 

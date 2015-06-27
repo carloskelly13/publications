@@ -18,7 +18,7 @@
           }
         });
       }
-    }
+    };
   });
 
   pub.directive('pubUnsignedNonZeroFloatInput', function() {
@@ -38,7 +38,7 @@
           }
         });
       }
-    }
+    };
   });
 
   pub.directive('pubSignedFloatInput', function() {
@@ -58,7 +58,7 @@
           }
         });
       }
-    }
+    };
   });
 
   pub.directive('pubUnsignedIntegerInput', function() {
@@ -78,7 +78,7 @@
           }
         });
       }
-    }
+    };
   });
 
   pub.directive('pubAlphaFloatInput', function() {
@@ -98,9 +98,8 @@
           }
         });
       }
-    }
+    };
   });
-  
 
   pub.directive('shakeThat', ['$animate', function($animate) {
     return {
@@ -114,25 +113,25 @@
         element.on('submit', function() {
           scope.$apply(function() {
             if (form.$valid) {
-              return scope.submit()
+              return scope.submit();
             }
-            scope.submitted = true
+            scope.submitted = true;
             $animate.addClass(element, 'shake', function() {
-              $animate.removeClass(element, 'shake')
-            })
-          })
-        })
+              $animate.removeClass(element, 'shake');
+            });
+          });
+        });
 
         scope.$watch('authSuccess', function() {
           if (scope.authSuccess === false) {
             $animate.addClass(element, 'shake', function() {
-              $animate.removeClass(element, 'shake')
-              scope.authSuccess = null
-            })
+              $animate.removeClass(element, 'shake');
+              scope.authSuccess = null;
+            });
           }
-        })
+        });
       }
-    }
-  }])
+    };
+  }]);
 
 }());

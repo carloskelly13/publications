@@ -34,10 +34,10 @@
           function() {
             $state.go('pub.documents.index');
           },
-          function(err) {
+          function() {
             $scope.password = null;
             $scope.authSuccess = false;
-          })
+          });
         };
 
         $scope.createAccount = function() {
@@ -48,8 +48,8 @@
             },
             function() {
               $state.go('pub.documents.index');
-            })
-          })
+            });
+          });
         };
       }
     ])
@@ -100,11 +100,11 @@
                 securityContext.setAuthentication(user);
               });
             })
-            .error(function(data, status, headers, config) {
+            .error(function() {
               clearUserForm();
               $scope.userErrorModalVisible = true;
             });
         };
       }
-    ])
+    ]);
 }());

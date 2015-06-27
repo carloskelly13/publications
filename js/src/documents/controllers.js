@@ -54,7 +54,7 @@
       '$location',
       'documentServices',
       'securityContext',
-      function($http, $scope, $state, $location, documentServices, securityContext) {
+      function($http, $scope, $state, $location, documentServices) {
         $scope.selectedDoc = null;
         $scope.iconDpi = 15;
         $scope.newDocumentModalVisible = false;
@@ -66,7 +66,7 @@
             height: $scope.newHeight
           }).then(function(newDocument) {
             $scope.documents.push(newDocument);
-            $scope.newDocumentModalVisible = false
+            $scope.newDocumentModalVisible = false;
             $scope.newName = '';
             $scope.newWidth = '';
             $scope.newHeight = '';
@@ -82,7 +82,7 @@
         };
 
         this.documentIconSelected = function(sender) {
-	        $scope.selectedDoc = sender;
+          $scope.selectedDoc = sender;
         };
 
         this.openDocument = function(doc) {
@@ -104,7 +104,7 @@
         this.deleteDocument = function(sender) {
           _.remove($scope.documents, function(doc) {
             return doc._id === sender._id;
-          })
+          });
           sender.remove();
         };
       }
@@ -136,11 +136,11 @@
           $scope.doc.put();
 
           if (closeDocumentView) {
-            var idx = _.findIndex($scope.documents, { _id : $scope.doc._id });
+            var idx = _.findIndex($scope.documents, { _id: $scope.doc._id });
             $scope.documents[idx] = $scope.doc;
             $state.go('pub.documents.index');
           }
-        }
+        };
 
         this.updateDocument = function() {
           postDocumentToServer(false);
@@ -265,5 +265,5 @@
           return ($scope.zoomLevel > 1) ? 0.5 : 1;
         };
       }
-    ])
+    ]);
 }());

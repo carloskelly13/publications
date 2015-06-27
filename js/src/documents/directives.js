@@ -7,20 +7,6 @@
     return function(scope, element) {
       var eX = 0, eY = 0, oX = 0, oY = 0;
 
-      element.on('mousedown', dragStart);
-      element.on('touchstart', dragStart);
-
-      function dragStart(event) {
-        $document.on('mousemove', updatePosition);
-        $document.on('mouseup', dragEnd);
-        $document.on('touchmove', updatePosition);
-        $document.on('touchend', dragEnd);
-        eX = event.pageX;
-        eY = event.pageY;
-        oX = scope.selectedObj.x;
-        oY = scope.selectedObj.y;
-      }
-
       function updatePosition(event) {
         scope.$apply(function() {
           scope.selectedObj.x = oX + ((event.pageX - eX) / scope.dpi / scope.zoomLevel);
@@ -44,29 +30,27 @@
         });
         eX = eY = oX = oY = 0;
       }
-    }
+
+      function dragStart(event) {
+        $document.on('mousemove', updatePosition);
+        $document.on('mouseup', dragEnd);
+        $document.on('touchmove', updatePosition);
+        $document.on('touchend', dragEnd);
+        eX = event.pageX;
+        eY = event.pageY;
+        oX = scope.selectedObj.x;
+        oY = scope.selectedObj.y;
+      }
+
+      element.on('mousedown', dragStart);
+      element.on('touchstart', dragStart);
+    };
   })
 
   .directive('pubResizable', function($document) {
     return function(scope, element) {
       var coordinate = scope.objAnchor.coordinate;
       var eX = 0, eY = 0, oX = 0, oY = 0, oW = 0, oH = 0;
-
-      element.on('mousedown', resizeStart);
-      element.on('touchstart', resizeStart);
-
-      function resizeStart(event) {
-        $document.on('mousemove', updateFrame);
-        $document.on('mouseup', resizeEnd);
-        $document.on('touchmove', updateFrame);
-        $document.on('touchend', resizeEnd);
-        eX = event.pageX;
-        eY = event.pageY;
-        oX = scope.selectedObj.x;
-        oY = scope.selectedObj.y;
-        oW = scope.selectedObj.width;
-        oH = scope.selectedObj.height;
-      }
 
       function updateFrame(event) {
         scope.$apply(function() {
@@ -114,9 +98,25 @@
         });
         eX = eY = oX = oY = oW = oH = 0;
       }
-    }
+
+      function resizeStart(event) {
+        $document.on('mousemove', updateFrame);
+        $document.on('mouseup', resizeEnd);
+        $document.on('touchmove', updateFrame);
+        $document.on('touchend', resizeEnd);
+        eX = event.pageX;
+        eY = event.pageY;
+        oX = scope.selectedObj.x;
+        oY = scope.selectedObj.y;
+        oW = scope.selectedObj.width;
+        oH = scope.selectedObj.height;
+      }
+
+      element.on('mousedown', resizeStart);
+      element.on('touchstart', resizeStart);
+    };
   })
-  
+
   .directive('pubShapeRectangle', function() {
     return {
       scope: {
@@ -131,7 +131,7 @@
                 'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
                 'ng-attr-rx="{{shape.r * zoomLevel}}"' +
                 'ng-attr-ry="{{shape.r * zoomLevel}}"' +
-                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' + 
+                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' +
                 'ng-attr-width="{{shape.width * dpi * zoomLevel}}"' +
                 'ng-attr-fill="{{shape.fill}}"' +
                 'ng-attr-stroke="{{shape.stroke}}"' +
@@ -139,12 +139,12 @@
                 'ng-attr-fill-opacity="{{shape.fillOpacity}}"' +
                 'ng-attr-stroke-opacity="{{shape.strokeOpacity}}"' +
                 '/>',
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         scope.dpi = 72;
       }
-    }
+    };
   })
-  
+
   .directive('pubShapeEllipse', function() {
     return {
       scope: {
@@ -165,10 +165,10 @@
                 'ng-attr-fill-opacity="{{shape.fillOpacity}}"' +
                 'ng-attr-stroke-opacity="{{shape.strokeOpacity}}"' +
                 '/>',
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         scope.dpi = 72;
       }
-    }
+    };
   })
 
   .directive('pubShapeText', function() {
@@ -183,19 +183,19 @@
       replace: true,
       template: '<foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
                 'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
-                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' + 
+                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' +
                 'ng-attr-width="{{shape.width * dpi * zoomLevel}}">' +
-                '<p ng-style="{color: shape.color,' + 
-                'fontFamily: shape.fontFamily,' + 
+                '<p ng-style="{color: shape.color,' +
+                'fontFamily: shape.fontFamily,' +
                 'fontStyle: shape.fontStyle,' +
-                'fontSize: (shape.fontSize * zoomLevel) + \'px\',' + 
-                'fontWeight: shape.fontWeight,' + 
+                'fontSize: (shape.fontSize * zoomLevel) + \'px\',' +
+                'fontWeight: shape.fontWeight,' +
                 'textAlign: shape.textAlign }">{{shape.text}}</p>' +
                 '</foreignObject>',
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         scope.dpi = 72;
       }
-    }
+    };
   })
 
   .directive('pubColorPicker', function() {
@@ -207,14 +207,14 @@
         property: '@'
       },
       templateUrl: '/views/directives/color-picker.html',
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         scope.updateColor = function(color) {
           scope.selectedObj[scope.property] = color;
         };
       }
-    }
+    };
   })
-  
+
   .directive('pubTypefacePicker', function() {
     return {
       scope: {
@@ -222,23 +222,23 @@
         selectedObj: '='
       },
       templateUrl: '/views/directives/typeface-picker.html',
-      link: function(scope, element, attrs) {
+      link: function(scope) {
         scope.updateTypeface = function(typeface) {
           scope.selectedObj.fontFamily = typeface;
-        }
+        };
       }
-    }
+    };
   })
 
   .directive('pubDocumentItem', function() {
     return {
       templateUrl: '/views/directives/document-item.html'
-    }
+    };
   })
 
   .directive('pubDocumentSvg', function() {
     return {
       templateUrl: '/views/directives/svg.html'
-    }
-  })
+    };
+  });
 }());

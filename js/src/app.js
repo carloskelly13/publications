@@ -6,7 +6,6 @@
     'pub.controllers',
     'pub.documents',
     'pub.security',
-    'pub.services',
     'pub.directives',
     'restangular',
     'ui.bootstrap',
@@ -22,15 +21,15 @@
     '$stateProvider',
     '$urlRouterProvider',
     '$locationProvider',
-    '$injector',
     '$httpProvider',
+    '$windowProvider',
     'RestangularProvider',
     'appConfig',
     function($stateProvider,
              $urlRouterProvider,
              $locationProvider,
-             $injector,
              $httpProvider,
+             $windowProvider,
              RestangularProvider,
              appConfig) {
 
@@ -38,9 +37,8 @@
 
       RestangularProvider.setBaseUrl(appConfig.apiUrl);
 
-
       RestangularProvider.setDefaultHeaders({
-        'Authorization' : 'Bearer ' + sessionStorage.getItem('access-token')
+        Authorization: 'Bearer ' + $windowProvider.$get().sessionStorage.getItem('access-token')
       });
 
       RestangularProvider.setRestangularFields({
@@ -55,7 +53,7 @@
           abstract: true
         });
 
-      $httpProvider.interceptors.push(function($q, $location, $injector) {
+      $httpProvider.interceptors.push(function($q, $injector) {
         return {
           responseError: function(response) {
             if (response.status > 399) {
@@ -66,7 +64,7 @@
               return $q.then(response);
             }
           }
-        }
+        };
       });
     }
   ])

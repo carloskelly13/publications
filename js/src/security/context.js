@@ -4,8 +4,8 @@
   var pub = angular.module('pub.security.context', []);
 
   pub.factory('securityContext', [
-    '$q',
-    function($q) {
+    '$window',
+    function($window) {
 
       var securityContext = {
         user: {},
@@ -15,18 +15,18 @@
         },
 
         token: function() {
-          return sessionStorage.getItem('access-token');
+          return $window.sessionStorage.getItem('access-token');
         },
 
         setToken: function(newToken) {
           if (!newToken) { return; }
-          sessionStorage.setItem('access-token', newToken);
+          $window.sessionStorage.setItem('access-token', newToken);
         },
 
         reset: function() {
-          securityContext.user = {},
+          securityContext.user = {};
           securityContext.authenticated = false;
-          sessionStorage.removeItem('access-token');
+          $window.sessionStorage.removeItem('access-token');
           return securityContext;
         },
 

@@ -2,7 +2,7 @@
   <div class="app-wordmark"></div>
   <div class="btn-group">
     <div class="dropdown" dropdown is-open="newDocumentModalVisible">
-      <button class="btn dropdown-toggle" dropdown-toggle>New</button>
+      <button class="btn btn-toolbar dropdown-toggle" dropdown-toggle>New</button>
       <div class="dropdown-menu document-item-menu padded-menu new-document" role="menu" ng-click="$event.stopPropagation()">
         <form ng-submit="controller.newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
           <div class="form-text-inputs">
@@ -24,11 +24,11 @@
         </form>
       </div>
     </div>
-    <button class="btn" ng-disabled="selectedDoc === null" ng-click="controller.openDocument(selectedDoc)">Edit</button>
-    <button class="btn" ng-click="controller.downloadPdf()" type="submit" ng-disabled="selectedDoc === null">PDF</button>
-    <button class="btn" ng-disabled="selectedDoc === null" ng-click="controller.deleteDocument(selectedDoc)">Delete</button>
+    <button class="btn btn-toolbar" ng-disabled="selectedDoc === null" ng-click="controller.openDocument(selectedDoc)">Edit</button>
+    <button class="btn btn-toolbar" ng-click="controller.downloadPdf()" type="submit" ng-disabled="selectedDoc === null">PDF</button>
+    <button class="btn btn-toolbar" ng-disabled="selectedDoc === null" ng-click="controller.deleteDocument(selectedDoc)">Delete</button>
     <div class="dropdown" dropdown>
-      <button class="btn" dropdown-toggle>{{user.temporary ? 'Test Drive User' : user.name}}</button>
+      <button class="btn btn-toolbar" dropdown-toggle>{{user.temporary ? 'Test Drive User' : user.name}}</button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <button class="dropdown-menu-item" type="button" ng-click="controller.viewUser()">{{user.temporary ? 'Create Account' : 'Change Password'}}</button>
         <div class="dropdown-menu-spacer"></div>

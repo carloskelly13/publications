@@ -27,17 +27,17 @@ html, body {
 
 .app-controls {
   .animation(all, 250ms);
-  background: #fff;
+  background: darken(@pub-primary, 20%);
+  box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.15);
   display: table-cell;
   vertical-align: middle;
-  border-bottom: 1px solid #aaa;
+  border: none;
   padding: 0;
   height: 40px;
   position: fixed;
   text-align: left;
   width: 100%;
   z-index: 9003;
-  box-shadow: 0 0 2px hsla(0, 0%, 0%, 0.15);
   .valign-container-space-between;
 
   &.app-controls-editor {
@@ -46,13 +46,13 @@ html, body {
   }
 
   .app-wordmark {
-    .retina-picture('pub-v4-logo-40x28', 40px, 28px, inline-block);
+    .retina-picture('pub-v5-icon-20x20-w', 20px, 20px, inline-block);
     margin: 0 0 0 10px;
   }
 
   .btn-group {
     display: inline-block;
-    padding-right: 31px;
+    padding-right: 30px;
   }
 
   &:after {

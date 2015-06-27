@@ -1,17 +1,15 @@
-String.prototype.capitalize = function() {
-  return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-};
-
 (function(){
   'use strict';
 
   var pub = angular.module('pub.documents.services', []);
 
   pub.factory('documentServices', [
+    '$document',
     '$http',
+    '$window',
     'appConfig',
     'securityContext',
-    function($http, appConfig, securityContext) {
+    function($document, $http, $window, appConfig, securityContext) {
       var documentServices = {
 
         offsetShape: function(shapes, shape, offset) {
@@ -36,18 +34,18 @@ String.prototype.capitalize = function() {
         downloadPdf: function(documentId, documentName) {
           $http.get(appConfig.apiUrl + '/documents/' + documentId + '/pdf', {
             headers: {
-              'Authorization' : 'Bearer ' + securityContext.token()
+              'Authorization': 'Bearer ' + securityContext.token()
             },
             responseType: 'arraybuffer'
           }).success(function(pdf) {
-            var a = document.createElement('a');
-            document.body.appendChild(a);
-            var blob = new Blob([pdf], {type: 'application/pdf'}),
-            url = window.URL.createObjectURL(blob);
+            var a = $document.createElement('a');
+            $document.body.appendChild(a);
+            var blob = new $window.Blob([pdf], {type: 'application/pdf'}),
+            url = $window.URL.createObjectURL(blob);
             a.href = url;
             a.download = documentName + '.pdf';
             a.click();
-            window.URL.revokeObjectURL(url);
+            $window.URL.revokeObjectURL(url);
 
           }).error(function() {
           });
