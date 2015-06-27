@@ -2,23 +2,41 @@
   .hero {
     background: darken(@pub-primary, 20%);
     margin: 0 auto;
-    padding: 3em 0 2.5em;
+    padding: 0;
     text-align: center;
     width: 100%;
+    .valign-container-space-between;
+
+    .pub-container {
+      display: inline-block;
+      box-sizing: border-box;
+      width: 70%;
+    }
 
     .publications-logo {
-      .retina-picture('pub-v5-327x53-w', 327px, 53px, inline-block);
+      .retina-picture('pub-v5-304x53-w', 304px, 53px, inline-block);
+    }
+
+    .login-bar {
+      border-left: 1px solid hsla(0, 0%, 100%, 0.5);
+      box-sizing: border-box;
+      display: inline-block;
+      padding: 0;
+      text-align: center;
+      width: 30%;
+
+      .txt {
+        box-sizing: border-box;
+        vertical-align: middle;
+        padding: 8px 5%;
+        width: 100%;
+      }
     }
   }
 
   .hero-bar {
-    background: @pub-primary;
-    padding: 1em 0;
-    text-align: center;
+    background: @pub-secondary;
+    padding: 2em 0;
     width: 100%;
-
-    .btn, .txt {
-      vertical-align: middle;
-    }
   }
 }

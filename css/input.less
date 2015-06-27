@@ -34,7 +34,7 @@
   zoom: 1;
 
   &.txt-light {
-    background: #E2F5FE;
+    background: #e2f5fe;
     border-bottom: none;
     border-radius: 2px;
     color: @color-text;
@@ -132,11 +132,36 @@
   }
 
   &.big {
+    border-radius: 0;
     box-shadow: none;
     font-weight: 300;
     font-size: 22px;
     padding: 6px 0;
-    border-radius: 6px;
+
+    &.big-light {
+      border-color: hsla(0, 0%, 100%, 0.5);
+      color: #fff;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+
+      @placeholder-color: hsla(0, 0%, 100%, 0.5);
+
+      &::-webkit-input-placeholder {
+        color: @placeholder-color;
+      }
+
+      &::-moz-placeholder {
+        color: @placeholder-color;
+      }
+
+      &:-ms-input-placeholder {
+        color: @placeholder-color;
+      }
+
+      &:-moz-placeholder {
+        color: @placeholder-color;
+      }
+    }
 
     &::-webkit-input-placeholder {
       color: #c0c1c6;
