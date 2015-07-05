@@ -2,7 +2,10 @@
   <div class="app-wordmark"></div>
   <div class="btn-group">
     <div class="dropdown" dropdown>
-      <button class="btn btn-toolbar" dropdown-toggle>New</button>
+      <button class="btn btn-toolbar" dropdown-toggle>
+        New
+        <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
+      </button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('rect')">Rectangle</button>
         <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('ellipse')">Ellipse</button>
@@ -10,7 +13,10 @@
       </div>
     </div>
     <div class="dropdown" dropdown>
-      <button class="btn btn-toolbar" dropdown-toggle>Edit</button>
+      <button class="btn btn-toolbar" dropdown-toggle>
+        Edit
+        <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
+      </button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <button class="dropdown-menu-item" type="button" ng-click="documentController.cutObj()" ng-disabled="!selectedObj">Cut</button>
         <button class="dropdown-menu-item" type="button" ng-click="documentController.copyObj()" ng-disabled="!selectedObj">Copy</button>
@@ -23,7 +29,10 @@
       </div>
     </div>
     <div class="dropdown" dropdown>
-      <button class="btn btn-toolbar" dropdown-toggle>View</button>
+      <button class="btn btn-toolbar" dropdown-toggle>
+        View
+        <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
+      </button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
         <div class="dropdown-menu-header">Zoom</div>
         <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(0.5)">
@@ -60,12 +69,12 @@
       </div>
     </div>
     <button class="btn btn-toolbar" ng-click="documentController.updateDocument()">Save</button>
-    <button class="btn btn-toolbar" ng-click="documentController.viewAllDocuments($event)">Documents</button>
+    <button class="btn btn-toolbar" ng-click="documentController.viewAllDocuments($event)">View all Documents</button>
   </div>
 </div>
 <div class="editor-toolbar" ng-class="{'active' : showInspector}">
   <div class="editor-toolbar-container" ng-if="!selectedObj">
-    <span class="helper-text">No Object Selected</span>
+    <span class="helper-text">{{doc.name}}&nbsp;&mdash;&nbsp;{{doc.width}}&#8221;&#32;&#215;&#32;{{doc.height}}&#8221;</span>
   </div>
   <div class="editor-toolbar-container" ng-if="selectedObj">
     <div class="toolbar-control">

@@ -102,10 +102,10 @@
         };
 
         this.deleteDocument = function(sender) {
-          _.remove($scope.documents, function(doc) {
-            return doc._id === sender._id;
+          sender.remove().then(function() {
+            var idx = $scope.documents.indexOf(sender);
+            if (idx > -1) { $scope.documents.splice(idx, 1); }
           });
-          sender.remove();
         };
       }
     ])
@@ -118,10 +118,11 @@
       '$mdToast',
       '$mdDialog',
       '$animate',
+      '$document',
       'documentServices',
       'doc',
       'colors',
-      function($scope, $state, $window, $timeout, $mdToast, $mdDialog, $animate, documentServices, doc, colors) {
+      function($scope, $state, $window, $timeout, $mdToast, $mdDialog, $animate, $document, documentServices, doc, colors) {
         $scope.doc = doc;
         $scope.selectedObj = null;
         $scope.showCanvasGrid = true;
@@ -147,7 +148,6 @@
 
           $mdToast.show($mdToast.simple()
             .content($scope.doc.name + ' saved.')
-            .action('OK')
             .hideDelay(2000)
             .highlightAction(false)
             .position('top right')
@@ -155,18 +155,42 @@
         };
 
         this.viewAllDocuments = function(event) {
-          var confirmDialog = $mdDialog.confirm()
-            .title('Do you want to save the changes made to ' + $scope.doc.name + '?')
-            .content('Your changes will be lost if you don’t save them.')
-            .ok('Save')
-            .clickOutsideToClose(false)
-            .cancel('Don’t Save')
-            .targetEvent(event);
+          $mdDialog.show({
+            clickOutsideToClose: true,
+            locals: {
+              docName: $scope.doc.name || ''
+            },
+            targetEvent: event,
+            template: '<md-dialog>' +
+                      ' <md-dialog-content>' +
+                      '   <h2>Do you want to save the changes made to {{docName}}?</h2>' +
+                      '   <p>Your changes will be lost if you don’t save them.</p>' +
+                      '   <button class="btn frame pull-left" ng-click="cancelSelected()">Cancel</button>' +
+                      '   <button class="btn frame" ng-click="saveSelected()">Save</button>' +
+                      '   <button class="btn frame" ng-click="dontSaveSelected()">Donʼt Save</button>' +
+                      ' </md-dialog-content>' +
+                      '</md-dialog>',
+            controller: [
+              '$scope',
+              'docName',
+              function SaveDialogController($dialogScope, docName) {
+                $dialogScope.docName = docName;
 
-          $mdDialog.show(confirmDialog).then(function() {
-            postDocumentToServer(true);
-          }, function() {
-            $state.go('pub.documents.index');
+                $dialogScope.cancelSelected = function() {
+                  $mdDialog.cancel();
+                };
+
+                $dialogScope.saveSelected = function() {
+                  $mdDialog.hide();
+                  postDocumentToServer(true);
+                };
+
+                $dialogScope.dontSaveSelected = function() {
+                  $mdDialog.hide();
+                  $state.go('pub.documents.index');
+                };
+              }
+            ]
           });
         };
 

@@ -7,10 +7,12 @@
     'pub.documents',
     'pub.security',
     'pub.directives',
+    'pub.services',
     'restangular',
     'ui.bootstrap',
     'ngResource',
-    'ngMaterial'
+    'ngMaterial',
+    'uuid4'
   ])
 
   .constant('appConfig', {
@@ -38,7 +40,8 @@
       RestangularProvider.setBaseUrl(appConfig.apiUrl);
 
       RestangularProvider.setDefaultHeaders({
-        Authorization: 'Bearer ' + $windowProvider.$get().sessionStorage.getItem('access-token')
+        Authorization: 'Bearer ' + $windowProvider.$get().sessionStorage.getItem('access-token'),
+        'Content-Type': 'application/json'
       });
 
       RestangularProvider.setRestangularFields({
@@ -52,20 +55,6 @@
           templateUrl: '/views/app.html',
           abstract: true
         });
-
-      $httpProvider.interceptors.push(function($q, $injector) {
-        return {
-          responseError: function(response) {
-            if (response.status > 399) {
-              $injector.get('$state').transitionTo('pub.home');
-              return $q.reject(response);
-            } else {
-              $injector.get('$state').transitionTo('pub.documents.index');
-              return $q.then(response);
-            }
-          }
-        };
-      });
     }
   ])
 
@@ -76,6 +65,10 @@
     function($state, $rootScope, $stateParams) {
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
+
+      $rootScope.$on('$stateChangeError', function() {
+        $state.transitionTo('pub.home');
+      });
     }
   ]);
 }());

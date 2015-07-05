@@ -33,48 +33,6 @@
   white-space: nowrap;
   zoom: 1;
 
-  &.txt-light {
-    background: #e2f5fe;
-    border-bottom: none;
-    border-radius: 2px;
-    color: @color-text;
-    height: 32px;
-    line-height: 32px;
-    font-weight: 500;
-    padding: 0 12px;
-
-    @txt-light-placeholder-color: lighten(@color-text-bright, 10%);
-
-    &::-webkit-input-placeholder {
-      color: @txt-light-placeholder-color;
-    }
-
-    &::-moz-placeholder {
-      color: @txt-light-placeholder-color;
-    }
-
-    &:-ms-input-placeholder {
-      color: @txt-light-placeholder-color;
-    }
-
-    &:-moz-placeholder {
-      color: @txt-light-placeholder-color;
-    }
-
-    &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 1000px #E2F5FE inset;
-      -webkit-text-fill-color: #1560c0 !important;
-
-      &:focus {
-        -webkit-box-shadow: 0 0 0 1000px #fff inset;
-      }
-    }
-
-    &:focus {
-      background: #fff;
-    }
-  }
-
   &.picker-typeface {
     background: #fff;
     border-radius: 0;
@@ -129,77 +87,12 @@
     &:focus {
       border-color: #999;
     }
-  }
 
-  &.big {
-    border-radius: 0;
-    box-shadow: none;
-    font-weight: 300;
-    font-size: 22px;
-    padding: 6px 0;
-
-    &.big-light {
-      border-color: hsla(0, 0%, 100%, 0.5);
-      color: #fff;
-      font-weight: 400;
-      letter-spacing: -0.5px;
-
-      @placeholder-color: hsla(0, 0%, 100%, 0.5);
-
-      &::-webkit-input-placeholder {
-        color: @placeholder-color;
-      }
-
-      &::-moz-placeholder {
-        color: @placeholder-color;
-      }
-
-      &:-ms-input-placeholder {
-        color: @placeholder-color;
-      }
-
-      &:-moz-placeholder {
-        color: @placeholder-color;
-      }
-    }
-
-    &::-webkit-input-placeholder {
-      color: #c0c1c6;
-    }
-
-    &::-moz-placeholder {
-      color: #c0c1c6;
-    }
-
-    &:-ms-input-placeholder {
-      color: #c0c1c6;
-    }
-
-    &:-moz-placeholder {
-      color: #c0c1c6;
-    }
-
-    + label {
-      font-size: 12px;
-      text-transform: uppercase;
-    }
-
-    &.big-dark {
-      border-color: #999;
-      color: #777;
-
-      &:focus {
-        border-color: #777;
-      }
-    }
-
-    &.bottom-frame {
-      border-radius: 0;
-      border-bottom: 1px solid #bbb;
-
-      &:focus {
-        border-color: #999;
-      }
+    &.frame-big {
+      font-size: 15px;
+      padding: 0 8px;
+      line-height: 32px;
+      height: 32px;
     }
   }
 
@@ -221,6 +114,8 @@
     margin: 1em auto;
     padding: 2px 6px 3px 6px;
     font-weight: 300;
+    font-size: 22px;
+    // height: 40px;
     display: block;
 
     &::-webkit-input-placeholder {

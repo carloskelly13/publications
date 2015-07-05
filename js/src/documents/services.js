@@ -38,13 +38,16 @@
             },
             responseType: 'arraybuffer'
           }).success(function(pdf) {
-            var a = $document.createElement('a');
-            $document.body.appendChild(a);
             var blob = new $window.Blob([pdf], {type: 'application/pdf'}),
-            url = $window.URL.createObjectURL(blob);
+              url = ($window.URL || $window.webkitURL).createObjectURL(blob),
+              a = $window.document.createElement('a');
+
+            $window.document.body.appendChild(a);
+
             a.href = url;
             a.download = documentName + '.pdf';
             a.click();
+
             $window.URL.revokeObjectURL(url);
 
           }).error(function() {

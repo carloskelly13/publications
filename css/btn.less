@@ -12,6 +12,12 @@
   vertical-align: middle;
 }
 
+.btn-toolbar-icon-arrow {
+  display: inline-block;
+  font-size: 8px;
+  margin-left: 4px;
+}
+
 .btn {
   .animation(all, 150ms);
 
@@ -41,6 +47,36 @@
   vertical-align: middle;
   white-space: nowrap;
   zoom: 1;
+
+  &.frame {
+    border-radius: 2px;
+    background-color: #f5f5f5;
+    box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25), inset 0 2px 0 0 #fff;
+    font-size: 14px;
+    font-weight: 500;
+    height: 32px;
+    line-height: 30px;
+    padding: 0 20px;
+
+    &:hover {
+      background-color: #eee;
+      box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25), inset 0 2px 0 0 #f5f5f5;
+      color: @color-text;
+    }
+
+    &:active {
+      background-color: #eee;
+      box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25), inset 0 2px 0 0 hsla(0, 0%, 0%, 0.1);
+      color: @color-text;
+    }
+
+    &:disabled, &:disabled:hover {
+      box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.15);
+      background: #f5f5f5;
+      color: #ddd;
+      cursor: not-allowed;
+    }
+  }
 
   &::-moz-focus-inner {
     padding: 0;
@@ -93,33 +129,6 @@
       .icon {
         font-family: 'streamline-24px-filled-in';
       }
-    }
-  }
-
-  &.btn-lg-left {
-    color: #fff;
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -0.5px;
-    line-height: 50px;
-    height: 50px;
-    margin: 0;
-    padding: 0 5%;
-    text-align: left;
-    width: 100%;
-
-    &:hover {
-      background: hsla(0, 0%, 100%, 0.2);
-    }
-
-    &:active {
-      background: hsla(0, 0%, 0%, 0.1);
-    }
-
-    &:disabled, &:disabled:hover {
-      cursor: not-allowed;
-      background: transparent;
-      color: hsla(0, 0%, 100%, 0.33);
     }
   }
 
@@ -190,6 +199,7 @@
 
   &:disabled, &:disabled:hover {
     color: #ccc;
+    cursor: not-allowed;
 
     &.btn-frame {
       background: #f5f5f5 !important;

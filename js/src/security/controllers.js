@@ -8,9 +8,13 @@
       '$state',
       '$http',
       '$location',
+      '$mdToast',
+      'pub.progressModal',
       'Restangular',
+      'appConfig',
       'authentication',
-      function($scope, $state, $http, $location, Restangular, authentication) {
+      'uuid4',
+      function($scope, $state, $http, $location, $mdToast, progressModal, Restangular, appConfig, authentication, uuid4) {
         $scope.submitted = false;
         $scope.authSuccess = null;
 
@@ -20,35 +24,58 @@
           }
         });
 
-        $scope.loginModalVisible = false;
+        $scope.submit = function($event) {
+          progressModal.showProgressModal($event);
 
-        $scope.loginModal = function() {
-          $scope.loginModalVisible = !$scope.loginModalVisible;
-        };
-
-        $scope.submit = function() {
           authentication.login({
             name: $scope.username,
             password: $scope.password
           },
-          function() {
+          function onSuccess() {
+            progressModal.hideProgressModal();
             $state.go('pub.documents.index');
           },
-          function() {
+          function onError() {
+            progressModal.hideProgressModal();
             $scope.password = null;
-            $scope.authSuccess = false;
+
+            $mdToast.show($mdToast.simple()
+              .content('Incorrect email address or password. Try again.')
+              .hideDelay(2000)
+              .highlightAction(false)
+              .position('top right')
+            );
           });
         };
 
-        $scope.createAccount = function() {
-          $http.post('/users', {}, null).success(function(user) {
+        $scope.createAccount = function($event) {
+          progressModal.showProgressModal($event);
+
+          var request = {
+            method: 'POST',
+            url: appConfig.apiUrl + '/users',
+            data: {
+              name: uuid4.generate() + '@publicationsapp.com',
+              password: 'password',
+              temporary: true
+            }
+          };
+
+          $http(request).success(function(user) {
+            console.log(user);
             authentication.login({
-              username: user.name,
-              password: 'password'
-            },
-            function() {
-              $state.go('pub.documents.index');
-            });
+                name: user.name,
+                password: 'password'
+              },
+              function onSuccess() {
+                progressModal.hideProgressModal();
+                $state.go('pub.documents.index');
+              },
+              function onError() {
+                progressModal.hideProgressModal();
+                console.log('Could not log in with new temporary user.');
+              }
+            );
           });
         };
       }
@@ -57,23 +84,16 @@
     .controller('UserController', [
       '$scope',
       '$state',
+      '$mdDialog',
       '$http',
+      'pub.progressModal',
+      'appConfig',
       'securityContext',
       'authentication',
-      function($scope, $state, $http, securityContext, authentication) {
+      function($scope, $state, $mdDialog, $http, progressModal, appConfig, securityContext, authentication) {
         $scope.user = securityContext.user;
         $scope.userErrorModalVisible = false;
         $scope.currentUserTab = 'account';
-
-        var clearUserForm = function() {
-          $scope.userAccountForm.emailAddress = null;
-          $scope.userAccountForm.newPassword = null;
-          $scope.userAccountForm.confirmPassword = null;
-
-          $scope.changePasswordForm.newPassword = null;
-          $scope.changePasswordForm.currentPassword = null;
-          $scope.changePasswordForm.confirmPassword = null;
-        };
 
         $scope.toggleUserTab = function(newTab) {
           $scope.currentUserTab = newTab;
@@ -87,23 +107,59 @@
           $scope.userErrorModalVisible = false;
         };
 
-        $scope.updateUserAccount = function(sender) {
-          $scope.user.name = sender.name || $scope.user.name;
-          $scope.user.currentPassword = sender.currentPassword || 'password';
-          $scope.user.password = sender.newPassword;
-          $scope.user.temporary = false;
+        $scope.updateUserAccount = function(sender, $event) {
+          progressModal.showProgressModal($event);
 
-          $http.put('/users/' + $scope.user._id, $scope.user, null)
-            .success(function(user) {
-              authentication.requestSecurityContext().then(function(securityContext) {
-                clearUserForm();
-                securityContext.setAuthentication(user);
-              });
-            })
-            .error(function() {
-              clearUserForm();
-              $scope.userErrorModalVisible = true;
+          var request = {
+            method: 'PATCH',
+            url: appConfig.apiUrl + '/users',
+            headers: {
+              'Authorization': 'Bearer ' + securityContext.token()
+            },
+            data: {
+              name: sender.emailAddress || $scope.user.name,
+              currentPassword: sender.currentPassword || 'password',
+              password: sender.newPassword,
+              temporary: false
+            }
+          };
+
+          $http(request).success(function(updatedUser) {
+            progressModal.hideProgressModal();
+
+            authentication.requestSecurityContext().then(function(updatedSecurityContext) {
+              updatedSecurityContext.setAuthentication(updatedUser);
+              $state.transitionTo('pub.documents.index');
             });
+
+          }).error(function(error) {
+            progressModal.hideProgressModal();
+
+            $mdDialog.show({
+              clickOutsideToClose: true,
+              locals: {
+                errorMessage: error.message || ''
+              },
+              template: '<md-dialog>' +
+                        ' <md-dialog-content>' +
+                        '   <h2>Could not update user account.</h2>' +
+                        '   <p>{{errorMessage}}</p>' +
+                        '   <button class="btn frame" ng-click="okSelected()">OK</button>' +
+                        ' </md-dialog-content>' +
+                        '</md-dialog>',
+              controller: [
+                '$scope',
+                'errorMessage',
+                function SaveDialogController($dialogScope, errorMessage) {
+                  $dialogScope.errorMessage = errorMessage;
+
+                  $dialogScope.okSelected = function() {
+                    $mdDialog.cancel();
+                  };
+                }
+              ]
+            });
+          });
         };
       }
     ]);
