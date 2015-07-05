@@ -1,32 +1,13 @@
 {
-  "name": "publications-js",
-  "version": "0.2.0",
+  "name": "publications-ng",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "bcryptjs": "2.1.0",
-    "body-parser": "^1.2.0",
-    "cookie-parser": "1.1.0",
-    "cors": "^2.6.0",
-    "ejs": "*",
-    "express": "~4.2.0",
-    "express-session": "1.1.0",
-    "lodash": "2.4.1",
-    "method-override": "^1.0.1",
-    "mongoose": "3.8.23",
-    "morgan": "^1.0.1",
-    "passport": "0.2.0",
-    "passport-local": "0.1.6",
-    "pdfkit": "^0.6.2",
-    "serve-favicon": "^2.0.1"
-  },
   "devDependencies": {
     "bower": "~1.2.8",
     "gulp": "^3.6.2",
     "gulp-concat": "^2.2.0",
     "gulp-html2js": "^0.1.0",
+    "gulp-jshint": "^1.11.0",
     "gulp-less": "^1.2.3",
     "gulp-uglify": "^0.3.0"
   }

@@ -1,0 +1,150 @@
+<div class="app-controls app-controls-editor">
+  <div class="app-wordmark"></div>
+  <div class="btn-group">
+    <div class="dropdown" dropdown>
+      <button class="btn btn-toolbar" dropdown-toggle>
+        New
+        <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
+      </button>
+      <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('rect')">Rectangle</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('ellipse')">Ellipse</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.addObject('text')">Text Box</button>
+      </div>
+    </div>
+    <div class="dropdown" dropdown>
+      <button class="btn btn-toolbar" dropdown-toggle>
+        Edit
+        <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
+      </button>
+      <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.cutObj()" ng-disabled="!selectedObj">Cut</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.copyObj()" ng-disabled="!selectedObj">Copy</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.pasteObj()" ng-disabled="!clipboard">Paste</button>
+        <div class="dropdown-menu-spacer"></div>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.shiftLayer(1)" ng-disabled="!selectedObj || !canMoveObjectByOffset(1)">Move Forwards</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.shiftLayer(-1)" ng-disabled="!selectedObj || !canMoveObjectByOffset(-1)">Move Backwards</button>
+        <div class="dropdown-menu-spacer"></div>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.deleteObj()" ng-disabled="!selectedObj">Remove Object</button>
+      </div>
+    </div>
+    <div class="dropdown" dropdown>
+      <button class="btn btn-toolbar" dropdown-toggle>
+        View
+        <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
+      </button>
+      <div class="dropdown-menu document-item-menu padded-menu" role="menu">
+        <div class="dropdown-menu-header">Zoom</div>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(0.5)">
+          50%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 0.5"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(0.75)">
+          75%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 0.75"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(1)">
+          100%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 1"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(1.25)">
+          125%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 1.25"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(1.5)">
+          150%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 1.5"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(2)">
+          200%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 2"></span>
+        </button>
+        <button class="dropdown-menu-item" ng-click="documentController.setZoomLevel(3)">
+          300%
+          <span class="accessory-item" data-icon="&#xe2fe;" ng-if="zoomLevel === 3"></span>
+        </button>
+        <div class="dropdown-menu-spacer"></div>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.toggleCanvasGrid()">{{ showCanvasGrid ? 'Hide' : 'Show'}} Canvas Grid</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.toggleSnapToGrid()">{{ snapToGrid ? 'Freeform Objects' : 'Snap Objects to Grid'}}</button>
+      </div>
+    </div>
+    <button class="btn btn-toolbar" ng-click="documentController.updateDocument()">Save</button>
+    <button class="btn btn-toolbar" ng-click="documentController.viewAllDocuments($event)">View all Documents</button>
+  </div>
+</div>
+<div class="editor-toolbar" ng-class="{'active' : showInspector}">
+  <div class="editor-toolbar-container" ng-if="!selectedObj">
+    <span class="helper-text">{{doc.name}}&nbsp;&mdash;&nbsp;{{doc.width}}&#8221;&#32;&#215;&#32;{{doc.height}}&#8221;</span>
+  </div>
+  <div class="editor-toolbar-container" ng-if="selectedObj">
+    <div class="toolbar-control">
+      <input pub-signed-float-input type="text" name="x" id="x" class="txt txt-toolbar" ng-model="selectedObj.x" />
+      <label class="txt-label" for="x">
+        <span class="label-unit">in</span>&nbsp;x
+       </label>
+    </div>
+    <div class="toolbar-control">
+      <input pub-signed-float-input type="text" name="y" id="y" class="txt txt-toolbar" ng-model="selectedObj.y" />
+      <label class="txt-label" for="y">
+        <span class="label-unit">in</span>&nbsp;y
+      </label>
+    </div>
+    <div class="toolbar-control">
+      <input pub-unsigned-non-zero-float-input type="text" name="width" id="width" class="txt txt-toolbar" ng-model="selectedObj.width" />
+      <label class="txt-label" for="width">
+        <span class="label-unit">in</span>&nbsp;width
+      </label>
+    </div>
+    <div class="toolbar-control">
+      <input pub-unsigned-non-zero-float-input type="text" name="height" id="height" class="txt txt-toolbar" ng-model="selectedObj.height" />
+      <label class="txt-label" for="height">
+        <span class="label-unit">in</span>&nbsp;height
+      </label>
+    </div>
+    <div class="spacer"></div>
+    <div class="toolbar-control-group" ng-if="selectedObj.type === 'text'">
+      <div class="toolbar-control">
+        <div pub-typeface-picker class="typeface-picker" typefaces="typefaces" selected-obj="selectedObj"></div>
+      </div>
+      <div class="toolbar-control">
+        <input pub-unsigned-integer-input type="text" name="font-size" id="font-size" class="txt txt-toolbar integer" ng-model="selectedObj.fontSize" />
+        <label class="txt-label" for="font-size">
+        <span class="label-unit">pt</span>
+      </label>
+      </div>
+      <div class="toolbar-control">
+        <div class="btn-toolbar-icon-group">
+          <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'left'}" ng-click="documentController.changeTextAlign('left')">&#xe4f5;</button>
+          <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'center'}" ng-click="documentController.changeTextAlign('center')">&#xe4f4;</button>
+          <button class="btn btn-icon btn-toolbar-icon" ng-class="{'btn-toolbar-icon-active' : selectedObj.textAlign === 'right'}" ng-click="documentController.changeTextAlign('right')">&#xe4f6;</button>
+        </div>
+      </div>
+    </div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
+      <input pub-unsigned-integer-input type="text" name="stroke-width" id="stroke-width" class="txt txt-toolbar integer" ng-model="selectedObj.strokeWidth" />
+      <label class="txt-label" for="stroke-width">
+        <span class="label-unit">pt</span>&nbsp;stroke
+      </label>
+    </div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect'">
+      <input pub-unsigned-integer-input type="text" name="stroke-radius" id="stroke-radius" class="txt  txt-toolbar integer" ng-model="selectedObj.r" />
+      <label class="txt-label" for="stroke-radius">
+        <span class="label-unit">pt</span>&nbsp;radius
+      </label>
+    </div>
+    <div class="spacer"></div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'text'">
+      <div pub-color-picker class="color-picker-container" colors="colors" property="color" selected-obj="selectedObj" color="selectedObj.color"></div>
+    </div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
+      <div pub-color-picker class="color-picker-container" colors="colors" property="fill" selected-obj="selectedObj" color="selectedObj.fill"></div>
+      <label class="txt-label">fill</label>
+    </div>
+    <div class="spacer mini" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'"></div>
+    <div class="toolbar-control" ng-if="selectedObj.type === 'rect' || selectedObj.type === 'ellipse'">
+      <div pub-color-picker class="color-picker-container" colors="colors" property="stroke" selected-obj="selectedObj" color="selectedObj.stroke"></div>
+      <label class="txt-label">stroke</label>
+    </div>
+  </div>
+</div>
+<div ui-view="document-canvas"></div>
