@@ -2,8 +2,17 @@
   'use strict';
 
   angular.module('pub.documents.directives', [])
+    .directive('pubDraggable', pubDraggable)
+    .directive('pubResizable', pubResizable)
+    .directive('pubShapeRectangle', pubShapeRectangle)
+    .directive('pubShapeEllipse', pubShapeEllipse)
+    .directive('pubShapeText', pubShapeText)
+    .directive('pubColorPicker', pubColorPicker)
+    .directive('pubTypefacePicker', pubTypefacePicker)
+    .directive('pubDocumentItem', pubDocumentItem)
+    .directive('pubDocumentSvg', pubDocumentSvg);
 
-  .directive('pubDraggable', function($document) {
+  function pubDraggable($document) {
     return function(scope, element) {
       var eX = 0, eY = 0, oX = 0, oY = 0;
 
@@ -45,9 +54,9 @@
       element.on('mousedown', dragStart);
       element.on('touchstart', dragStart);
     };
-  })
+  }
 
-  .directive('pubResizable', function($document) {
+  function pubResizable($document) {
     return function(scope, element) {
       var coordinate = scope.objAnchor.coordinate;
       var eX = 0, eY = 0, oX = 0, oY = 0, oW = 0, oH = 0;
@@ -115,9 +124,9 @@
       element.on('mousedown', resizeStart);
       element.on('touchstart', resizeStart);
     };
-  })
+  }
 
-  .directive('pubShapeRectangle', function() {
+  function pubShapeRectangle() {
     return {
       scope: {
         shape: '=',
@@ -127,25 +136,25 @@
       restrict: 'E',
       type: 'svg',
       replace: true,
-      template: '<rect ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
-                'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
-                'ng-attr-rx="{{shape.r * zoomLevel}}"' +
-                'ng-attr-ry="{{shape.r * zoomLevel}}"' +
-                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' +
-                'ng-attr-width="{{shape.width * dpi * zoomLevel}}"' +
-                'ng-attr-fill="{{shape.fill}}"' +
-                'ng-attr-stroke="{{shape.stroke}}"' +
-                'ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"' +
-                'ng-attr-fill-opacity="{{shape.fillOpacity}}"' +
-                'ng-attr-stroke-opacity="{{shape.strokeOpacity}}"' +
-                '/>',
+      template: `<rect ng-attr-x="{{shape.x * dpi * zoomLevel}}"
+                       ng-attr-y="{{shape.y * dpi * zoomLevel}}"
+                       ng-attr-rx="{{shape.r * zoomLevel}}"
+                       ng-attr-ry="{{shape.r * zoomLevel}}"
+                       ng-attr-height="{{shape.height * dpi * zoomLevel}}"
+                       ng-attr-width="{{shape.width * dpi * zoomLevel}}"
+                       ng-attr-fill="{{shape.fill}}"
+                       ng-attr-stroke="{{shape.stroke}}"
+                       ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"
+                       ng-attr-fill-opacity="{{shape.fillOpacity}}"
+                       ng-attr-stroke-opacity="{{shape.strokeOpacity}}"
+                />`,
       link: function(scope) {
         scope.dpi = 72;
       }
     };
-  })
+  }
 
-  .directive('pubShapeEllipse', function() {
+  function pubShapeEllipse() {
     return {
       scope: {
         shape: '=',
@@ -155,23 +164,23 @@
       restrict: 'E',
       type: 'svg',
       replace: true,
-      template: '<ellipse ng-attr-cx="{{(shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel)}}"' +
-                'ng-attr-cy="{{(shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel)}}"' +
-                'ng-attr-rx="{{shape.width / 2.0 * dpi * zoomLevel}}"' +
-                'ng-attr-ry="{{shape.height / 2.0 * dpi * zoomLevel}}"' +
-                'ng-attr-fill="{{shape.fill}}"' +
-                'ng-attr-stroke="{{shape.stroke}}"' +
-                'ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"' +
-                'ng-attr-fill-opacity="{{shape.fillOpacity}}"' +
-                'ng-attr-stroke-opacity="{{shape.strokeOpacity}}"' +
-                '/>',
+      template: `<ellipse ng-attr-cx="{{(shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel)}}"
+                          ng-attr-cy="{{(shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel)}}"
+                          ng-attr-rx="{{shape.width / 2.0 * dpi * zoomLevel}}"
+                          ng-attr-ry="{{shape.height / 2.0 * dpi * zoomLevel}}"
+                          ng-attr-fill="{{shape.fill}}"
+                          ng-attr-stroke="{{shape.stroke}}"
+                          ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"
+                          ng-attr-fill-opacity="{{shape.fillOpacity}}"
+                          ng-attr-stroke-opacity="{{shape.strokeOpacity}}"
+                />`,
       link: function(scope) {
         scope.dpi = 72;
       }
     };
-  })
+  }
 
-  .directive('pubShapeText', function() {
+  function pubShapeText() {
     return {
       scope: {
         shape: '=',
@@ -181,24 +190,26 @@
       restrict: 'E',
       type: 'svg',
       replace: true,
-      template: '<foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"' +
-                'ng-attr-y="{{shape.y * dpi * zoomLevel}}"' +
-                'ng-attr-height="{{shape.height * dpi * zoomLevel}}"' +
-                'ng-attr-width="{{shape.width * dpi * zoomLevel}}">' +
-                '<p ng-style="{color: shape.color,' +
-                'fontFamily: shape.fontFamily,' +
-                'fontStyle: shape.fontStyle,' +
-                'fontSize: (shape.fontSize * zoomLevel) + \'px\',' +
-                'fontWeight: shape.fontWeight,' +
-                'textAlign: shape.textAlign }">{{shape.text}}</p>' +
-                '</foreignObject>',
+      template: `<foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"
+                                ng-attr-y="{{shape.y * dpi * zoomLevel}}"
+                                ng-attr-height="{{shape.height * dpi * zoomLevel}}"
+                                ng-attr-width="{{shape.width * dpi * zoomLevel}}">
+                    <p ng-style="{color: shape.color,
+                                  fontFamily: shape.fontFamily,
+                                  fontStyle: shape.fontStyle,
+                                  fontSize: (shape.fontSize * zoomLevel) + \'px\',
+                                  fontWeight: shape.fontWeight,
+                                  textAlign: shape.textAlign }">
+                      {{shape.text}}
+                    </p>
+                </foreignObject>`,
       link: function(scope) {
         scope.dpi = 72;
       }
     };
-  })
+  }
 
-  .directive('pubColorPicker', function() {
+  function pubColorPicker() {
     return {
       scope: {
         color: '=',
@@ -207,38 +218,39 @@
         property: '@'
       },
       templateUrl: '/views/directives/color-picker.html',
-      link: function(scope) {
-        scope.updateColor = function(color) {
+      link: (scope) => {
+        scope.updateColor = (color) => {
           scope.selectedObj[scope.property] = color;
         };
       }
     };
-  })
+  }
 
-  .directive('pubTypefacePicker', function() {
+  function pubTypefacePicker() {
     return {
       scope: {
         typefaces: '=',
         selectedObj: '='
       },
       templateUrl: '/views/directives/typeface-picker.html',
-      link: function(scope) {
-        scope.updateTypeface = function(typeface) {
+      link: (scope) => {
+        scope.updateTypeface = (typeface) => {
           scope.selectedObj.fontFamily = typeface;
         };
       }
     };
-  })
+  }
 
-  .directive('pubDocumentItem', function() {
+  function pubDocumentItem() {
     return {
       templateUrl: '/views/directives/document-item.html'
     };
-  })
+  }
 
-  .directive('pubDocumentSvg', function() {
+  function pubDocumentSvg() {
     return {
       templateUrl: '/views/directives/svg.html'
     };
-  });
+  }
+
 }());

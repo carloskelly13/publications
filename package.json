@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "bower": "~1.2.8",
+    "eslint": "^0.24.1",
     "gulp": "^3.6.2",
     "gulp-angular-injector": "^1.0.0",
     "gulp-babel": "^5.1.0",

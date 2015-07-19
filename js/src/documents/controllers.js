@@ -52,9 +52,9 @@
       '$scope',
       '$state',
       '$location',
-      'documentServices',
+      'documentService',
       'securityContext',
-      function($http, $scope, $state, $location, documentServices) {
+      function($http, $scope, $state, $location, documentService) {
         $scope.selectedDoc = null;
         $scope.iconDpi = 15;
         $scope.newDocumentModalVisible = false;
@@ -93,7 +93,7 @@
 
         this.downloadPdf = function() {
           if (!!$scope.selectedDoc) {
-            documentServices.downloadPdf($scope.selectedDoc._id, $scope.selectedDoc.name);
+            documentService.downloadPdf($scope.selectedDoc._id, $scope.selectedDoc.name);
           }
         };
 
@@ -119,10 +119,10 @@
       '$mdDialog',
       '$animate',
       '$document',
-      'documentServices',
+      'documentService',
       'doc',
       'colors',
-      function($scope, $state, $window, $timeout, $mdToast, $mdDialog, $animate, $document, documentServices, doc, colors) {
+      function($scope, $state, $window, $timeout, $mdToast, $mdDialog, $animate, $document, documentService, doc, colors) {
         $scope.doc = doc;
         $scope.selectedObj = null;
         $scope.showCanvasGrid = true;
@@ -195,7 +195,7 @@
         };
 
         this.shiftLayer = function(offset) {
-          documentServices.offsetShape($scope.doc.shapes, $scope.selectedObj, offset);
+          documentService.offsetShape($scope.doc.shapes, $scope.selectedObj, offset);
         };
 
         this.toggleCanvasGrid = function() {
@@ -233,7 +233,7 @@
         };
 
         this.addObject = function(objType) {
-          $scope.doc.shapes.push(documentServices.newShape(objType));
+          $scope.doc.shapes.push(documentService.newShape(objType));
         };
 
         this.changeTextAlign = function(textAlign) {
@@ -260,9 +260,9 @@
 
     .controller('DocumentCanvasController', [
       '$scope',
-      'documentServices',
+      'documentService',
       'objAnchors',
-      function($scope, documentServices, objAnchors) {
+      function($scope, documentService, objAnchors) {
         $scope.objAnchors = objAnchors;
 
         this.svgObjectSelected = function(obj) {

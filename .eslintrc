@@ -2,7 +2,8 @@
   "rules": {
     "quotes": [1, "single"],
     "no-underscore-dangle": 0,
-    "no-extra-boolean-cast": 0
+    "no-extra-boolean-cast": 0,
+    "no-use-before-define": 0
   },
   "globals": {
     "angular": true,
@@ -10,5 +11,8 @@
   },
   "env": {
     "node": true
+  },
+  "ecmaFeatures": {
+    "arrowFunctions": true
   }
 }
