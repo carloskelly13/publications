@@ -4,11 +4,11 @@ md-toast {
 
 md-dialog {
   box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.33), 0 1px 3px hsla(0, 0%, 0%, 0.1);
-  padding: 1em;
+  padding: 0;
   width: 400px;
 
   &.dialog-progress {
-    background: fade(darken(@pub-primary, 25%), 90%);
+    background: hsla(0, 0%, 0%, 0.85);
     border-radius: 8px;
     box-sizing: border-box;
     box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25), 0 1px 3px hsla(0, 0%, 0%, 0.1);
@@ -16,6 +16,11 @@ md-dialog {
     min-width: 120px;
     padding: 0;
     width: 120px;
+    
+    md-dialog-content {
+      padding: 17px 0 0;
+      overflow: hidden;
+    }
   }
 
   h2 {
@@ -58,9 +63,8 @@ md-dialog {
 .progress-loader,
 .progress-loader:after {
   border-radius: 50%;
-  width: 80px;
   height: 80px;
-  top: 20px;
+  width: 80px;
 }
 @-webkit-keyframes progressLoaderKeyframes {
   0% {

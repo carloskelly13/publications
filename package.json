@@ -5,6 +5,8 @@
   "devDependencies": {
     "bower": "~1.2.8",
     "gulp": "^3.6.2",
+    "gulp-angular-injector": "^1.0.0",
+    "gulp-babel": "^5.1.0",
     "gulp-concat": "^2.2.0",
     "gulp-html2js": "^0.1.0",
     "gulp-jshint": "^1.11.0",

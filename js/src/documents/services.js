@@ -37,18 +37,19 @@
               'Authorization': 'Bearer ' + securityContext.token()
             },
             responseType: 'arraybuffer'
-          }).success(function(pdf) {
-            var blob = new $window.Blob([pdf], {type: 'application/pdf'}),
-              url = ($window.URL || $window.webkitURL).createObjectURL(blob),
-              a = $window.document.createElement('a');
-
-            $window.document.body.appendChild(a);
-
-            a.href = url;
-            a.download = documentName + '.pdf';
-            a.click();
-
-            $window.URL.revokeObjectURL(url);
+          }).success(function(pdfData) {
+            var blob = new $window.Blob([pdfData], {type: 'application/pdf'});
+            console.log(blob);
+            //   url = ($window.URL || $window.webkitURL).createObjectURL(blob),
+            //   a = $window.document.createElement('a');
+            //
+            // $window.document.body.appendChild(a);
+            //
+            // a.href = url;
+            // a.download = documentName + '.pdf';
+            // a.click();
+            //
+            // $window.URL.revokeObjectURL(url);
 
           }).error(function() {
           });

@@ -9,7 +9,8 @@ function logError(err) {
   console.log(err);
 }
 
-var concat = require('gulp-concat'),
+var babel = require('gulp-babel'),
+  concat = require('gulp-concat'),
   gulp = require('gulp'),
   html2js = require('gulp-html2js'),
   less = require('gulp-less'),
@@ -18,7 +19,7 @@ var concat = require('gulp-concat'),
 
 var paths = {
   css: ['css/*.less'],
-  js: ['views/templates.js', 'js/_vendor/**/*.js', 'js/src/**/*.js'],
+  js: ['js/_vendor/**/*.js', 'js/src/**/*.js'],
   templates: 'views/**/*.html'
 };
 
@@ -46,14 +47,30 @@ gulp.task('templates', function() {
     .pipe(gulp.dest('views/'));
 });
 
+gulp.task('templates-prod', function() {
+  return gulp.src(paths.templates)
+    .pipe(html2js({
+      moduleName: 'pub',
+      useStrict: true
+    }).on('error', function(err) {
+      logError(err);
+      this.emit('end');
+    }))
+    .pipe(uglify({mangle: false}))
+    .pipe(concat('templates.js'))
+    .pipe(gulp.dest('views/'));
+});
+
 gulp.task('js', function() {
   return gulp.src(paths.js)
     .pipe(concat('app.min.js'))
+    .pipe(babel())
     .pipe(gulp.dest('js/'));
 });
 
 gulp.task('js-prod', function() {
   return gulp.src(paths.js)
+    .pipe(babel())
     .pipe(uglify({mangle: false}))
     .pipe(concat('app.min.js'))
     .pipe(gulp.dest('js/'));
@@ -66,4 +83,4 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', ['less', 'templates', 'js', 'watch']);
-gulp.task('production', ['less', 'templates', 'js-prod']);
+gulp.task('production', ['less', 'templates-prod', 'js-prod']);

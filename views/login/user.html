@@ -24,7 +24,7 @@
             <label class="txt-label" for="confirm-password">Confirm New Password</label>
           </div>
           <div class="form-btns">
-            <button class="btn frame" ng-click="updateUserAccount(userAccountForm, $event)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
+            <button class="btn frame" ng-click="userController.updateUserAccount(userAccountForm)" ng-disabled="userAccountForm.$invalid || userAccountForm.newPassword !== userAccountForm.confirmPassword">Create Account</button>
             <button class="btn frame" type="button" ui-sref="pub.documents.index">Cancel</button>
           </div>
         </div>
@@ -46,7 +46,7 @@
             <label class="txt-label" for="confirm-password">Confirm New Password</label>
           </div>
           <div class="form-btns">
-            <button class="btn frame" type="button" ng-click="updateUserAccount(changePasswordForm, $event)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
+            <button class="btn frame" type="button" ng-click="userController.updateUserAccount(changePasswordForm, $event)" ng-disabled="changePasswordForm.$invalid || changePasswordForm.newPassword !== changePasswordForm.confirmPassword">Change Password</button>
             <button class="btn frame" type="button" ui-sref="pub.documents.index">Cancel</button>
           </div>
         </div>

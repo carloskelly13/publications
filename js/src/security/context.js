@@ -1,44 +1,42 @@
 (function() {
   'use strict';
 
-  var pub = angular.module('pub.security.context', []);
+  angular.module('pub.security.context', [])
+    .factory('securityContext', securityContext);
+  
+  function securityContext($window) {
+    var securityContextObject = {
+      user: {},
 
-  pub.factory('securityContext', [
-    '$window',
-    function($window) {
+      authenticated: () => {
+        return !!securityContextObject.token;
+      },
 
-      var securityContext = {
-        user: {},
+      token: () => {
+        return $window.sessionStorage.getItem('access-token');
+      },
 
-        authenticated: function() {
-          return !!securityContext.token;
-        },
+      setToken: (newToken) => {
+        if (!newToken) { return; }
+        $window.sessionStorage.setItem('access-token', newToken);
+      },
 
-        token: function() {
-          return $window.sessionStorage.getItem('access-token');
-        },
+      reset: () => {
+        securityContextObject.user = {};
+        securityContextObject.authenticated = false;
+        $window.sessionStorage.removeItem('access-token');
+        return securityContextObject;
+      },
 
-        setToken: function(newToken) {
-          if (!newToken) { return; }
-          $window.sessionStorage.setItem('access-token', newToken);
-        },
+      setAuthentication: (user) => {
+        securityContextObject.user = user || {};
+        securityContextObject.setToken(user.token);
+        securityContextObject.authenticated = _.isObject(user);
+        return securityContextObject;
+      }
+    };
+    
+    return securityContextObject;
+  }
 
-        reset: function() {
-          securityContext.user = {};
-          securityContext.authenticated = false;
-          $window.sessionStorage.removeItem('access-token');
-          return securityContext;
-        },
-
-        setAuthentication: function(user) {
-          securityContext.user = user || {};
-          securityContext.setToken(user.token);
-          securityContext.authenticated = _.isObject(user);
-          return securityContext;
-        }
-      };
-
-      return securityContext;
-    }
-  ]);
 }());

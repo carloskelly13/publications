@@ -1,35 +1,29 @@
 (function() {
   'use strict';
 
-  angular.module('pub.security', [
-    'pub.security.controllers',
-    'pub.security.authentication',
-    'pub.security.context'
-  ])
+  angular.module('pub.security', ['pub.security.controllers', 'pub.security.authentication', 'pub.security.context', 'pub.security.services'])
+    .config(pubSecurityConfig);
+    
+  function pubSecurityConfig($stateProvider) {
+    $stateProvider
+      .state('pub.home', {
+        url: '/home',
+        templateUrl: 'views/login/home.html',
+        controller: 'HomeController',
+        controllerAs: 'homeController'
+      })
 
-    .config([
-      '$stateProvider',
-      function($stateProvider) {
-        $stateProvider
-          .state('pub.home', {
-            url: '/home',
-            templateUrl: 'views/login/home.html',
-            controller: 'HomeController'
-          })
-
-          .state('pub.user', {
-            url: '/user',
-            templateUrl: 'views/login/user.html',
-            controller: 'UserController',
-            resolve: {
-              securityContext: [
-                'authentication',
-                function(authentication) {
-                  return authentication.requestSecurityContext();
-                }
-              ]
-            }
-          });
-      }
-    ]);
+      .state('pub.user', {
+        url: '/user',
+        templateUrl: 'views/login/user.html',
+        controller: 'UserController',
+        controllerAs: 'userController',
+        resolve: {
+          securityContext: (authentication) => {
+            return authentication.requestSecurityContext();
+          }
+        }
+      });
+  }
+  
 }());

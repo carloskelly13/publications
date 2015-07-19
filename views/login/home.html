@@ -6,11 +6,11 @@
     </div>
   </div>
   <div class="login-bar">
-    <form ng-submit="submit($event)" submitted="submitted" name="loginForm" role="form" class="form">
+    <form ng-submit="homeController.loginSubmit()" submitted="submitted" name="loginForm" role="form" class="form">
       <input class="txt frame frame-big" type="email" ng-model="username" name="username" id="username" required placeholder="user@email.com">
       <input class="txt frame frame-big" type="password" ng-model="password" name="password" id="password" required placeholder="• • • • • • • •">
       <button class="btn frame frame-big" type="submit" ng-disabled="loginForm.$invalid">Log In</button>
-      <button class="btn frame frame-big" type="button" ng-click="createAccount($event)">Test Drive / Sign Up</button>
+      <button class="btn frame frame-big" type="button" ng-click="homeController.createAccount()">Test Drive / Sign Up</button>
     </form>
     <p>Instantly try out Publications with a free test drive. A test drive can be converted to a full account.</p>
   </div>

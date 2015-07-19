@@ -1,74 +1,39 @@
 (function(){
   'use strict';
-
-  angular.module('pub', [
-    'ui.router',
-    'pub.controllers',
-    'pub.documents',
-    'pub.security',
-    'pub.directives',
-    'pub.services',
-    'restangular',
-    'ui.bootstrap',
-    'ngResource',
-    'ngMaterial',
-    'uuid4'
-  ])
-
-  .constant('appConfig', {
+  
+  var appConstants = {
     apiUrl: 'http://api.publicationsapp.com'
-  })
+  };
 
-  .config([
-    '$stateProvider',
-    '$urlRouterProvider',
-    '$locationProvider',
-    '$httpProvider',
-    '$windowProvider',
-    'RestangularProvider',
-    'appConfig',
-    function($stateProvider,
-             $urlRouterProvider,
-             $locationProvider,
-             $httpProvider,
-             $windowProvider,
-             RestangularProvider,
-             appConfig) {
+  angular.module('pub', ['ui.router', 'pub.controllers', 'pub.documents', 'pub.security', 'pub.directives', 'pub.services', 'ui.bootstrap', 'restangular', 'ngResource', 'ngMaterial', 'uuid4'])
+    .constant('appConfig', appConstants)
+    .config(pubConfiguration)
+    .run(pubRun);
+  
+  function pubConfiguration($stateProvider, $urlRouterProvider, $windowProvider, appConfig, RestangularProvider) {    
+    $urlRouterProvider.otherwise('/documents/all');
 
-      $urlRouterProvider.otherwise('/documents/all');
+    RestangularProvider.setBaseUrl(appConfig.apiUrl);
+    RestangularProvider.setRestangularFields({id: '_id'});
+    RestangularProvider.setDefaultHeaders({
+      Authorization: `Bearer ${$windowProvider.$get().sessionStorage.getItem('access-token')}`,
+      'Content-Type': 'application/json'
+    });
 
-      RestangularProvider.setBaseUrl(appConfig.apiUrl);
+    $stateProvider.state('pub', {
+      url: '',
+      controller: 'AppController',
+      templateUrl: '/views/app.html',
+      abstract: true
+    });
+  }
+    
+  function pubRun($state, $stateParams, $rootScope) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
 
-      RestangularProvider.setDefaultHeaders({
-        Authorization: 'Bearer ' + $windowProvider.$get().sessionStorage.getItem('access-token'),
-        'Content-Type': 'application/json'
-      });
-
-      RestangularProvider.setRestangularFields({
-        id: '_id'
-      });
-
-      $stateProvider
-        .state('pub', {
-          url: '',
-          controller: 'AppController',
-          templateUrl: '/views/app.html',
-          abstract: true
-        });
-    }
-  ])
-
-  .run([
-    '$state',
-    '$rootScope',
-    '$stateParams',
-    function($state, $rootScope, $stateParams) {
-      $rootScope.$state = $state;
-      $rootScope.$stateParams = $stateParams;
-
-      $rootScope.$on('$stateChangeError', function() {
-        $state.transitionTo('pub.home');
-      });
-    }
-  ]);
+    $rootScope.$on('$stateChangeError', () => {
+      $state.transitionTo('pub.home');
+    });
+  }
 }());
