@@ -4,7 +4,19 @@
   angular.module('pub.documents.services', [])
     .service('documentService', documentService);
 
-  function documentService($document, $http, $q, $window, appConfig, securityContext) {
+  function documentService($document, $http, $q, $window, appConfig, Restangular, securityContext) {
+
+    this.newDocument = function(sender) {
+      let deferred = $q.defer();
+
+      Restangular.all('documents')
+        .post(sender)
+        .then((responseObj) => { deferred.resolve(responseObj); },
+              (error) => { deferred.reject(error); });
+
+      return deferred.promise;
+    };
+
     this.offsetShape = function(shapes, shape, offset) {
       let idx = shapes.indexOf(shape);
 
