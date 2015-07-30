@@ -26,6 +26,14 @@
 
 @ui-font: 'Helvetica Neue';
 
+.color-gradient(@angle, @color-one, @position-one, @color-two, @position-two) {
+  background: -webkit-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
+  background:    -moz-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
+  background:     -ms-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
+  background:      -o-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
+  background:         linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
+}
+
 .mobile-only-b {
   display: none !important;
 
