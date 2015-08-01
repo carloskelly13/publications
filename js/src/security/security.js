@@ -1,9 +1,7 @@
 (function() {
-  'use strict';
-
   angular.module('pub.security', ['pub.security.controllers', 'pub.security.authentication', 'pub.security.context', 'pub.security.services'])
     .config(pubSecurityConfig);
-    
+
   function pubSecurityConfig($stateProvider) {
     $stateProvider
       .state('pub.home', {
@@ -25,5 +23,5 @@
         }
       });
   }
-  
+
 }());

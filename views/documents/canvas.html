@@ -1,33 +1,33 @@
 <div class="editor-view">
   <div class="canvas-container" ng-class="{'canvas-expanded' : showInspector}">
-    <div class="unit unit-top" ng-repeat="x in xAxisRange()"
-      ng-style="{ left: (x * (dpi / 4.0) * zoomLevel + 28) + 'px' }"
-      ng-if="(x / 4) % unitDivider() === 0 && x > 0">
+    <div class="unit unit-top" ng-repeat="x in documentCanvasController.xAxisRange()"
+      ng-style="{ left: (x * (documentsController.dpi / 4.0) * zoomLevel + 28) + 'px' }"
+      ng-if="(x / 4) % documentCanvasController.unitDivider() === 0 && x > 0">
       {{ x / 4 }}&rdquo;
     </div>
-    <div class="unit unit-left" ng-repeat="y in yAxisRange()"
-      ng-style="{ top: (y * (dpi / 4.0) * zoomLevel - 3) + 'px' }"
-      ng-if="(y / 4) % unitDivider() === 0 && y > 0">
+    <div class="unit unit-left" ng-repeat="y in documentCanvasController.yAxisRange()"
+      ng-style="{ top: (y * (documentsController.dpi / 4.0) * zoomLevel - 3) + 'px' }"
+      ng-if="(y / 4) % documentCanvasController.unitDivider() === 0 && y > 0">
       {{ y / 4 }}&rdquo;
     </div>
     <div class="unit-mark horizontal"
-      ng-repeat="x in xAxisRange()"
-      ng-style="{left: (x * zoomLevel *  dpi / 4) + 25 + 'px'}"
-      ng-class="{'inch' : (x / 4) % unitDivider() === 0 && x > 0}">
+      ng-repeat="x in documentCanvasController.xAxisRange()"
+      ng-style="{left: (x * zoomLevel *  documentsController.dpi / 4) + 25 + 'px'}"
+      ng-class="{'inch' : (x / 4) % documentCanvasController.unitDivider() === 0 && x > 0}">
     </div>
     <div class="unit-mark vertical"
-      ng-repeat="y in yAxisRange()"
-      ng-style="{top: (y * zoomLevel *  dpi / 4) + 25 + 'px'}"
-      ng-class="{'inch' : (y / 4) % unitDivider() === 0 && y > 0}">
+      ng-repeat="y in documentCanvasController.yAxisRange()"
+      ng-style="{top: (y * zoomLevel *  documentsController.dpi / 4) + 25 + 'px'}"
+      ng-class="{'inch' : (y / 4) % documentCanvasController.unitDivider() === 0 && y > 0}">
     </div>
-    <svg ng-attr-width="{{ doc.width * dpi * zoomLevel }}"
-      ng-attr-height="{{ doc.height * dpi * zoomLevel }}"
+    <svg ng-attr-width="{{ doc.width * documentsController.dpi * zoomLevel }}"
+      ng-attr-height="{{ doc.height * documentsController.dpi * zoomLevel }}"
       class="canvas-svg"
       xmlns="http://www.w3.org/2000/svg"
       version="1.1">
       <g id="svg-background">
-        <rect ng-attr-height="{{doc.height * dpi * zoomLevel}}"
-          ng-attr-width="{{doc.width * dpi * zoomLevel}}"
+        <rect ng-attr-height="{{doc.height * documentsController.dpi * zoomLevel}}"
+          ng-attr-width="{{doc.width * documentsController.dpi * zoomLevel}}"
           x="0"
           y="0"
           fill="#fff"
@@ -37,12 +37,12 @@
           ng-click="documentCanvasController.svgObjectSelected(null)" />
       </g>
       <g id="grid" ng-if="showCanvasGrid">
-          <path ng-repeat="x in xAxisRange()"
-            ng-attr-d="M{{(x * (dpi / 4.0) * zoomLevel) - 0.5}} 0 V{{(x * (dpi / 4.0) * zoomLevel) - 2.5}} {{ doc.height * dpi * zoomLevel }} Z"
+          <path ng-repeat="x in documentCanvasController.xAxisRange()"
+            ng-attr-d="M{{(x * (documentsController.dpi / 4.0) * zoomLevel) - 0.5}} 0 V{{(x * (documentsController.dpi / 4.0) * zoomLevel) - 2.5}} {{ doc.height * documentsController.dpi * zoomLevel }} Z"
             ng-class="{ 'inch-mark' : (x % 4) === 0 }"
             ng-click="svgObjectSelected(null)" />
-            <path ng-repeat="y in yAxisRange()"
-            ng-attr-d="M0 {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} H{{ doc.width * dpi * zoomLevel }} {{(y * (dpi / 4.0) * zoomLevel) - 0.5}} Z"
+            <path ng-repeat="y in documentCanvasController.yAxisRange()"
+            ng-attr-d="M0 {{(y * (documentsController.dpi / 4.0) * zoomLevel) - 0.5}} H{{ doc.width * documentsController.dpi * zoomLevel }} {{(y * (documentsController.dpi / 4.0) * zoomLevel) - 0.5}} Z"
             ng-class="{ 'inch-mark' : (y % 4) === 0 }"
             ng-click="documentCanvasController.svgObjectSelected(null)" />
       </g>
@@ -69,10 +69,10 @@
         </g>
       </g>
       <g id="bounding-box" ng-if="selectedObj">
-        <rect ng-attr-x="{{ (selectedObj.x * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
-          ng-attr-y="{{ (selectedObj.y * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
-          ng-attr-height="{{ (selectedObj.height * dpi + selectedObj.strokeWidth) * zoomLevel }}"
-          ng-attr-width="{{ (selectedObj.width * dpi + selectedObj.strokeWidth) * zoomLevel }}"
+        <rect ng-attr-x="{{ (selectedObj.x * documentsController.dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
+          ng-attr-y="{{ (selectedObj.y * documentsController.dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel }}"
+          ng-attr-height="{{ (selectedObj.height * documentsController.dpi + selectedObj.strokeWidth) * zoomLevel }}"
+          ng-attr-width="{{ (selectedObj.width * documentsController.dpi + selectedObj.strokeWidth) * zoomLevel }}"
           stroke="hsla(0, 0%, 0%, 0.5)"
           stroke-width="1"
           fill-opacity="0"
@@ -81,11 +81,11 @@
           ng-dblclick="documentCanvasController.selectedObjDblClick()"
           pub-draggable />
         <g id="anchors">
-          <rect ng-repeat="objAnchor in objAnchors.points"
-            ng-attr-x="{{ ((selectedObj.x * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (objAnchors.size / 2.0) + ((selectedObj.width * dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.x) }}"
-            ng-attr-y="{{ ((selectedObj.y * dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (objAnchors.size / 2.0) + ((selectedObj.height * dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.y) }}"
-            ng-attr-width="{{ objAnchors.size }}"
-            ng-attr-height="{{ objAnchors.size }}"
+          <rect ng-repeat="objAnchor in documentCanvasController.objAnchors.points"
+            ng-attr-x="{{ ((selectedObj.x * documentsController.dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (documentCanvasController.objAnchors.size / 2.0) + ((selectedObj.width * documentsController.dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.x) }}"
+            ng-attr-y="{{ ((selectedObj.y * documentsController.dpi - (selectedObj.strokeWidth / 2.0)) * zoomLevel)  - (documentCanvasController.objAnchors.size / 2.0) + ((selectedObj.height * documentsController.dpi + selectedObj.strokeWidth) * zoomLevel * objAnchor.y) }}"
+            ng-attr-width="{{ documentCanvasController.objAnchors.size }}"
+            ng-attr-height="{{ documentCanvasController.objAnchors.size }}"
             stroke="hsla(0, 0%, 0%, 0.5)"
             stroke-width="1"
             fill="#fff"
@@ -93,15 +93,15 @@
             stroke-opacity="1"
             cursor="{{ objAnchor.coordinate }}-resize"
             pub-resizable />
-          <foreignObject ng-attr-x="{{ selectedObj.x * dpi * zoomLevel }}"
-            ng-attr-y="{{ selectedObj.y * dpi * zoomLevel }}"
-            ng-attr-height="{{ selectedObj.height * dpi * zoomLevel }}"
-            ng-attr-width="{{ selectedObj.width * dpi * zoomLevel }}"
+          <foreignObject ng-attr-x="{{ selectedObj.x * documentsController.dpi * zoomLevel }}"
+            ng-attr-y="{{ selectedObj.y * documentsController.dpi * zoomLevel }}"
+            ng-attr-height="{{ selectedObj.height * documentsController.dpi * zoomLevel }}"
+            ng-attr-width="{{ selectedObj.width * documentsController.dpi * zoomLevel }}"
             ng-if="editingText">
             <textarea class="editing-text-area"
               ng-model="selectedObj.text" ng-style="{
-                width: (selectedObj.width * dpi * zoomLevel) + 'px',
-                height: (selectedObj.height * dpi * zoomLevel) + 'px',
+                width: (selectedObj.width * documentsController.dpi * zoomLevel) + 'px',
+                height: (selectedObj.height * documentsController.dpi * zoomLevel) + 'px',
                 fontFamily: selectedObj.fontFamily,
                 fontStyle: selectedObj.fontStyle,
                 fontSize: (selectedObj.fontSize * zoomLevel) + 'px',

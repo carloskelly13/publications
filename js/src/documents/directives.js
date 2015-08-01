@@ -1,6 +1,4 @@
 (function() {
-  'use strict';
-
   angular.module('pub.documents.directives', [])
     .directive('pubDraggable', pubDraggable)
     .directive('pubResizable', pubResizable)
@@ -14,10 +12,10 @@
 
   function pubDraggable($document) {
     return function(scope, element) {
-      var eX = 0, eY = 0, oX = 0, oY = 0;
+      let eX = 0, eY = 0, oX = 0, oY = 0;
 
       function updatePosition(event) {
-        scope.$apply(function() {
+        scope.$apply(() => {
           scope.selectedObj.x = oX + ((event.pageX - eX) / scope.dpi / scope.zoomLevel);
           scope.selectedObj.y = oY + ((event.pageY - eY) / scope.dpi / scope.zoomLevel);
         });
@@ -28,7 +26,7 @@
         $document.unbind('mouseup', dragEnd);
         $document.unbind('touchmove', updatePosition);
         $document.unbind('touchend', dragEnd);
-        scope.$apply(function() {
+        scope.$apply(() => {
           if (scope.snapToGrid) {
             scope.selectedObj.x = parseFloat((Math.round(scope.selectedObj.x * 4) / 4).toFixed(3));
             scope.selectedObj.y = parseFloat((Math.round(scope.selectedObj.y * 4) / 4).toFixed(3));
@@ -58,11 +56,11 @@
 
   function pubResizable($document) {
     return function(scope, element) {
-      var coordinate = scope.objAnchor.coordinate;
-      var eX = 0, eY = 0, oX = 0, oY = 0, oW = 0, oH = 0;
+      let coordinate = scope.objAnchor.coordinate;
+      let eX = 0, eY = 0, oX = 0, oY = 0, oW = 0, oH = 0;
 
       function updateFrame(event) {
-        scope.$apply(function() {
+        scope.$apply(() => {
           if (_.contains(coordinate, 'n')) {
             scope.selectedObj.height = Math.max(oH + ((eY - event.pageY) / scope.dpi / scope.zoomLevel), 0);
 
@@ -92,7 +90,7 @@
         $document.unbind('mouseup', resizeEnd);
         $document.unbind('touchmove', updateFrame);
         $document.unbind('touchend', resizeEnd);
-        scope.$apply(function() {
+        scope.$apply(() => {
           if (scope.snapToGrid) {
             scope.selectedObj.width = parseFloat((Math.round(scope.selectedObj.width * 4) / 4).toFixed(2));
             scope.selectedObj.height = parseFloat((Math.round(scope.selectedObj.height * 4) / 4).toFixed(2));
@@ -134,20 +132,21 @@
         selectedObj: '='
       },
       restrict: 'E',
-      type: 'svg',
+      templateNamespace: 'svg',
       replace: true,
-      template: `<rect ng-attr-x="{{shape.x * dpi * zoomLevel}}"
-                       ng-attr-y="{{shape.y * dpi * zoomLevel}}"
-                       ng-attr-rx="{{shape.r * zoomLevel}}"
-                       ng-attr-ry="{{shape.r * zoomLevel}}"
-                       ng-attr-height="{{shape.height * dpi * zoomLevel}}"
-                       ng-attr-width="{{shape.width * dpi * zoomLevel}}"
-                       ng-attr-fill="{{shape.fill}}"
-                       ng-attr-stroke="{{shape.stroke}}"
-                       ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"
-                       ng-attr-fill-opacity="{{shape.fillOpacity}}"
-                       ng-attr-stroke-opacity="{{shape.strokeOpacity}}"
-                />`,
+      template: `
+        <rect ng-attr-x="{{shape.x * dpi * zoomLevel}}"
+              ng-attr-y="{{shape.y * dpi * zoomLevel}}"
+              ng-attr-rx="{{shape.r * zoomLevel}}"
+              ng-attr-ry="{{shape.r * zoomLevel}}"
+              ng-attr-height="{{shape.height * dpi * zoomLevel}}"
+              ng-attr-width="{{shape.width * dpi * zoomLevel}}"
+              ng-attr-fill="{{shape.fill}}"
+              ng-attr-stroke="{{shape.stroke}}"
+              ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"
+              ng-attr-fill-opacity="{{shape.fillOpacity}}"
+              ng-attr-stroke-opacity="{{shape.strokeOpacity}}" />
+      `,
       link: function(scope) {
         scope.dpi = 72;
       }
@@ -162,18 +161,19 @@
         selectedObj: '='
       },
       restrict: 'E',
-      type: 'svg',
+      templateNamespace: 'svg',
       replace: true,
-      template: `<ellipse ng-attr-cx="{{(shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel)}}"
-                          ng-attr-cy="{{(shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel)}}"
-                          ng-attr-rx="{{shape.width / 2.0 * dpi * zoomLevel}}"
-                          ng-attr-ry="{{shape.height / 2.0 * dpi * zoomLevel}}"
-                          ng-attr-fill="{{shape.fill}}"
-                          ng-attr-stroke="{{shape.stroke}}"
-                          ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"
-                          ng-attr-fill-opacity="{{shape.fillOpacity}}"
-                          ng-attr-stroke-opacity="{{shape.strokeOpacity}}"
-                />`,
+      template: `
+        <ellipse ng-attr-cx="{{(shape.x * dpi * zoomLevel) + (shape.width / 2.0 * dpi * zoomLevel)}}"
+                 ng-attr-cy="{{(shape.y * dpi * zoomLevel) + (shape.height / 2.0 * dpi * zoomLevel)}}"
+                 ng-attr-rx="{{shape.width / 2.0 * dpi * zoomLevel}}"
+                 ng-attr-ry="{{shape.height / 2.0 * dpi * zoomLevel}}"
+                 ng-attr-fill="{{shape.fill}}"
+                 ng-attr-stroke="{{shape.stroke}}"
+                 ng-attr-stroke-width="{{shape.strokeWidth * zoomLevel}}"
+                 ng-attr-fill-opacity="{{shape.fillOpacity}}"
+                 ng-attr-stroke-opacity="{{shape.strokeOpacity}}" />
+      `,
       link: function(scope) {
         scope.dpi = 72;
       }
@@ -188,21 +188,23 @@
         selectedObj: '='
       },
       restrict: 'E',
-      type: 'svg',
+      templateNamespace: 'svg',
       replace: true,
-      template: `<foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"
-                                ng-attr-y="{{shape.y * dpi * zoomLevel}}"
-                                ng-attr-height="{{shape.height * dpi * zoomLevel}}"
-                                ng-attr-width="{{shape.width * dpi * zoomLevel}}">
-                    <p ng-style="{color: shape.color,
-                                  fontFamily: shape.fontFamily,
-                                  fontStyle: shape.fontStyle,
-                                  fontSize: (shape.fontSize * zoomLevel) + \'px\',
-                                  fontWeight: shape.fontWeight,
-                                  textAlign: shape.textAlign }">
-                      {{shape.text}}
-                    </p>
-                </foreignObject>`,
+      template: `
+        <foreignObject ng-attr-x="{{shape.x * dpi * zoomLevel}}"
+                       ng-attr-y="{{shape.y * dpi * zoomLevel}}"
+                       ng-attr-height="{{shape.height * dpi * zoomLevel}}"
+                       ng-attr-width="{{shape.width * dpi * zoomLevel}}">
+          <p ng-style="{color: shape.color,
+             fontFamily: shape.fontFamily,
+             fontStyle: shape.fontStyle,
+             fontSize: (shape.fontSize * zoomLevel) + \'px\',
+             fontWeight: shape.fontWeight,
+             textAlign: shape.textAlign }">
+            {{shape.text}}
+          </p>
+      </foreignObject>
+      `,
       link: function(scope) {
         scope.dpi = 72;
       }

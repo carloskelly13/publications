@@ -1,6 +1,4 @@
 (function() {
-  'use strict';
-
   const typefaces = ['Source Serif Pro', 'Source Sans Pro'];
 
   const colors = [
@@ -31,13 +29,13 @@
     .controller('DocumentController', DocumentController)
     .controller('DocumentCanvasController', DocumentCanvasController);
 
-  function DocumentsController($scope, Restangular, documents) {
+  function DocumentsController($scope, documents) {
     $scope.updateAuthenticationStatus();
     $scope.documents = documents;
-    $scope.dpi = 72;
+    this.dpi = 72;
   }
 
-  function DocumentsIndexController($scope, $state, documentService) {
+  function DocumentsIndexController($mdToast, $scope, $state, documentService) {
     $scope.selectedDoc = null;
     $scope.iconDpi = 15;
     $scope.newDocumentModalVisible = false;
@@ -109,7 +107,7 @@
     $scope.typefaces = typefaces;
 
     let postDocumentToServer = function(closeDocumentView) {
-      $scope.doc.put().then((responseObj) => {
+      $scope.doc.put().then(() => {
         if (closeDocumentView) {
           let idx = _.findIndex($scope.documents, {_id: $scope.doc._id});
           $scope.documents[idx] = $scope.doc;
@@ -229,8 +227,8 @@
     };
   }
 
-  function DocumentCanvasController($scope, documentService) {
-    $scope.objAnchors = objectAnchors;
+  function DocumentCanvasController($scope) {
+    this.objAnchors = objectAnchors;
 
     this.svgObjectSelected = function(obj) {
       $scope.$parent.selectedObj = obj;
@@ -244,15 +242,15 @@
       }
     };
 
-    $scope.xAxisRange = function() {
+    this.xAxisRange = function() {
       return _.range($scope.doc.width / 0.25);
     };
 
-    $scope.yAxisRange = function() {
+    this.yAxisRange = function() {
       return _.range($scope.doc.height / 0.25);
     };
 
-    $scope.unitDivider = function() {
+    this.unitDivider = function() {
       return ($scope.zoomLevel > 1) ? 0.5 : 1;
     };
   }

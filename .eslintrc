@@ -1,5 +1,7 @@
 {
+  "parser": "babel-eslint",
   "rules": {
+    "strict": 0,
     "quotes": [1, "single"],
     "no-underscore-dangle": 0,
     "no-extra-boolean-cast": 0,
@@ -11,8 +13,5 @@
   },
   "env": {
     "node": true
-  },
-  "ecmaFeatures": {
-    "arrowFunctions": true
   }
 }

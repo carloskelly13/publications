@@ -1,11 +1,9 @@
 (function() {
-  'use strict';
-
   angular.module('pub.security.controllers', [])
     .controller('HomeController', HomeController)
     .controller('UserController', UserController);
-    
-  function HomeController($scope, $state, $http, $location, $mdToast, accountService, appConfig, authentication, pubProgressModal, Restangular, uuid4) {
+
+  function HomeController($scope, $state, $http, $location, $mdToast, accountService, appConfig, authentication, pubProgressModal) {
     $scope.submitted = false;
     $scope.authSuccess = null;
 
@@ -41,7 +39,7 @@
 
     this.createAccount = () => {
       pubProgressModal.showProgressModal();
-      
+
       accountService.createAccount()
         .success((user) => {
           authentication.login({
@@ -53,7 +51,7 @@
             })
             .catch((error) => {
               let message = error.message || 'An unknown error occurred.';
-              
+
               $mdToast.show($mdToast.simple()
                 .content(message)
                 .hideDelay(2000)
@@ -67,38 +65,36 @@
         });
     };
   }
-  
-  function UserController($mdDialog, $state, accountService, authentication, pubProgressModal, securityContext) {
+
+  function UserController($mdDialog, $state, accountService, authentication, pubProgressModal) {
     this.updateUserAccount = (sender) => {
       pubProgressModal.showProgressModal();
 
       accountService.updateAccount(sender)
         .success(function(updatedUser) {
           pubProgressModal.hideProgressModal();
-  
+
           authentication.requestSecurityContext().then((updatedSecurityContext) => {
             updatedSecurityContext.setAuthentication(updatedUser);
             $state.transitionTo('pub.documents.index');
           });
-  
+
         })
         .error(function(error) {
           pubProgressModal.hideProgressModal();
-  
+
           $mdDialog.show({
             clickOutsideToClose: true,
-            locals: {
-              errorMessage: error.message || 'An unknown error occurred.'
-            },
-            template: `<md-dialog>
-                        <md-dialog-content>
-                          <h2>Could not update user account.</h2>
-                          <p>{{errorMessage}}</p>
-                          <button class="btn frame" ng-click="okSelected()">OK</button>
-                        </md-dialog-content>
-                      </md-dialog>`,
-            controller: ['$scope', 'errorMessage', function($dialogScope, errorMessage) {
-              $dialogScope.errorMessage = errorMessage;
+            template: `
+              <md-dialog>
+                <md-dialog-content>
+                  <h2>Could not update user account.</h2>
+                  <p>${error.message}</p>
+                  <button class="btn frame" ng-click="okSelected()">OK</button>
+                </md-dialog-content>
+              </md-dialog>
+            `,
+            controller: ['$scope', function($dialogScope) {
               $dialogScope.okSelected = () => {
                 $mdDialog.cancel();
               };

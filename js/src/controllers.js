@@ -1,9 +1,7 @@
 (function(){
-  'use strict';
-
   angular.module('pub.controllers', [])
     .controller('AppController', AppController);
-    
+
   function AppController($scope, $state, authentication) {
     $scope.updateAuthenticationStatus = function() {
       authentication.requestSecurityContext().then(function(securityContext) {

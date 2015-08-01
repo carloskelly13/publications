@@ -1,6 +1,4 @@
 (function(){
-  'use strict';
-
   angular.module('pub.documents', ['pub.documents.controllers', 'pub.documents.services', 'pub.documents.directives'])
     .config(pubDocumentsConfig);
 
@@ -9,6 +7,7 @@
       .state('pub.documents', {
         url: '/documents',
         controller: 'DocumentsController',
+        controllerAs: 'documentsController',
         templateUrl: '/views/documents/documents.html',
         resolve: {
           documents: [

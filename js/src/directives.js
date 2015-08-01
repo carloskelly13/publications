@@ -1,13 +1,11 @@
 (function() {
-  'use strict';
-
   angular.module('pub.directives', ['ngAnimate'])
     .directive('pubHexColorInput', pubHexColorInput)
     .directive('pubUnsignedNonZeroFloatInput', pubUnsignedNonZeroFloatInput)
     .directive('pubSignedFloatInput', pubSignedFloatInput)
     .directive('pubUnsignedIntegerInput', pubUnsignedIntegerInput)
     .directive('pubAlphaFloatInput', pubAlphaFloatInput);
-  
+
   function pubHexColorInput() {
     return {
       restrict: 'A',
@@ -25,7 +23,7 @@
       }
     };
   }
-  
+
   function pubUnsignedNonZeroFloatInput() {
     return {
       restrict: 'A',
@@ -45,7 +43,7 @@
       }
     };
   }
-  
+
   function pubSignedFloatInput() {
     return {
       restrict: 'A',
@@ -65,7 +63,7 @@
       }
     };
   }
-  
+
   function pubUnsignedIntegerInput() {
     return {
       restrict: 'A',
@@ -85,7 +83,7 @@
       }
     };
   }
-  
+
   function pubAlphaFloatInput() {
     return {
       restrict: 'A',

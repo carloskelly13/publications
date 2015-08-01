@@ -4,13 +4,13 @@
       <g ng-switch-when="rect">
         <rect ng-attr-x="{{ shape.x * iconDpi }}"
               ng-attr-y="{{ shape.y * iconDpi }}"
-              ng-attr-rx="{{ shape.r * (iconDpi / dpi) }}"
-              ng-attr-ry="{{ shape.r * (iconDpi / dpi) }}"
+              ng-attr-rx="{{ shape.r * (iconDpi / documentsController.dpi) }}"
+              ng-attr-ry="{{ shape.r * (iconDpi / documentsController.dpi) }}"
               ng-attr-height="{{ shape.height * iconDpi }}"
               ng-attr-width="{{ shape.width * iconDpi }}"
               ng-attr-fill="{{ shape.fill }}"
               ng-attr-stroke="{{ shape.stroke }}"
-              ng-attr-stroke-width="{{ shape.strokeWidth * (iconDpi / dpi) }}"
+              ng-attr-stroke-width="{{ shape.strokeWidth * (iconDpi / documentsController.dpi) }}"
               ng-attr-fill-opacity="{{ shape.fillOpacity }}"
               ng-attr-stroke-opacity="{{ shape.strokeOpacity }}" />
       </g>
@@ -21,7 +21,7 @@
                  ng-attr-ry="{{ shape.height / 2.0 * iconDpi }}"
                  ng-attr-fill="{{ shape.fill }}"
                  ng-attr-stroke="{{ shape.stroke }}"
-                 ng-attr-stroke-width="{{ shape.strokeWidth * (iconDpi / dpi) }}"
+                 ng-attr-stroke-width="{{ shape.strokeWidth * (iconDpi / documentsController.dpi) }}"
                  ng-attr-fill-opacity="{{ shape.fillOpacity }}"
                  ng-attr-stroke-opacity="{{ shape.strokeOpacity }}" />
       </g>
@@ -35,7 +35,7 @@
             color: shape.color,
             fontFamily: shape.fontFamily,
             fontStyle: shape.fontStyle,
-            fontSize: (shape.fontSize * (iconDpi / dpi)) + 'px',
+            fontSize: (shape.fontSize * (iconDpi / documentsController.dpi)) + 'px',
             fontWeight: shape.fontWeight,
             textAlign: shape.textAlign
           }">

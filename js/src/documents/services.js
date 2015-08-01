@@ -1,6 +1,4 @@
 (function(){
-  'use strict';
-
   angular.module('pub.documents.services', [])
     .service('documentService', documentService);
 

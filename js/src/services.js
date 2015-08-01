@@ -1,31 +1,26 @@
 (function() {
-  'use strict';
-
   angular.module('pub.services', [])
     .service('pubProgressModal', pubProgressModal);
-    
+
   function pubProgressModal($mdDialog) {
-    var _dialogConfig = {
+    const dialogConfig = {
       clickOutsideToClose: false,
-      template: `<md-dialog class="dialog-progress" aria-label="Working. Please Wait.">
-                  <md-dialog-content>
-                    <div class="progress-loader"></div>
-                  </md-dialog-content>
-                </md-dialog>`
+      template: `
+        <md-dialog class="dialog-progress" aria-label="Working. Please Wait.">
+          <md-dialog-content>
+            <div class="progress-loader"></div>
+          </md-dialog-content>
+        </md-dialog>
+      `
     };
 
-    this.showProgressModal = ($event) => {
-      if (!!$event) {
-        _dialogConfig.targetEvent = $event;
-      }
-
-      $mdDialog.show(_dialogConfig);
+    this.showProgressModal = function() {
+      $mdDialog.show(dialogConfig);
     };
 
-    this.hideProgressModal = () => {
-      _dialogConfig.targetEvent = null;
+    this.hideProgressModal = function() {
       $mdDialog.hide();
     };
   }
-  
+
 }());

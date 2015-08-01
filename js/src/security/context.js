@@ -1,9 +1,7 @@
 (function() {
-  'use strict';
-
   angular.module('pub.security.context', [])
     .factory('securityContext', securityContext);
-  
+
   function securityContext($window) {
     var securityContextObject = {
       user: {},
@@ -35,7 +33,7 @@
         return securityContextObject;
       }
     };
-    
+
     return securityContextObject;
   }
 

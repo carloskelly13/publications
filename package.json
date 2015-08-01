@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "babel-eslint": "^4.0.5",
     "bower": "~1.2.8",
     "eslint": "^0.24.1",
     "gulp": "^3.6.2",
