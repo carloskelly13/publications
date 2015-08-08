@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import CanvasGridline from './canvas.gridline';
+
 export default class CanvasBackground extends Component {
   constructor(props, context) {
     super(props)
@@ -13,11 +15,13 @@ export default class CanvasBackground extends Component {
     let selectable = this.props.params.selectable;
 
     return (
-      <rect
-        onClick={selectable ? this.canvasSelected : null}
-        y="0" x="0" fill="#fff" stroke="0" strokeWidth="0"
-        width={doc.width * dpi * zoom} height={doc.height * dpi * zoom}
-      />
+      <g>
+        <rect
+          onClick={selectable ? this.canvasSelected : null}
+          y="0" x="0" fill="#fff" stroke="0" strokeWidth="0"
+          width={doc.width * dpi * zoom} height={doc.height * dpi * zoom}
+        />
+      </g>
     );
   }
 
