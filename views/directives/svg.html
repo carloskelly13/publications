@@ -1,4 +1,4 @@
-<svg ng-style="documentIconSize(doc)">
+<svg ng-style="documentsIndexController.documentIconSize(doc)">
   <g ng-repeat="shape in doc.shapes">
     <g ng-switch="shape.type">
       <g ng-switch-when="rect">

@@ -7,7 +7,7 @@
         <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
       </button>
       <div class="dropdown-menu document-item-menu padded-menu new-document" role="menu" ng-click="$event.stopPropagation()">
-        <form ng-submit="controller.newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
+        <form ng-submit="documentsIndexController.newDocument()" name="newDocumentForm" role="form" class="form form-vertical">
           <div class="form-text-inputs">
             <div class="txt-group">
               <input class="txt frame" type="text" ng-model="newName" name="name" id="name" required>
@@ -27,23 +27,23 @@
         </form>
       </div>
     </div>
-    <button class="btn btn-toolbar" ng-disabled="selectedDoc === null" ng-click="controller.openDocument(selectedDoc)">Edit</button>
-    <!-- <button class="btn btn-toolbar" ng-click="controller.downloadPdf()" type="submit" ng-disabled="selectedDoc === null">PDF</button> -->
-    <button class="btn btn-toolbar" ng-disabled="selectedDoc === null" ng-click="controller.deleteDocument(selectedDoc)">Delete</button>
+    <button class="btn btn-toolbar" ng-disabled="selectedDoc === null" ng-click="documentsIndexController.openDocument(selectedDoc)">Edit</button>
+    <!-- <button class="btn btn-toolbar" ng-click="documentsIndexController.downloadPdf()" type="submit" ng-disabled="selectedDoc === null">PDF</button> -->
+    <button class="btn btn-toolbar" ng-disabled="selectedDoc === null" ng-click="documentsIndexController.deleteDocument(selectedDoc)">Delete</button>
     <div class="dropdown" dropdown>
       <button class="btn btn-toolbar" dropdown-toggle>
         {{user.temporary ? 'Test Drive User' : user.name}}
         <span class="btn-toolbar-icon-arrow" data-icon-fill="&#xe621;"></span>
       </button>
       <div class="dropdown-menu document-item-menu padded-menu" role="menu">
-        <button class="dropdown-menu-item" type="button" ng-click="controller.viewUser()">{{user.temporary ? 'Create Account' : 'Change Password'}}</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentsIndexController.viewUser()">{{user.temporary ? 'Create Account' : 'Change Password'}}</button>
         <div class="dropdown-menu-spacer"></div>
         <button class="dropdown-menu-item" type="button" ng-click="logout()">{{user.temporary ? 'Exit Test Drive' : 'Log Out'}}</button>
       </div>
     </div>
   </div>
 </div>
-<div class="documents-list"  ng-click="controller.documentIconSelected(null)">
+<div class="documents-list"  ng-click="documentsIndexController.documentIconSelected(null)">
   <div class="documents-list-container">
     <div class="no-documents-banner" ng-if="documents.length === 0">
       <h1>No Documents</h1>
@@ -52,8 +52,8 @@
     <div class="document-item"
          pub-document-item
          ng-class="{'document-item-active' : selectedDoc === doc}"
-         ng-click="controller.documentIconSelected(doc); $event.stopPropagation();"
-         ng-dblclick="controller.openDocument(doc)"
+         ng-click="documentsIndexController.documentIconSelected(doc); $event.stopPropagation();"
+         ng-dblclick="documentsIndexController.openDocument(doc)"
          ng-repeat="doc in documents | filter: search | orderBy: 'modified': true"
          ng-init="doc.modifiedStr = ( doc.modified | date: 'd MMM yyyy' ); doc.size = doc.height * doc.width;">
     </div>

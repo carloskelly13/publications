@@ -10,18 +10,13 @@
         controllerAs: 'documentsController',
         templateUrl: '/views/documents/documents.html',
         resolve: {
-          documents: [
-            'Restangular',
-            function(Restangular) {
-              return Restangular.all('documents').getList();
-            }
-          ]
+          documents: (Restangular) => Restangular.all('documents').getList()
         }
       })
         .state('pub.documents.index', {
           url: '/all',
           controller: 'DocumentsIndexController',
-          controllerAs: 'controller',
+          controllerAs: 'documentsIndexController',
           templateUrl: 'views/documents/index.html'
         })
 
@@ -33,13 +28,7 @@
           abstract: true,
           templateUrl: '/views/documents/document.html',
           resolve: {
-            doc: [
-              'Restangular',
-              '$stateParams',
-              function(Restangular, $stateParams) {
-                return Restangular.one('documents', $stateParams.documentId).get();
-              }
-            ]
+            doc: (Restangular, $stateParams) => Restangular.one('documents', $stateParams.documentId).get()
           }
         })
           .state('pub.documents.document.view', {

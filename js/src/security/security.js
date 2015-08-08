@@ -10,18 +10,15 @@
         controller: 'HomeController',
         controllerAs: 'homeController'
       })
-
-      .state('pub.user', {
-        url: '/user',
-        templateUrl: 'views/login/user.html',
-        controller: 'UserController',
-        controllerAs: 'userController',
-        resolve: {
-          securityContext: (authentication) => {
-            return authentication.requestSecurityContext();
+        .state('pub.user', {
+          url: '/user',
+          templateUrl: 'views/login/user.html',
+          controller: 'UserController',
+          controllerAs: 'userController',
+          resolve: {
+            securityContext: (authentication) => authentication.requestSecurityContext()
           }
-        }
-      });
+        });
   }
 
 }());

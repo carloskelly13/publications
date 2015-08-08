@@ -65,7 +65,7 @@
         });
     };
 
-    $scope.documentIconSize = function(doc) {
+    this.documentIconSize = function(doc) {
       const iconDpi = 15;
       let iconWidth = Math.max(Math.min(doc.width * iconDpi, 160), 30);
       let iconHeight = (iconWidth / doc.width) * doc.height;
@@ -94,7 +94,7 @@
     };
   }
 
-  function DocumentController($scope, $state, $window, $timeout, $mdToast, $mdDialog, $animate, $document, documentService, doc) {
+  function DocumentController($animate, $document, $mdDialog, $mdToast, $scope, $state, $timeout, $window, documentService, doc) {
     $scope.doc = doc;
     $scope.selectedObj = null;
     $scope.showCanvasGrid = true;
@@ -130,37 +130,34 @@
     this.viewAllDocuments = function(event) {
       $mdDialog.show({
         clickOutsideToClose: true,
-        locals: {
-          docName: $scope.doc.name || ''
-        },
         targetEvent: event,
-        template: `<md-dialog>
-                    <md-dialog-content>
-                      <h2>Do you want to save the changes made to {{docName}}?</h2>
-                      <p>Your changes will be lost if you don’t save them.</p>
-                      <button class="btn frame pull-left" ng-click="cancelSelected()">Cancel</button>
-                      <button class="btn frame" ng-click="saveSelected()">Save</button>
-                      <button class="btn frame" ng-click="dontSaveSelected()">Donʼt Save</button>
-                    </md-dialog-content>
-                  </md-dialog>`,
-        controller: ['$scope', 'docName', function SaveDialogController($dialogScope, docName) {
-            $dialogScope.docName = docName;
+        template: `
+          <md-dialog>
+            <md-dialog-content>
+              <h2>Do you want to save the changes made to ${$scope.doc.name}?</h2>
+              <p>Your changes will be lost if you don’t save them.</p>
+              <button class="btn frame pull-left" ng-click="saveDialogController.cancelSelected()">Cancel</button>
+              <button class="btn frame" ng-click="saveDialogController.saveSelected()">Save</button>
+              <button class="btn frame" ng-click="saveDialogController.dontSaveSelected()">Donʼt Save</button>
+            </md-dialog-content>
+          </md-dialog>
+        `,
+        controllerAs: 'saveDialogController',
+        controller: function SaveDialogController() {
+          this.cancelSelected = function() {
+            $mdDialog.cancel();
+          };
 
-            $dialogScope.cancelSelected = function() {
-              $mdDialog.cancel();
-            };
+          this.saveSelected = function() {
+            $mdDialog.hide();
+            postDocumentToServer(true);
+          };
 
-            $dialogScope.saveSelected = function() {
-              $mdDialog.hide();
-              postDocumentToServer(true);
-            };
-
-            $dialogScope.dontSaveSelected = function() {
-              $mdDialog.hide();
-              $state.go('pub.documents.index');
-            };
-          }
-        ]
+          this.dontSaveSelected = function() {
+            $mdDialog.hide();
+            $state.go('pub.documents.index');
+          };
+        }
       });
     };
 
@@ -199,11 +196,12 @@
       duplicateObj.x += 0.25;
       duplicateObj.y += 0.25;
       $scope.doc.shapes.push(duplicateObj);
-      $scope.svgObjectSelected(duplicateObj);
+      $scope.selectedObj = duplicateObj;
     };
 
     this.addObject = function(objType) {
-      $scope.doc.shapes.push(documentService.newShape(objType));
+      let newShape = documentService.newShape(objType);
+      $scope.doc.shapes.push(newShape);
     };
 
     this.changeTextAlign = function(textAlign) {
@@ -214,7 +212,7 @@
       $scope.zoomLevel = zoomLevel;
     };
 
-    $scope.canMoveObjectByOffset = function(offset) {
+    this.canMoveObjectByOffset = function(offset) {
       let objIdx = $scope.doc.shapes.indexOf($scope.selectedObj);
 
       if (offset === -1 && objIdx === 0) {
@@ -224,6 +222,14 @@
       } else {
         return true;
       }
+    };
+
+    this.downloadPdf = function() {
+      documentService.downloadPdf($scope.doc._id)
+        .then((pdfBlob) => {
+          console.log(pdfBlob);
+        })
+        .catch(() => console.log(`There was an error downloading the PDF for ${$scope.doc.name}.`));
     };
   }
 

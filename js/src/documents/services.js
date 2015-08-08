@@ -22,7 +22,7 @@
         return;
       }
 
-      var newIdx = idx + offset;
+      let newIdx = idx + offset;
 
       if (newIdx < 0) {
         newIdx = 0;
@@ -45,16 +45,22 @@
     };
 
     this.downloadPdf = function(documentId) {
+      let deferred = $q.defer();
+
       $http.get(`${appConfig.apiUrl}/documents/${documentId}/pdf`, {
         headers: {
           Authorization: `Bearer ${securityContext.token()}`
         },
         responseType: 'arraybuffer'
       })
-        .success((pdfData) => {
-          var blob = new $window.Blob([pdfData], {type: 'application/pdf'});
-          console.log(blob);
+        .then((pdfData) => {
+          let blob = new $window.Blob([pdfData], {type: 'application/pdf'});
+          deferred.resolve(blob);
+        }, (error) => {
+          deferred.reject(error);
         });
+
+       return deferred.promise;
     };
   }
 }());

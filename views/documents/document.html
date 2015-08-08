@@ -22,8 +22,8 @@
         <button class="dropdown-menu-item" type="button" ng-click="documentController.copyObj()" ng-disabled="!selectedObj">Copy</button>
         <button class="dropdown-menu-item" type="button" ng-click="documentController.pasteObj()" ng-disabled="!clipboard">Paste</button>
         <div class="dropdown-menu-spacer"></div>
-        <button class="dropdown-menu-item" type="button" ng-click="documentController.shiftLayer(1)" ng-disabled="!selectedObj || !canMoveObjectByOffset(1)">Move Forwards</button>
-        <button class="dropdown-menu-item" type="button" ng-click="documentController.shiftLayer(-1)" ng-disabled="!selectedObj || !canMoveObjectByOffset(-1)">Move Backwards</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.shiftLayer(1)" ng-disabled="!selectedObj || !documentController.canMoveObjectByOffset(1)">Move Forwards</button>
+        <button class="dropdown-menu-item" type="button" ng-click="documentController.shiftLayer(-1)" ng-disabled="!selectedObj || !documentController.canMoveObjectByOffset(-1)">Move Backwards</button>
         <div class="dropdown-menu-spacer"></div>
         <button class="dropdown-menu-item" type="button" ng-click="documentController.deleteObj()" ng-disabled="!selectedObj">Remove Object</button>
       </div>
@@ -69,7 +69,7 @@
       </div>
     </div>
     <button class="btn btn-toolbar" ng-click="documentController.updateDocument()">Save</button>
-    <button class="btn btn-toolbar" ng-click="documentController.exportToPdf()">Export</button>
+    <button class="btn btn-toolbar" ng-click="documentController.downloadPdf()">Export</button>
     <button class="btn btn-toolbar" ng-click="documentController.viewAllDocuments($event)">View all Documents</button>
   </div>
 </div>

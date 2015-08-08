@@ -21,7 +21,7 @@
 
       reset: () => {
         securityContextObject.user = {};
-        securityContextObject.authenticated = false;
+        securityContextObject.securityContextObject = null;
         $window.sessionStorage.removeItem('access-token');
         return securityContextObject;
       },
