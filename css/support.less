@@ -1,126 +1,3 @@
-@lightgray-dark:     #e6e9e9;
-@lightgray-light:    #f0f2f2;
-@mediumgray-dark:    #aab2b2;
-@mediumgray-light:   #ccd1d1;
-@darkgray-dark:      #434a54;
-@darkgray-light:     #656d78;
-@background-color:   #57585c;
-@navbar-color:       #313235;
-
-// Cool
-
-@blue:  #00b1ff;
-@blue-dark: #0096d8;
-@aqua:  #69d2e7;
-@green: #2ed88d;
-@red:   #da3544;
-@red-light: #f33544;
-
-@white:  #fff;
-@silver: #ddd;
-@gray:   #aaa;
-@black:  #111;
-
-@app-nav-height: 40px;
-@app-footer-height: 5px;
-
-@ui-font: 'Helvetica Neue';
-
-.color-gradient(@angle, @color-one, @position-one, @color-two, @position-two) {
-  background: -webkit-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
-  background:    -moz-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
-  background:     -ms-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
-  background:      -o-linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
-  background:         linear-gradient(@angle, @color-one @position-one, @color-two @position-two);
-}
-
-.mobile-only-b {
-  display: none !important;
-
-  @media (max-width: 767px) {
-    display: block !important;
-  }
-}
-
-.mobile-only-ib {
-  display: none !important;
-
-  @media (max-width: 767px) {
-    display: inline-block !important;
-  }
-}
-
-.valign-container-space-between {
-  display: -webkit-flex;
-  -webkit-align-items: center;
-  -webkit-box-pack: justify;
-  -moz-box-pack: justify;
-  -ms-flex-pack: justify;
-  -webkit-justify-content: space-between;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.valign-container-center {
-  display: -webkit-flex;
-  -webkit-align-items: center;
-  -webkit-box-pack: justify;
-  -moz-box-pack: justify;
-  -ms-flex-pack: justify;
-  -webkit-justify-content: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.center {
-  margin: auto;
-  position: absolute;
-  top: 30%; left: 0; right: 0;
-}
-
-.center-top {
-  margin: auto;
-  position: absolute;
-  top: 40%; left: 0; right: 0;
-}
-
-.search-input-icon {
-  font-family: "streamline-24px" !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  font-size: 22px;
-  speak: none;
-  line-height: 34px;
-  color: #bbb;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media all and (max-width: 767px) {
-    font-size: 18px;
-    line-height: 20px;
-  }
-}
-
-.rounded-corners (@radius) {
-  -webkit-border-radius: @radius;
-  -moz-border-radius: @radius;
-  -ms-border-radius: @radius;
-  -o-border-radius: @radius;
-  border-radius: @radius;
-}
-
-.svg-picture(@image, @width, @height, @display) {
-  background-image: url("../img/@{image}.svg");
-  background-repeat: no-repeat;
-  width: @width;
-  height: @height;
-  display: @display;
-}
-
 .retina-picture(@image, @width, @height, @display) {
   background-image: url("../img/@{image}.png");
   background-size: @width @height;
@@ -141,20 +18,16 @@
   }
 }
 
-.twoD-transform(@transforms) {
-  -ms-transform: @transforms;
-  -o-transform: @transforms;
-  -webkit-transform: @transforms;
-  transform: @transforms;
-}
-
-.gradient(@start, @stop) {
-  background: @stop;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, @start), color-stop(1, @stop));
-  background: -ms-linear-gradient(bottom, @start, @stop);
-  background: -moz-linear-gradient(center bottom, @start 0%, @stop 100%);
-  background: -o-linear-gradient(@stop, @start);
-  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
+.valign-container-space-between {
+  display: -webkit-flex;
+  -webkit-align-items: center; 
+  -webkit-box-pack: justify;
+  -moz-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .animation(@selector, @duration) {

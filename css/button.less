@@ -1,0 +1,53 @@
+.button {
+//   .animation(all, 150ms);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+
+  background: #fff;
+  border: none;
+  box-sizing: border-box;
+  color: #4f4f4f;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.25px;
+  outline: none;
+  padding: 0 8px;
+  text-align: center;
+  text-rendering: optimizeLegibility;
+  text-decoration: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  zoom: 1;
+
+  &:hover {
+    color: #1e88e5;
+  }
+
+  &:active {
+    color: #1565c0;
+    position: relative;
+    top: 1px;
+  }
+
+  &.button-destructive {
+    &:hover {
+      color: #e53935;
+    }
+
+    &:active {
+      color: #c62828;
+    }
+  }
+
+  &:disabled, &:disabled:hover, &:disabled:active {
+    color: #ccc;
+    cursor: not-allowed;
+    top: 0;
+  }
+}

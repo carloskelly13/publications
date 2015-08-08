@@ -1,92 +1,30 @@
-md-toast {
-  box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.1);
-}
+.modal-anim-enter {
+  opacity: 0.00;
+  transform: scale(0.7);
+  transition: all 0.2s;
 
-md-dialog {
-  box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.33), 0 1px 3px hsla(0, 0%, 0%, 0.1);
-  padding: 0;
-  width: 400px;
-
-  &.dialog-progress {
-    background: hsla(0, 0%, 0%, 0.85);
-    border-radius: 8px;
-    box-sizing: border-box;
-    box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25), 0 1px 3px hsla(0, 0%, 0%, 0.1);
-    height: 120px;
-    min-width: 120px;
-    padding: 0;
-    width: 120px;
-    
-    md-dialog-content {
-      padding: 17px 0 0;
-      overflow: hidden;
-    }
-  }
-  
-  md-dialog-content {
-    padding: 20px 25px;
-  }
-
-  h2 {
-    font-weight: 500;
-    font-size: 16px;
-    margin: 0 6px 0.25em;
-  }
-
-  p {
-    font-size: 15px;
-    margin: 0 6px 1.5em;
-  }
-
-  .btn {
-    margin: 0 6px;
-    float: right;
-
-    &.pull-left {
-      float: left;
-    }
+  &.modal-anim-enter-active {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-.progress-loader {
-  @inactive-progress-color: hsla(0, 0%, 100%, 0.25);
-  margin: 0 auto;
-  font-size: 10px;
-  position: relative;
-  border-top: 3px solid @inactive-progress-color;
-  border-right: 3px solid @inactive-progress-color;
-  border-bottom: 3px solid @inactive-progress-color;
-  border-left: 3px solid #fff;
+.modal-anim-leave {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.2s;
 
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: progressLoaderKeyframes 1.75s infinite linear;
-  animation: progressLoaderKeyframes 1.75s infinite linear;
-}
-.progress-loader,
-.progress-loader:after {
-  border-radius: 50%;
-  height: 80px;
-  width: 80px;
-}
-@-webkit-keyframes progressLoaderKeyframes {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
+  &.modal-anim-leave-active {
+    opacity: 0.00;
+    transform: scale(0.7);
   }
 }
-@keyframes progressLoaderKeyframes {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+
+.modal {
+  background: #fff;
+  display: block;
+  height: 50%;
+  position: absolute;
+  width: 60%;
+  margin: 12.5% 15%;
 }

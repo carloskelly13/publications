@@ -1,26 +1,11 @@
-publications-js
----------------
-Publications is an AngularJS print and screen design client web application. It operates on the [publications-service API](https://github.com/carlospaelinck/publications-service). It uses AngularJS, Restangular, ui-router and LoDash for resolution-independent SVG-based editing of documents.
+### Publications 3.0
+##### A web app for screen layout and print design.
 
+This is a rewrite of the current running application at [publicationsapp.com](http://www.publicationsapp.com). It uses React, React Router and Flux for the client side app and HapiJS, Mongoose and JWT for the API service. Publications 3.0 is very experimental and feature incomplete. The feature complete AngularJS-ExpressJS version source can be found at [Publications-JS](https://github.com/carlospaelinck/publications-js).
 
-#### Getting Started
----------------
-To run publications-js just clone the repo and use npm, bower and gulp to process the files.
-
-##### Development Mode with Gulp Watch
-
-```Shell
-$ git clone git@github.com:carlospaelinck/publications-js.git
-$ npm install
-$ bower install
-$ gulp
+##### To run Publications 3.0
 ```
-
-##### Production Mode with Minified Source
-
-```Shell
-$ git clone git@github.com:carlospaelinck/publications-js.git
 $ npm install
-$ bower install
-$ gulp production
+$ gulp
+$ node app
 ```

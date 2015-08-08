@@ -1,94 +1,55 @@
-.documents-list-container {
-  padding-top: 3em;
-  -webkit-overflow-scrolling: touch;
-  width: 95%;
+ul.document-items {
   margin: 0 auto;
-}
-
-.documents-list {
-  -webkit-overflow-scrolling: touch;
-  background: #e5e6e9;
-  height: inherit;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  position: absolute;
-  top: 0; left: 0; bottom: @app-footer-height; right: 0;
-  width: 100%;
-  z-index: 3;
-
-  @media all and (max-width: 767px) {
-    bottom: 0;
-  }
-
-  .no-documents-banner {
-    .center-top;
-    text-align: center;
-
-    h1 {
-      color: hsla(0, 0%, 0%, 0.15);
-      font-size: 3em;
-      font-weight: 300;
-      margin: 0 0 0.67em 0;
-      letter-spacing: -0.5px;
-      vertical-align: middle;
-    }
-  }
-
-  .document-item {
-    .animation(all, 250ms);
+  padding: 1em 0;
+  width: 90%;
+  
+  li.document-item {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    user-select: none;
     box-sizing: border-box;
+    cursor: default;
     display: inline-block;
-    cursor: pointer;
     margin: 0em;
-    padding: 1em 2% 2.5em;
+    padding: 1.5em 2%;
     text-align: center;
+    user-select: none;
     vertical-align: bottom;
     width: 25%;
-
-    @media all and (max-width: 767px) {
-      background: #f5f5f5;
-      border-top: 1px solid @color-line-bright;
-      display: block;
-      margin: 0;
-      padding: 1em 0 0.5em;
-    }
-
-    .document-icon {
-      border-radius: 2px;
-      background: #fff;
-      box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25);
-      display: inline-block;
+    
+    .canvas-container svg {
+      box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.25);
+      border-radius: 4px;
       overflow: hidden;
     }
-
-    &.document-item-active {
-      .document-icon {
-        box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.25), 0 0 0 4px #e5e6e9, 0 0 0 6px darken(@pub-primary, 15%);
-      }
-
-      .document-name {
-        color: darken(@pub-primary, 25%);
-      }
-    }
-
-    .document-name,
-    .document-info {
+    
+    .document-item-name {
       display: block;
-      line-height: 1em;
-      margin: 0.5em 0 0 0;
-    }
-
-    .document-name {
       font-size: 15px;
       font-weight: 500;
+      margin: 0.25em 0 0 0;
     }
-
-    .document-info {
+    
+    .document-item-description {
+      display: block;
       font-size: 12px;
+      margin: 0;
     }
+    
+    &.selected {
+      .canvas-container svg {
+        box-shadow: 0 0 0 3px #2196F3;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+.document-canvas-container {
+  margin: 1em;
+  
+  .canvas-container svg {
+    border: 1px solid #ccc;
   }
 }

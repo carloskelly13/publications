@@ -1,29 +1,35 @@
-@import 'colors.less';
-@import 'reset.less';
-@import 'animation.less';
-@import 'typefaces.less';
-@import 'support.less';
-@import 'dropdown.less';
-@import 'icons.less';
-@import 'app.less';
-@import 'modal.less';
-@import 'menu.less';
-@import 'home.less';
-@import 'document.less';
-@import 'editor.less';
-@import 'inspector.less';
-@import 'btn.less';
-@import 'input.less';
-@import 'user.less';
-@import 'toolbar.less';
+@import 'fonts';
+@import 'reset';
+@import 'support';
+@import 'navbar';
+@import 'app';
+@import 'button';
+@import 'document';
+@import 'modal';
 
 ::-moz-selection {
   color: #fff;
-  background: @pub-active;
+  background: #7e57c2;
 }
 
 ::selection {
-  -webkit-text-fill-color: #fff;
   color: #fff;
-  background: @pub-active;
+  background: #7e57c2;
+}
+
+
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fff;
+  color: #424242;
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+}
+
+button, input {
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
 }

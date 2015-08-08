@@ -1,9 +1,0 @@
-<div class="dropdown" dropdown>
-  <div class="picker picker-typeface" dropdown-toggle>{{selectedObj.fontFamily}}</div>
-  <div class="dropdown-menu typeface-picker-menu padded-menu" role="menu">
-    <div class="dropdown-menu-item" ng-repeat="typeface in typefaces track by $index" ng-click="updateTypeface(typeface);">
-      <span style="font-family: {{typeface}};">{{typeface}}</span>
-      <span class="accessory-item" data-icon="&#xe2fe;" ng-if="selectedObj.fontFamily === typeface"></span>
-    </div>
-  </div>
-</div>
