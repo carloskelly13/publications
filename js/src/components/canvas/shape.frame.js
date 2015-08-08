@@ -23,10 +23,12 @@ export default class ShapeFrame extends Component {
     this.frameDeselected = this.frameDeselected.bind(this);
     this.frameDragged = this.frameDragged.bind(this);
     this.resizeAnchorSelected = this.resizeAnchorSelected.bind(this);
+    this.resizeAnchorDeselected = this.resizeAnchorDeselected.bind(this);
+    this.resizeAnchorDragged = this.resizeAnchorDragged.bind(this);
   }
 
   componentDidMount() {
-    this.resetDragState();
+    this.resetState();
   }
 
   render() {
@@ -42,7 +44,6 @@ export default class ShapeFrame extends Component {
           fillOpacity="0" stroke="hsla(0, 0%, 0%, 0.5)"
           strokeWidth={1 * zoom}
           onMouseDown={this.frameSelected}
-          onMouseUp={this.frameDeselected}
         />
         {
           frameAnchors.points.map((anchor, index) => {
@@ -62,7 +63,7 @@ export default class ShapeFrame extends Component {
                 fillOpacity="1"
                 strokeOpacity="1"
                 cursor={`${anchor.coordinate}-resize`}
-                onClick={this.resizeAnchorSelected.bind(this, anchor.coordinate)}
+                onMouseDown={this.resizeAnchorSelected.bind(this, anchor.coordinate)}
               />
             )
           })
@@ -72,34 +73,106 @@ export default class ShapeFrame extends Component {
   }
 
   updateStateForDragging(event) {
-    this.state.eX = event.pageX;
-    this.state.eY = event.pageY;
-    this.state.oX = this.props.shape.x;
-    this.state.oY = this.props.shape.y;
+    this.setState({
+      eX: event.pageX,
+      eY: event.pageY,
+      oX: this.props.shape.x,
+      oY: this.props.shape.y
+    });
   }
 
-  resetDragState() {
-    this.setState({eX: 0, eY: 0, oX: 0, oY: 0, dragging: false, resizing: false});
+  updateStateForResizing(event) {
+    this.setState({
+      eX: event.pageX,
+      eY: event.pageY,
+      oX: this.props.shape.x,
+      oY: this.props.shape.y,
+      oW: this.props.shape.width,
+      oH: this.props.shape.height
+    });
+  }
+
+  resetState() {
+    this.setState({
+      eX: 0,  eY: 0,
+      oX: 0,  oY: 0,
+      oW: 0,  oH: 0,
+      dragging: false,
+      resizing: false,
+      resizeAnchor: null
+    });
   }
 
   frameSelected(event) {
-    this.state.dragging = true;
+    this.setState({dragging: true});
     this.updateStateForDragging(event);
     document.addEventListener('mousemove', this.frameDragged);
-  }
-
-  frameDragged(event) {
-    let dX = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
-    let dY = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
-    this.props.updateShape({x: dX, y: dY});
-  }
-
-  frameDeselected(event) {
-    this.resetDragState();
-    document.removeEventListener('mousemove', this.frameDragged);
+    document.addEventListener('mouseup', this.frameDeselected);
   }
 
   resizeAnchorSelected(coordinate, event) {
-    console.log(coordinate);
+    this.setState({
+      resizing: true,
+      resizeAnchor: coordinate
+    });
+
+    this.updateStateForResizing(event);
+    document.addEventListener('mousemove', this.resizeAnchorDragged);
+    document.addEventListener('mouseup', this.resizeAnchorDeselected);
+  }
+
+  frameDragged(event) {
+    if (!this.state.dragging) return;
+
+    let dX = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
+    let dY = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
+
+    this.props.updateShape({x: dX, y: dY});
+  }
+
+  resizeAnchorDragged(event) {
+    if (!this.state.resizing) return;
+
+    let updatedMetrics = {};
+
+    if (_.contains(this.state.resizeAnchor, 'n')) {
+      updatedMetrics.height = Math.max(this.state.oH +
+        ((this.state.eY - event.pageY) / this.props.dpi / this.props.zoom), 0);
+
+      if (this.props.shape.height > 0) {
+        updatedMetrics.y = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
+      }
+
+    } else if (_.contains(this.state.resizeAnchor, 's')) {
+      updatedMetrics.height = Math.max(this.state.oH +
+        ((event.pageY - this.state.eY) / this.props.dpi / this.props.zoom), 0);
+    }
+
+    if (_.contains(this.state.resizeAnchor, 'w')) {
+      updatedMetrics.width = Math.max(this.state.oW +
+        ((this.state.eX - event.pageX) / this.props.dpi / this.props.zoom), 0);
+
+      if (this.props.shape.width > 0) {
+        updatedMetrics.x = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
+      }
+
+    } else if (_.contains(this.state.resizeAnchor, 'e')) {
+      updatedMetrics.width = Math.max(this.state.oW +
+        ((event.pageX - this.state.eX) / this.props.dpi / this.props.zoom), 0);
+    }
+
+    this.props.updateShape(updatedMetrics);
+  }
+
+  frameDeselected() {
+    this.resetState();
+    document.removeEventListener('mousemove', this.frameDragged);
+    document.removeEventListener('mouseup', this.frameDeselected);
+  }
+
+  resizeAnchorDeselected() {
+    this.resetState();
+    document.removeEventListener('mousemove', this.resizeAnchorDragged);
+    document.removeEventListener('mouseup', this.resizeAnchorDeselected);
   }
 }
