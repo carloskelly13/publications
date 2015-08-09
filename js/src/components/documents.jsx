@@ -13,12 +13,6 @@ export default class Documents extends AuthComponent {
     super(props);
 
     this.dataChanged = this.dataChanged.bind(this);
-    this.updateSelectedDocument = this.updateSelectedDocument.bind(this);
-    this.createNewDocument = this.createNewDocument.bind(this);
-    this.editDocument = this.editDocument.bind(this);
-    this.deleteDocument = this.deleteDocument.bind(this);
-    this.toggleNewDocumentModal = this.toggleNewDocumentModal.bind(this);
-    this.logOut = this.logOut.bind(this);
     this.store = DocumentsStore;
     this.state = this.store.getState();
   }
@@ -41,15 +35,15 @@ export default class Documents extends AuthComponent {
       <div>
         <DocumentsNavbar
           documentIsSelected={this.state.selectedDocument !== null}
-          editDocument={this.editDocument}
-          deleteDocument={this.deleteDocument}
-          createNewDocument={this.createNewDocument}
-          logOut={this.logOut} />
+          editDocument={e => this.editDocument(e)}
+          deleteDocument={e => this.deleteDocument(e)}
+          createNewDocument={e => this.createNewDocument(e)}
+          logOut={e => this.logOut(e)} />
         <div className="app-content">
           <NewDocumentModal
-            toggleNewDocumentModal={this.toggleNewDocumentModal}
+            toggleNewDocumentModal={e => this.toggleNewDocumentModal(e)}
             isOpen={this.state.isNewDocModalOpen} />
-          <ul className="document-items" onClick={this.updateSelectedDocument.bind(event, null)}>
+          <ul className="document-items" onClick={(e, s) => this.updateSelectedDocument(event, null)}>
             {
               this.state.documents.map(doc => {
                 return (
@@ -57,7 +51,7 @@ export default class Documents extends AuthComponent {
                     key={doc._id}
                     doc={doc}
                     selectedDocument={this.state.selectedDocument}
-                    updateSelectedDocument={this.updateSelectedDocument} />);
+                    updateSelectedDocument={(e, s) => this.updateSelectedDocument(e, s)} />);
               })
             }
           </ul>

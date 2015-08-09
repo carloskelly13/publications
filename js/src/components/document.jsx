@@ -12,8 +12,6 @@ export default class Document extends AuthComponent {
   constructor(props, context) {
     super(props);
     this.dataChanged = this.dataChanged.bind(this);
-    this.updateSelectedCanvasObject = this.updateSelectedCanvasObject.bind(this);
-    this.updateShape = this.updateShape.bind(this);
     this.store = DocumentStore;
     this.state = this.store.getState();
   }
@@ -34,7 +32,10 @@ export default class Document extends AuthComponent {
   render() {
     return (
       <div>
-        <DocumentNavbar store={this.store} />
+        <DocumentNavbar
+          addNewShape={e => this.addNewShape(e)}
+          save={e => this.save(e)}
+          viewAllDocuments={e => this.viewAllDocuments(e)} />
         <div className="app-content">
           <div className="document-canvas-container">
             <Canvas
@@ -43,8 +44,8 @@ export default class Document extends AuthComponent {
               zoom={1}
               selectable={true}
               selectedShape={this.store.state.selectedShape}
-              updateSelectedCanvasObject={this.updateSelectedCanvasObject}
-              updateShape={this.updateShape} />
+              updateSelectedCanvasObject={e => this.updateSelectedCanvasObject(e)}
+              updateShape={e => this.updateShape(e)} />
           </div>
         </div>
       </div>
@@ -65,6 +66,18 @@ export default class Document extends AuthComponent {
 
   updateShape(sender) {
     this.store.updateShape(sender);
+  }
+
+  save(sender) {
+    this.store.updateDocument();
+  }
+
+  addNewShape(sender) {
+    this.store.addNewShape(sender);
+  }
+
+  viewAllDocuments(sender) {
+    this.context.router.transitionTo('documents');
   }
 }
 

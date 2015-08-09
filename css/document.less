@@ -2,7 +2,7 @@ ul.document-items {
   margin: 0 auto;
   padding: 1em 0;
   width: 90%;
-  
+
   li.document-item {
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -16,26 +16,26 @@ ul.document-items {
     user-select: none;
     vertical-align: bottom;
     width: 25%;
-    
+
     .canvas-container svg {
       box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.25);
       border-radius: 4px;
       overflow: hidden;
     }
-    
+
     .document-item-name {
       display: block;
       font-size: 15px;
       font-weight: 500;
       margin: 0.25em 0 0 0;
     }
-    
+
     .document-item-description {
       display: block;
       font-size: 12px;
       margin: 0;
     }
-    
+
     &.selected {
       .canvas-container svg {
         box-shadow: 0 0 0 3px #2196F3;
@@ -48,8 +48,22 @@ ul.document-items {
 
 .document-canvas-container {
   margin: 1em;
-  
+
   .canvas-container svg {
     border: 1px solid #ccc;
+
+    #horizontal-gridlines,
+    #vertical-gridlines {
+      path {
+        fill: none;
+        stroke: hsla(0, 0%, 0%, 0.075);
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+
+        &.inch-mark {
+          stroke: #bbdefb;
+        }
+      }
+    }
   }
 }
