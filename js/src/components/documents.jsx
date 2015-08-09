@@ -1,6 +1,7 @@
 import AuthComponent from '../core/auth-component';
 import {DocumentsStore} from '../stores/documents.store';
 import React, {Component, PropTypes} from 'react';
+// import Joi from 'joi';
 
 import DocumentsNavbar from './ui/documents.navbar';
 import DocumentItem from './document.item';
@@ -11,7 +12,6 @@ import UserAuth from '../core/user-auth';
 export default class Documents extends AuthComponent {
   constructor(props, context) {
     super(props);
-
     this.dataChanged = this.dataChanged.bind(this);
     this.store = DocumentsStore;
     this.state = this.store.getState();
@@ -33,17 +33,18 @@ export default class Documents extends AuthComponent {
   render() {
     return (
       <div>
+        <NewDocumentModal
+          createNewDocument={o => this.createNewDocument(o)}
+          toggleNewDocumentModal={e => this.toggleNewDocumentModal(e)}
+          isOpen={this.state.isNewDocModalOpen} />
         <DocumentsNavbar
           documentIsSelected={this.state.selectedDocument !== null}
           editDocument={e => this.editDocument(e)}
           deleteDocument={e => this.deleteDocument(e)}
-          createNewDocument={e => this.createNewDocument(e)}
+          createNewDocument={e => this.toggleNewDocumentModal(e)}
           logOut={e => this.logOut(e)} />
         <div className="app-content">
-          <NewDocumentModal
-            toggleNewDocumentModal={e => this.toggleNewDocumentModal(e)}
-            isOpen={this.state.isNewDocModalOpen} />
-          <ul className="document-items" onClick={(e, s) => this.updateSelectedDocument(event, null)}>
+          <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
             {
               this.state.documents.map(doc => {
                 return (
@@ -51,7 +52,7 @@ export default class Documents extends AuthComponent {
                     key={doc._id}
                     doc={doc}
                     selectedDocument={this.state.selectedDocument}
-                    updateSelectedDocument={(e, s) => this.updateSelectedDocument(e, s)} />);
+                    updateSelectedDocument={(s, e) => this.updateSelectedDocument(s, e)} />);
               })
             }
           </ul>
@@ -61,9 +62,7 @@ export default class Documents extends AuthComponent {
   }
 
   updateSelectedDocument(sender, event) {
-    if (event) {
-      event.preventDefault();
-    }
+    if (!!event) event.preventDefault();
     this.store.setSelectedDocument(sender);
   }
 
@@ -75,13 +74,12 @@ export default class Documents extends AuthComponent {
     this.store.toggleNewDocumentModal();
   }
 
-  createNewDocument(sender) {
-    // this.props.store.createNewDocument({
-    //   name: 'Untitled Document',
-    //   width: 5.0,
-    //   height: 7.0
-    // });
-    this.toggleNewDocumentModal();
+  createNewDocument(options) {
+    this.store.createNewDocument({
+      name: options.name,
+      width: options.width,
+      height: options.height
+    });
   }
 
   editDocument() {
@@ -101,7 +99,7 @@ export default class Documents extends AuthComponent {
   }
 
   logOut() {
-    UserAuth.logOut(() => this.context.router.transitionTo('login') );
+    UserAuth.logOut(() => this.context.router.transitionTo('login'));
   }
 }
 

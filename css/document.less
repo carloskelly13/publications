@@ -38,9 +38,13 @@ ul.document-items {
 
     &.selected {
       .canvas-container svg {
-        box-shadow: 0 0 0 3px #2196F3;
+        box-shadow: 0 0 0 3px @color-app-background, 0 0 0 5px @color-active-bright;
         border-radius: 4px;
         overflow: hidden;
+      }
+
+      .document-item-name {
+        color: #fff;
       }
     }
   }

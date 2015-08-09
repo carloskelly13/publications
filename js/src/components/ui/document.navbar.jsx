@@ -6,8 +6,8 @@ export default class DocumentNavbar extends Component {
   render() {
     return (
       <div className="navbar-container">
-        <div className="navbar-wordmark">
-          <span className="navbar-title">Publications</span>
+        <div className="navbar-logo">
+          <div className="navbar-logo-icon"></div>
         </div>
         <div className="navbar-controls-center">
           <button className="button" onClick={this.props.addNewShape.bind(this, 'rect')}>Rectangle</button>

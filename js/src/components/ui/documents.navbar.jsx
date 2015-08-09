@@ -8,8 +8,8 @@ export default class DocumentsNavbar extends Component {
   render() {
     return (
       <div className="navbar-container">
-        <div className="navbar-wordmark">
-          <span className="navbar-title">Publications</span>
+        <div className="navbar-logo">
+          <div className="navbar-logo-icon"></div>
         </div>
         <div className="navbar-controls-center">
           <button className="button" disabled={!this.props.documentIsSelected} onClick={this.props.editDocument}>Edit</button>

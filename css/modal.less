@@ -1,30 +1,77 @@
 .modal-anim-enter {
   opacity: 0.00;
-  transform: scale(0.7);
   transition: all 0.2s;
 
   &.modal-anim-enter-active {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
 .modal-anim-leave {
   opacity: 1;
-  transform: scale(1);
   transition: all 0.2s;
 
   &.modal-anim-leave-active {
     opacity: 0.00;
-    transform: scale(0.7);
   }
 }
 
 .modal {
-  background: #fff;
+  background: hsla(0, 0%, 100%, 95%);
+  border-radius: 10px;
+  bottom: 0;
+  box-shadow: 0 2px 25px hsla(0, 0%, 0%, 0.25);
   display: block;
-  height: 50%;
+  left: 0;
+  margin: auto;
   position: absolute;
-  width: 60%;
-  margin: 12.5% 15%;
+  right: 0;
+  z-index: 9600;
+  top: 0;
+
+  &.modal-new-document {
+    height: 300px;
+    width: 600px;
+  }
+
+  .modal-content {
+    box-sizing: border-box;
+    height: inherit;
+    padding:  0 0 20px;
+    width: inherit;
+
+    .modal-header {
+      background: hsla(0, 0%, 0%, 0.1);
+      border-radius: 10px 10px 0 0;
+      padding: 20px;
+
+      h1 {
+        font-size: 20px;
+        font-weight: 500;
+        margin: 0;
+      }
+
+      h3 {
+        font-size: 16px;
+        font-weight: 400;
+        margin: 0;
+      }
+    }
+
+    .modal-inner-content {
+      padding: 20px 20px 0;
+    }
+  }
+}
+
+.modal-cover {
+  background: hsla(0, 0%, 0%, 0.33);
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  right: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 9500;
 }
