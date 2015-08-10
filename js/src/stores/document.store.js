@@ -18,44 +18,19 @@ class DocumentStoreFactory extends Store {
     this.clearState();
   }
 
-  setSelectedShape(sender) {
-    this.state.selectedShape = sender;
-    this.emitChange();
-  }
-
-  updateShape(options) {
-    _.extend(this.state.selectedShape, options);
-    this.emitChange();
-  }
-
   clearState() {
     this.setState({
       doc: {id: '', name: '', width: 0, height: 0, shapes: []},
-      selectedShape: null
+      selectedShape: null,
+      showInspector: false
     });
-  }
-
-  addNewShape(type) {
-    switch (type) {
-      case 'rect':
-      this.state.doc.shapes.push(ShapeFactory.rectangle());
-      break;
-
-      case 'ellipse':
-      this.state.doc.shapes.push(ShapeFactory.ellipse());
-      break;
-
-      default: break;
-    }
-
-    this.emitChange();
   }
 
   getDocument(id) {
     Api.get({
       path: `${DOCUMENTS_PATH}/${id}`,
       success: (responseObj) => {
-        this.state = {doc: responseObj, selectedShape: null};
+        this.state = {doc: responseObj, selectedShape: null, showInspector: true};
         this.emitChange();
       },
       failure: (error) => {

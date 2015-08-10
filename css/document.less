@@ -50,24 +50,26 @@ ul.document-items {
   }
 }
 
-.document-canvas-container {
-  margin: 1em;
+.canvas-container svg {
+  .animation(margin, 0.25s);
+  border: 1px solid darken(@color-app-background, 20%);
+  margin: 15px;
 
-  .canvas-container svg {
-    border: 1px solid #ccc;
+  #horizontal-gridlines,
+  #vertical-gridlines {
+    path {
+      fill: none;
+      stroke: hsla(0, 0%, 0%, 0.075);
+      stroke-width: 1;
+      shape-rendering: crispEdges;
 
-    #horizontal-gridlines,
-    #vertical-gridlines {
-      path {
-        fill: none;
-        stroke: hsla(0, 0%, 0%, 0.075);
-        stroke-width: 1;
-        shape-rendering: crispEdges;
-
-        &.inch-mark {
-          stroke: #bbdefb;
-        }
+      &.inch-mark {
+        stroke: #bbdefb;
       }
     }
   }
+}
+
+.canvas-container.canvas-container-expanded svg {
+  margin: 15px (@inspector-width + 15px) 15px 15px;
 }

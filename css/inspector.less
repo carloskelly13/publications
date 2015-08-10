@@ -1,0 +1,15 @@
+.inspector-container {
+  .animation(right, 0.25s);
+  background: fade(@color-light-background, 95%);
+  bottom: 0;
+  height: inherit;
+  position: fixed;
+  right: -@inspector-width;
+  top: 40px;
+  width: @inspector-width;
+  z-index: 8000;
+
+  &.inspector-container-visible {
+    right: 0;
+  }
+}

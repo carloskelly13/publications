@@ -10,19 +10,26 @@ export default class Canvas extends Component {
   }
 
   render() {
-    let doc = this.props.doc;
+    let
+      doc = this.props.doc,
+      params = {
+        dpi: this.props.dpi,
+        zoom: this.props.zoom,
+        selectable: this.props.selectable,
+        selectedShape: this.props.selectedShape,
+        updateSelectedCanvasObject: this.props.updateSelectedCanvasObject,
+        updateShape: this.props.updateShape
+      },
+      canvasContainerSelector = '';
 
-    let params = {
-      dpi: this.props.dpi,
-      zoom: this.props.zoom,
-      selectable: this.props.selectable,
-      selectedShape: this.props.selectedShape,
-      updateSelectedCanvasObject: this.props.updateSelectedCanvasObject,
-      updateShape: this.props.updateShape
-    };
+    if (this.props.showInspector) {
+      canvasContainerSelector = 'canvas-container canvas-container-expanded';
+    } else {
+      canvasContainerSelector = 'canvas-container';
+    }
 
     return (
-      <div className="canvas-container">
+      <div className={canvasContainerSelector}>
         <svg width={doc.width * params.dpi * params.zoom}
           height={doc.height * params.dpi * params.zoom}
           className="canvas-svg"

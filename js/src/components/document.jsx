@@ -6,6 +6,7 @@ import {Router, RouteHandler, Link} from 'react-router';
 
 import Canvas from './canvas/canvas';
 import DocumentNavbar from './ui/document.navbar';
+import InspectorBase from './ui/inspector.base';
 
 export default class Document extends AuthComponent {
 
@@ -34,19 +35,21 @@ export default class Document extends AuthComponent {
       <div>
         <DocumentNavbar
           addNewShape={e => this.addNewShape(e)}
+          toggleInspector={e => this.toggleInspector(e)}
           save={e => this.save(e)}
           viewAllDocuments={e => this.viewAllDocuments(e)} />
         <div className="app-content">
-          <div className="document-canvas-container">
-            <Canvas
-              doc={this.state.doc}
-              dpi={72}
-              zoom={1}
-              selectable={true}
-              selectedShape={this.store.state.selectedShape}
-              updateSelectedCanvasObject={e => this.updateSelectedCanvasObject(e)}
-              updateShape={e => this.updateShape(e)} />
-          </div>
+          <InspectorBase
+            showInspector={this.state.showInspector} />
+          <Canvas
+            doc={this.state.doc}
+            dpi={72}
+            zoom={1}
+            showInspector={this.state.showInspector}
+            selectable={true}
+            selectedShape={this.state.selectedShape}
+            updateSelectedCanvasObject={e => this.updateSelectedCanvasObject(e)}
+            updateShape={e => this.updateShape(e)} />
         </div>
       </div>
     );
@@ -61,11 +64,13 @@ export default class Document extends AuthComponent {
       event.preventDefault();
     }
 
-    this.store.setSelectedShape(sender);
+    this.setState({selectedShape: sender});
   }
 
   updateShape(sender) {
-    this.store.updateShape(sender);
+    this.setState({
+      setSelectedShape: _.merge(this.state.selectedShape, sender)
+    });
   }
 
   save(sender) {
@@ -73,11 +78,23 @@ export default class Document extends AuthComponent {
   }
 
   addNewShape(sender) {
-    this.store.addNewShape(sender);
+    if (type === 'rect') {
+      this.state.doc.shapes.push(ShapeFactory.rectangle());
+    } else if (type === 'ellipse') {
+      this.state.doc.shapes.push(ShapeFactory.ellipse());
+    } else {
+      return;
+    }
+
+    this.setState({doc: this.state.doc});
   }
 
   viewAllDocuments(sender) {
     this.context.router.transitionTo('documents');
+  }
+
+  toggleInspector(sender) {
+    this.setState({showInspector: !this.state.showInspector});
   }
 }
 
