@@ -9,13 +9,13 @@ export default class ShapeBase extends Component {
   }
 
   isShapeSelected() {
-    return this.props.params.selectable &&
-           this.props.params.selectedShape &&
-           this.props.params.selectedShape === this.props.shape;
+    return this.props.selectable &&
+           this.props.selectedShape &&
+           this.props.selectedShape === this.props.shape;
   }
 
   shapeSelected(event) {
     event.preventDefault();
-    this.props.params.updateSelectedCanvasObject(this.props.shape, null);
+    this.props.updateSelectedCanvasObject(this.props.shape, null);
   }
 }

@@ -64,6 +64,14 @@
   }
 }
 
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .modal {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: hsla(0, 0%, 100%, 0.85);
+  }
+}
+
 .modal-cover {
   background: hsla(0, 0%, 0%, 0.33);
   bottom: 0;

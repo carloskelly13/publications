@@ -1,6 +1,7 @@
 .inspector-container {
   .animation(right, 0.25s);
   background: fade(@color-light-background, 95%);
+  border-left: 1px solid hsla(0, 0%, 0%, 0.5);
   bottom: 0;
   height: inherit;
   position: fixed;
@@ -11,5 +12,17 @@
 
   &.inspector-container-visible {
     right: 0;
+  }
+
+  .inspector-pane {
+
+  }
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .inspector-container {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: fade(@color-light-background, 85%);
   }
 }

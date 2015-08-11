@@ -10,11 +10,12 @@ export default class CanvasBackground extends Component {
   }
 
   render() {
-    let
-      doc = this.props.doc,
-      dpi = this.props.params.dpi,
-      selectable = this.props.params.selectable,
-      zoom = this.props.params.zoom,
+    let {
+        doc,
+        dpi,
+        selectable,
+        zoom
+      } = this.props,
       xRange = _.range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom),
       yRange = _.range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom),
       gridlines = null;
@@ -72,6 +73,6 @@ export default class CanvasBackground extends Component {
 
   canvasSelected(event) {
     event.preventDefault();
-    this.props.params.updateSelectedCanvasObject(null, null);
+    this.props.updateSelectedCanvasObject(null, null);
   }
 }

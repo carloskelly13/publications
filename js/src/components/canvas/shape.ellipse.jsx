@@ -5,11 +5,14 @@ import ShapeBase from './shape.base';
 
 export default class ShapeEllipse extends ShapeBase {
   render() {
-    let shape = this.props.shape;
-    let dpi = this.props.params.dpi;
-    let zoom = this.props.params.zoom;
-    let selectable = this.props.params.selectable;
-    var shapeFrame;
+    let {
+      dpi,
+      selectable,
+      shape,
+      updateShape,
+      zoom
+    } = this.props,
+    shapeFrame;
 
     if (super.isShapeSelected()) {
       shapeFrame = (
@@ -17,7 +20,7 @@ export default class ShapeEllipse extends ShapeBase {
           shape={shape}
           dpi={dpi}
           zoom={zoom}
-          updateShape={this.props.params.updateShape} />
+          updateShape={updateShape} />
       );
     }
 

@@ -1,13 +1,11 @@
-import AuthComponent from '../core/auth-component';
-import {DocumentsStore} from '../stores/documents.store';
+import AuthComponent from '../../core/auth-component';
+import {DocumentsStore} from '../../stores/documents.store';
 import React, {Component, PropTypes} from 'react';
-// import Joi from 'joi';
 
-import DocumentsNavbar from './ui/documents.navbar';
+import DocumentsNavbar from './documents.navbar';
 import DocumentItem from './document.item';
-import Document from './document';
-import NewDocumentModal from './documents/new.modal';
-import UserAuth from '../core/user-auth';
+import NewDocumentModal from './documents.new.modal';
+import UserAuth from '../../core/user-auth';
 
 export default class Documents extends AuthComponent {
   constructor(props, context) {

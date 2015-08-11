@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
 import CanvasBackground from './canvas.background';
-import ShapeRect from './shape.rect';
 import ShapeEllipse from './shape.ellipse';
+import ShapeRect from './shape.rect';
 
 export default class Canvas extends Component {
   constructor(props, context) {
@@ -10,43 +10,56 @@ export default class Canvas extends Component {
   }
 
   render() {
-    let
-      doc = this.props.doc,
-      params = {
-        dpi: this.props.dpi,
-        zoom: this.props.zoom,
-        selectable: this.props.selectable,
-        selectedShape: this.props.selectedShape,
-        updateSelectedCanvasObject: this.props.updateSelectedCanvasObject,
-        updateShape: this.props.updateShape
-      },
-      canvasContainerSelector = '';
-
-    if (this.props.showInspector) {
-      canvasContainerSelector = 'canvas-container canvas-container-expanded';
-    } else {
-      canvasContainerSelector = 'canvas-container';
-    }
+    let {
+        doc,
+        dpi,
+        selectable,
+        selectedShape,
+        showInspector,
+        updateSelectedCanvasObject,
+        updateShape,
+        zoom
+      } = this.props;
 
     return (
-      <div className={canvasContainerSelector}>
-        <svg width={doc.width * params.dpi * params.zoom}
-          height={doc.height * params.dpi * params.zoom}
+      <div className={`canvas-container ${showInspector ? 'canvas-container-expanded' : ''}`}>
+        <svg width={doc.width * dpi * zoom}
+          height={doc.height * dpi * zoom}
           className="canvas-svg"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1">
           <g>
-            <CanvasBackground doc={doc} params={params} />
+            <CanvasBackground
+              doc={doc}
+              dpi={dpi}
+              selectable={selectable}
+              updateSelectedCanvasObject={updateSelectedCanvasObject}
+              zoom={zoom} />
           </g>
           <g>
             {
               doc.shapes.map((shape, idx) => {
                 switch (shape.type) {
                   case 'rect':
-                  return <ShapeRect key={idx} shape={shape} params={params} />;
+                  return (<ShapeRect
+                            dpi={dpi}
+                            key={idx}
+                            selectable={selectable}
+                            selectedShape={selectedShape}
+                            shape={shape}
+                            updateShape={updateShape}
+                            updateSelectedCanvasObject={updateSelectedCanvasObject}
+                            zoom={zoom} />);
 
                   case 'ellipse':
-                  return <ShapeEllipse key={idx} shape={shape} params={params} />;
+                  return (<ShapeEllipse dpi={dpi}
+                            key={idx}
+                            selectable={selectable}
+                            selectedShape={selectedShape}
+                            shape={shape}
+                            updateShape={updateShape}
+                            updateSelectedCanvasObject={updateSelectedCanvasObject}
+                            zoom={zoom} />);
 
                   default:
                   return <g key={idx} />;

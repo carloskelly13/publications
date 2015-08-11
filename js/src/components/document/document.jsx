@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import AuthComponent from '../core/auth-component';
-import {DocumentStore} from '../stores/document.store';
+import AuthComponent from '../../core/auth-component';
+import {DocumentStore} from '../../stores/document.store';
 import React, {Component, PropTypes} from 'react';
 import {Router, RouteHandler, Link} from 'react-router';
 
-import Canvas from './canvas/canvas';
-import DocumentNavbar from './ui/document.navbar';
-import InspectorBase from './ui/inspector.base';
+import Canvas from '../canvas/canvas';
+import DocumentNavbar from './document.navbar';
+import InspectorBase from '../inspector/inspector.base';
 
 export default class Document extends AuthComponent {
 
@@ -40,6 +40,11 @@ export default class Document extends AuthComponent {
           viewAllDocuments={e => this.viewAllDocuments(e)} />
         <div className="app-content">
           <InspectorBase
+            doc={this.state.doc}
+            dpi={72}
+            zoom={1}
+            selectedShape={this.state.selectedShape}
+            updateShape={e => this.updateShape(e)}
             showInspector={this.state.showInspector} />
           <Canvas
             doc={this.state.doc}

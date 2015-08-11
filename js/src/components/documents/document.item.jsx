@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Router, RouteHandler, Link} from 'react-router';
 
-import Canvas from './canvas/canvas';
+import Canvas from '../canvas/canvas';
 
 export default class DocumentItem extends Component {
 
