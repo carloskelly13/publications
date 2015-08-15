@@ -22,7 +22,7 @@ export default class Router {
   }
 
   run() {
-    this.router.run((Handler, state) => {
+    this.router.run(Handler => {
       React.render(<Handler />, document.body);
     });
   }

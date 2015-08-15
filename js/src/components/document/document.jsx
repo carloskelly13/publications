@@ -30,7 +30,7 @@ export default class Document extends AuthComponent {
     this.store.removeChangeListener(this.dataChanged);
   }
 
-  render() {
+  render() {    
     return (
       <div>
         <DocumentNavbar
@@ -44,6 +44,7 @@ export default class Document extends AuthComponent {
             dpi={72}
             zoom={1}
             selectedShape={this.state.selectedShape}
+            updateDocument={e => this.updateDocument(e)}
             updateShape={e => this.updateShape(e)}
             showInspector={this.state.showInspector} />
           <Canvas
@@ -70,6 +71,12 @@ export default class Document extends AuthComponent {
     }
 
     this.setState({selectedShape: sender});
+  }
+
+  updateDocument(sender) {
+    this.setState({
+      doc: _.merge(this.state.doc, sender)
+    });
   }
 
   updateShape(sender) {

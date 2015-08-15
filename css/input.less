@@ -1,0 +1,94 @@
+.input-container {
+  &.input-container-full {
+    width: 100%;
+  }
+
+  &.input-container-half {
+    display: inline-block;
+    width: 50%;
+  }
+}
+
+.input-text {
+  padding: 0.25em;
+
+  label {
+    display: block;
+    box-sizing: border-box;
+    font-size: 12px;
+    height: 12px;
+    margin: 0 0 5px;
+    padding: 0 5px 0;
+    width: 100%;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    background: transparent;
+    border: 1px transparent solid;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: inset 1px 1px 1px hsla(0, 0%, 0%, 0.1);
+    font-size: 15px;
+    margin: 0;
+    padding: 2px 4px;
+    vertical-align: middle;
+    width: 100%;
+
+    &.has-unit {
+      border-radius: 4px 0 0 4px;
+      width: 75%;
+    }
+  }
+
+  .unit-marker {
+    border-radius: 0 4px 4px 0;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    vertical-align: middle;
+    width: 25%;
+  }
+
+  &.light {
+    label {
+      color: lighten(@color-light-background, 5%);
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      background: #fff;
+      border-color: lighten(@color-light-background, 20%);
+      color: #444;
+    }
+
+    .unit-marker {
+      // background: #fff;
+      border-color: lighten(@color-light-background, 20%);
+      border-left: none;
+      color: #444;
+    }
+  }
+
+  &.dark {
+    label {
+      color: darken(@color-app-text, 10%);
+    }
+
+    .unit-marker {
+      background: hsla(0, 0%, 0%, 0.33);
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      border-color: hsla(0, 0%, 0%, 0.33);
+      color: @color-app-text;
+    }
+  }
+}

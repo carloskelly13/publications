@@ -1,7 +1,6 @@
 .inspector-container {
   .animation(right, 0.25s);
-  background: fade(@color-light-background, 95%);
-  border-left: 1px solid hsla(0, 0%, 0%, 0.5);
+  box-shadow: -1px 0 2px hsla(0, 0%, 0%, 0.25);
   bottom: 0;
   height: inherit;
   position: fixed;
@@ -10,12 +9,20 @@
   width: @inspector-width;
   z-index: 8000;
 
+  &.light {
+    background: fade(#fff, 95%);
+  }
+
+  &.dark {
+    background: fade(@color-dark-background, 95%);
+  }
+
   &.inspector-container-visible {
     right: 0;
   }
 
   .inspector-pane {
-
+    padding: 0.5em;
   }
 }
 
@@ -23,6 +30,13 @@
   .inspector-container {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    background: fade(@color-light-background, 85%);
+
+    &.light {
+      background: fade(#fff, 85%);
+    }
+
+    &.dark {
+      background: fade(@color-light-background, 85%);
+    }
   }
 }

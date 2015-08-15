@@ -15,7 +15,8 @@
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "request": "^2.55.0",
-    "superagent": "^1.2.0"
+    "superagent": "^1.2.0",
+    "validator": "^4.0.2"
   },
   "devDependencies": {
     "babel-core": "^5.8.20",
