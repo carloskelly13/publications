@@ -32,9 +32,11 @@ export default class ShapeFrame extends Component {
   }
 
   render() {
-    let shape = this.props.shape;
-    let dpi = this.props.dpi;
-    let zoom = this.props.zoom;
+    let {
+      dpi,
+      shape,
+      zoom
+    } = this.props;
 
     return (
       <g>
@@ -47,9 +49,14 @@ export default class ShapeFrame extends Component {
         />
         {
           frameAnchors.points.map((anchor, index) => {
-            let lineWidth = shape.strokeWidth > 0 ? shape.strokeWidth : 1;
-            let x = ((shape.x * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.width * dpi) + lineWidth) * zoom * anchor.x);
-            let y = ((shape.y * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.height * dpi) + lineWidth) * zoom * anchor.y);
+            let
+              lineWidth = shape.strokeWidth > 0 ? shape.strokeWidth : 1,
+              style = {
+                cursor: `${anchor.coordinate}-resize`
+              },
+              x = ((shape.x * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.width * dpi) + lineWidth) * zoom * anchor.x),
+              y = ((shape.y * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.height * dpi) + lineWidth) * zoom * anchor.y);
+
             return (
               <rect
                 key={`shape-anchor-${index}`}
@@ -62,7 +69,7 @@ export default class ShapeFrame extends Component {
                 fill="#fff"
                 fillOpacity="1"
                 strokeOpacity="1"
-                cursor={`${anchor.coordinate}-resize`}
+                style={style}
                 onMouseDown={this.resizeAnchorSelected.bind(this, anchor.coordinate)}
               />
             )
