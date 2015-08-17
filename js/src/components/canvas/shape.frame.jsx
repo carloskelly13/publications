@@ -38,6 +38,8 @@ export default class ShapeFrame extends Component {
       zoom
     } = this.props;
 
+    console.log(shape);
+
     return (
       <g>
         <rect

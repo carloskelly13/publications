@@ -28,15 +28,17 @@ export default class Document extends AuthComponent {
   componentWillUnmount() {
     this.store.clearState();
     this.store.removeChangeListener(this.dataChanged);
+    document.title = 'Publications';
   }
 
-  render() {    
+  render() {
     return (
       <div>
         <DocumentNavbar
           addNewShape={e => this.addNewShape(e)}
           toggleInspector={e => this.toggleInspector(e)}
           save={e => this.save(e)}
+          title={this.state.doc.name}
           viewAllDocuments={e => this.viewAllDocuments(e)} />
         <div className="app-content">
           <InspectorBase
@@ -63,6 +65,7 @@ export default class Document extends AuthComponent {
 
   dataChanged() {
     this.setState(this.store.getState());
+    document.title = `Publications — ${this.state.doc.name}`;
   }
 
   updateSelectedCanvasObject(sender, event) {

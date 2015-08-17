@@ -21,11 +21,13 @@ export default class Documents extends AuthComponent {
 
   componentDidMount() {
     this.store.getAllDocuments();
+    document.title = 'Publications — All Documents';
   }
 
   componentWillUnmount() {
     this.store.setSelectedDocument(null);
     this.store.removeChangeListener(this.dataChanged);
+    document.title = 'Publications';
   }
 
   render() {

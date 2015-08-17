@@ -9,8 +9,18 @@
   width: @inspector-width;
   z-index: 8000;
 
+  h1 {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.5em 0.33em;
+  }
+
   &.light {
     background: fade(#fff, 95%);
+
+    h1 {
+      color: #444;
+    }
   }
 
   &.dark {
@@ -22,7 +32,11 @@
   }
 
   .inspector-pane {
+  }
+
+  .inspector-content-section {
     padding: 0.5em;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
   }
 }
 
