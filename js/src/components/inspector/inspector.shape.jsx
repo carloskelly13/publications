@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import _ from 'lodash';
 
 import InspectorShapeBorder from './inspector.shape.border';
 import InspectorShapeColor from './inspector.shape.color';
@@ -35,7 +36,13 @@ export default class InspectorShape extends Component {
       updateShape
     } = this.props;
 
-    shape[event.target.name] = event.target.value;
+    let updatedValue = event.target.value;
+
+    if (!isNaN(updatedValue)) {
+      updatedValue = parseFloat(updatedValue);
+    }
+
+    shape[event.target.name] = updatedValue;
     updateShape(shape);
   }
 }

@@ -36,15 +36,19 @@ export default class ShapeFrame extends Component {
       dpi,
       shape,
       zoom
-    } = this.props;
-
-    console.log(shape);
+    } = this.props,
+      x = (shape.x * dpi * zoom) - (shape.strokeWidth / 2.0),
+      y = (shape.y * dpi * zoom) - (shape.strokeWidth / 2.0),
+      width = (shape.width * dpi * zoom) + shape.strokeWidth,
+      height = (shape.height * dpi * zoom) + shape.strokeWidth;
 
     return (
       <g>
         <rect
-          x={(shape.x * dpi * zoom) - (shape.strokeWidth / 2.0)} y={(shape.y * dpi * zoom) - (shape.strokeWidth / 2.0)}
-          width={(shape.width * dpi * zoom) + (shape.strokeWidth)} height={(shape.height * dpi * zoom) + (shape.strokeWidth)}
+          x={x}
+          y={y}
+          height={height}
+          width={width}
           fillOpacity="0" stroke="hsla(0, 0%, 0%, 0.5)"
           strokeWidth={1 * zoom}
           onMouseDown={this.frameSelected}
@@ -56,14 +60,14 @@ export default class ShapeFrame extends Component {
               style = {
                 cursor: `${anchor.coordinate}-resize`
               },
-              x = ((shape.x * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.width * dpi) + lineWidth) * zoom * anchor.x),
-              y = ((shape.y * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.height * dpi) + lineWidth) * zoom * anchor.y);
+              xAnchor = ((shape.x * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.width * dpi) + lineWidth) * zoom * anchor.x),
+              yAnchor = ((shape.y * dpi - (shape.strokeWidth / 2.0)) * zoom) - (frameAnchors.size / 2.0) + (((shape.height * dpi) + lineWidth) * zoom * anchor.y);
 
             return (
               <rect
                 key={`shape-anchor-${index}`}
-                x={x}
-                y={y}
+                x={xAnchor}
+                y={yAnchor}
                 width={frameAnchors.size}
                 height={frameAnchors.size}
                 stroke="hsla(0, 0%, 0%, 0.5)"

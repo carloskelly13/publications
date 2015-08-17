@@ -16,6 +16,7 @@ export default class InspectorDocumentProperties extends Component {
 
     return (
       <div className="inspector-content-section">
+        <h1>Properties</h1>
         <div className="input-container input-container-full">
           <InputText
             displayName="Name"

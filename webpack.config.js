@@ -22,6 +22,10 @@ module.exports = {
           path.resolve(__dirname, 'js/src')
         ],
         loader: 'babel-loader'
+      },
+      {
+        test: /\.less$/,
+        loader: "style!css!less"
       }
     ]
   },
