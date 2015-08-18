@@ -11,9 +11,9 @@ function logError(err) {
 
 var
   babelify    = require('babelify'),
-  browserify  = require('browserify'),
   buffer      = require('vinyl-buffer'),
   gulp        = require('gulp'),
+  karma       = require('karma').server,
   less        = require('gulp-less'),
   path        = require('path'),
   rename      = require('gulp-rename'),
@@ -37,6 +37,13 @@ gulp.task('less', function() {
       this.emit('end');
     }))
     .pipe(gulp.dest('css/'));
+});
+
+gulp.task('test', function(done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: false
+  }, done);
 });
 
 gulp.task('webpack', function() {

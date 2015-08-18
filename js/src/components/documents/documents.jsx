@@ -7,6 +7,8 @@ import DocumentItem from './document.item';
 import NewDocumentModal from './documents.new.modal';
 import UserAuth from '../../core/user-auth';
 
+import DocumentActions from '../../actions/document.actions';
+
 export default class Documents extends AuthComponent {
   constructor(props, context) {
     super(props);
@@ -20,7 +22,7 @@ export default class Documents extends AuthComponent {
   }
 
   componentDidMount() {
-    this.store.getAllDocuments();
+    DocumentActions.list();
     document.title = 'Publications — All Documents';
   }
 
@@ -75,7 +77,7 @@ export default class Documents extends AuthComponent {
   }
 
   createNewDocument(options) {
-    this.store.createNewDocument({
+    DocumentActions.create({
       name: options.name,
       width: options.width,
       height: options.height
@@ -94,7 +96,7 @@ export default class Documents extends AuthComponent {
     let selectedDocument = this.store.state.selectedDocument;
 
     if (!!selectedDocument) {
-      this.store.deleteDocument(selectedDocument);
+      DocumentActions.remove(selectedDocument);
     }
   }
 

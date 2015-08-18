@@ -8,6 +8,8 @@ import Canvas from '../canvas/canvas';
 import DocumentNavbar from './document.navbar';
 import InspectorBase from '../inspector/inspector.base';
 
+import DocumentActions from '../../actions/document.actions';
+
 export default class Document extends AuthComponent {
 
   constructor(props, context) {
@@ -22,7 +24,7 @@ export default class Document extends AuthComponent {
   }
 
   componentDidMount() {
-    this.store.getDocument(this.props.params.id);
+    DocumentActions.get(this.props.params.id);
   }
 
   componentWillUnmount() {
@@ -88,8 +90,8 @@ export default class Document extends AuthComponent {
     });
   }
 
-  save(sender) {
-    this.store.updateDocument();
+  save() {
+    DocumentActions.update(this.props.params.id);
   }
 
   addNewShape(sender) {

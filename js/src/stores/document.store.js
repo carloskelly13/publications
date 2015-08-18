@@ -1,16 +1,20 @@
 import _ from 'lodash';
-import Api from '../core/api';
-import {Promise} from 'es6-promise';
-import Router from 'react-router';
+import axios from 'axios';
+
+import DocumentActions from '../actions/document.actions';
 import ShapeFactory from '../core/shape.factory';
 import Store from '../flux/flux.store';
-
-const DOCUMENTS_PATH = '/documents';
 
 class DocumentStoreFactory extends Store {
 
   constructor() {
     super();
+
+    let events = {};
+    events[DocumentActions.GET] = this.get;
+    events[DocumentActions.UPDATE] = this.update;
+
+    this.register(events);
     this.initState();
   }
 
@@ -26,36 +30,48 @@ class DocumentStoreFactory extends Store {
     });
   }
 
-  getDocument(id) {
-    Api.get({
-      path: `${DOCUMENTS_PATH}/${id}`,
-      success: (responseObj) => {
-        this.state = {doc: responseObj, selectedShape: null, showInspector: true};
-        this.emitChange();
-      },
-      failure: (error) => {
-        console.log(error);
+  get(payload) {
+    let
+      id = payload.action.data.id,
+      token = sessionStorage.getItem('access-token') || '',
+      request = axios({
+        url: `http://api.publicationsapp.com/documents/${id}`,
+        method: 'get',
+        headers: {
+          'Authorization' : `Bearer ${token}`
+        }
+      });
+
+    request.then(responseObj => {
+      this.state = {
+        doc: responseObj.data,
+        selectedShape: null,
+        showInspector: true
       }
     });
+
+    return request;
   }
 
-  updateDocument() {
-    Api.put({
-      path: `${DOCUMENTS_PATH}/${this.state.doc._id}`,
-      data: {
-        name: this.state.doc.name,
-        width: this.state.doc.width,
-        height: this.state.doc.height,
-        shapes: this.state.doc.shapes
-      },
-      success: (responseObj) => {
-        this.state.doc = responseObj;
-        this.emitChange();
-      },
-      failure: (error) => {
-        console.log(error);
-      }
-    });
+  update(payload) {
+    let
+      id = payload.action.data.id,
+      token = sessionStorage.getItem('access-token') || '',
+      request = axios({
+        url: `http://api.publicationsapp.com/documents/${id}`,
+        method: 'put',
+        data: {
+          name: this.state.doc.name,
+          width: this.state.doc.width,
+          height: this.state.doc.height,
+          shapes: this.state.doc.shapes
+        },
+        headers: {
+          'Authorization' : `Bearer ${token}`
+        }
+      });
+
+    return request;
   }
 }
 

@@ -1,6 +1,6 @@
 import {Dispatcher as FluxDispatcher} from 'flux';
 
-export default class Dispatcher extends FluxDispatcher {
+class Dispatcher extends FluxDispatcher {
 
   constructor() {
     super();
@@ -10,3 +10,5 @@ export default class Dispatcher extends FluxDispatcher {
     this.dispatch({source: 'VIEW_ACTION', action: sender});
   }
 }
+
+export default new Dispatcher();

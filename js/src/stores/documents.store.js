@@ -1,15 +1,20 @@
 import _ from 'lodash';
-import Api from '../core/api';
-import {Promise} from 'es6-promise';
-import Router from 'react-router';
-import Store from '../flux/flux.store';
+import axios from 'axios';
 
-const DOCUMENTS_PATH = '/documents';
+import DocumentActions from '../actions/document.actions';
+import Store from '../flux/flux.store';
 
 class DocumentsStoreFactory extends Store {
 
   constructor() {
     super();
+
+    let events = {};
+    events[DocumentActions.LIST] = this.list;
+    events[DocumentActions.REMOVE] = this.remove;
+    events[DocumentActions.CREATE] = this.create;
+
+    this.register(events);
     this.initState();
   }
 
@@ -27,48 +32,65 @@ class DocumentsStoreFactory extends Store {
     this.emitChange();
   }
 
-  getAllDocuments() {
-    Api.get({
-      path: DOCUMENTS_PATH,
-      success: (responseObj) => {
-        this.state = {documents: responseObj, selectedDocument: null, isNewDocModalOpen: false};
-        this.emitChange();
-      },
-      failure: (error) => {
-        console.log(error);
+  list() {
+    let
+      token = sessionStorage.getItem('access-token') || '',
+      request = axios({
+        url: 'http://api.publicationsapp.com/documents',
+        method: 'get',
+        headers: {
+          'Authorization' : `Bearer ${token}`
+        }
+      });
+
+    request.then(responseObj => {
+      this.state = {
+        documents: responseObj.data,
+        selectedDocument: null,
+        isNewDocModalOpen: false
       }
     });
+
+    return request;
   }
 
-  createNewDocument(options) {
-    Api.post({
-      path: DOCUMENTS_PATH,
-      data: options,
-      success: (responseObj) => {
-        this.state.documents.push(responseObj);
-        this.emitChange();
-      },
-      failure: (error) => {
-        console.log(error);
-      }
+  remove(payload) {
+    let
+      doc = payload.action.data.doc,
+      token = sessionStorage.getItem('access-token') || '',
+      request = axios({
+        url: `http://api.publicationsapp.com/documents/${doc._id}`,
+        method: 'delete',
+        headers: {
+          'Authorization' : `Bearer ${token}`
+        }
+      });
+
+    request.then(responseObj => {
+      this.state.documents = _.without(this.state.documents, doc);
     });
+
+    return request;
   }
 
-  deleteDocument(doc) {
-    if (this.state.selectedDocument === doc) {
-      this.state.selectedDocument = null;
-    }
+  create(payload) {
+    let
+      doc = payload.action.data.doc,
+      token = sessionStorage.getItem('access-token') || '',
+      request = axios({
+        url: 'http://api.publicationsapp.com/documents',
+        data: doc,
+        method: 'post',
+        headers: {
+          'Authorization' : `Bearer ${token}`
+        }
+      });
 
-    Api.del({
-      path: DOCUMENTS_PATH + '/' + doc._id,
-      success: (responseObj) => {
-        this.state.documents = _.without(this.state.documents, doc);
-        this.emitChange();
-      },
-      failure: (error) => {
-        console.log(error);
-      }
+    request.then(responseObj => {
+      this.state.documents.push(responseObj.data);
     });
+
+    return request;
   }
 }
 
