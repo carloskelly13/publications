@@ -1,11 +1,10 @@
 ### Publications 3.0
 ##### A web app for screen layout and print design.
 
-This is a rewrite of the current running application at [publicationsapp.com](http://www.publicationsapp.com). It uses React, React Router and Flux for the client side app and HapiJS, Mongoose and JWT for the API service. Publications 3.0 is very experimental and feature incomplete. The feature complete AngularJS-ExpressJS version source can be found at [Publications-JS](https://github.com/carlospaelinck/publications-js).
+This is a rewrite of the current running application at [publicationsapp.com](http://www.publicationsapp.com). It is a client-side application uses React, React Router and Flux. It uses Karma, Chai and Mocha for testing. It connects to the Publications API service at [api.publicationsapp.com](http://api.publicationsapp.com).
 
-##### To run Publications 3.0
+##### To build Publications 3.0
 ```
 $ npm install
-$ gulp
-$ node app
+$ gulp watch:dev
 ```
