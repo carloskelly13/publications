@@ -1,19 +1,33 @@
-import UserAuth from '../core/user-auth';
+import UserStore from '../stores/user.store';
 import React, {Component} from 'react/addons';
+
+import UserActions from '../actions/user.actions';
 
 export default class Login extends Component {
   static willTransitionTo(transition) {
-    if (UserAuth.isLoggedIn()) {
+    if (UserStore.isAuthenticated()) {
       transition.redirect('/');
     }
   }
 
   constructor(props, context) {
     super(props);
-    this.state = {name: '', password: ''};
+
+    this.dataChanged = this.dataChanged.bind(this);
     this.logInFormSubmitted = this.logInFormSubmitted.bind(this);
     this.nameChanged = this.nameChanged.bind(this);
     this.passwordChanged = this.passwordChanged.bind(this);
+
+    this.store = UserStore;
+    this.state = this.store.getState();
+  }
+
+  componentWillMount() {
+    this.store.addChangeListener(this.dataChanged);
+  }
+
+  componentWillUnmount() {
+    this.store.removeChangeListener(this.dataChanged);
   }
 
   render() {
@@ -35,19 +49,20 @@ export default class Login extends Component {
     this.setState({password: event.target.value});
   }
 
+  dataChanged() {
+    this.setState(this.store.getState());
+
+    if (this.state.authenticated) {
+      this.context.router.transitionTo('documents');
+    }
+  }
+
   logInFormSubmitted(event) {
     event.preventDefault();
 
-    UserAuth.logIn({
+    UserActions.login({
       name: this.state.name,
-      password: this.state.password,
-      success: () => {
-        this.setState({name: '', password: ''});
-        this.context.router.transitionTo('documents');
-      },
-      failure: () => {
-        this.setState({password: ''});
-      }
+      password: this.state.password
     });
   }
 }

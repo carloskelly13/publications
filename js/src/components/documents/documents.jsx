@@ -5,19 +5,22 @@ import React, {Component, PropTypes} from 'react';
 import DocumentsNavbar from './documents.navbar';
 import DocumentItem from './document.item';
 import NewDocumentModal from './documents.new.modal';
-import UserAuth from '../../core/user-auth';
+import UserStore from '../../stores/user.store';
 
 import DocumentActions from '../../actions/document.actions';
+import UserActions from '../../actions/user.actions';
 
 export default class Documents extends AuthComponent {
   constructor(props, context) {
     super(props);
+    this.loginStateChanged = this.loginStateChanged.bind(this);
     this.dataChanged = this.dataChanged.bind(this);
     this.store = DocumentsStore;
     this.state = this.store.getState();
   }
 
   componentWillMount() {
+    UserStore.addChangeListener(this.loginStateChanged);
     this.store.addChangeListener(this.dataChanged);
   }
 
@@ -27,6 +30,7 @@ export default class Documents extends AuthComponent {
   }
 
   componentWillUnmount() {
+    UserStore.removeChangeListener(this.loginStateChanged);
     this.store.setSelectedDocument(null);
     this.store.removeChangeListener(this.dataChanged);
     document.title = 'Publications';
@@ -68,6 +72,12 @@ export default class Documents extends AuthComponent {
     this.store.setSelectedDocument(sender);
   }
 
+  loginStateChanged() {
+    if (!UserStore.isAuthenticated()) {
+      this.context.router.transitionTo('login');
+    }
+  }
+
   dataChanged() {
     this.setState(this.store.getState());
   }
@@ -101,7 +111,7 @@ export default class Documents extends AuthComponent {
   }
 
   logOut() {
-    UserAuth.logOut(() => this.context.router.transitionTo('login'));
+    UserActions.logout();
   }
 }
 

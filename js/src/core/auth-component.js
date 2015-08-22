@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import UserAuth from './user-auth';
+import UserStore from '../stores/user.store';
 
 export default class AuthComponent extends Component {
   static willTransitionTo(transition) {
-    if (!UserAuth.isLoggedIn()) {
+    if (!UserStore.isAuthenticated()) {
       transition.redirect('login');
     }
   }

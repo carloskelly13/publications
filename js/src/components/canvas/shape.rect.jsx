@@ -16,11 +16,7 @@ export default class ShapeRect extends ShapeBase {
 
     if (super.isShapeSelected()) {
       shapeFrame = (
-        <ShapeFrame
-          shape={shape}
-          dpi={dpi}
-          zoom={zoom}
-          updateShape={updateShape} />
+        <ShapeFrame {...this.props} />
       );
     }
 
