@@ -4,7 +4,7 @@ import axios from 'axios';
 import DocumentActions from '../actions/document.actions';
 import Store from '../flux/flux.store';
 
-class DocumentsStoreFactory extends Store {
+class DocumentsStore extends Store {
 
   constructor() {
     super();
@@ -94,4 +94,4 @@ class DocumentsStoreFactory extends Store {
   }
 }
 
-export const DocumentsStore = new DocumentsStoreFactory();
+export default new DocumentsStore();

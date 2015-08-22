@@ -5,7 +5,7 @@ import DocumentActions from '../actions/document.actions';
 import ShapeFactory from '../core/shape.factory';
 import Store from '../flux/flux.store';
 
-class DocumentStoreFactory extends Store {
+class DocumentStore extends Store {
 
   constructor() {
     super();
@@ -75,4 +75,4 @@ class DocumentStoreFactory extends Store {
   }
 }
 
-export const DocumentStore = new DocumentStoreFactory();
+export default new DocumentStore();

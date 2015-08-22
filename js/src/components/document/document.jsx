@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import AuthComponent from '../../core/auth-component';
-import {DocumentStore} from '../../stores/document.store';
+import DocumentStore from '../../stores/document.store';
 import React, {Component, PropTypes} from 'react';
 import {Router, RouteHandler, Link} from 'react-router';
 

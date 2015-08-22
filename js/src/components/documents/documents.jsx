@@ -1,5 +1,5 @@
 import AuthComponent from '../../core/auth-component';
-import {DocumentsStore} from '../../stores/documents.store';
+import DocumentsStore from '../../stores/documents.store';
 import React, {Component, PropTypes} from 'react';
 
 import DocumentsNavbar from './documents.navbar';
