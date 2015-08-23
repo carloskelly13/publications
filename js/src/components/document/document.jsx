@@ -7,6 +7,8 @@ import {Router, RouteHandler, Link} from 'react-router';
 import Canvas from '../canvas/canvas';
 import DocumentNavbar from './document.navbar';
 import InspectorBase from '../inspector/inspector.base';
+import RulerHorizontal from '../rulers/ruler.horizontal';
+import RulerVertical from '../rulers/ruler.vertical';
 
 import DocumentActions from '../../actions/document.actions';
 
@@ -34,6 +36,9 @@ export default class Document extends AuthComponent {
   }
 
   render() {
+    let zoom = 1;
+    const DPI = 72.0;
+
     return (
       <div>
         <DocumentNavbar
@@ -42,19 +47,27 @@ export default class Document extends AuthComponent {
           save={e => this.save(e)}
           title={this.state.doc.name}
           viewAllDocuments={e => this.viewAllDocuments(e)} />
-        <div className="app-content">
+        <div className="app-content" id="app-scroll-content">
           <InspectorBase
             doc={this.state.doc}
-            dpi={72}
-            zoom={1}
+            dpi={DPI}
+            zoom={zoom}
             selectedShape={this.state.selectedShape}
             updateDocument={e => this.updateDocument(e)}
             updateShape={e => this.updateShape(e)}
             showInspector={this.state.showInspector} />
+          <RulerHorizontal
+            doc={this.state.doc}
+            dpi={DPI}
+            zoom={zoom} />
+          <RulerVertical
+            doc={this.state.doc}
+            dpi={DPI}
+            zoom={zoom} />
           <Canvas
             doc={this.state.doc}
-            dpi={72}
-            zoom={1}
+            dpi={DPI}
+            zoom={zoom}
             showInspector={this.state.showInspector}
             selectable={true}
             selectedShape={this.state.selectedShape}
