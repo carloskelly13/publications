@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="25px" height="24px" viewBox="0 0 25 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12072) - http://www.bohemiancoding.com/sketch -->
+    <title>paragraph-normal</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="paragraph-normal" sketch:type="MSLayerGroup" fill="#FFFFFF">
+            <g id="Group" sketch:type="MSShapeGroup">
+                <path d="M23.513,24 L0.513,24 C0.237,24 0.013,23.776 0.013,23.5 L0.013,0.5 C0.013,0.224 0.237,0 0.513,0 L23.513,0 C23.789,0 24.013,0.224 24.013,0.5 L24.013,23.5 C24.013,23.776 23.789,24 23.513,24 L23.513,24 Z M1.013,23 L23.013,23 L23.013,1 L1.013,1 L1.013,23 L1.013,23 Z" id="Shape"></path>
+                <path d="M20.513,6 L6.513,6 C6.237,6 6.013,5.776 6.013,5.5 C6.013,5.224 6.236,5 6.513,5 L20.513,5 C20.789,5 21.013,5.224 21.013,5.5 C21.013,5.776 20.789,6 20.513,6 L20.513,6 Z" id="Shape"></path>
+                <path d="M20.513,9 L3.513,9 C3.237,9 3.013,8.776 3.013,8.5 C3.013,8.224 3.236,8 3.513,8 L20.513,8 C20.789,8 21.013,8.224 21.013,8.5 C21.013,8.776 20.789,9 20.513,9 L20.513,9 Z" id="Shape"></path>
+                <path d="M20.513,12 L3.513,12 C3.237,12 3.013,11.776 3.013,11.5 C3.013,11.224 3.237,11 3.513,11 L20.513,11 C20.789,11 21.013,11.224 21.013,11.5 C21.013,11.776 20.789,12 20.513,12 L20.513,12 Z" id="Shape"></path>
+                <path d="M20.513,15 L3.513,15 C3.237,15 3.013,14.776 3.013,14.5 C3.013,14.224 3.237,14 3.513,14 L20.513,14 C20.789,14 21.013,14.224 21.013,14.5 C21.013,14.776 20.789,15 20.513,15 L20.513,15 Z" id="Shape"></path>
+                <path d="M10.513,18 L3.513,18 C3.237,18 3.013,17.776 3.013,17.5 C3.013,17.224 3.237,17 3.513,17 L10.513,17 C10.789,17 11.013,17.224 11.013,17.5 C11.013,17.776 10.789,18 10.513,18 L10.513,18 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

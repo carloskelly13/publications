@@ -18,6 +18,14 @@
   }
 }
 
+.svg-icon(@image, @width, @height, @display) {
+  background-image: url("../img/icons/@{image}.svg");
+  background-repeat: no-repeat;
+  width: @width;
+  height: @height;
+  display: @display;
+}
+
 .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

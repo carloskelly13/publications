@@ -44,6 +44,7 @@
     "proxyquire": "^1.7.0",
     "proxyquire-universal": "^1.0.8",
     "proxyquireify": "^3.0.0",
+    "react-tap-event-plugin": "^0.1.7",
     "reactify": "^1.1.1",
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0",

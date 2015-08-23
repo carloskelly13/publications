@@ -26,7 +26,8 @@ class DocumentStore extends Store {
     this.setState({
       doc: {id: '', name: '', width: 0, height: 0, shapes: []},
       selectedShape: null,
-      showInspector: false
+      showInspector: false,
+      zoom: 1.0
     });
   }
 

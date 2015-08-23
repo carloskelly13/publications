@@ -25,13 +25,23 @@
   white-space: nowrap;
   zoom: 1;
 
-  &:hover {
-    color: #fff;
+  &.button-icon {
+    padding: 0 4px;
   }
 
-  // &:active {
-  //   color: @color-active;
-  // }
+  &:hover {
+    color: #fff;
+
+    .icon {
+      opacity: 1.0;
+    }
+  }
+
+  &:active {
+    .icon {
+      opacity: 1.0;
+    }
+  }
 
   &.button-destructive {
     &:hover {
@@ -47,5 +57,28 @@
     color: hsla(0, 0%, 0%, 0.4);
     cursor: not-allowed;
     top: 0;
+
+    .icon {
+      cursor: not-allowed;
+      opacity: 0.25;
+    }
+  }
+
+  .icon {
+    opacity: 0.75;
+  }
+}
+
+.button-label {
+  color: #ddd;
+  cursor: default;
+  font-size: 13px;
+  font-weight: 500;
+
+  &.button-label-bordered {
+    border: 1px solid #999;
+    border-radius: 4px;
+    font-size: 13px;
+    padding: 2px 6px;
   }
 }
