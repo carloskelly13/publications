@@ -6,6 +6,7 @@ const DocumentActions = {
   LIST: 'LIST_DOCUMENTS',
   REMOVE: 'REMOVE_DOCUMENT',
   CREATE: 'CREATE_DOCUMENT',
+  PDF: 'PDF_DOCUMENT',
 
   get(id) {
     dispatcher.handleViewAction({
@@ -38,6 +39,13 @@ const DocumentActions = {
     dispatcher.handleViewAction({
       actionType: DocumentActions.CREATE,
       data: {doc}
+    });
+  },
+
+  pdf(id) {
+    dispatcher.handleViewAction({
+      actionType: DocumentActions.PDF,
+      data: {id}
     });
   }
 };

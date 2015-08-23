@@ -13,6 +13,7 @@ class DocumentStore extends Store {
     let events = {};
     events[DocumentActions.GET] = this.get;
     events[DocumentActions.UPDATE] = this.update;
+    events[DocumentActions.PDF] = this.pdf;
 
     this.register(events);
     this.initState();
@@ -70,6 +71,21 @@ class DocumentStore extends Store {
         headers: {
           'Authorization' : `Bearer ${token}`
         }
+      });
+
+    return request;
+  }
+
+  pdf(id) {
+    let
+      token = sessionStorage.getItem('access-token') || '',
+      request = axios({
+        url: `http://api.publicationsapp.com/documents/${id}/pdf`,
+        method: 'get',
+        headers: {
+          'Authorization' : `Bearer ${token}`
+        },
+        responseType: 'arraybuffer'
       });
 
     return request;

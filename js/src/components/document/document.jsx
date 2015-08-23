@@ -143,7 +143,12 @@ export default class Document extends AuthComponent {
   }
 
   downloadPdf() {
-    console.log('Download PDf');
+    DocumentStore.pdf(this.props.params.id)
+      .then(responseObj => {
+        let blob = new Blob([responseObj.data], {type: 'application/pdf'});
+
+      });
+    // DocumentActions.pdf(this.props.params.id);
   }
 }
 
