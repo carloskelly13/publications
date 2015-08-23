@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import CanvasBackground from './canvas.background';
 import ShapeEllipse from './shape.ellipse';
 import ShapeRect from './shape.rect';
+import ShapeText from './shape.text';
 
 export default class Canvas extends Component {
   constructor(props, context) {
@@ -47,7 +48,19 @@ export default class Canvas extends Component {
                             zoom={zoom} />);
 
                   case 'ellipse':
-                  return (<ShapeEllipse dpi={dpi}
+                  return (<ShapeEllipse
+                            dpi={dpi}
+                            key={idx}
+                            selectable={selectable}
+                            selectedShape={selectedShape}
+                            shape={shape}
+                            updateShape={updateShape}
+                            updateSelectedCanvasObject={updateSelectedCanvasObject}
+                            zoom={zoom} />);
+
+                  case 'text':
+                  return (<ShapeText
+                            dpi={dpi}
                             key={idx}
                             selectable={selectable}
                             selectedShape={selectedShape}

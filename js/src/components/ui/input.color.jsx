@@ -28,7 +28,7 @@ export default class InputColor extends InputBase {
             step={validatorOptions ? validatorOptions.step : null}
             type={type || 'text'}
             value={this.state.value} />
-          <span className="unit-marker" style={spanStyle}></span>
+          <span className="unit-marker unit-marker-color" style={spanStyle}></span>
         </div>
         <label htmlFor={name}>
           {displayName}
