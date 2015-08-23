@@ -69,9 +69,9 @@ export default class RulerVertical extends Component {
                   <g key={`h-ruler-line-${idx}`}>
                     {label}
                     <CanvasGridline
-                            mX={10}
+                            mX={15}
                             mY={mark - 1.5}
-                            dX={major ? 0 : 10}
+                            dX={major ? 0 : 15}
                             dY={25}
                             direction={'H'} />
                   </g>

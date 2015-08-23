@@ -56,9 +56,9 @@ export default class CanvasBackground extends Component {
     }
 
     return (
-      <g id="canvas-background">
+      <g id="canvas-background"
+        onClick={selectable ? this.canvasSelected : null} >
         <rect
-          onClick={selectable ? this.canvasSelected : null}
           y="0"
           x="0"
           fill="#fff"

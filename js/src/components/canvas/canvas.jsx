@@ -23,7 +23,7 @@ export default class Canvas extends Component {
       } = this.props;
 
     return (
-      <div className={`canvas-container ${showInspector ? 'canvas-container-expanded' : ''}`}>
+      <div className={`canvas-container ${showInspector ? 'canvas-container-expanded' : ''} ${selectable ? '' : 'canvas-no-select'}`}>
         <svg width={doc.width * dpi * zoom}
           height={doc.height * dpi * zoom}
           className="canvas-svg"

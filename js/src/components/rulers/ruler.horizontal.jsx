@@ -58,8 +58,8 @@ export default class RulerHorizontal extends Component {
                     <text
                       fill="#444"
                       fontSize="12"
-                      x={mark + 3}
-                      y={20}>
+                      x={mark + 2}
+                      y={12}>
                       {idx / 4}
                     </text>
                   );
@@ -70,9 +70,9 @@ export default class RulerHorizontal extends Component {
                     {label}
                     <CanvasGridline
                             mX={mark - 0.5}
-                            mY={10}
+                            mY={15}
                             dX={25}
-                            dY={major ? 0 : 10}
+                            dY={major ? 0 : 15}
                             direction={'V'} />
                   </g>
                 );
