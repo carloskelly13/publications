@@ -8,21 +8,21 @@ export default class RulerHorizontal extends Component {
   constructor(props) {
     super(props);
     this.handleScroll = this.handleScroll.bind(this);
-    this.state = {offsetScroll: 0};
   }
 
   componentDidMount() {
     let scrollContainer = document.getElementById('app-scroll-content');
-    scrollContainer.addEventListener('scroll', _.throttle(this.handleScroll, 10));
+    scrollContainer.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
     let scrollContainer = document.getElementById('app-scroll-content');
-    scrollContainer.removeEventListener('scroll', _.throttle(this.handleScroll, 10));
+    scrollContainer.removeEventListener('scroll', this.handleScroll);
   }
 
   handleScroll(event) {
-    this.setState({offsetScroll: event.target.scrollLeft});
+    React.findDOMNode(this.refs.rulerContainer)
+      .style.left = `${25 - event.target.scrollLeft}px`;
   }
 
   render() {
@@ -35,8 +35,9 @@ export default class RulerHorizontal extends Component {
 
     return (
       <div
+        ref="rulerContainer"
         style={{
-          left: `${25 - this.state.offsetScroll }px`,
+          left: "25px",
           width: `${doc.width * zoom * dpi}px`
         }}
         className="ruler ruler-horizontal">
