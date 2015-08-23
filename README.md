@@ -3,8 +3,15 @@
 
 This is a rewrite of the current running application at [publicationsapp.com](http://www.publicationsapp.com). It is a client-side application uses React, React Router and Flux. It uses Karma, Chai and Mocha for testing. It connects to the Publications API service at [api.publicationsapp.com](http://api.publicationsapp.com).
 
-##### To build Publications 3.0
+##### To build and run Publications 3.0
 ```
 $ npm install
-$ gulp watch:dev
+$ webpack
+$ http-server
+```
+
+##### To test Publications 3.0
+```
+$ npm install
+$ gulp test
 ```
