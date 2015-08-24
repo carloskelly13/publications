@@ -9,6 +9,7 @@ import DocumentNavbar from './document.navbar';
 import InspectorBase from '../inspector/inspector.base';
 import RulerHorizontal from '../rulers/ruler.horizontal';
 import RulerVertical from '../rulers/ruler.vertical';
+import DocumentPdfViewModal from './document.pdf.modal';
 
 import DocumentActions from '../../actions/document.actions';
 import ShapeFactory from '../../core/shape.factory';
@@ -41,10 +42,14 @@ export default class Document extends AuthComponent {
 
     return (
       <div>
+        <DocumentPdfViewModal
+          doc={this.state.doc}
+          togglePdfDownloadModal={() => this.togglePdfDownloadModal()}
+          isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
-          addNewShape={(t, e) => this.addNewShape(t, e)}
-          changeZoom={(s, e) => this.changeZoom(s, e)}
-          downloadPdf={() => this.downloadPdf()}
+          addNewShape={t => this.addNewShape(t)}
+          changeZoom={s => this.changeZoom(s)}
+          downloadPdf={() => this.togglePdfDownloadModal()}
           save={e => this.save(e)}
           title={this.state.doc.name}
           toggleInspector={e => this.toggleInspector(e)}
@@ -110,7 +115,7 @@ export default class Document extends AuthComponent {
     DocumentActions.update(this.props.params.id);
   }
 
-  addNewShape(type, event) {
+  addNewShape(type) {
     if (type === 'rect') {
       this.state.doc.shapes.push(ShapeFactory.rectangle());
     } else if (type === 'ellipse') {
@@ -142,13 +147,8 @@ export default class Document extends AuthComponent {
     }
   }
 
-  downloadPdf() {
-    DocumentStore.pdf(this.props.params.id)
-      .then(responseObj => {
-        let blob = new Blob([responseObj.data], {type: 'application/pdf'});
-
-      });
-    // DocumentActions.pdf(this.props.params.id);
+  togglePdfDownloadModal() {
+    this.setState({isPdfModalOpen: !this.state.isPdfModalOpen});
   }
 }
 

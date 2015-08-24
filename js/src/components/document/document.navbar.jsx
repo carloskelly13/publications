@@ -9,13 +9,13 @@ export default class DocumentNavbar extends Component {
           <div className="navbar-logo-icon"></div>
         </div>
         <div className="navbar-controls-center">
-          <button className="button button-icon" onClick={this.props.addNewShape.bind(event, 'rect')}>
+          <button className="button button-icon" onClick={this.props.addNewShape.bind(this, 'rect')}>
             <span className="icon icon-rect"></span>
           </button>
-          <button className="button button-icon" onClick={this.props.addNewShape.bind(event, 'ellipse')}>
+          <button className="button button-icon" onClick={this.props.addNewShape.bind(this, 'ellipse')}>
             <span className="icon icon-ellipse"></span>
           </button>
-          <button className="button button-icon" onClick={this.props.addNewShape.bind(event, 'text')}>
+          <button className="button button-icon" onClick={this.props.addNewShape.bind(this, 'text')}>
             <span className="icon icon-text"></span>
           </button>
           <div className="spacer"></div>
@@ -23,11 +23,11 @@ export default class DocumentNavbar extends Component {
             <span className="icon icon-download"></span>
           </button>
           <div className="spacer"></div>
-          <button className="button button-icon" onClick={this.props.changeZoom.bind(event, 'zoom-in')}>
+          <button className="button button-icon" onClick={this.props.changeZoom.bind(this, 'zoom-in')}>
             <span className="icon icon-zoom-in"></span>
           </button>
           <span className="button-label button-label-bordered">{this.props.zoom * 100}%</span>
-          <button className="button button-icon" onClick={this.props.changeZoom.bind(event, 'zoom-out')}>
+          <button className="button button-icon" onClick={this.props.changeZoom.bind(this, 'zoom-out')}>
             <span className="icon icon-zoom-out"></span>
           </button>
         </div>

@@ -28,6 +28,7 @@ class DocumentStore extends Store {
       doc: {id: '', name: '', width: 0, height: 0, shapes: []},
       selectedShape: null,
       showInspector: false,
+      isPdfModalOpen: false,
       zoom: 1.0
     });
   }
@@ -48,7 +49,8 @@ class DocumentStore extends Store {
       this.state = {
         doc: responseObj.data,
         selectedShape: null,
-        showInspector: true
+        showInspector: true,
+        isPdfModalOpen: false
       }
     });
 
