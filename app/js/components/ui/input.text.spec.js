@@ -1,6 +1,6 @@
 var
   _ = require('lodash'),
-  React = require('react/addons'),
+  React = require('react'),
   TestUtils = React.addons.TestUtils;
 
 describe('Input Text: ', function() {

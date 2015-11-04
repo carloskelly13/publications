@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react/addons';
+import React, {Component, PropTypes} from 'react';
 import InputBase from './input.base';
 
 export default class InputColor extends InputBase {

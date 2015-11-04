@@ -1,8 +1,7 @@
-import React, {Component, PropTypes, addons} from 'react';
+import React, {Component, PropTypes} from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import DocumentStore from '../../stores/document.store';
 import _ from 'lodash';
-
-const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 
 export default class DocumentPdfViewModal extends Component {
   constructor(props) {
@@ -28,7 +27,10 @@ export default class DocumentPdfViewModal extends Component {
   render() {
     if (this.props.isOpen) {
       return (
-        <ReactCSSTransitionGroup transitionName="modal-anim">
+        <ReactCSSTransitionGroup
+          transitionName="modal-anim"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
           <div className="modal-cover">
             <div className="modal modal-new-document">
               <div className="modal-content">
@@ -44,7 +46,10 @@ export default class DocumentPdfViewModal extends Component {
       )
     } else {
       return (
-        <ReactCSSTransitionGroup transitionName="modal-anim" />
+        <ReactCSSTransitionGroup
+          transitionName="modal-anim"
+          transitionEnterTimeout={0}
+          transitionLeaveTimeout={0} />
       )
     }
   }

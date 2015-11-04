@@ -1,5 +1,5 @@
 import UserStore from '../stores/user.store';
-import React, {Component} from 'react/addons';
+import React, {Component} from 'react';
 
 import UserActions from '../actions/user.actions';
 

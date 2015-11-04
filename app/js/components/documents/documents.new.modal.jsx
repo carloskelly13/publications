@@ -1,7 +1,6 @@
 import React, {Component, PropTypes, addons} from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'lodash';
-
-const ReactCSSTransitionGroup = addons.CSSTransitionGroup;
 
 export default class NewDocumentModal extends Component {
   constructor(props, context) {
@@ -19,7 +18,10 @@ export default class NewDocumentModal extends Component {
   render() {
     if (this.props.isOpen) {
       return (
-        <ReactCSSTransitionGroup transitionName="modal-anim">
+        <ReactCSSTransitionGroup
+          transitionName="modal-anim"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
           <div className="modal-cover">
             <div className="modal modal-new-document">
               <div className="modal-content">
@@ -56,7 +58,10 @@ export default class NewDocumentModal extends Component {
       )
     } else {
       return (
-        <ReactCSSTransitionGroup transitionName="modal-anim" />
+        <ReactCSSTransitionGroup 
+          transitionName="modal-anim"
+          transitionEnterTimeout={0}
+          transitionLeaveTimeout={0} />
       )
     }
   }

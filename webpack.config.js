@@ -22,7 +22,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, 'app/js')
         ],
-        loader: 'babel-loader'
+        loader: 'babel-loader?optional[]=runtime&stage=0'
       },
       {
         test: /\.less$/,
@@ -30,7 +30,7 @@ module.exports = {
       },
       {
         test: /\.(eot|woff|ttf|svg|png|otf)$/,
-        loader: 'url'
+        loader: 'url?limit=1000'
       }
     ]
   },

@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react/addons';
+import React, {Component, PropTypes} from 'react';
 import validator from 'validator';
 
 export default class InputBase extends Component {

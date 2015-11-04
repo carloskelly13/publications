@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import ReactRouter, {Route, Redirect, DefaultRoute, NotFoundRoute} from 'react-router';
 import Index from '../components/index';
 import Login from '../components/login';
@@ -23,7 +24,7 @@ export default class Router {
 
   run() {
     this.router.run(Handler => {
-      React.render(<Handler />, document.body);
+      ReactDOM.render(<Handler />, document.getElementById('pub-app'));
     });
   }
 }
