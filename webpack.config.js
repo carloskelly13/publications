@@ -1,16 +1,17 @@
 var
-  path    = require('path'),
+  path = require('path'),
+  HtmlWebpackPlugin = require('html-webpack-plugin'),
   webpack = require('webpack');
 
 module.exports = {
   watch: true,
 
   entry: [
-    './js/src/app.js'
+    './app/js/app.js'
   ],
 
   output: {
-    path: __dirname + '/js',
+    path: __dirname + '/dist',
     filename: 'app.js'
   },
 
@@ -19,7 +20,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         include: [
-          path.resolve(__dirname, 'js/src')
+          path.resolve(__dirname, 'app/js')
         ],
         loader: 'babel-loader'
       },
@@ -42,6 +43,10 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'app/index.html',
+      inject: 'body'
+    })
   ]
 };

@@ -16,7 +16,4 @@ results
 
 npm-debug.log
 node_modules
-css/_style.css
-js/app.min.js
-js/app.dev.js
-js/app.js
+dist
