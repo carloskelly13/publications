@@ -1,6 +1,6 @@
-import _ from 'lodash';
+import {eq, range} from 'lodash';
 import React, {Component, PropTypes} from 'react';
-
+import ReactDOM from 'react-dom';
 import CanvasGridline from '../canvas/canvas.gridline';
 
 
@@ -21,8 +21,13 @@ export default class RulerHorizontal extends Component {
   }
 
   handleScroll(event) {
-    React.findDOMNode(this.refs.rulerContainer)
+    ReactDOM.findDOMNode(this.refs.rulerContainer)
       .style.left = `${25 - event.target.scrollLeft}px`;
+  }
+
+  shouldComponentUpdate(nextProps) {
+    let documentSizeChanged = !(eq(this.props.doc.width, nextProps.doc.width) && eq(this.props.doc.height, nextProps.doc.height));
+    return documentSizeChanged;
   }
 
   render() {
@@ -31,7 +36,7 @@ export default class RulerHorizontal extends Component {
       dpi,
       zoom
     } = this.props,
-    xRange = _.range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom);
+    xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom);
 
     return (
       <div

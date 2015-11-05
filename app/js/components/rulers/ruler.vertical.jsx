@@ -1,6 +1,6 @@
-import _ from 'lodash';
+import {eq, range} from 'lodash';
 import React, {Component, PropTypes} from 'react';
-
+import ReactDOM from 'react-dom';
 import CanvasGridline from '../canvas/canvas.gridline';
 
 
@@ -20,8 +20,13 @@ export default class RulerVertical extends Component {
     scrollContainer.removeEventListener('scroll', this.handleScroll);
   }
 
+  shouldComponentUpdate(nextProps) {
+    let documentSizeChanged = !(eq(this.props.doc.width, nextProps.doc.width) && eq(this.props.doc.height, nextProps.doc.height));
+    return documentSizeChanged;
+  }
+
   handleScroll(event) {
-    React.findDOMNode(this.refs.rulerContainer)
+    ReactDOM.findDOMNode(this.refs.rulerContainer)
       .style.top = `${66 - event.target.scrollTop}px`;
   }
 
@@ -31,7 +36,7 @@ export default class RulerVertical extends Component {
       dpi,
       zoom
     } = this.props,
-    yRange = _.range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom);
+    yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom);
 
     return (
       <div

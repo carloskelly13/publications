@@ -44,7 +44,7 @@ export default class Document extends AuthComponent {
       <div>
         <DocumentPdfViewModal
           doc={this.state.doc}
-          togglePdfDownloadModal={() => this.togglePdfDownloadModal()}
+          togglePdfDownloadModal={::this.togglePdfDownloadModal}
           isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
           addNewShape={t => this.addNewShape(t)}
@@ -79,8 +79,8 @@ export default class Document extends AuthComponent {
             showInspector={this.state.showInspector}
             selectable={true}
             selectedShape={this.state.selectedShape}
-            updateSelectedCanvasObject={e => this.updateSelectedCanvasObject(e)}
-            updateShape={e => this.updateShape(e)} />
+            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
+            updateShape={::this.updateShape} />
         </div>
       </div>
     );

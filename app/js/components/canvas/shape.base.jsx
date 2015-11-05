@@ -16,6 +16,6 @@ export default class ShapeBase extends Component {
 
   shapeSelected(event) {
     event.preventDefault();
-    this.props.updateSelectedCanvasObject(this.props.shape, null);
+    this.props.updateSelectedCanvasObject(this.props.shape);
   }
 }

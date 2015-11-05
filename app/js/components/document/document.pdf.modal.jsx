@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import DocumentStore from '../../stores/document.store';
 import _ from 'lodash';
@@ -15,7 +16,7 @@ export default class DocumentPdfViewModal extends Component {
         .then(responseObj => {
           let blob = new Blob([responseObj.data], {type: 'application/pdf'}),
             url = URL.createObjectURL(blob),
-            pdfLink = React.findDOMNode(this.refs.pdfLink);
+            pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink);
 
           pdfLink.href = url;
           pdfLink.setAttribute('download', `${this.props.doc.name}.pdf`);

@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
-import _ from 'lodash';
+import {eq, range, get} from 'lodash';
 
 import CanvasGridline from './canvas.gridline';
 
 export default class CanvasBackground extends Component {
   constructor(props, context) {
-    super(props)
+    super(props);
     this.canvasSelected = this.canvasSelected.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    let documentSizeChanged = !(eq(this.props.doc.width, nextProps.doc.width) && eq(this.props.doc.height, nextProps.doc.height));
+    return documentSizeChanged;
   }
 
   render() {
@@ -16,8 +21,8 @@ export default class CanvasBackground extends Component {
         selectable,
         zoom
       } = this.props,
-      xRange = _.range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom),
-      yRange = _.range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom),
+      xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom),
+      yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom),
       gridlines = null;
 
     if (selectable) {
