@@ -26,8 +26,10 @@ export default class RulerHorizontal extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    let documentSizeChanged = !(eq(this.props.doc.width, nextProps.doc.width) && eq(this.props.doc.height, nextProps.doc.height));
-    return documentSizeChanged;
+    let widthChanged = this.props.doc.get('width') != nextProps.doc.get('width');
+    let heightChanged = this.props.doc.get('height') != nextProps.doc.get('height');
+    let zoomChanged = this.props.zoom != nextProps.zoom;
+    return (widthChanged || heightChanged || zoomChanged);
   }
 
   render() {
@@ -36,17 +38,17 @@ export default class RulerHorizontal extends Component {
       dpi,
       zoom
     } = this.props,
-    xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom);
+    xRange = range(0, doc.get('width') * dpi * zoom, 0.25 * dpi * zoom);
 
     return (
       <div
         ref="rulerContainer"
         style={{
           left: "25px",
-          width: `${doc.width * zoom * dpi}px`
+          width: `${doc.get('width') * zoom * dpi}px`
         }}
         className="ruler ruler-horizontal">
-        <svg width={doc.width * dpi * zoom}
+        <svg width={doc.get('width') * dpi * zoom}
           height="25"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1">

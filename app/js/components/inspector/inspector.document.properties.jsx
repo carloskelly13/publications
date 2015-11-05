@@ -24,7 +24,7 @@ export default class InspectorDocumentProperties extends Component {
             theme={theme}
             validator='isLength'
             validatorOptions={1}
-            value={doc.name}
+            value={doc.get('name')}
             valueChanged={inputValueChanged} />
         </div>
         <div className="input-container input-container-half">
@@ -36,7 +36,7 @@ export default class InspectorDocumentProperties extends Component {
             unit="in"
             validator='isFloat'
             validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
-            value={doc.width}
+            value={doc.get('width')}
             valueChanged={inputValueChanged} />
         </div>
         <div className="input-container input-container-half">
@@ -48,7 +48,7 @@ export default class InspectorDocumentProperties extends Component {
             unit="in"
             validator='isFloat'
             validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
-            value={doc.height}
+            value={doc.get('height')}
             valueChanged={inputValueChanged} />
         </div>
       </div>

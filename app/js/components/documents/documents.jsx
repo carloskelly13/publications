@@ -55,10 +55,10 @@ export default class Documents extends AuthComponent {
               this.state.documents.map(doc => {
                 return (
                   <DocumentItem
-                    key={doc._id}
+                    key={doc.get('_id')}
                     doc={doc}
                     selectedDocument={this.state.selectedDocument}
-                    updateSelectedDocument={(s, e) => this.updateSelectedDocument(s, e)} />);
+                    updateSelectedDocument={::this.updateSelectedDocument} />);
               })
             }
           </ul>
@@ -98,7 +98,7 @@ export default class Documents extends AuthComponent {
     let selectedDocument = this.store.state.selectedDocument;
 
     if (selectedDocument) {
-      this.context.router.transitionTo('document-edit', {id: selectedDocument._id});
+      this.context.router.transitionTo('document-edit', {id: selectedDocument.get('_id')});
     }
   }
 

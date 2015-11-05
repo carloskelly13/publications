@@ -24,7 +24,6 @@ export default class InspectorDocument extends Component {
       updateDocument
     } = this.props;
 
-    doc[event.target.name] = event.target.value;
-    updateDocument(doc);
+    updateDocument(doc.set(event.target.name, event.target.value));
   }
 }

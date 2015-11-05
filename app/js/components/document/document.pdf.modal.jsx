@@ -12,7 +12,7 @@ export default class DocumentPdfViewModal extends Component {
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      DocumentStore.pdf(this.props.doc._id)
+      DocumentStore.pdf(this.props.doc.get('_id'))
         .then(responseObj => {
           let blob = new Blob([responseObj.data], {type: 'application/pdf'}),
             url = URL.createObjectURL(blob),

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {omit} from 'lodash';
 
 import CanvasBackground from './canvas.background';
 import ShapeEllipse from './shape.ellipse';
@@ -15,17 +16,18 @@ export default class Canvas extends Component {
         doc,
         dpi,
         selectable,
-        selectedShape,
         showInspector,
-        updateSelectedCanvasObject,
-        updateShape,
         zoom
-      } = this.props;
+      } = this.props,
+      canvasSelectors = `canvas-container ${showInspector ? 'canvas-container-expanded' : ''} ${selectable ? '' : 'canvas-no-select'}`;
+
+    let shapeProps = omit(this.props, 'doc');
 
     return (
-      <div className={`canvas-container ${showInspector ? 'canvas-container-expanded' : ''} ${selectable ? '' : 'canvas-no-select'}`}>
-        <svg width={doc.width * dpi * zoom}
-          height={doc.height * dpi * zoom}
+      <div className={canvasSelectors}>
+        <svg
+          width={doc.get('width') * dpi * zoom}
+          height={doc.get('height') * dpi * zoom}
           className="canvas-svg"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1">
@@ -34,40 +36,16 @@ export default class Canvas extends Component {
           </g>
           <g>
             {
-              doc.shapes.map((shape, idx) => {
+              doc.get('shapes').map((shape, idx) => {
                 switch (shape.type) {
                   case 'rect':
-                  return (<ShapeRect
-                            dpi={dpi}
-                            key={idx}
-                            selectable={selectable}
-                            selectedShape={selectedShape}
-                            shape={shape}
-                            updateShape={updateShape}
-                            updateSelectedCanvasObject={updateSelectedCanvasObject}
-                            zoom={zoom} />);
+                  return <ShapeRect {...shapeProps} key={idx} shape={shape} />;
 
                   case 'ellipse':
-                  return (<ShapeEllipse
-                            dpi={dpi}
-                            key={idx}
-                            selectable={selectable}
-                            selectedShape={selectedShape}
-                            shape={shape}
-                            updateShape={updateShape}
-                            updateSelectedCanvasObject={updateSelectedCanvasObject}
-                            zoom={zoom} />);
+                  return <ShapeEllipse {...shapeProps} key={idx} shape={shape} />;
 
                   case 'text':
-                  return (<ShapeText
-                            dpi={dpi}
-                            key={idx}
-                            selectable={selectable}
-                            selectedShape={selectedShape}
-                            shape={shape}
-                            updateShape={updateShape}
-                            updateSelectedCanvasObject={updateSelectedCanvasObject}
-                            zoom={zoom} />);
+                  return <ShapeText {...shapeProps} key={idx} shape={shape} />;
 
                   default:
                   return <g key={idx} />;

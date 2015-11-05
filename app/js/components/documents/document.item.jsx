@@ -12,14 +12,14 @@ export default class DocumentItem extends Component {
 
   render() {
     let selected = !!this.props.selectedDocument &&
-                     this.props.selectedDocument._id == this.props.doc._id;
+                     this.props.selectedDocument.get('_id') == this.props.doc.get('_id');
 
     return (
       <li className={selected ? 'document-item selected' : 'document-item'}>
         <div onClick={this.documentSelected}>
           <Canvas doc={this.props.doc} dpi={72} zoom={0.2} selectable={false} />
-          <span className="document-item-name">{this.props.doc.name}</span>
-          <span className="document-item-description">{this.props.doc.width}&#8221;&#32;&#215;&#32;{this.props.doc.height}&#8221;</span>
+          <span className="document-item-name">{this.props.doc.get('name')}</span>
+          <span className="document-item-description">{this.props.doc.get('width')}&#8221;&#32;&#215;&#32;{this.props.doc.get('height')}&#8221;</span>
         </div>
       </li>
     );

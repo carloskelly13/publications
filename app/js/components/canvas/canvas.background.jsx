@@ -10,8 +10,10 @@ export default class CanvasBackground extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    let documentSizeChanged = !(eq(this.props.doc.width, nextProps.doc.width) && eq(this.props.doc.height, nextProps.doc.height));
-    return documentSizeChanged;
+    let widthChanged = this.props.doc.get('width') != nextProps.doc.get('width');
+    let heightChanged = this.props.doc.get('height') != nextProps.doc.get('height');
+    let zoomChanged = this.props.zoom != nextProps.zoom;
+    return (widthChanged || heightChanged || zoomChanged);
   }
 
   render() {
@@ -21,8 +23,8 @@ export default class CanvasBackground extends Component {
         selectable,
         zoom
       } = this.props,
-      xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom),
-      yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom),
+      xRange = range(0, doc.get('width') * dpi * zoom, 0.25 * dpi * zoom),
+      yRange = range(0, doc.get('height') * dpi * zoom, 0.25 * dpi * zoom),
       gridlines = null;
 
     if (selectable) {
@@ -37,7 +39,7 @@ export default class CanvasBackground extends Component {
                           mX={mark - 0.5}
                           mY="0"
                           dX={mark - 0.5}
-                          dY={doc.height * dpi * zoom}
+                          dY={doc.get('height') * dpi * zoom}
                           direction={'V'} />);
               })
             }
@@ -50,7 +52,7 @@ export default class CanvasBackground extends Component {
                           major={(idx % 4 === 0) && (idx > 0)}
                           mX="0"
                           mY={mark - 0.5}
-                          dX={doc.width * dpi * zoom}
+                          dX={doc.get('width') * dpi * zoom}
                           dY={mark - 0.5}
                           direction={'H'} />);
               })
@@ -69,8 +71,8 @@ export default class CanvasBackground extends Component {
           fill="#fff"
           stroke="0"
           strokeWidth="0"
-          width={doc.width * dpi * zoom}
-          height={doc.height * dpi * zoom} />
+          width={doc.get('width') * dpi * zoom}
+          height={doc.get('height') * dpi * zoom} />
         {gridlines}
       </g>
     );

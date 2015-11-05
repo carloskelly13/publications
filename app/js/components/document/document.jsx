@@ -47,13 +47,13 @@ export default class Document extends AuthComponent {
           togglePdfDownloadModal={::this.togglePdfDownloadModal}
           isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
-          addNewShape={t => this.addNewShape(t)}
-          changeZoom={s => this.changeZoom(s)}
-          downloadPdf={() => this.togglePdfDownloadModal()}
-          save={e => this.save(e)}
-          title={this.state.doc.name}
-          toggleInspector={e => this.toggleInspector(e)}
-          viewAllDocuments={e => this.viewAllDocuments(e)}
+          addNewShape={::this.addNewShape}
+          changeZoom={::this.changeZoom}
+          downloadPdf={::this.togglePdfDownloadModal}
+          save={::this.save}
+          title={this.state.doc.get('name')}
+          toggleInspector={::this.toggleInspector}
+          viewAllDocuments={::this.viewAllDocuments}
           zoom={this.state.zoom} />
         <div className="app-content" id="app-scroll-content">
           <InspectorBase
@@ -61,8 +61,8 @@ export default class Document extends AuthComponent {
             dpi={DPI}
             zoom={this.state.zoom}
             selectedShape={this.state.selectedShape}
-            updateDocument={e => this.updateDocument(e)}
-            updateShape={e => this.updateShape(e)}
+            updateDocument={::this.updateDocument}
+            updateShape={::this.updateShape}
             showInspector={this.state.showInspector} />
           <RulerHorizontal
             doc={this.state.doc}
@@ -101,7 +101,7 @@ export default class Document extends AuthComponent {
 
   updateDocument(sender) {
     this.setState({
-      doc: _.merge(this.state.doc, sender)
+      doc: sender
     });
   }
 
@@ -116,17 +116,17 @@ export default class Document extends AuthComponent {
   }
 
   addNewShape(type) {
-    if (type === 'rect') {
-      this.state.doc.shapes.push(ShapeFactory.rectangle());
-    } else if (type === 'ellipse') {
-      this.state.doc.shapes.push(ShapeFactory.ellipse());
-    } else if (type === 'text') {
-      this.state.doc.shapes.push(ShapeFactory.text());
-    } else {
-      return;
-    }
-
-    this.setState({doc: this.state.doc});
+    // if (type === 'rect') {
+    //   this.state.doc.shapes.push(ShapeFactory.rectangle());
+    // } else if (type === 'ellipse') {
+    //   this.state.doc.shapes.push(ShapeFactory.ellipse());
+    // } else if (type === 'text') {
+    //   this.state.doc.shapes.push(ShapeFactory.text());
+    // } else {
+    //   return;
+    // }
+    //
+    // this.setState({doc: this.state.doc});
   }
 
   viewAllDocuments(sender) {

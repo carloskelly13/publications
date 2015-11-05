@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import axios from 'axios';
+import {Map} from 'immutable';
 
 import DocumentActions from '../actions/document.actions';
 import ShapeFactory from '../core/shape.factory';
@@ -25,7 +26,7 @@ class DocumentStore extends Store {
 
   clearState() {
     this.setState({
-      doc: {id: '', name: '', width: 0, height: 0, shapes: []},
+      doc: Map({id: '', name: '', width: 0, height: 0, shapes: []}),
       selectedShape: null,
       showInspector: false,
       isPdfModalOpen: false,
@@ -47,7 +48,7 @@ class DocumentStore extends Store {
 
     request.then(responseObj => {
       this.state = {
-        doc: responseObj.data,
+        doc: Map(responseObj.data),
         selectedShape: null,
         showInspector: true,
         isPdfModalOpen: false
@@ -65,10 +66,10 @@ class DocumentStore extends Store {
         url: `http://api.publicationsapp.com/documents/${id}`,
         method: 'put',
         data: {
-          name: this.state.doc.name,
-          width: this.state.doc.width,
-          height: this.state.doc.height,
-          shapes: this.state.doc.shapes
+          name: this.state.doc.get('name'),
+          width: this.state.doc.get('width'),
+          height: this.state.doc.get('height'),
+          shapes: this.state.doc.get('shapes')
         },
         headers: {
           'Authorization' : `Bearer ${token}`

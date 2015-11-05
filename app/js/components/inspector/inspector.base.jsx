@@ -19,7 +19,7 @@ export default class InspectorBase extends Component {
         updateDocument,
         updateShape
       } = this.props,
-      documentLoaded = !_.isEmpty(doc._id);
+      documentLoaded = !_.isEmpty(doc.get('_id'));
 
     if (documentLoaded && !!selectedShape) {
       currentPane = (

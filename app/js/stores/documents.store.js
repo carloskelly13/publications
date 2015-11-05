@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import axios from 'axios';
+import {Map} from 'immutable';
 
 import DocumentActions from '../actions/document.actions';
 import Store from '../flux/flux.store';
@@ -45,7 +46,7 @@ class DocumentsStore extends Store {
 
     request.then(responseObj => {
       this.state = {
-        documents: responseObj.data,
+        documents: responseObj.data.map(doc => Map(doc)),
         selectedDocument: null,
         isNewDocModalOpen: false
       }
@@ -59,7 +60,7 @@ class DocumentsStore extends Store {
       doc = payload.action.data.doc,
       token = sessionStorage.getItem('access-token') || '',
       request = axios({
-        url: `http://api.publicationsapp.com/documents/${doc._id}`,
+        url: `http://api.publicationsapp.com/documents/${doc.get('_id')}`,
         method: 'delete',
         headers: {
           'Authorization' : `Bearer ${token}`
@@ -79,7 +80,7 @@ class DocumentsStore extends Store {
       token = sessionStorage.getItem('access-token') || '',
       request = axios({
         url: 'http://api.publicationsapp.com/documents',
-        data: doc,
+        data: doc.toJS(),
         method: 'post',
         headers: {
           'Authorization' : `Bearer ${token}`
@@ -87,7 +88,7 @@ class DocumentsStore extends Store {
       });
 
     request.then(responseObj => {
-      this.state.documents.push(responseObj.data);
+      this.state.documents.push(Map(responseObj.data));
     });
 
     return request;
