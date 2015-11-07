@@ -131,7 +131,6 @@ export default class Document extends AuthComponent {
       return shapes;
     });
 
-    console.log(updatedDocument);
     this.updateDocument(updatedDocument);
   }
 

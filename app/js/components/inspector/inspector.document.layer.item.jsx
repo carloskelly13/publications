@@ -6,6 +6,17 @@ export default class InspectorDocumentLayerItem extends Component {
     super(props);
   }
 
+  dimensionsElement(shape) {
+    return (
+      <span className="layer-item-size">
+        X:&#32;{shape.x.toFixed(2)}&#8221;
+        Y:&#32;{shape.y.toFixed(2)}&#8221;
+        W:&#32;{shape.width.toFixed(2)}&#8221;
+        H:&#32;{shape.height.toFixed(2)}&#8221;
+      </span>
+    )
+  }
+
   render() {
     let {shape} = this.props;
 
@@ -16,27 +27,30 @@ export default class InspectorDocumentLayerItem extends Component {
             switch (shape.type) {
               case 'rect':
                 return (
-                  <div>
-                    <span className="layer-item-name">Rectangle</span>
-                    <span className="layer-item-size">
-                      {shape.width.toFixed(2)}&#8221;&#32;&times;&#32;{shape.height.toFixed(2)}&#8221;
-                    </span>
+                  <div className="row">
+                    <span className="layer-item-icon" style={{background: shape.fill, border: `1px solid ${shape.stroke}`}}></span>
+                    <div className="box">
+                      <span className="layer-item-name">Rectangle</span>
+                      { this.dimensionsElement(shape) }
+                    </div>
                   </div>);
               case 'ellipse':
                 return (
-                  <div>
-                    <span className="layer-item-name">Ellipse</span>
-                    <span className="layer-item-size">
-                      {shape.width.toFixed(2)}&#8221;&#32;&times;&#32;{shape.height.toFixed(2)}&#8221;
-                    </span>
+                  <div className="row">
+                    <span className="layer-item-icon layer-item-icon-ellipse" style={{background: shape.fill, border: `1px solid ${shape.stroke}`}}></span>
+                    <div className="box">
+                      <span className="layer-item-name">Ellipse</span>
+                      { this.dimensionsElement(shape) }
+                    </div>
                   </div>);
               case 'text':
                 return (
-                  <div>
-                    <span className="layer-item-name">Text Box</span>
-                    <span className="layer-item-size">
-                      {shape.width.toFixed(2)}&#8221;&#32;&times;&#32;{shape.height.toFixed(2)}&#8221;
-                    </span>
+                  <div className="row">
+                    <span className="layer-item-icon layer-item-icon-text" style={{color: shape.color}}>Aa</span>
+                    <div className="box">
+                      <span className="layer-item-name">Text Box</span>
+                      { this.dimensionsElement(shape) }
+                    </div>
                   </div>);
               default:
                 return <div></div>;

@@ -25,10 +25,22 @@ export default class ShapeFrame extends Component {
     this.resizeAnchorSelected = this.resizeAnchorSelected.bind(this);
     this.resizeAnchorDeselected = this.resizeAnchorDeselected.bind(this);
     this.resizeAnchorDragged = this.resizeAnchorDragged.bind(this);
+
+    this.state = {isEditingText: false};
   }
 
   componentDidMount() {
     this.resetState();
+  }
+
+  frameDoubleClicked() {
+    if (this.props.shape.type === 'text') {
+      this.setState({isEditingText: true});
+    }
+  }
+
+  textDidChange(event) {
+    this.props.updateShape({text: event.target.value});
   }
 
   render() {
@@ -52,7 +64,36 @@ export default class ShapeFrame extends Component {
           fillOpacity="0" stroke="hsla(0, 0%, 0%, 0.5)"
           strokeWidth={1 * zoom}
           onMouseDown={this.frameSelected}
+          onDoubleClick={::this.frameDoubleClicked}
         />
+        {
+          (() => {
+            if (this.state.isEditingText) {
+              return (
+                <g>
+                  <foreignObject
+                    x={x}
+                    y={y}
+                    height={height}
+                    width={width}>
+                    <textarea
+                      value={shape.text}
+                      onChange={::this.textDidChange}
+                      className="shape-frame-textarea"
+                      style={{
+                        color: shape.color,
+                        fontFamily: shape.fontFamily,
+                        fontStyle: shape.fontStyle,
+                        fontSize: `${shape.fontSize * zoom}px`,
+                        fontWeight: shape.fontWeight,
+                        textAlign: shape.textAlign
+                      }} />
+                  </foreignObject>
+                </g>
+              );
+            }
+          })()
+        }
         {
           frameAnchors.points.map((anchor, index) => {
             let

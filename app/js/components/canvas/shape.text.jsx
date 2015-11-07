@@ -27,8 +27,10 @@ export default class ShapeText extends ShapeBase {
           x={shape.x * dpi * zoom} y={shape.y * dpi * zoom}
           width={shape.width * dpi * zoom} height={shape.height * dpi * zoom}>
 
-          <p
-            className="embedded-shape-text"
+          <textarea
+            readonly
+            value={shape.text}
+            className="shape-frame-textarea shape-frame-textarea-no-edit"
             style={{
               color: shape.color,
               fontFamily: shape.fontFamily,
@@ -36,9 +38,7 @@ export default class ShapeText extends ShapeBase {
               fontSize: `${shape.fontSize * zoom}px`,
               fontWeight: shape.fontWeight,
               textAlign: shape.textAlign
-            }}>
-            {shape.text}
-          </p>
+            }} />
 
         </foreignObject>
         {shapeFrame}
