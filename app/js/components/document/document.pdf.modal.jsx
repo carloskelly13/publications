@@ -37,7 +37,7 @@ export default class DocumentPdfViewModal extends Component {
               <div className="modal-content">
                 Pdf Me Yo!
                 <a href="#" target="_blank" ref="pdfLink">Download My Pdf</a>
-                <button type="button" onClick={() => this.dismiss()}>
+                <button type="button" onClick={::this.dismiss}>
                   Close
                 </button>
               </div>

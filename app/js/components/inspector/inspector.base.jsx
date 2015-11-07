@@ -17,7 +17,8 @@ export default class InspectorBase extends Component {
         selectedShape,
         showInspector,
         updateDocument,
-        updateShape
+        updateShape,
+        updateSelectedCanvasObject
       } = this.props,
       documentLoaded = !_.isEmpty(doc.get('_id'));
 
@@ -36,6 +37,7 @@ export default class InspectorBase extends Component {
           doc={doc}
           theme={this.state.theme}
           updateDocument={updateDocument}
+          updateSelectedCanvasObject={updateSelectedCanvasObject}
           />
       );
     }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {merge} from 'lodash';
 import AuthComponent from '../../core/auth-component';
 import DocumentStore from '../../stores/document.store';
 import React, {Component, PropTypes} from 'react';
@@ -63,12 +63,13 @@ export default class Document extends AuthComponent {
             selectedShape={this.state.selectedShape}
             updateDocument={::this.updateDocument}
             updateShape={::this.updateShape}
+            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
             showInspector={this.state.showInspector} />
-          <RulerHorizontal
+          <RulerVertical
             doc={this.state.doc}
             dpi={DPI}
             zoom={this.state.zoom} />
-          <RulerVertical
+          <RulerHorizontal
             doc={this.state.doc}
             dpi={DPI}
             zoom={this.state.zoom} />
@@ -88,7 +89,7 @@ export default class Document extends AuthComponent {
 
   dataChanged() {
     this.setState(this.store.getState());
-    document.title = `Publications — ${this.state.doc.name}`;
+    document.title = `Publications — ${this.state.doc.get('name')}`;
   }
 
   updateSelectedCanvasObject(sender, event) {
@@ -100,14 +101,13 @@ export default class Document extends AuthComponent {
   }
 
   updateDocument(sender) {
-    this.setState({
-      doc: sender
-    });
+    this.store.state.doc = sender;
+    this.setState({doc: sender});
   }
 
   updateShape(sender) {
     this.setState({
-      setSelectedShape: _.merge(this.state.selectedShape, sender)
+      setSelectedShape: merge(this.state.selectedShape, sender)
     });
   }
 
@@ -116,17 +116,23 @@ export default class Document extends AuthComponent {
   }
 
   addNewShape(type) {
-    // if (type === 'rect') {
-    //   this.state.doc.shapes.push(ShapeFactory.rectangle());
-    // } else if (type === 'ellipse') {
-    //   this.state.doc.shapes.push(ShapeFactory.ellipse());
-    // } else if (type === 'text') {
-    //   this.state.doc.shapes.push(ShapeFactory.text());
-    // } else {
-    //   return;
-    // }
-    //
-    // this.setState({doc: this.state.doc});
+    let newShape = null;
+
+    if (type === 'ellipse') {
+      newShape = ShapeFactory.ellipse();
+    } else if (type === 'text') {
+      newShape = ShapeFactory.text();
+    } else {
+      newShape = ShapeFactory.rectangle();
+    }
+
+    let updatedDocument = this.state.doc.update('shapes', shapes => {
+      shapes.push(newShape);
+      return shapes;
+    });
+
+    console.log(updatedDocument);
+    this.updateDocument(updatedDocument);
   }
 
   viewAllDocuments(sender) {

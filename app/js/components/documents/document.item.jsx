@@ -7,7 +7,6 @@ export default class DocumentItem extends Component {
 
   constructor(props, context) {
     super(props);
-    this.documentSelected = this.documentSelected.bind(this);
   }
 
   render() {
@@ -16,7 +15,7 @@ export default class DocumentItem extends Component {
 
     return (
       <li className={selected ? 'document-item selected' : 'document-item'}>
-        <div onClick={this.documentSelected}>
+        <div onClick={::this.documentSelected} onDoubleClick={::this.documentDoubleClicked}>
           <Canvas doc={this.props.doc} dpi={72} zoom={0.2} selectable={false} />
           <span className="document-item-name">{this.props.doc.get('name')}</span>
           <span className="document-item-description">{this.props.doc.get('width')}&#8221;&#32;&#215;&#32;{this.props.doc.get('height')}&#8221;</span>
@@ -28,5 +27,11 @@ export default class DocumentItem extends Component {
   documentSelected(event) {
     event.stopPropagation();
     this.props.updateSelectedDocument(this.props.doc, null);
+  }
+
+  documentDoubleClicked(event) {
+    event.stopPropagation();
+    this.props.updateSelectedDocument(this.props.doc, null);
+    this.props.editDocument();
   }
 }

@@ -57,6 +57,7 @@ export default class Documents extends AuthComponent {
                   <DocumentItem
                     key={doc.get('_id')}
                     doc={doc}
+                    editDocument={::this.editDocument}
                     selectedDocument={this.state.selectedDocument}
                     updateSelectedDocument={::this.updateSelectedDocument} />);
               })

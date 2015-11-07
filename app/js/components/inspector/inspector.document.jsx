@@ -9,10 +9,11 @@ export default class InspectorDocument extends Component {
     return (
       <div className="inspector-pane inspector-pane-document">
         <InspectorDocumentProperties
-          inputValueChanged={e => this.inputValueChanged(e)}
+          inputValueChanged={::this.inputValueChanged}
           {...this.props} />
         <InspectorDocumentLayers
-          inputValueChanged={e => this.inputValueChanged(e)}
+          inputValueChanged={::this.inputValueChanged}
+          updateSelectedCanvasObject={this.props.updateSelectedCanvasObject}
           {...this.props} />
       </div>
     );

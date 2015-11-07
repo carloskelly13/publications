@@ -22,7 +22,7 @@ export default class RulerHorizontal extends Component {
 
   handleScroll(event) {
     ReactDOM.findDOMNode(this.refs.rulerContainer)
-      .style.left = `${25 - event.target.scrollLeft}px`;
+      .style.left = `${-1 - event.target.scrollLeft}px`;
   }
 
   shouldComponentUpdate(nextProps) {
@@ -44,11 +44,11 @@ export default class RulerHorizontal extends Component {
       <div
         ref="rulerContainer"
         style={{
-          left: "25px",
-          width: `${doc.get('width') * zoom * dpi}px`
+          left: "-1px",
+          width: `${(doc.get('width') * zoom * dpi) + 26}px`
         }}
         className="ruler ruler-horizontal">
-        <svg width={doc.get('width') * dpi * zoom}
+        <svg width={(doc.get('width') * dpi * zoom) + 26}
           height="25"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1">
@@ -65,7 +65,7 @@ export default class RulerHorizontal extends Component {
                     <text
                       fill="#444"
                       fontSize="12"
-                      x={mark + 2}
+                      x={mark + 27}
                       y={12}>
                       {idx / 4}
                     </text>
@@ -76,11 +76,11 @@ export default class RulerHorizontal extends Component {
                   <g key={`v-ruler-line-${idx}`}>
                     {label}
                     <CanvasGridline
-                            mX={mark - 0.5}
-                            mY={15}
-                            dX={25}
-                            dY={major ? 0 : 15}
-                            direction={'V'} />
+                      mX={mark + 25.5}
+                      mY={15}
+                      dX={25}
+                      dY={major ? 0 : 15}
+                      direction={'V'} />
                   </g>
                 );
               })
