@@ -9,7 +9,7 @@
   }
 }
 
-.input-text {
+.input-text, .segmented-control {
   padding: 0.25em;
 
   label {
@@ -95,6 +95,62 @@
     input[type="number"] {
       border-color: hsla(0, 0%, 0%, 0.33);
       color: @color-app-text;
+    }
+  }
+}
+
+.segmented-control {
+  button {
+    float: left;
+    border: 1px solid transparent;
+    box-shadow: 0 0 0 1px lighten(@color-light-background, 20%);
+    border-radius: 0;
+    background: #fff;
+    margin: 0;
+
+    &:first-child {
+      border-radius: 4px 0 0 4px;
+    }
+
+    &:last-child {
+      border-radius: 0 4px 4px 0;
+    }
+
+    &.active {
+      background: lighten(@color-light-background, 20%);
+    }
+  }
+
+  &.segmented-control-3 {
+    button {
+      width: 33%;
+    }
+  }
+
+  &.segmented-control-2 {
+    button {
+      width: 50%;
+    }
+  }
+
+  .segmented-control-btn-container {
+    display: block;
+    width: 100%;
+
+    &:after {
+      content: ' ';
+      clear: both;
+      display: block;
+    }
+  }
+
+  &.segmented-control-2, &.segmented-control-3 {
+    button {
+      .icon {
+        background-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
     }
   }
 }

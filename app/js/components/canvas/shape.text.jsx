@@ -28,7 +28,8 @@ export default class ShapeText extends ShapeBase {
           width={shape.width * dpi * zoom} height={shape.height * dpi * zoom}>
 
           <textarea
-            readonly
+            readOnly
+            onChange={null}
             value={shape.text}
             className="shape-frame-textarea shape-frame-textarea-no-edit"
             style={{
