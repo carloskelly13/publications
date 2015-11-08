@@ -18,7 +18,7 @@ ul.document-items {
     width: 25%;
 
     .canvas-container svg {
-      box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.25);
+      box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.15);
       border-radius: 4px;
       overflow: hidden;
     }
@@ -38,13 +38,13 @@ ul.document-items {
 
     &.selected {
       .canvas-container svg {
-        box-shadow: 0 0 0 3px @color-app-background, 0 0 0 5px @color-active-bright;
+        box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.15), 0 0 0 3px @color-active-bright;
         border-radius: 4px;
         overflow: hidden;
       }
 
       .document-item-name {
-        color: #fff;
+        color: @color-active;
       }
     }
   }
@@ -52,8 +52,7 @@ ul.document-items {
 
 .canvas-container svg {
   .animation(margin, 0.25s);
-  border: 1px solid darken(@color-app-background, 20%);
-  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.25);
+  border: 1px solid #bbb;
   margin: 25px 15px 15px 25px;
 
   #horizontal-gridlines,
@@ -81,7 +80,7 @@ ul.document-items {
     &.shape-frame-textarea-no-edit {
       background: transparent;
       -webkit-user-select: none;
-      -moz-user-select: none;    
+      -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
     }

@@ -5,7 +5,7 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="paragraph-normal" sketch:type="MSLayerGroup" fill="#FFFFFF">
+        <g id="paragraph-normal" sketch:type="MSLayerGroup" fill="#444">
             <g id="Group" sketch:type="MSShapeGroup">
                 <path d="M23.513,24 L0.513,24 C0.237,24 0.013,23.776 0.013,23.5 L0.013,0.5 C0.013,0.224 0.237,0 0.513,0 L23.513,0 C23.789,0 24.013,0.224 24.013,0.5 L24.013,23.5 C24.013,23.776 23.789,24 23.513,24 L23.513,24 Z M1.013,23 L23.013,23 L23.013,1 L1.013,1 L1.013,23 L1.013,23 Z" id="Shape"></path>
                 <path d="M20.513,6 L6.513,6 C6.237,6 6.013,5.776 6.013,5.5 C6.013,5.224 6.236,5 6.513,5 L20.513,5 C20.789,5 21.013,5.224 21.013,5.5 C21.013,5.776 20.789,6 20.513,6 L20.513,6 Z" id="Shape"></path>
