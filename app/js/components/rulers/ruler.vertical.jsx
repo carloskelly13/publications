@@ -45,7 +45,7 @@ export default class RulerVertical extends Component {
         ref="rulerContainer"
         style={{
           top: '66px',
-          height: `${doc.get('height') * zoom * dpi - 1}px`
+          height: `${doc.get('height') * zoom * dpi}px`
         }}
         className="ruler ruler-vertical">
         <svg width="25"
@@ -77,7 +77,7 @@ export default class RulerVertical extends Component {
                     {label}
                     <CanvasGridline
                             mX={15}
-                            mY={mark - 1.5}
+                            mY={mark - 0.5}
                             dX={major ? 0 : 15}
                             dY={25}
                             direction={'H'} />

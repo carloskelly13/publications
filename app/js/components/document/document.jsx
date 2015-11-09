@@ -1,4 +1,4 @@
-import {merge} from 'lodash';
+import {merge, isEmpty} from 'lodash';
 import AuthComponent from '../../core/auth-component';
 import DocumentStore from '../../stores/document.store';
 import React, {Component, PropTypes} from 'react';
@@ -39,6 +39,7 @@ export default class Document extends AuthComponent {
 
   render() {
     const DPI = 72.0;
+    let documentLoaded = !isEmpty(this.state.doc.get('_id'));
 
     return (
       <div>
@@ -65,14 +66,24 @@ export default class Document extends AuthComponent {
             updateShape={::this.updateShape}
             updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
             showInspector={this.state.showInspector} />
-          <RulerVertical
-            doc={this.state.doc}
-            dpi={DPI}
-            zoom={this.state.zoom} />
-          <RulerHorizontal
-            doc={this.state.doc}
-            dpi={DPI}
-            zoom={this.state.zoom} />
+          {
+            (() => {
+              if (documentLoaded) {
+                return (
+                  <div>
+                    <RulerVertical
+                      doc={this.state.doc}
+                      dpi={DPI}
+                      zoom={this.state.zoom} />
+                    <RulerHorizontal
+                      doc={this.state.doc}
+                      dpi={DPI}
+                      zoom={this.state.zoom} />
+                  </div>
+                )
+              }
+            })()
+          }
           <Canvas
             doc={this.state.doc}
             dpi={DPI}
@@ -132,6 +143,7 @@ export default class Document extends AuthComponent {
     });
 
     this.updateDocument(updatedDocument);
+    this.updateSelectedCanvasObject(newShape, null);
   }
 
   viewAllDocuments(sender) {

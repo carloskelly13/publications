@@ -39,7 +39,7 @@ export default class ShapeFactory {
       x: 0.25,
       y: 0.25,
       r: 0,
-      text: 'Text Box',
+      text: 'Double click to insert text',
       fontFamily: 'Source Sans Pro',
       fontSize: 14,
       fontStyle: 'normal',

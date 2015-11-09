@@ -9,7 +9,7 @@
   }
 }
 
-.input-text, .segmented-control {
+.input-text, .segmented-control, .input-picker {
   padding: 0.25em;
 
   label {
@@ -23,7 +23,8 @@
   }
 
   input[type="text"],
-  input[type="number"] {
+  input[type="number"],
+  select {
     background: transparent;
     border: 1px transparent solid;
     border-radius: 4px;
@@ -41,6 +42,11 @@
       border-radius: 4px 0 0 4px;
       width: 75%;
     }
+  }
+
+  select {
+    -webkit-appearance: none;
+    box-shadow: none;
   }
 
   .unit-marker {
@@ -68,14 +74,14 @@
     }
 
     input[type="text"],
-    input[type="number"] {
+    input[type="number"],
+    select {
       background: #fff;
       border-color: lighten(@color-light-background, 20%);
       color: #444;
     }
 
     .unit-marker {
-      // background: #fff;
       border-color: lighten(@color-light-background, 20%);
       border-left: none;
       color: #444;
@@ -92,7 +98,8 @@
     }
 
     input[type="text"],
-    input[type="number"] {
+    input[type="number"],
+    select {
       border-color: hsla(0, 0%, 0%, 0.33);
       color: @color-app-text;
     }

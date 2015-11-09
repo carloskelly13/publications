@@ -2,6 +2,8 @@ import React, {Component, PropTypes} from 'react';
 
 import InputColor from '../ui/input.color';
 import InputText from '../ui/input.text';
+import InputSelect from '../ui/input.select';
+import {Typefaces} from '../../core/constants';
 
 export default class InspectorShapeText extends Component {
   changeFontFormatting(event, name, value) {
@@ -17,19 +19,17 @@ export default class InspectorShapeText extends Component {
       theme
     } = this.props;
 
-    console.table(shape);
-
     return (
       <div className="inspector-content-section">
         <h1>Text</h1>
         <div className="input-container input-container-full">
-          <InputText
-            displayName="Font"
+          <InputSelect
+            displayName="Font Family"
             name="fontFamily"
             theme={theme}
             value={shape.fontFamily}
-            validator="isAlphanumeric"
-            valueChanged={inputValueChanged} />
+            options={Typefaces}
+            onChange={inputValueChanged} />
         </div>
         <div className="input-container input-container-half">
           <InputText
