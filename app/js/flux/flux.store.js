@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 import assign from 'object-assign';
 import dispatcher from './flux.dispatcher';
-import _ from 'lodash';
+import {isUndefined, merge} from 'lodash';
 
 const CHANGE_EVENT = 'CHANGE_EVENT';
 
@@ -17,7 +17,7 @@ export default class Store extends EventEmitter {
   }
 
   setState(sender) {
-    this.state = _.extend(this.state, sender);
+    this.state = merge(this.state, sender);
   }
 
   emitChange() {
@@ -37,7 +37,7 @@ export default class Store extends EventEmitter {
       var action = payload.action;
       var promise = events[action.actionType];
 
-      if (!_.isUndefined(promise)) {
+      if (!isUndefined(promise)) {
         promise.apply(this, [payload]).then(() => {
           this.emitChange();
         });

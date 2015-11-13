@@ -18,13 +18,19 @@ export default class Document extends AuthComponent {
 
   constructor(props, context) {
     super(props);
+
     this.dataChanged = this.dataChanged.bind(this);
-    this.store = DocumentStore;
-    this.state = this.store.getState();
+    this.state = {
+      doc: DocumentStore.getDocument(),
+      selectedShape: null,
+      showInspector: false,
+      isPdfModalOpen: false,
+      zoom: 1.0
+    };
   }
 
   componentWillMount() {
-    this.store.addChangeListener(this.dataChanged);
+    DocumentStore.addChangeListener(this.dataChanged);
   }
 
   componentDidMount() {
@@ -32,8 +38,8 @@ export default class Document extends AuthComponent {
   }
 
   componentWillUnmount() {
-    this.store.clearState();
-    this.store.removeChangeListener(this.dataChanged);
+    DocumentStore.resetDocument();
+    DocumentStore.removeChangeListener(this.dataChanged);
     document.title = 'Publications';
   }
 
@@ -99,7 +105,7 @@ export default class Document extends AuthComponent {
   }
 
   dataChanged() {
-    this.setState(this.store.getState());
+    this.setState({doc: DocumentStore.getDocument()});
     document.title = `Publications — ${this.state.doc.get('name')}`;
   }
 
@@ -112,8 +118,7 @@ export default class Document extends AuthComponent {
   }
 
   updateDocument(sender) {
-    this.store.state.doc = sender;
-    this.setState({doc: sender});
+    DocumentActions.update(sender);
   }
 
   updateShape(sender) {
@@ -123,7 +128,7 @@ export default class Document extends AuthComponent {
   }
 
   save() {
-    DocumentActions.update(this.props.params.id);
+    DocumentActions.put(this.props.params.id);
   }
 
   addNewShape(type) {

@@ -1,10 +1,10 @@
 import AuthComponent from '../../core/auth-component';
-import DocumentsStore from '../../stores/documents.store';
 import React, {Component, PropTypes} from 'react';
 
 import DocumentsNavbar from './documents.navbar';
 import DocumentItem from './document.item';
 import NewDocumentModal from './documents.new.modal';
+import DocumentStore from '../../stores/document.store';
 import UserStore from '../../stores/user.store';
 
 import DocumentActions from '../../actions/document.actions';
@@ -15,13 +15,17 @@ export default class Documents extends AuthComponent {
     super(props);
     this.loginStateChanged = this.loginStateChanged.bind(this);
     this.dataChanged = this.dataChanged.bind(this);
-    this.store = DocumentsStore;
-    this.state = this.store.getState();
+
+    this.state = {
+      documents: [],
+      selectedDocument: null,
+      isNewDocModalOpen: false
+    };
   }
 
   componentWillMount() {
     UserStore.addChangeListener(this.loginStateChanged);
-    this.store.addChangeListener(this.dataChanged);
+    DocumentStore.addChangeListener(this.dataChanged);
   }
 
   componentDidMount() {
@@ -31,8 +35,8 @@ export default class Documents extends AuthComponent {
 
   componentWillUnmount() {
     UserStore.removeChangeListener(this.loginStateChanged);
-    this.store.setSelectedDocument(null);
-    this.store.removeChangeListener(this.dataChanged);
+    DocumentStore.removeChangeListener(this.dataChanged);
+    this.setState({selectedDocument: null});
     document.title = 'Publications';
   }
 
@@ -70,7 +74,7 @@ export default class Documents extends AuthComponent {
 
   updateSelectedDocument(sender, event) {
     if (!!event) event.preventDefault();
-    this.store.setSelectedDocument(sender);
+    this.setState({selectedDocument: sender});
   }
 
   loginStateChanged() {
@@ -80,11 +84,16 @@ export default class Documents extends AuthComponent {
   }
 
   dataChanged() {
-    this.setState(this.store.getState());
+    this.setState({
+      documents: DocumentStore.getDocuments(),
+      isNewDocModalOpen: false
+    });
   }
 
   toggleNewDocumentModal() {
-    this.store.toggleNewDocumentModal();
+    this.setState({
+      isNewDocModalOpen: !this.state.isNewDocModalOpen
+    });
   }
 
   createNewDocument(options) {
@@ -96,7 +105,7 @@ export default class Documents extends AuthComponent {
   }
 
   editDocument() {
-    let selectedDocument = this.store.state.selectedDocument;
+    let selectedDocument = this.state.selectedDocument;
 
     if (selectedDocument) {
       this.context.router.transitionTo('document-edit', {id: selectedDocument.get('_id')});
@@ -104,7 +113,7 @@ export default class Documents extends AuthComponent {
   }
 
   deleteDocument() {
-    let selectedDocument = this.store.state.selectedDocument;
+    let selectedDocument = this.state.selectedDocument;
 
     if (!!selectedDocument) {
       DocumentActions.remove(selectedDocument);

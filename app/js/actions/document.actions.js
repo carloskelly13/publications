@@ -3,6 +3,7 @@ import dispatcher from '../flux/flux.dispatcher';
 const DocumentActions = {
   GET: 'GET_DOCUMENT',
   UPDATE: 'UPDATE_DOCUMENT',
+  PUT: 'PUT_DOCUMENT',
   LIST: 'LIST_DOCUMENTS',
   REMOVE: 'REMOVE_DOCUMENT',
   CREATE: 'CREATE_DOCUMENT',
@@ -15,10 +16,17 @@ const DocumentActions = {
     });
   },
 
-  update(id) {
+  put(id) {
+    dispatcher.handleViewAction({
+      actionType: DocumentActions.PUT,
+      data: {id}
+    });
+  },
+
+  update(doc) {
     dispatcher.handleViewAction({
       actionType: DocumentActions.UPDATE,
-      data: {id}
+      data: {doc}
     });
   },
 
