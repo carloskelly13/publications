@@ -8,33 +8,31 @@ import InspectorShapeText from './inspector.shape.text';
 
 export default class InspectorShape extends Component {
   render() {
-    let panels = '';
-
-    if (this.props.shape.type === 'text') {
-      panels = (
-        <InspectorShapeText
-          inputValueChanged={e => this.inputValueChanged(e)}
-          {...this.props} />
-      );
-    } else {
-      panels = (
-        <div>
-          <InspectorShapeColor
-            inputValueChanged={e => this.inputValueChanged(e)}
-            {...this.props} />
-          <InspectorShapeBorder
-            inputValueChanged={e => this.inputValueChanged(e)}
-            {...this.props} />
-        </div>
-      );
-    }
-
     return (
       <div className="inspector-pane inspector-pane-document">
         <InspectorShapeMetrics
           inputValueChanged={e => this.inputValueChanged(e)}
           {...this.props} />
-        {panels}
+        { (() => {
+          if (this.props.shape.type === 'text') {
+            return (
+              <InspectorShapeText
+                inputValueChanged={e => this.inputValueChanged(e)}
+                {...this.props} />
+            );
+          } else {
+            return (
+              <div>
+                <InspectorShapeColor
+                  inputValueChanged={e => this.inputValueChanged(e)}
+                  {...this.props} />
+                <InspectorShapeBorder
+                  inputValueChanged={e => this.inputValueChanged(e)}
+                  {...this.props} />
+              </div>
+            );
+          }
+        })() }
       </div>
     );
   }

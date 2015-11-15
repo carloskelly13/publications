@@ -30,6 +30,16 @@ export default class DocumentNavbar extends Component {
           <button className="button button-icon" onClick={this.props.changeZoom.bind(this, 'zoom-out')}>
             <span className="icon icon-zoom-out"></span>
           </button>
+          <div className="spacer"></div>
+          <button disabled={!this.props.selectedShape} className="button button-icon" onClick={this.props.clipboardAction.bind(this, 'cut')}>
+            <span className="icon icon-cut"></span>
+          </button>
+          <button disabled={!this.props.selectedShape} className="button button-icon" onClick={this.props.clipboardAction.bind(this, 'copy')}>
+            <span className="icon icon-copy"></span>
+          </button>
+          <button disabled={!this.props.clipboard} className="button button-icon" onClick={this.props.clipboardAction.bind(this, 'paste')}>
+            <span className="icon icon-paste"></span>
+          </button>
         </div>
         <div className="navbar-controls-right">
           <button className="button" onClick={this.props.toggleInspector}>Inspector</button>
