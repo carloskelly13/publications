@@ -1,16 +1,15 @@
 import React, {Component, PropTypes, addons} from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'lodash';
+import InputText from '../ui/input.text';
 
 export default class NewDocumentModal extends Component {
   constructor(props, context) {
     super(props);
     this.state = {
       form: {
-        name:  null,
-        width: null,
-        height: null,
-        valid: false
+        name:  'New Document',
+        width: 6.0,
+        height: 4.0
       }
     };
   }
@@ -18,69 +17,69 @@ export default class NewDocumentModal extends Component {
   render() {
     if (this.props.isOpen) {
       return (
-        <ReactCSSTransitionGroup
-          transitionName="modal-anim"
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}>
-          <div className="modal-cover">
-            <div className="modal modal-new-document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1>Create New Document</h1>
-                  <h3>Specify the name, width and height of the new blank document.</h3>
-                </div>
-                <div className="modal-inner-content">
-                  <form onSubmit={e => this.handleSubmit(e)}>
-                    <input type="text"
-                      name="name"
-                      value={this.state.form.name}
-                      onChange={e => this.validate(e)} />
-                    <input type="text"
+        <div className="modal-cover">
+          <div className="modal modal-new-document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1>Create New Document</h1>
+                <h3>Specify the name, width and height of your new document.</h3>
+              </div>
+              <div className="modal-inner-content">
+                <form onSubmit={::this.handleSubmit}>
+                  <InputText
+                    displayName="Name"
+                    name="name"
+                    theme="light"
+                    validator='isLength'
+                    validatorOptions={1}
+                    value={this.state.form.name}
+                    valueChanged={::this.formValueChanged} />
+                  <div className="input-container input-container-half">
+                    <InputText
+                      displayName="Width"
                       name="width"
+                      theme="light"
+                      type="number"
+                      unit="in"
+                      validator='isFloat'
+                      validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
                       value={this.state.form.width}
-                      onChange={e => this.validate(e)} />
-                    <input type="text"
+                      valueChanged={::this.formValueChanged} />
+                  </div>
+                  <div className="input-container input-container-half">
+                    <InputText
+                      displayName="Height"
                       name="height"
+                      theme="light"
+                      type="number"
+                      unit="in"
+                      validator='isFloat'
+                      validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
                       value={this.state.form.height}
-                      onChange={e => this.validate(e)} />
-                    <button type="submit" disabled={!this.state.form.valid}>
-                      Create Document
+                      valueChanged={::this.formValueChanged} />
+                  </div>
+                  <div className="modal-form-buttons">
+                    <button className="button" type="submit">
+                      Create
                     </button>
-                    <button type="button" onClick={this.props.toggleNewDocumentModal}>
-                      Close
+                    <button className="button button-destructive" type="button" onClick={this.props.toggleNewDocumentModal}>
+                      Cancel
                     </button>
-                  </form>
-                </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
-        </ReactCSSTransitionGroup>
-      )
+        </div>
+      );
     } else {
-      return (
-        <ReactCSSTransitionGroup 
-          transitionName="modal-anim"
-          transitionEnterTimeout={0}
-          transitionLeaveTimeout={0} />
-      )
+      return (<div/>);
     }
   }
 
-  validate(event) {
+  formValueChanged(event) {
     this.state.form[event.target.name] = event.target.value;
-    this.state.form.valid = this.isFormValid();
     this.setState({form: this.state.form});
-  }
-
-  isFormValid() {
-    let
-      width = parseFloat(this.state.form.width),
-      height = parseFloat(this.state.form.height);
-
-    return (
-      _.isString(this.state.form.name) &&
-      _.isNumber(width) && !_.isNaN(width) && width > 1.0 &&
-      _.isNumber(height) && !_.isNaN(height) && height > 1.0);
   }
 
   handleSubmit(event) {

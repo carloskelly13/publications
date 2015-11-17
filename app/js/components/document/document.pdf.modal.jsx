@@ -19,6 +19,7 @@ export default class DocumentPdfViewModal extends Component {
             pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink);
 
           pdfLink.href = url;
+          pdfLink.innerHTML = 'Download';
           pdfLink.setAttribute('download', `${this.props.doc.name}.pdf`);
           this.state.currentUrl = url;
         });
@@ -28,29 +29,28 @@ export default class DocumentPdfViewModal extends Component {
   render() {
     if (this.props.isOpen) {
       return (
-        <ReactCSSTransitionGroup
-          transitionName="modal-anim"
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}>
-          <div className="modal-cover">
-            <div className="modal modal-new-document">
-              <div className="modal-content">
-                Pdf Me Yo!
-                <a href="#" target="_blank" ref="pdfLink">Download My Pdf</a>
-                <button type="button" onClick={::this.dismiss}>
+        <div className="modal-cover">
+          <div className="modal modal-pdf">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1>Export PDF</h1>
+                <h3>{this.props.doc.get('name')} has been exported to PDF.</h3>
+              </div>
+              <div className="modal-form-buttons">
+                <a className="button" role="button" href="#" target="_blank" ref="pdfLink">
+                  Exporting…
+                </a>
+                <button className="button" type="button" onClick={::this.dismiss}>
                   Close
                 </button>
               </div>
             </div>
           </div>
-        </ReactCSSTransitionGroup>
+        </div>
       )
     } else {
       return (
-        <ReactCSSTransitionGroup
-          transitionName="modal-anim"
-          transitionEnterTimeout={0}
-          transitionLeaveTimeout={0} />
+        <div />
       )
     }
   }

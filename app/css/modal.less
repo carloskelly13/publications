@@ -28,10 +28,16 @@
   right: 0;
   z-index: 9600;
   top: 0;
+  overflow: hidden;
 
   &.modal-new-document {
     height: 300px;
-    width: 600px;
+    width: 360px;
+  }
+
+  &.modal-pdf {
+    height: 180px;
+    width: 360px;
   }
 
   .modal-content {
@@ -41,14 +47,12 @@
     width: inherit;
 
     .modal-header {
-      background: hsla(0, 0%, 0%, 0.1);
-      border-radius: 10px 10px 0 0;
-      padding: 20px;
+      padding: 1.25em 1.25em 0.25em;
 
       h1 {
         font-size: 20px;
         font-weight: 500;
-        margin: 0;
+        margin: 0 0 5px 0;
       }
 
       h3 {
@@ -59,7 +63,28 @@
     }
 
     .modal-inner-content {
-      padding: 20px 20px 0;
+      padding: 20px 1em 0;
+    }
+
+    .modal-form-buttons {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      right: 0;
+
+      .button {
+        width: 50%;
+        border-right: 1px solid #999;
+        border-top: 1px solid #999;
+        margin: 0;
+        height: 50px;
+        line-height: 48px;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
     }
   }
 }
@@ -68,7 +93,7 @@
   .modal {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    background-color: hsla(0, 0%, 100%, 0.85);
+    background-color: hsla(0, 0%, 100%, 0.7);
   }
 }
 
