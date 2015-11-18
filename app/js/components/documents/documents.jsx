@@ -1,11 +1,13 @@
 import AuthComponent from '../../core/auth-component';
 import React, {Component, PropTypes} from 'react';
+import {select, contains, isEmpty} from 'lodash';
 
 import DocumentsNavbar from './documents.navbar';
 import DocumentItem from './document.item';
 import NewDocumentModal from './documents.new.modal';
 import DocumentStore from '../../stores/document.store';
 import UserStore from '../../stores/user.store';
+import InputText from '../ui/input.text';
 
 import DocumentActions from '../../actions/document.actions';
 import UserActions from '../../actions/user.actions';
@@ -18,6 +20,7 @@ export default class Documents extends AuthComponent {
 
     this.state = {
       documents: [],
+      searchKeyword: '',
       selectedDocument: null,
       isNewDocModalOpen: false
     };
@@ -41,31 +44,43 @@ export default class Documents extends AuthComponent {
   }
 
   render() {
+    let documentItems = select(this.state.documents, doc => {
+      if (isEmpty(this.state.searchKeyword)) {
+        return true;
+      } else {
+        return contains(doc.get('name').toLowerCase(), this.state.searchKeyword.toLowerCase());
+      }
+    }).map(doc => {
+      return (
+        <DocumentItem
+          key={doc.get('_id')}
+          doc={doc}
+          editDocument={::this.editDocument}
+          selectedDocument={this.state.selectedDocument}
+          updateSelectedDocument={::this.updateSelectedDocument} />
+      );
+    });
+
     return (
       <div>
         <NewDocumentModal
-          createNewDocument={o => this.createNewDocument(o)}
-          toggleNewDocumentModal={e => this.toggleNewDocumentModal(e)}
+          createNewDocument={::this.createNewDocument}
+          toggleNewDocumentModal={::this.toggleNewDocumentModal}
           isOpen={this.state.isNewDocModalOpen} />
         <DocumentsNavbar
           documentIsSelected={this.state.selectedDocument !== null}
-          editDocument={e => this.editDocument(e)}
-          deleteDocument={e => this.deleteDocument(e)}
-          createNewDocument={e => this.toggleNewDocumentModal(e)}
+          editDocument={::this.editDocument}
+          deleteDocument={::this.deleteDocument}
+          createNewDocument={::this.toggleNewDocumentModal}
           logOut={e => this.logOut(e)} />
         <div className="app-content">
+          <input
+            className="input-text-search"
+            value={this.state.searchKeyword}
+            onChange={::this.searchKeywordChanged}
+            placeholder="Search for Documents" />
           <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
-            {
-              this.state.documents.map(doc => {
-                return (
-                  <DocumentItem
-                    key={doc.get('_id')}
-                    doc={doc}
-                    editDocument={::this.editDocument}
-                    selectedDocument={this.state.selectedDocument}
-                    updateSelectedDocument={::this.updateSelectedDocument} />);
-              })
-            }
+            {documentItems}
           </ul>
         </div>
       </div>
@@ -81,6 +96,10 @@ export default class Documents extends AuthComponent {
     if (!UserStore.isAuthenticated()) {
       this.context.router.transitionTo('login');
     }
+  }
+
+  searchKeywordChanged(event) {
+    this.setState({searchKeyword: event.target.value});
   }
 
   dataChanged() {
