@@ -1,62 +1,61 @@
-import {without} from 'lodash';
-import axios from 'axios';
-import {Map} from 'immutable';
-import {Promise} from 'es6-promise';
+import {without} from 'lodash'
+import {Map} from 'immutable'
+import {Promise} from 'es6-promise'
+import fetch from 'isomorphic-fetch'
 
-import DocumentActions from '../actions/document.actions';
-import ShapeFactory from '../core/shape.factory';
-import Store from '../flux/flux.store';
+import DocumentActions from '../actions/document.actions'
+import ShapeFactory from '../core/shape.factory'
+import Store from '../flux/flux.store'
 
 class DocumentStore extends Store {
 
   constructor() {
-    super();
+    super()
 
-    let events = {};
-    events[DocumentActions.GET] = this.get;
-    events[DocumentActions.PUT] = this.put;
-    events[DocumentActions.PDF] = this.pdf;
-    events[DocumentActions.UPDATE] = this.update;
-    events[DocumentActions.LIST] = this.list;
-    events[DocumentActions.REMOVE] = this.remove;
-    events[DocumentActions.CREATE] = this.create;
+    let events = {}
+    events[DocumentActions.GET] = this.get
+    events[DocumentActions.PUT] = this.put
+    events[DocumentActions.PDF] = this.pdf
+    events[DocumentActions.UPDATE] = this.update
+    events[DocumentActions.LIST] = this.list
+    events[DocumentActions.REMOVE] = this.remove
+    events[DocumentActions.CREATE] = this.create
 
-    this.register(events);
-    this.resetDocument();
-    this.documents = [];
+    this.register(events)
+    this.resetDocument()
+    this.documents = []
   }
 
   resetDocument() {
-    this.doc = Map({id: '', name: '', width: 0, height: 0, shapes: []});
+    this.doc = Map({id: '', name: '', width: 0, height: 0, shapes: []})
   }
 
   getDocument() {
-    return this.doc;
+    return this.doc
   }
 
   getDocuments() {
-    return this.documents;
+    return this.documents
   }
 
   update(payload) {
     return new Promise(resolve => {
-      this.doc = payload.action.data.doc;
-      resolve();
+      this.doc = payload.action.data.doc
+      resolve()
     });
   }
 
   list() {
-    let token = sessionStorage.getItem('access-token') || '';
+    const token = sessionStorage.getItem('access-token') || ''
 
-    return axios({
-      url: 'http://api.publicationsapp.com/documents',
+    return fetch('http://api.publicationsapp.com/documents', {
       method: 'get',
       headers: {
         'Authorization' : `Bearer ${token}`
       }
-    }).then(responseObj => {
-      this.documents = responseObj.data.map(doc => Map(doc));
-    });
+    })
+    .then(response => response.json())
+    .then(json => this.documents = json.map(doc => Map(doc)))
   }
 
   remove(payload) {
@@ -64,82 +63,84 @@ class DocumentStore extends Store {
       doc = payload.action.data.doc,
       token = sessionStorage.getItem('access-token') || '';
 
-    return axios({
-      url: `http://api.publicationsapp.com/documents/${doc.get('_id')}`,
+    return fetch(`http://api.publicationsapp.com/documents/${doc.get('_id')}`, {
       method: 'delete',
       headers: {
         'Authorization' : `Bearer ${token}`
       }
-    }).then(responseObj => {
-      this.documents = without(this.documents, doc);
-    });
+    })
+    .then(() => this.documents = without(this.documents, doc))
   }
 
   create(payload) {
     let
       doc = payload.action.data.doc,
-      token = sessionStorage.getItem('access-token') || '';
+      token = sessionStorage.getItem('access-token') || ''
 
-    return axios({
-      url: 'http://api.publicationsapp.com/documents',
-      data: doc,
+    return fetch('http://api.publicationsapp.com/documents', {
       method: 'post',
       headers: {
-        'Authorization' : `Bearer ${token}`
-      }
-    }).then(responseObj => {
-      this.documents.push(Map(responseObj.data));
-    });
+        'Authorization' : `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(doc)
+    })
+    .then(response => response.json())
+    .then(json => this.documents.push(Map(json)))
   }
 
   get(payload) {
     let
       id = payload.action.data.id,
-      token = sessionStorage.getItem('access-token') || '';
+      token = sessionStorage.getItem('access-token') || ''
 
-    return axios({
-      url: `http://api.publicationsapp.com/documents/${id}`,
+    return fetch(`http://api.publicationsapp.com/documents/${id}`, {
       method: 'get',
       headers: {
         'Authorization' : `Bearer ${token}`
       }
-    }).then(responseObj => this.doc = Map(responseObj.data));
+    })
+    .then(response => response.json())
+    .then(json => this.doc = Map(json))
   }
 
   put(payload) {
     let
       id = payload.action.data.id,
-      token = sessionStorage.getItem('access-token') || '';
-
-    return axios({
-      url: `http://api.publicationsapp.com/documents/${id}`,
-      method: 'put',
-      data: {
+      token = sessionStorage.getItem('access-token') || '',
+      doc = {
         name: this.doc.get('name'),
         width: this.doc.get('width'),
         height: this.doc.get('height'),
         shapes: this.doc.get('shapes')
-      },
-      headers: {
-        'Authorization' : `Bearer ${token}`
       }
-    });
+
+    return fetch(`http://api.publicationsapp.com/documents/${id}`, {
+      method: 'put',
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(doc)
+    })
   }
 
   pdf(id) {
-    let
-      token = sessionStorage.getItem('access-token') || '',
-      request = axios({
-        url: `http://api.publicationsapp.com/documents/${id}/pdf`,
-        method: 'get',
-        headers: {
-          'Authorization' : `Bearer ${token}`
-        },
-        responseType: 'arraybuffer'
-      });
-
-    return request;
+    // let
+    //   token = sessionStorage.getItem('access-token') || '',
+    //   request = axios({
+    //     url: `http://api.publicationsapp.com/documents/${id}/pdf`,
+    //     method: 'get',
+    //     headers: {
+    //       'Authorization' : `Bearer ${token}`
+    //     },
+    //     responseType: 'arraybuffer'
+    //   });
+    //
+    // return request;
   }
 }
 
-export default new DocumentStore();
+export default new DocumentStore()
