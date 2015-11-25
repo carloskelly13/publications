@@ -25,6 +25,13 @@ module.exports = {
         loader: 'babel-loader?optional[]=runtime&stage=0'
       },
       {
+        test: /\.jsx?$/,
+        include: [
+          path.resolve(__dirname, 'app/js')
+        ],
+        loader: 'eslint-loader'
+      },
+      {
         test: /\.less$/,
         loader: "style!css!less"
       },

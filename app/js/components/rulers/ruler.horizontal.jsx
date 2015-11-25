@@ -44,7 +44,7 @@ export default class RulerHorizontal extends Component {
       <div
         ref="rulerContainer"
         style={{
-          left: "-1px",
+          left: '-1px',
           width: `${(doc.get('width') * zoom * dpi) + 26}px`
         }}
         className="ruler ruler-horizontal">
