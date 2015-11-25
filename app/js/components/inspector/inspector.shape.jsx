@@ -1,10 +1,11 @@
 import React, {Component, PropTypes} from 'react';
-import _ from 'lodash';
+import {omit} from 'lodash';
 
 import InspectorShapeBorder from './inspector.shape.border';
 import InspectorShapeColor from './inspector.shape.color';
 import InspectorShapeMetrics from './inspector.shape.metrics';
 import InspectorShapeText from './inspector.shape.text';
+import InspectorShapeLayer from './inspector.shape.layer';
 
 export default class InspectorShape extends Component {
   render() {
@@ -25,8 +26,11 @@ export default class InspectorShape extends Component {
               <div>
                 <InspectorShapeColor
                   inputValueChanged={e => this.inputValueChanged(e)}
-                  {...this.props} />
+                  {...omit(this.props, ['updateDocument', 'doc'])} />
                 <InspectorShapeBorder
+                  inputValueChanged={e => this.inputValueChanged(e)}
+                  {...omit(this.props, ['updateDocument', 'doc'])} />
+                <InspectorShapeLayer
                   inputValueChanged={e => this.inputValueChanged(e)}
                   {...this.props} />
               </div>

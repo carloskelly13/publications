@@ -25,8 +25,10 @@ export default class InspectorBase extends Component {
     if (documentLoaded && !!selectedShape) {
       currentPane = (
         <InspectorShape
+          doc={doc}
           shape={selectedShape}
           theme={this.state.theme}
+          updateDocument={updateDocument}
           updateShape={updateShape}
           />
       );
