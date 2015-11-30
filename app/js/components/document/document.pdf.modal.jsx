@@ -13,16 +13,16 @@ export default class DocumentPdfViewModal extends Component {
   componentDidUpdate() {
     if (this.props.isOpen) {
       DocumentStore.pdf(this.props.doc.get('_id'))
-        .then(responseObj => {
-          let blob = new Blob([responseObj.data], {type: 'application/pdf'}),
+        .then(blob => {
+          const
             url = URL.createObjectURL(blob),
-            pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink);
+            pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink)
 
-          pdfLink.href = url;
-          pdfLink.innerHTML = 'Download';
-          pdfLink.setAttribute('download', `${this.props.doc.name}.pdf`);
-          this.state.currentUrl = url;
-        });
+          pdfLink.href = url
+          pdfLink.innerHTML = 'Download'
+          pdfLink.setAttribute('download', `${this.props.doc.get('name')}.pdf`)
+          this.state.currentUrl = url
+        })
     }
   }
 

@@ -128,18 +128,15 @@ class DocumentStore extends Store {
   }
 
   pdf(id) {
-    // let
-    //   token = sessionStorage.getItem('access-token') || '',
-    //   request = axios({
-    //     url: `http://api.publicationsapp.com/documents/${id}/pdf`,
-    //     method: 'get',
-    //     headers: {
-    //       'Authorization' : `Bearer ${token}`
-    //     },
-    //     responseType: 'arraybuffer'
-    //   });
-    //
-    // return request;
+    const token = sessionStorage.getItem('access-token') || ''
+
+    return fetch(`http://api.publicationsapp.com/documents/${id}/pdf`, {
+      method: 'get',
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    })
+    .then(response => response.blob())
   }
 }
 
