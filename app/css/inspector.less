@@ -48,10 +48,13 @@
 
       .row {
         padding: 0.33em;
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
 
         &:hover {
           background: hsla(0, 0%, 0%, 0.10);
-          border-bottom-color: transparent;
+          border-bottom: 1px solid #aaa;
+          border-top: 1px solid #aaa;
         }
       }
 
@@ -61,7 +64,7 @@
 
       .layer-item-icon {
         border-radius: 2px;
-        margin: 3px 0.5em 0;
+        margin: 3px 8px 0;
         width: 20px; height: 20px;
 
         &.layer-item-icon-ellipse {
@@ -86,6 +89,7 @@
         display: block;
         color: #555;
         font-size: 11px;
+        line-height: 26px;
       }
     }
   }

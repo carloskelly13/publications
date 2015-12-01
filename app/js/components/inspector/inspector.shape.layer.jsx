@@ -49,11 +49,14 @@ export default class InspectorShapeLayer extends Component {
 
   render() {
     return (
-      <div>
-        <button onClick={::this.moveToFront}>Move to Front</button>
-        <button onClick={::this.moveToBack}>Move to Back</button>
-        <button onClick={::this.moveForwards}>Move Forwards</button>
-        <button onClick={::this.moveBackwards}>Move Backwards</button>
+      <div className="inspector-content-section">
+        <h1>Move</h1>
+        <div>
+          <button className="button button-full" onClick={::this.moveToFront}>Front</button>
+          <button className="button button-full" onClick={::this.moveToBack}>Back</button>
+          <button className="button button-full" onClick={::this.moveForwards}>Forwards</button>
+          <button className="button button-full" onClick={::this.moveBackwards}>Backwards</button>
+        </div>
       </div>
     )
   }

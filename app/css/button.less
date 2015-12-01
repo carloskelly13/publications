@@ -1,6 +1,4 @@
 .button {
-//   .animation(all, 150ms);
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-box-sizing: border-box;
@@ -61,6 +59,25 @@
 
   .icon {
     opacity: 0.75;
+  }
+
+  &.button-full {
+    border-radius: 2px;
+    padding: 0.25em 0;
+    width: 46%;
+    border: 1px solid #aaa;
+    font-size: 14px;
+    margin: 2%;
+
+    &:hover, &:active {
+      background: #aaa;
+      color: #fff;
+    }
+
+    &:active {
+      border-color: #999;
+      background: #999;
+    }
   }
 }
 
