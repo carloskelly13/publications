@@ -30,6 +30,7 @@ export default class InspectorBase extends Component {
           theme={this.state.theme}
           updateDocument={updateDocument}
           updateShape={updateShape}
+          updateSelectedCanvasObject={updateSelectedCanvasObject}
           />
       );
 
