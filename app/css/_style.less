@@ -23,6 +23,7 @@
   background: @color-active;
 }
 
+@appFont: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
 
 html, body {
   -webkit-font-smoothing: antialiased;
@@ -30,12 +31,12 @@ html, body {
   background: #e5e5e5;
   color: #424242;
   height: 100%;
-  font-family: -apple-system, 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: @appFont;
   font-weight: 400;
   font-size: 15px;
   text-rendering: optimizeLegibility;
 }
 
 button, input {
-  font-family: -apple-system, 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: @appFont;
 }
