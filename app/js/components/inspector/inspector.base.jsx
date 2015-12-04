@@ -1,12 +1,13 @@
-import React, {Component, PropTypes} from 'react';
-
-import InspectorDocument from './inspector.document';
-import InspectorShape from './inspector.shape';
+import React, {Component, PropTypes} from 'react'
+import {isEmpty} from 'lodash'
+import InspectorDocument from './inspector.document'
+import InspectorShape from './inspector.shape'
+import InspectorBreadcrumbBar from './inspector.breadcrumb'
 
 export default class InspectorBase extends Component {
-  constructor(props, context) {
-    super(props);
-    this.state = {theme: 'light'};
+  constructor() {
+    super(...arguments)
+    this.state = {theme: 'light'}
   }
 
   render() {
@@ -20,7 +21,7 @@ export default class InspectorBase extends Component {
         updateShape,
         updateSelectedCanvasObject
       } = this.props,
-      documentLoaded = !_.isEmpty(doc.get('_id'));
+      documentLoaded = !isEmpty(doc.get('_id'))
 
     if (documentLoaded && !!selectedShape) {
       currentPane = (
@@ -32,7 +33,7 @@ export default class InspectorBase extends Component {
           updateShape={updateShape}
           updateSelectedCanvasObject={updateSelectedCanvasObject}
           />
-      );
+      )
 
     } else if (documentLoaded & !selectedShape) {
       currentPane = (
@@ -42,13 +43,16 @@ export default class InspectorBase extends Component {
           updateDocument={updateDocument}
           updateSelectedCanvasObject={updateSelectedCanvasObject}
           />
-      );
+      )
     }
 
     return (
       <div className={`inspector-container ${showInspector ? 'inspector-container-visible' : ''} ${this.state.theme}`}>
+        <InspectorBreadcrumbBar
+          shape={selectedShape}
+          updateSelectedCanvasObject={this.props.updateSelectedCanvasObject}/>
         {currentPane}
       </div>
-    );
+    )
   }
 }

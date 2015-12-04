@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import {omit} from 'lodash'
 
-import InspectorShapeBreadcrumbBar from './inspector.shape.breadcrumb'
 import InspectorShapeBorder from './inspector.shape.border'
 import InspectorShapeColor from './inspector.shape.color'
 import InspectorShapeMetrics from './inspector.shape.metrics'
@@ -42,8 +41,6 @@ export default class InspectorShape extends Component {
 
     return (
       <div className="inspector-pane inspector-pane-document">
-        <InspectorShapeBreadcrumbBar
-          updateSelectedCanvasObject={this.props.updateSelectedCanvasObject}/>
         <InspectorShapeMetrics
           inputValueChanged={::this.inputValueChanged}
           {...this.props} />

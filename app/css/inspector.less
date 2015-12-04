@@ -38,6 +38,26 @@
     border-bottom: 1px solid hsla(0, 0%, 0%, 0.33);
   }
 
+  .breadcrumb-bar {
+    padding: 0.67em 0.75em 0.5em 0.75em;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.25);
+    font-size: 13px;
+    font-weight: 600;
+
+    .breadcrumb-bar-root-element {
+      color: #999;
+
+      &.active {
+        cursor: pointer;
+
+        &:hover, &:active {
+          color: @color-active;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
   .inspector-layers {
     list-style: none;
     margin: 0;
