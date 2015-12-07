@@ -5,10 +5,16 @@ export default class DocumentNavbar extends Component {
 
     return (
       <div className="navbar-container">
-        <div className="navbar-logo">
-          <div className="navbar-logo-icon"></div>
+        <div className="navbar-controls-left">
+          <div className="navbar-logo">
+            <div className="navbar-logo-icon"></div>
+          </div>
+          <button className="button" onClick={this.props.toggleInspector}>Inspector</button>
+          <button className="button" onClick={this.props.save}>Save</button>
+          <button className="button" onClick={this.props.downloadPdf}>PDF</button>
+          <button className="button" onClick={this.props.viewAllDocuments}>All Documents</button>
         </div>
-        <div className="navbar-controls-center">
+        <div className="navbar-controls-right">
           <button className="button button-icon" onClick={this.props.addNewShape.bind(this, 'rect')}>
             <span className="icon icon-rect"></span>
           </button>
@@ -36,12 +42,6 @@ export default class DocumentNavbar extends Component {
           <button disabled={!this.props.clipboard} className="button button-icon" onClick={this.props.clipboardAction.bind(this, 'paste')}>
             <span className="icon icon-paste"></span>
           </button>
-        </div>
-        <div className="navbar-controls-right">
-          <button className="button" onClick={this.props.toggleInspector}>Inspector</button>
-          <button className="button" onClick={this.props.save}>Save</button>
-          <button className="button" onClick={this.props.downloadPdf}>PDF</button>
-          <button className="button" onClick={this.props.viewAllDocuments}>All Documents</button>
         </div>
       </div>
     );

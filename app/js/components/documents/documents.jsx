@@ -72,13 +72,10 @@ export default class Documents extends AuthComponent {
           editDocument={::this.editDocument}
           deleteDocument={::this.deleteDocument}
           createNewDocument={::this.toggleNewDocumentModal}
-          logOut={e => this.logOut(e)} />
+          searchKeyword={this.state.searchKeyword}
+          searchKeywordChanged={::this.searchKeywordChanged}
+          logOut={::this.logOut} />
         <div className="app-content">
-          <input
-            className="input-text-search"
-            value={this.state.searchKeyword}
-            onChange={::this.searchKeywordChanged}
-            placeholder="Search for Documents" />
           <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
             {documentItems}
           </ul>
