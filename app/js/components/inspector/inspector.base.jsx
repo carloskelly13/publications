@@ -37,7 +37,7 @@ export default class InspectorBase extends Component {
             theme={this.state.theme}
             updateDocument={updateDocument}
             updateSelectedCanvasObject={updateSelectedCanvasObject}
-            />
+          />
         )
         break
 
@@ -50,7 +50,7 @@ export default class InspectorBase extends Component {
             updateDocument={updateDocument}
             updateShape={updateShape}
             updateSelectedCanvasObject={updateSelectedCanvasObject}
-            />
+          />
         )
         break
       }
@@ -58,7 +58,10 @@ export default class InspectorBase extends Component {
 
     return (
       <div className={`inspector-container ${showInspector ? 'inspector-container-visible' : ''} ${this.state.theme}`}>
-        <InspectorTabBar switchTab={::this.switchTab}/>
+        <InspectorTabBar
+          selectedTab={this.state.tab}
+          switchTab={::this.switchTab}
+        />
         {currentPane}
       </div>
     )
