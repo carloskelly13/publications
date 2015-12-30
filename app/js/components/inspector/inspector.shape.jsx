@@ -9,42 +9,62 @@ import InspectorShapeLayer from './inspector.shape.layer'
 
 export default class InspectorShape extends Component {
   render() {
-    const {type} = this.props.shape
-    let inspectorSections = null
+    let inspectorContent = null
 
-    switch (type) {
-      case 'text':
-      inspectorSections = (
-        <InspectorShapeText
+    if (this.props.shape) {
+      const {type} = this.props.shape
+      const shapeMetricsContent = (
+        <InspectorShapeMetrics
           inputValueChanged={::this.inputValueChanged}
           {...this.props} />
       )
-      break
 
-      case 'ellipse':
-      case 'rect':
-      inspectorSections = (
-        <div>
-          <InspectorShapeColor
-            inputValueChanged={::this.inputValueChanged}
-            {...omit(this.props, ['updateDocument', 'doc'])} />
-          <InspectorShapeBorder
-            inputValueChanged={::this.inputValueChanged}
-            {...omit(this.props, ['updateDocument', 'doc'])} />
-          <InspectorShapeLayer
+      let shapeContentSections = null
+
+      switch (type) {
+        case 'text':
+        shapeContentSections = (
+          <InspectorShapeText
             inputValueChanged={::this.inputValueChanged}
             {...this.props} />
+        )
+        break
+
+        case 'ellipse':
+        case 'rect':
+        shapeContentSections = (
+          <div>
+            <InspectorShapeColor
+              inputValueChanged={::this.inputValueChanged}
+              {...omit(this.props, ['updateDocument', 'doc'])} />
+            <InspectorShapeBorder
+              inputValueChanged={::this.inputValueChanged}
+              {...omit(this.props, ['updateDocument', 'doc'])} />
+            <InspectorShapeLayer
+              inputValueChanged={::this.inputValueChanged}
+              {...this.props} />
+          </div>
+        )
+        break
+      }
+
+      inspectorContent = (
+        <div>
+          {shapeMetricsContent}
+          {shapeContentSections}
         </div>
       )
-      break
+    } else {
+      inspectorContent = (
+        <div>
+          No Shape Selected
+        </div>
+      )
     }
 
     return (
       <div className="inspector-pane inspector-pane-document">
-        <InspectorShapeMetrics
-          inputValueChanged={::this.inputValueChanged}
-          {...this.props} />
-        {inspectorSections}
+        {inspectorContent}
       </div>
     )
   }

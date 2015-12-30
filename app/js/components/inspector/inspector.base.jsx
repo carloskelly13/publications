@@ -2,12 +2,16 @@ import React, {Component, PropTypes} from 'react'
 import {isEmpty} from 'lodash'
 import InspectorDocument from './inspector.document'
 import InspectorShape from './inspector.shape'
-import InspectorBreadcrumbBar from './inspector.breadcrumb'
+import InspectorTabBar from './inspector.tabbar'
 
 export default class InspectorBase extends Component {
   constructor() {
     super(...arguments)
-    this.state = {theme: 'light'}
+    this.state = {theme: 'light', tab: 'document'}
+  }
+
+  switchTab(sender) {
+    this.setState({tab: sender})
   }
 
   render() {
@@ -23,34 +27,38 @@ export default class InspectorBase extends Component {
       } = this.props,
       documentLoaded = !isEmpty(doc.get('_id'))
 
-    if (documentLoaded && !!selectedShape) {
-      currentPane = (
-        <InspectorShape
-          doc={doc}
-          shape={selectedShape}
-          theme={this.state.theme}
-          updateDocument={updateDocument}
-          updateShape={updateShape}
-          updateSelectedCanvasObject={updateSelectedCanvasObject}
-          />
-      )
+    if (documentLoaded) {
+      switch (this.state.tab) {
+        case 'document':
+        currentPane = (
+          <InspectorDocument
+            doc={doc}
+            shape={selectedShape}
+            theme={this.state.theme}
+            updateDocument={updateDocument}
+            updateSelectedCanvasObject={updateSelectedCanvasObject}
+            />
+        )
+        break
 
-    } else if (documentLoaded & !selectedShape) {
-      currentPane = (
-        <InspectorDocument
-          doc={doc}
-          theme={this.state.theme}
-          updateDocument={updateDocument}
-          updateSelectedCanvasObject={updateSelectedCanvasObject}
-          />
-      )
+        case 'shape':
+        currentPane = (
+          <InspectorShape
+            doc={doc}
+            shape={selectedShape}
+            theme={this.state.theme}
+            updateDocument={updateDocument}
+            updateShape={updateShape}
+            updateSelectedCanvasObject={updateSelectedCanvasObject}
+            />
+        )
+        break
+      }
     }
 
     return (
       <div className={`inspector-container ${showInspector ? 'inspector-container-visible' : ''} ${this.state.theme}`}>
-        <InspectorBreadcrumbBar
-          shape={selectedShape}
-          updateSelectedCanvasObject={this.props.updateSelectedCanvasObject}/>
+        <InspectorTabBar switchTab={::this.switchTab}/>
         {currentPane}
       </div>
     )

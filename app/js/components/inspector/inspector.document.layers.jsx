@@ -7,25 +7,28 @@ export default class InspectorDocumentLayers extends Component {
   }
 
   render() {
-    let {
+    const {
       doc,
       inputValueChanged,
       theme,
       updateSelectedCanvasObject
-    } = this.props;
+    } = this.props
 
-    let shapes = doc.get('shapes');
+    const shapes = doc.get('shapes')
 
     return (
       <div className="inspector-content-section">
         <h1>Layers</h1>
         <ul className="inspector-layers">
-          { shapes.map((shape, idx) => <InspectorDocumentLayerItem
-            key={`inspector-layer-item-${idx}`}
-            shape={shape}
-            updateSelectedCanvasObject={updateSelectedCanvasObject}/>) }
+          { shapes.map((shape, idx) => (
+            <InspectorDocumentLayerItem
+              isSelected={shape === this.props.selectedShape}
+              key={`inspector-layer-item-${idx}`}
+              shape={shape}
+              updateSelectedCanvasObject={updateSelectedCanvasObject}/>
+          )) }
         </ul>
       </div>
-    );
+    )
   }
 }

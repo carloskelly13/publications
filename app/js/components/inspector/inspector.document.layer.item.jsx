@@ -18,7 +18,9 @@ export default class InspectorDocumentLayerItem extends Component {
     )
 
     return (
-      <li onClick={::this.layerItemSelected}>
+      <li
+        className={this.props.isSelected ? 'layer-active' : null}
+        onClick={::this.layerItemSelected}>
         {
           (() => {
             switch (shape.type) {

@@ -12,6 +12,7 @@ export default class InspectorDocument extends Component {
           inputValueChanged={::this.inputValueChanged}
           {...this.props} />
         <InspectorDocumentLayers
+          selectedShape={this.props.shape}
           inputValueChanged={::this.inputValueChanged}
           updateSelectedCanvasObject={this.props.updateSelectedCanvasObject}
           {...this.props} />
