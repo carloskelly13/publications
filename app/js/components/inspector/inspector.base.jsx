@@ -18,6 +18,7 @@ export default class InspectorBase extends Component {
     let
       currentPane = '',
       {
+        addNewShape,
         doc,
         selectedShape,
         showInspector,
@@ -32,6 +33,7 @@ export default class InspectorBase extends Component {
         case 'document':
         currentPane = (
           <InspectorDocument
+            addNewShape={addNewShape}
             doc={doc}
             shape={selectedShape}
             theme={this.state.theme}

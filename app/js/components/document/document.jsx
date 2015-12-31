@@ -70,19 +70,20 @@ export default class Document extends AuthComponent {
           togglePdfDownloadModal={::this.togglePdfDownloadModal}
           isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
-          addNewShape={::this.addNewShape}
           changeZoom={::this.changeZoom}
           clipboard={this.state.clipboard}
           clipboardAction={::this.clipboardAction}
           downloadPdf={::this.togglePdfDownloadModal}
           selectedShape={this.state.selectedShape}
           save={::this.save}
+          showInspector={this.state.showInspector}
           title={this.state.doc.get('name')}
           toggleInspector={::this.toggleInspector}
           viewAllDocuments={::this.viewAllDocuments}
           zoom={this.state.zoom} />
         <div className="app-content app-content-document">
           <InspectorBase
+            addNewShape={::this.addNewShape}
             doc={this.state.doc}
             dpi={DPI}
             zoom={this.state.zoom}
@@ -107,8 +108,12 @@ export default class Document extends AuthComponent {
   }
 
   dataChanged() {
-    this.setState({doc: DocumentStore.getDocument()});
-    document.title = `Publications — ${this.state.doc.get('name')}`;
+    this.setState({
+      doc: DocumentStore.getDocument(),
+      showInspector: true
+    })
+
+    document.title = `Publications — ${this.state.doc.get('name')}`
   }
 
   updateSelectedCanvasObject(sender, event) {

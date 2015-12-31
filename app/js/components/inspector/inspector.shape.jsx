@@ -56,7 +56,8 @@ export default class InspectorShape extends Component {
       )
     } else {
       inspectorContent = (
-        <div>
+        <div className="inspector-pane inspector-pane-no-shape-selected">
+          <div className="icon icon-big-shape-frame"></div>
           No Shape Selected
         </div>
       )
@@ -70,11 +71,7 @@ export default class InspectorShape extends Component {
   }
 
   inputValueChanged(event) {
-    const {
-      shape,
-      updateShape
-    } = this.props
-
+    const {shape, updateShape} = this.props
     let updatedValue = event.target.value
 
     if (!isNaN(updatedValue)) {
