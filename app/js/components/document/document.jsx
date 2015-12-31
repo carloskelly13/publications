@@ -81,7 +81,7 @@ export default class Document extends AuthComponent {
           toggleInspector={::this.toggleInspector}
           viewAllDocuments={::this.viewAllDocuments}
           zoom={this.state.zoom} />
-        <div className="app-content" id="app-scroll-content">
+        <div className="app-content app-content-document">
           <InspectorBase
             doc={this.state.doc}
             dpi={DPI}

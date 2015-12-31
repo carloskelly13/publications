@@ -11,12 +11,12 @@ export default class RulerHorizontal extends Component {
   }
 
   componentDidMount() {
-    let scrollContainer = document.getElementById('app-scroll-content');
+    let scrollContainer = document.getElementById('svg-canvas-container');
     scrollContainer.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
-    let scrollContainer = document.getElementById('app-scroll-content');
+    let scrollContainer = document.getElementById('svg-canvas-container');
     scrollContainer.removeEventListener('scroll', this.handleScroll);
   }
 
