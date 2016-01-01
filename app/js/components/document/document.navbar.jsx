@@ -33,6 +33,9 @@ export default class DocumentNavbar extends Component {
           <button disabled={!this.props.clipboard} className="button button-icon" onClick={this.props.clipboardAction.bind(this, 'paste')}>
             <span className="icon icon-paste"></span>
           </button>
+          <button disabled={!this.props.selectedShape} className="button button-icon" onClick={this.props.clipboardAction.bind(this, 'delete')}>
+            <span className="icon icon-delete"></span>
+          </button>
           <div className="spacer"></div>
           <button className="button button-icon" onClick={this.props.toggleInspector}>
             <span className={`icon icon-inspector ${this.props.showInspector ? 'active' : ''}`}></span>

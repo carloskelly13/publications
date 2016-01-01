@@ -177,38 +177,47 @@ export default class Document extends AuthComponent {
   }
 
   clipboardAction(action) {
-    let updatedDocument = null;
+    let updatedDocument = null
 
     switch (action) {
       case 'cut':
-      let shapeToCut = cloneDeep(omit(this.state.selectedShape, '_id'));
+      const shapeToCut = cloneDeep(omit(this.state.selectedShape, '_id'))
       updatedDocument = this.state.doc.update('shapes', shapes => {
-        return without(shapes, this.state.selectedShape);
-      });
+        return without(shapes, this.state.selectedShape)
+      })
 
-      this.setState({clipboard: shapeToCut});
-      this.updateDocument(updatedDocument);
-      this.updateSelectedCanvasObject(null);
+      this.setState({clipboard: shapeToCut})
+      this.updateDocument(updatedDocument)
+      this.updateSelectedCanvasObject(null)
       break;
+
+      case 'delete':
+      updatedDocument = this.state.doc.update('shapes', shapes => {
+        return without(shapes, this.state.selectedShape)
+      })
+
+      this.updateDocument(updatedDocument)
+      this.updateSelectedCanvasObject(null)
+      break
 
       case 'copy':
-      let shapeToCopy = cloneDeep(omit(this.state.selectedShape, '_id'));
-      this.setState({clipboard: shapeToCopy});
-      break;
+      const shapeToCopy = cloneDeep(omit(this.state.selectedShape, '_id'))
+      this.setState({clipboard: shapeToCopy})
+      break
 
       case 'paste':
-      let shapeToPaste = cloneDeep(this.state.clipboard);
-      shapeToPaste.x += 0.25;
-      shapeToPaste.y += 0.25;
+      let shapeToPaste = cloneDeep(this.state.clipboard)
+      shapeToPaste.x += 0.25
+      shapeToPaste.y += 0.25
 
       updatedDocument = this.state.doc.update('shapes', shapes => {
-        shapes.push(shapeToPaste);
-        return shapes;
+        shapes.push(shapeToPaste)
+        return shapes
       });
 
-      this.updateDocument(updatedDocument);
-      this.updateSelectedCanvasObject(shapeToPaste);
-      break;
+      this.updateDocument(updatedDocument)
+      this.updateSelectedCanvasObject(shapeToPaste)
+      break
 
       default: break
     }

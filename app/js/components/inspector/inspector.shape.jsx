@@ -58,7 +58,7 @@ export default class InspectorShape extends Component {
       inspectorContent = (
         <div className="inspector-pane inspector-pane-no-shape-selected">
           <div className="icon icon-big-shape-frame"></div>
-          No Shape Selected
+          <div className="no-shape-label">No Shape Selected</div>
         </div>
       )
     }
