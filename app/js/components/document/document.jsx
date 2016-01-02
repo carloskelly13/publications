@@ -1,56 +1,55 @@
-import {merge, isEmpty, extend, without, cloneDeep, omit} from 'lodash';
-import AuthComponent from '../../core/auth-component';
-import DocumentStore from '../../stores/document.store';
-import React, {Component, PropTypes} from 'react';
-import {Router, RouteHandler, Link} from 'react-router';
+import {merge, isEmpty, extend, without, cloneDeep, omit} from 'lodash'
+import AuthComponent from '../../core/auth-component'
+import DocumentStore from '../../stores/document.store'
+import React, {Component, PropTypes} from 'react'
+import {Router, RouteHandler, Link} from 'react-router'
 
-import Canvas from '../canvas/canvas';
-import DocumentNavbar from './document.navbar';
-import InspectorBase from '../inspector/inspector.base';
-import RulerHorizontal from '../rulers/ruler.horizontal';
-import RulerVertical from '../rulers/ruler.vertical';
-import DocumentPdfViewModal from './document.pdf.modal';
+import Canvas from '../canvas/canvas'
+import DocumentNavbar from './document.navbar'
+import InspectorBase from '../inspector/inspector.base'
+import RulerHorizontal from '../rulers/ruler.horizontal'
+import RulerVertical from '../rulers/ruler.vertical'
+import DocumentPdfViewModal from './document.pdf.modal'
 
-import DocumentActions from '../../actions/document.actions';
-import ShapeFactory from '../../core/shape.factory';
+import DocumentActions from '../../actions/document.actions'
+import ShapeFactory from '../../core/shape.factory'
 
 export default class Document extends AuthComponent {
 
-  constructor(props, context) {
-    super(props);
+  constructor() {
+    super(...arguments)
 
-    this.dataChanged = this.dataChanged.bind(this);
+    this.dataChanged = this.dataChanged.bind(this)
     this.state = {
       doc: DocumentStore.getDocument(),
       selectedShape: null,
       showInspector: false,
       isPdfModalOpen: false,
       zoom: 1.0,
-      clipboard: null
-    };
+      clipboard: null,
+      shouldViewAllDocuments: false
+    }
   }
 
   componentWillMount() {
-    DocumentStore.addChangeListener(this.dataChanged);
+    DocumentStore.addChangeListener(this.dataChanged)
   }
 
   componentDidMount() {
-    DocumentActions.get(this.props.params.id);
+    DocumentActions.get(this.props.params.id)
   }
 
   componentWillUnmount() {
-    DocumentStore.resetDocument();
-    DocumentStore.removeChangeListener(this.dataChanged);
-    document.title = 'Publications';
+    DocumentStore.resetDocument()
+    DocumentStore.removeChangeListener(this.dataChanged)
+    document.title = 'Publications'
   }
 
   render() {
-    const DPI = 72.0;
-    let documentLoaded = !isEmpty(this.state.doc.get('_id'));
+    const DPI = 72.0
+    const documentLoaded = !isEmpty(this.state.doc.get('_id'))
 
-    // console.log(this.state.doc.get('shapes'));
-
-    let rulers = documentLoaded ? (
+    const rulers = documentLoaded ? (
       <div>
         <RulerVertical
           doc={this.state.doc}
@@ -61,7 +60,7 @@ export default class Document extends AuthComponent {
           dpi={DPI}
           zoom={this.state.zoom} />
       </div>
-    ) : null;
+    ) : null
 
     return (
       <div>
@@ -104,7 +103,7 @@ export default class Document extends AuthComponent {
             updateShape={::this.updateShape} />
         </div>
       </div>
-    );
+    )
   }
 
   dataChanged() {
@@ -114,65 +113,70 @@ export default class Document extends AuthComponent {
     })
 
     document.title = `Publications — ${this.state.doc.get('name')}`
+
+    if (this.state.shouldViewAllDocuments) {
+      this.context.router.transitionTo('documents')
+    }
   }
 
   updateSelectedCanvasObject(sender, event) {
     if (event) {
-      event.preventDefault();
+      event.preventDefault()
     }
 
-    this.setState({selectedShape: sender});
+    this.setState({selectedShape: sender})
   }
 
   updateDocument(sender) {
-    DocumentActions.update(sender);
+    DocumentActions.update(sender)
   }
 
   updateShape(sender) {
     this.setState({
       setSelectedShape: merge(this.state.selectedShape, sender)
-    });
+    })
   }
 
   save() {
-    DocumentActions.put(this.props.params.id);
+    DocumentActions.put(this.props.params.id)
   }
 
   addNewShape(type) {
-    let newShape = null;
+    let newShape = null
 
     if (type === 'ellipse') {
-      newShape = ShapeFactory.ellipse();
+      newShape = ShapeFactory.ellipse()
     } else if (type === 'text') {
-      newShape = ShapeFactory.text();
+      newShape = ShapeFactory.text()
     } else {
-      newShape = ShapeFactory.rectangle();
+      newShape = ShapeFactory.rectangle()
     }
 
-    let updatedDocument = this.state.doc.update('shapes', shapes => {
-      shapes.push(newShape);
-      return shapes;
-    });
+    const updatedDocument = this.state.doc.update('shapes', shapes => {
+      shapes.push(newShape)
+      return shapes
+    })
 
-    this.updateDocument(updatedDocument);
-    this.updateSelectedCanvasObject(newShape, null);
+    this.updateDocument(updatedDocument)
+    this.updateSelectedCanvasObject(newShape, null)
   }
 
   viewAllDocuments(sender) {
-    this.context.router.transitionTo('documents');
+    this.setState({shouldViewAllDocuments: true})
+    DocumentActions.put(this.props.params.id)
   }
 
   toggleInspector(sender) {
-    this.setState({showInspector: !this.state.showInspector});
+    this.setState({showInspector: !this.state.showInspector})
   }
 
   changeZoom(sender, event) {
-    let currentZoom = this.state.zoom;
+    const currentZoom = this.state.zoom
 
     if (sender === 'zoom-in' && currentZoom < 5.0) {
-      this.setState({zoom: currentZoom + 0.25});
+      this.setState({zoom: currentZoom + 0.25})
     } else if (sender === 'zoom-out' && currentZoom > 0.25) {
-      this.setState({zoom: currentZoom - 0.25});
+      this.setState({zoom: currentZoom - 0.25})
     }
   }
 
@@ -224,8 +228,8 @@ export default class Document extends AuthComponent {
   }
 
   togglePdfDownloadModal() {
-    this.setState({isPdfModalOpen: !this.state.isPdfModalOpen});
+    this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
   }
 }
 
-Document.contextTypes = {router: React.PropTypes.func.isRequired};
+Document.contextTypes = {router: React.PropTypes.func.isRequired}

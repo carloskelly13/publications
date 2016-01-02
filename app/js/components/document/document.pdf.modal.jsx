@@ -37,10 +37,10 @@ export default class DocumentPdfViewModal extends Component {
                 <h3>{this.props.doc.get('name')} has been exported to PDF.</h3>
               </div>
               <div className="modal-form-buttons">
-                <a className="button" role="button" href="#" target="_blank" ref="pdfLink">
+                <a className="button button-full" role="button" href="#" target="_blank" ref="pdfLink">
                   Exporting…
                 </a>
-                <button className="button" type="button" onClick={::this.dismiss}>
+                <button className="button button-full" type="button" onClick={::this.dismiss}>
                   Close
                 </button>
               </div>

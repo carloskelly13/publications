@@ -62,21 +62,24 @@
   }
 
   &.button-full {
-    border-radius: 2px;
-    padding: 0.25em 0;
+    background: #eee;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px hsla(0, 0%, 0%, 0.15);
+    padding: 3px 0;
     width: 46%;
     border: 1px solid #aaa;
-    font-size: 14px;
+    font-size: 13px;
     margin: 2%;
 
-    &:hover, &:active {
-      background: #bbb;
-      color: #fff;
+    &:active, &:hover {
+      background: #fff;
+      color: @color-app-text;
     }
 
     &:active {
-      border-color: #999;
-      background: #999;
+      box-shadow: none;
+      position: relative;
+      top: 1px;
     }
   }
 }

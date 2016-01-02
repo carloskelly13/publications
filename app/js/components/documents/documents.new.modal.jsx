@@ -7,7 +7,7 @@ export default class NewDocumentModal extends Component {
     super(props);
     this.state = {
       form: {
-        name:  'New Document',
+        name: 'New Document',
         width: 6.0,
         height: 4.0
       }
@@ -59,10 +59,10 @@ export default class NewDocumentModal extends Component {
                       valueChanged={::this.formValueChanged} />
                   </div>
                   <div className="modal-form-buttons">
-                    <button className="button" type="submit">
+                    <button className="button button-full" type="submit">
                       Create
                     </button>
-                    <button className="button button-destructive" type="button" onClick={this.props.toggleNewDocumentModal}>
+                    <button className="button button-full" type="button" onClick={this.props.toggleNewDocumentModal}>
                       Cancel
                     </button>
                   </div>

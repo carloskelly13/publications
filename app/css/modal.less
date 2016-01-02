@@ -18,7 +18,7 @@
 
 .modal {
   background: hsla(0, 0%, 100%, 95%);
-  border-radius: 10px;
+  border-radius: 4px;
   bottom: 0;
   box-shadow: 0 2px 25px hsla(0, 0%, 0%, 0.25);
   display: block;
@@ -68,22 +68,14 @@
 
     .modal-form-buttons {
       position: absolute;
-      bottom: 0;
-      width: 100%;
-      left: 0;
-      right: 0;
+      bottom: 0.8em;
+      left: 0.8em;
+      right: 0.8em;
 
-      .button {
-        width: 50%;
-        border-right: 1px solid #999;
-        border-top: 1px solid #999;
-        margin: 0;
-        height: 50px;
-        line-height: 48px;
-
-        &:last-child {
-          border-right: none;
-        }
+      .button-full {
+        font-size: 14px;
+        height: 30px;
+        line-height: 22px;
       }
     }
   }

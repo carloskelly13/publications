@@ -2,9 +2,6 @@ import React, {Component, PropTypes} from 'react';
 
 export default class DocumentNavbar extends Component {
   render() {
-
-    console.log(this.props)
-
     return (
       <div className="navbar-container">
         <div className="navbar-controls-left">
