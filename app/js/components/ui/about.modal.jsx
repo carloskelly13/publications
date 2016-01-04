@@ -1,12 +1,8 @@
-import React, {Component, PropTypes} from 'react'
-import ReactDOM from 'react-dom'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import DocumentStore from '../../stores/document.store'
-import _ from 'lodash'
+import React, {Component} from 'react'
 
 export default class AboutAppModal extends Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
   }
 
   render() {
@@ -16,11 +12,17 @@ export default class AboutAppModal extends Component {
           <div className="modal modal-about">
             <div className="modal-content">
               <div className="modal-header">
+                <div className="pub-logo-60"></div>
                 <h1>Publications</h1>
-                <h3></h3>
+                <h3>Publications is designed, developed and maintained by Mike Kelly and Carlos Paelinck.</h3>
+                <h4>Powered by ReactJS.</h4>
               </div>
               <div className="modal-form-buttons">
-                <button className="button button-full" type="button" onClick={::this.dismiss}>
+                <button
+                  className="button button-full"
+                  type="button"
+                  onClick={this.props.toggleModal}
+                >
                   Close
                 </button>
               </div>

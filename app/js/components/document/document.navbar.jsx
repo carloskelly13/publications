@@ -1,13 +1,12 @@
 import React, {Component, PropTypes} from 'react';
+import AboutButton from '../ui/about.button'
 
 export default class DocumentNavbar extends Component {
   render() {
     return (
       <div className="navbar-container">
         <div className="navbar-controls-left">
-          <div className="navbar-logo">
-            <div className="navbar-logo-icon"></div>
-          </div>
+          <AboutButton />
           <button className="button" onClick={this.props.save}>Save</button>
           <button className="button" onClick={this.props.downloadPdf}>PDF</button>
           <button className="button" onClick={this.props.viewAllDocuments}>All Documents</button>

@@ -40,6 +40,16 @@
     width: 360px;
   }
 
+  &.modal-about {
+    width: 360px;
+    height: 300px;
+
+    .pub-logo-60 {
+      .retina-picture('pub-logo-60', 60px, 60px, block);
+      margin: 0 0 10px;
+    }
+  }
+
   .modal-content {
     box-sizing: border-box;
     height: inherit;
@@ -60,6 +70,12 @@
         font-weight: 400;
         margin: 0;
       }
+
+      h4 {
+        margin: 10px 0 0 0;
+        font-size: 12px;
+        font-weight: 500;
+      }
     }
 
     .modal-inner-content {
@@ -69,8 +85,8 @@
     .modal-form-buttons {
       position: absolute;
       bottom: 0.8em;
-      left: 0.8em;
-      right: 0.8em;
+      left: 0.78em;
+      right: 0.78em;
 
       .button-full {
         font-size: 14px;
@@ -95,7 +111,7 @@
   height: 100%;
   left: 0;
   right: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
   z-index: 9500;
