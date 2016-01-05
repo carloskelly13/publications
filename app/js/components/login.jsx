@@ -15,10 +15,6 @@ export default class Login extends Component {
     super(...arguments)
 
     this.dataChanged = this.dataChanged.bind(this)
-    this.logInFormSubmitted = this.logInFormSubmitted.bind(this)
-    this.nameChanged = this.nameChanged.bind(this)
-    this.passwordChanged = this.passwordChanged.bind(this)
-
     this.store = UserStore
     this.state = this.store.getState()
   }
@@ -29,25 +25,6 @@ export default class Login extends Component {
 
   componentWillUnmount() {
     this.store.removeChangeListener(this.dataChanged);
-  }
-
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.logInFormSubmitted}>
-          <h3>Log In</h3>
-          <input type="text" name="name" onChange={this.nameChanged} value={this.state.name} />
-          <input type="password" name="password" onChange={this.passwordChanged} value={this.state.password} />
-          <button type="submit">Log In</button>
-        </form>
-        <button
-          onClick={::this.createTestDriveAccount}
-          role="button">
-          Test Drive
-        </button>
-      </div>
-
-    );
   }
 
   createTestDriveAccount() {
@@ -81,8 +58,27 @@ export default class Login extends Component {
     UserActions.login({
       name: this.state.name,
       password: this.state.password
-    });
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={::this.logInFormSubmitted}>
+          <h3>Log In</h3>
+          <input type="text" name="name" onChange={::this.nameChanged} value={this.state.name} />
+          <input type="password" name="password" onChange={::this.passwordChanged} value={this.state.password} />
+          <button type="submit">Log In</button>
+        </form>
+        <button
+          onClick={::this.createTestDriveAccount}
+          role="button">
+          Test Drive
+        </button>
+      </div>
+
+    )
   }
 }
 
-Login.contextTypes = {router: React.PropTypes.func.isRequired};
+Login.contextTypes = {router: React.PropTypes.func.isRequired}
