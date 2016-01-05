@@ -31,6 +31,7 @@ export default class DocumentsNavbar extends Component {
           >
             Delete
           </button>
+          <button className="button" onClick={this.props.toggleUserAccountModal}>User Account</button>
           <button className="button" onClick={this.props.logOut}>Log Out</button>
         </div>
         <div className="navbar-controls-right">

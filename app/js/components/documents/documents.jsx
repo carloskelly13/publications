@@ -5,6 +5,7 @@ import {select, contains, isEmpty} from 'lodash';
 import DocumentsNavbar from './documents.navbar';
 import DocumentItem from './document.item';
 import NewDocumentModal from './documents.new.modal';
+import UserAccountModal from '../user/user.account.modal'
 import DocumentStore from '../../stores/document.store';
 import UserStore from '../../stores/user.store';
 import InputText from '../ui/input.text';
@@ -22,7 +23,8 @@ export default class Documents extends AuthComponent {
       documents: [],
       searchKeyword: '',
       selectedDocument: null,
-      isNewDocModalOpen: false
+      isNewDocModalOpen: false,
+      isUserAccountModalOpen: false
     };
   }
 
@@ -63,10 +65,15 @@ export default class Documents extends AuthComponent {
 
     return (
       <div>
+        <UserAccountModal
+          toggleModal={::this.toggleUserAccountModal}
+          isOpen={this.state.isUserAccountModalOpen}
+        />
         <NewDocumentModal
           createNewDocument={::this.createNewDocument}
           toggleNewDocumentModal={::this.toggleNewDocumentModal}
-          isOpen={this.state.isNewDocModalOpen} />
+          isOpen={this.state.isNewDocModalOpen}
+        />
         <DocumentsNavbar
           documentIsSelected={this.state.selectedDocument !== null}
           editDocument={::this.editDocument}
@@ -74,7 +81,9 @@ export default class Documents extends AuthComponent {
           createNewDocument={::this.toggleNewDocumentModal}
           searchKeyword={this.state.searchKeyword}
           searchKeywordChanged={::this.searchKeywordChanged}
-          logOut={::this.logOut} />
+          logOut={::this.logOut}
+          toggleUserAccountModal={::this.toggleUserAccountModal}
+        />
         <div className="app-content">
           <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
             {documentItems}
@@ -109,6 +118,12 @@ export default class Documents extends AuthComponent {
   toggleNewDocumentModal() {
     this.setState({
       isNewDocModalOpen: !this.state.isNewDocModalOpen
+    })
+  }
+
+  toggleUserAccountModal() {
+    this.setState({
+      isUserAccountModalOpen: !this.state.isUserAccountModalOpen
     });
   }
 
