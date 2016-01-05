@@ -47,7 +47,8 @@ export default class UserAccountModal extends Component {
       valueChanged={::this.formValueChanged}
     /> : null
 
-    const descriptionText = temporary ? 'Create a new account' : `Update password for ${this.state.name}.`
+    const headerText = temporary ? 'Create Account' : 'Change Password'
+    const descriptionText = temporary ? 'Create a free Publications account.' : `Update password for ${this.state.name}.`
 
     if (this.props.isOpen) {
       return (
@@ -55,7 +56,7 @@ export default class UserAccountModal extends Component {
           <div className="modal modal-new-document">
             <div className="modal-content">
               <div className="modal-header">
-                <h1>User Account</h1>
+                <h1>{headerText}</h1>
                 <h3>{descriptionText}</h3>
               </div>
               <div className="modal-inner-content">
@@ -74,7 +75,7 @@ export default class UserAccountModal extends Component {
                       {temporary ? 'Create Account' : 'Update'}
                     </button>
                     <button className="button button-full" type="button" onClick={::this.dismiss}>
-                      Cancel
+                      Close
                     </button>
                   </div>
                 </form>

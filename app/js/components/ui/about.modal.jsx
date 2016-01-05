@@ -21,8 +21,7 @@ export default class AboutAppModal extends Component {
                 <button
                   className="button button-full"
                   type="button"
-                  onClick={this.props.toggleModal}
-                >
+                  onClick={this.props.toggleModal}>
                   Close
                 </button>
               </div>
