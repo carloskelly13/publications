@@ -1,23 +1,22 @@
-import AuthComponent from '../../core/auth-component';
-import React, {Component, PropTypes} from 'react';
-import {select, contains, isEmpty} from 'lodash';
+import AuthComponent from '../../core/auth-component'
+import React, {Component, PropTypes} from 'react'
+import {select, contains, isEmpty} from 'lodash'
 
-import DocumentsNavbar from './documents.navbar';
-import DocumentItem from './document.item';
-import NewDocumentModal from './documents.new.modal';
+import DocumentsNavbar from './documents.navbar'
+import DocumentItem from './document.item'
+import NewDocumentModal from './documents.new.modal'
 import UserAccountModal from '../user/user.account.modal'
-import DocumentStore from '../../stores/document.store';
-import UserStore from '../../stores/user.store';
-import InputText from '../ui/input.text';
+import DocumentStore from '../../stores/document.store'
+import UserStore from '../../stores/user.store'
+import InputText from '../ui/input.text'
 
-import DocumentActions from '../../actions/document.actions';
-import UserActions from '../../actions/user.actions';
+import DocumentActions from '../../actions/document.actions'
+import UserActions from '../../actions/user.actions'
 
-export default class Documents extends AuthComponent {
+export default class Documents extends Component {
   constructor(props, context) {
-    super(props);
-    this.loginStateChanged = this.loginStateChanged.bind(this);
-    this.dataChanged = this.dataChanged.bind(this);
+    super(props)
+    this.dataChanged = this.dataChanged.bind(this)
 
     this.state = {
       documents: [],
@@ -25,32 +24,30 @@ export default class Documents extends AuthComponent {
       selectedDocument: null,
       isNewDocModalOpen: false,
       isUserAccountModalOpen: false
-    };
+    }
   }
 
   componentWillMount() {
-    UserStore.addChangeListener(this.loginStateChanged);
-    DocumentStore.addChangeListener(this.dataChanged);
+    DocumentStore.addChangeListener(this.dataChanged)
   }
 
   componentDidMount() {
-    DocumentActions.list();
-    document.title = 'Publications — All Documents';
+    DocumentActions.list()
+    document.title = 'Publications — All Documents'
   }
 
   componentWillUnmount() {
-    UserStore.removeChangeListener(this.loginStateChanged);
-    DocumentStore.removeChangeListener(this.dataChanged);
-    this.setState({selectedDocument: null});
-    document.title = 'Publications';
+    DocumentStore.removeChangeListener(this.dataChanged)
+    this.setState({selectedDocument: null})
+    document.title = 'Publications'
   }
 
   render() {
     let documentItems = select(this.state.documents, doc => {
       if (isEmpty(this.state.searchKeyword)) {
-        return true;
+        return true
       } else {
-        return contains(doc.get('name').toLowerCase(), this.state.searchKeyword.toLowerCase());
+        return contains(doc.get('name').toLowerCase(), this.state.searchKeyword.toLowerCase())
       }
     }).map(doc => {
       return (
@@ -60,8 +57,8 @@ export default class Documents extends AuthComponent {
           editDocument={::this.editDocument}
           selectedDocument={this.state.selectedDocument}
           updateSelectedDocument={::this.updateSelectedDocument} />
-      );
-    });
+      )
+    })
 
     return (
       <div>
@@ -90,29 +87,23 @@ export default class Documents extends AuthComponent {
           </ul>
         </div>
       </div>
-    );
+    )
   }
 
   updateSelectedDocument(sender, event) {
-    if (!!event) event.preventDefault();
-    this.setState({selectedDocument: sender});
-  }
-
-  loginStateChanged() {
-    if (!UserStore.isAuthenticated()) {
-      this.context.router.transitionTo('login');
-    }
+    if (!!event) event.preventDefault()
+    this.setState({selectedDocument: sender})
   }
 
   searchKeywordChanged(event) {
-    this.setState({searchKeyword: event.target.value});
+    this.setState({searchKeyword: event.target.value})
   }
 
   dataChanged() {
     this.setState({
       documents: DocumentStore.getDocuments(),
       isNewDocModalOpen: false
-    });
+    })
   }
 
   toggleNewDocumentModal() {
@@ -124,7 +115,7 @@ export default class Documents extends AuthComponent {
   toggleUserAccountModal() {
     this.setState({
       isUserAccountModalOpen: !this.state.isUserAccountModalOpen
-    });
+    })
   }
 
   createNewDocument(options) {
@@ -132,28 +123,30 @@ export default class Documents extends AuthComponent {
       name: options.name,
       width: options.width,
       height: options.height
-    });
+    })
   }
 
   editDocument() {
-    let selectedDocument = this.state.selectedDocument;
+    const selectedDocument = this.state.selectedDocument
 
     if (selectedDocument) {
-      this.context.router.transitionTo('document-edit', {id: selectedDocument.get('_id')});
+      const id = selectedDocument.get('_id')
+      this.props.history.push(`/documents/${id}/edit`)
+      // this.props.history.pushState
+      // this.context.router.transitionTo('document-edit', {id: })
     }
   }
 
   deleteDocument() {
-    let selectedDocument = this.state.selectedDocument;
+    const selectedDocument = this.state.selectedDocument
 
     if (!!selectedDocument) {
-      DocumentActions.remove(selectedDocument);
+      DocumentActions.remove(selectedDocument)
     }
   }
 
   logOut() {
-    UserActions.logout();
+    UserActions.logout()
+    this.props.history.push('/')
   }
 }
-
-Documents.contextTypes = {router: React.PropTypes.func.isRequired};

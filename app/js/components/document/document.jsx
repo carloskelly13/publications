@@ -14,7 +14,7 @@ import DocumentPdfViewModal from './document.pdf.modal'
 import DocumentActions from '../../actions/document.actions'
 import ShapeFactory from '../../core/shape.factory'
 
-export default class Document extends AuthComponent {
+export default class Document extends Component {
 
   constructor() {
     super(...arguments)
@@ -115,7 +115,7 @@ export default class Document extends AuthComponent {
     document.title = `Publications — ${this.state.doc.get('name')}`
 
     if (this.state.shouldViewAllDocuments) {
-      this.context.router.transitionTo('documents')
+      this.props.history.push('/documents')
     }
   }
 
@@ -231,5 +231,3 @@ export default class Document extends AuthComponent {
     this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
   }
 }
-
-Document.contextTypes = {router: React.PropTypes.func.isRequired}

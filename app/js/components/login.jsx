@@ -5,12 +5,6 @@ import uuid from 'uuid4'
 import UserActions from '../actions/user.actions'
 
 export default class Login extends Component {
-  static willTransitionTo(transition) {
-    if (UserStore.isAuthenticated()) {
-      transition.redirect('/')
-    }
-  }
-
   constructor(props, context) {
     super(...arguments)
 
@@ -21,6 +15,12 @@ export default class Login extends Component {
 
   componentWillMount() {
     this.store.addChangeListener(this.dataChanged);
+  }
+
+  componentDidMount() {
+    if (UserStore.isAuthenticated()) {
+      this.props.history.push('/documents')
+    }
   }
 
   componentWillUnmount() {
@@ -48,12 +48,12 @@ export default class Login extends Component {
     this.setState(user)
 
     if (user.authenticated) {
-      this.context.router.transitionTo('documents')
+      this.props.history.push('/documents')
     }
   }
 
   logInFormSubmitted(event) {
-    event.preventDefault();
+    event.preventDefault()
 
     UserActions.login({
       name: this.state.name,
@@ -76,9 +76,6 @@ export default class Login extends Component {
           Test Drive
         </button>
       </div>
-
     )
   }
 }
-
-Login.contextTypes = {router: React.PropTypes.func.isRequired}
