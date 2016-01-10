@@ -11,10 +11,47 @@ import Login from '../components/login'
 import Documents from '../components/documents/documents'
 import Document from '../components/document/document'
 
+import {getUser} from 'actions/user'
+
+const history = createHashHistory()
+const store = configureStore()
+
+const requireAuth = (nextState, replaceState, callback) => {
+  const {isRequestingUser, isAuthenticated} = store.getState().user
+
+  if (isAuthenticated) {
+    callback()
+
+  } else {
+    const subscribeToStore = store.subscribe
+    store.dispatch(getUser())
+
+    subscribeToStore(() => {
+      const {failedAuthentication} = store.getState().user
+      const authenticatedAfterRequest = store.getState().user.isAuthenticated
+
+      console.log(authenticatedAfterRequest)
+
+      if (failedAuthentication) {
+        replaceState({
+          nextPathame: nextState.location.pathname
+        }, '/login')
+
+        callback()
+
+      } else if (authenticatedAfterRequest) {
+        callback()
+      }
+    })
+  }
+}
+
+const authExit = () => {
+  subscribeToStore()
+}
+
 export default class AppRouter {
   constructor() {
-    const history = createHashHistory()
-    const store = configureStore()
     syncReduxAndRouter(history, store, state => state.router)
 
     this.router = <Provider store={store}>
@@ -22,8 +59,8 @@ export default class AppRouter {
           <Route path="/" component={BaseView}>
             <IndexRoute component={Login} />
             <Route path="login" component={Login} />
-            <Route path="documents" component={Documents} />
-            <Route path="documents/:id/edit" component={Document} />
+            <Route path="documents" component={Documents} onEnter={requireAuth} />
+            <Route path="documents/:id/edit" component={Document} onEnter={requireAuth} />
           </Route>
         </Router>
     </Provider>

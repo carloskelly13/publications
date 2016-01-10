@@ -6,10 +6,7 @@ import DocumentsNavbar from './documents.navbar'
 import DocumentItem from './document.item'
 import NewDocumentModal from './documents.new.modal'
 import UserAccountModal from '../user/user.account.modal'
-import DocumentStore from '../../stores/document.store'
 import InputText from '../ui/input.text'
-
-// import DocumentActions from '../../actions/document.actions'
 
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -34,39 +31,16 @@ export class Documents extends Component {
     }
   }
 
-  componentWillMount() {
-    DocumentStore.addChangeListener(this.dataChanged)
-
-    const {isAuthenticated, getUser, getDocuments} = this.props
-
-    if (!isAuthenticated) {
-      getUser()
-    } else {
-      getDocuments()
-      // DocumentActions.list()
-    }
-  }
-
   componentDidMount() {
     document.title = 'Publications — All Documents'
+    this.props.getDocuments()
   }
 
   componentWillUnmount() {
-    DocumentStore.removeChangeListener(this.dataChanged)
     this.setState({selectedDocument: null})
     document.title = 'Publications'
   }
 
-  componentWillReceiveProps(nextProps) {
-    const previousDocuments = this.props.documents
-    const {isAuthenticated, isRequestingData, failedAuthentication, history, getDocuments, documents} = nextProps
-
-    if (failedAuthentication) {
-      history.push('/')
-    } else if (isAuthenticated && !isRequestingData && (previousDocuments === documents)) {
-      getDocuments()
-    }
-  }
 
   render() {
     let documentItems = select(this.props.documents, doc => {
