@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
-import {Router, IndexRoute, Route, hashHistory} from 'react-router'
+import {Router, IndexRoute, Route} from 'react-router'
+import {syncReduxAndRouter} from 'redux-simple-router'
 import configureStore from 'stores/configureStore'
+import {createHashHistory} from 'history/lib'
 
 import BaseView from '../components/base.view'
 import Login from '../components/login'
@@ -16,16 +18,18 @@ const requireAuth = (nextState, replaceState) => {
 
 export default class AppRouter {
   constructor() {
+    const history = createHashHistory()
     const store = configureStore()
+    syncReduxAndRouter(history, store, state => state.router)
 
     this.router = <Provider store={store}>
-        <Router history={hashHistory}>
-            <Route path="/" component={BaseView}>
-              <IndexRoute component={Login} />
-              <Route path="login" component={Login} />
-              <Route path="documents" component={Documents} onEnter={requireAuth} />
-              <Route path="documents/:id/edit" component={Document} />
-            </Route>
+        <Router history={history}>
+          <Route path="/" component={BaseView}>
+            <IndexRoute component={Login} />
+            <Route path="login" component={Login} />
+            <Route path="documents" component={Documents} onEnter={requireAuth} />
+            <Route path="documents/:id/edit" component={Document} />
+          </Route>
         </Router>
     </Provider>
   }

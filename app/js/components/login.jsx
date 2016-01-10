@@ -2,37 +2,37 @@ import UserStore from '../stores/user.store'
 import React, {Component} from 'react'
 import uuid from 'uuid4'
 
-import UserActions from '../actions/user.actions'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as UserActions from 'actions/user'
 
-export default class Login extends Component {
-  constructor(props, context) {
+const mapStateToProps = state => state.user
+const mapDispatchToProps = dispatch => bindActionCreators(UserActions, dispatch)
+
+export class Login extends Component {
+  constructor() {
     super(...arguments)
-
-    this.dataChanged = this.dataChanged.bind(this)
-    this.store = UserStore
-    this.state = this.store.getState()
-  }
-
-  componentWillMount() {
-    this.store.addChangeListener(this.dataChanged);
+    this.state = {name: '', password: ''}
   }
 
   componentDidMount() {
-    if (UserStore.isAuthenticated()) {
-      this.props.history.push('/documents')
-    }
-  }
-
-  componentWillUnmount() {
-    this.store.removeChangeListener(this.dataChanged);
+    this.props.getUser()
   }
 
   createTestDriveAccount() {
-    UserActions.post({
-      name: `${uuid()}@publicationsapp.com`,
-      password: 'password',
-      temporary: true
-    })
+    // UserActions.post({
+    //   name: `${uuid()}@publicationsapp.com`,
+    //   password: 'password',
+    //   temporary: true
+    // })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {isAuthenticated, history} = nextProps
+
+    if (isAuthenticated) {
+      history.push('/documents')
+    }
   }
 
   nameChanged(event) {
@@ -43,19 +43,10 @@ export default class Login extends Component {
     this.setState({password: event.target.value});
   }
 
-  dataChanged() {
-    const user = UserStore.getState()
-    this.setState(user)
-
-    if (user.authenticated) {
-      this.props.history.push('/documents')
-    }
-  }
-
   logInFormSubmitted(event) {
     event.preventDefault()
 
-    UserActions.login({
+    this.props.login({
       name: this.state.name,
       password: this.state.password
     })
@@ -66,6 +57,7 @@ export default class Login extends Component {
       <div>
         <form onSubmit={::this.logInFormSubmitted}>
           <h3>Log In</h3>
+          <p>{this.props.isRequestingUser ? 'Checking Login' : ''}</p>
           <input type="text" name="name" onChange={::this.nameChanged} value={this.state.name} />
           <input type="password" name="password" onChange={::this.passwordChanged} value={this.state.password} />
           <button type="submit">Log In</button>
@@ -79,3 +71,5 @@ export default class Login extends Component {
     )
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

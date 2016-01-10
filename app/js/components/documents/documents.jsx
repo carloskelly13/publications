@@ -11,11 +11,17 @@ import UserStore from '../../stores/user.store'
 import InputText from '../ui/input.text'
 
 import DocumentActions from '../../actions/document.actions'
-import UserActions from '../../actions/user.actions'
 
-export default class Documents extends Component {
-  constructor(props, context) {
-    super(props)
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as UserActions from 'actions/user'
+
+const mapStateToProps = state => state.user
+const mapDispatchToProps = dispatch => bindActionCreators(UserActions, dispatch)
+
+export class Documents extends Component {
+  constructor() {
+    super(...arguments)
     this.dataChanged = this.dataChanged.bind(this)
 
     this.state = {
@@ -29,6 +35,12 @@ export default class Documents extends Component {
 
   componentWillMount() {
     DocumentStore.addChangeListener(this.dataChanged)
+
+    const {isAuthenticated, getUser} = this.props
+
+    if (!isAuthenticated) {
+      getUser()
+    }
   }
 
   componentDidMount() {
@@ -40,6 +52,16 @@ export default class Documents extends Component {
     DocumentStore.removeChangeListener(this.dataChanged)
     this.setState({selectedDocument: null})
     document.title = 'Publications'
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {failedAuthentication, history} = nextProps
+
+    console.log(failedAuthentication)
+
+    if (failedAuthentication) {
+      history.push('/')
+    }
   }
 
   render() {
@@ -72,6 +94,8 @@ export default class Documents extends Component {
           isOpen={this.state.isNewDocModalOpen}
         />
         <DocumentsNavbar
+          isTemporaryUser={this.props.isTemporaryUser}
+          isAuthenticated={this.props.isAuthenticated}
           documentIsSelected={this.state.selectedDocument !== null}
           editDocument={::this.editDocument}
           deleteDocument={::this.deleteDocument}
@@ -146,7 +170,10 @@ export default class Documents extends Component {
   }
 
   logOut() {
-    UserActions.logout()
-    this.props.history.push('/')
+    const {history, logoutUser} = this.props
+    logoutUser()
+    history.push('/')
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Documents)
