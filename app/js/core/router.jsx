@@ -23,10 +23,8 @@ const requireAuth = (nextState, replaceState, callback) => {
     const {failedAuthentication, isAuthenticated} = store.getState().user
 
     if (failedAuthentication) {
-      replaceState({
-        nextPathame: nextState.location.pathname
-      }, '/login')
-
+      const nextPathame = nextState.location.pathname
+      replaceState({nextPathame}, '/login')
       unsubscribe()
     } else if (isAuthenticated) {
       unsubscribe()
