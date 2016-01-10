@@ -17,37 +17,22 @@ const history = createHashHistory()
 const store = configureStore()
 
 const requireAuth = (nextState, replaceState, callback) => {
-  const {isRequestingUser, isAuthenticated} = store.getState().user
+  store.dispatch(getUser())
 
-  if (isAuthenticated) {
+  const unsubscribe = store.subscribe(() => {
+    const {failedAuthentication, isAuthenticated} = store.getState().user
+
+    if (failedAuthentication) {
+      replaceState({
+        nextPathame: nextState.location.pathname
+      }, '/login')
+
+      unsubscribe()
+    } else if (isAuthenticated) {
+      unsubscribe()
+    }
     callback()
-
-  } else {
-    const subscribeToStore = store.subscribe
-    store.dispatch(getUser())
-
-    subscribeToStore(() => {
-      const {failedAuthentication} = store.getState().user
-      const authenticatedAfterRequest = store.getState().user.isAuthenticated
-
-      console.log(authenticatedAfterRequest)
-
-      if (failedAuthentication) {
-        replaceState({
-          nextPathame: nextState.location.pathname
-        }, '/login')
-
-        callback()
-
-      } else if (authenticatedAfterRequest) {
-        callback()
-      }
-    })
-  }
-}
-
-const authExit = () => {
-  subscribeToStore()
+  })
 }
 
 export default class AppRouter {
