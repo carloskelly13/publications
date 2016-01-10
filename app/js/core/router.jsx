@@ -10,11 +10,6 @@ import BaseView from '../components/base.view'
 import Login from '../components/login'
 import Documents from '../components/documents/documents'
 import Document from '../components/document/document'
-import UserStore from 'stores/user.store'
-
-const requireAuth = (nextState, replaceState) => {
-  // replaceState(null, '/login')
-}
 
 export default class AppRouter {
   constructor() {
@@ -27,7 +22,7 @@ export default class AppRouter {
           <Route path="/" component={BaseView}>
             <IndexRoute component={Login} />
             <Route path="login" component={Login} />
-            <Route path="documents" component={Documents} onEnter={requireAuth} />
+            <Route path="documents" component={Documents} />
             <Route path="documents/:id/edit" component={Document} />
           </Route>
         </Router>

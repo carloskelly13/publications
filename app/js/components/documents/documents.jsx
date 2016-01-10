@@ -9,14 +9,17 @@ import UserAccountModal from '../user/user.account.modal'
 import DocumentStore from '../../stores/document.store'
 import InputText from '../ui/input.text'
 
-import DocumentActions from '../../actions/document.actions'
+// import DocumentActions from '../../actions/document.actions'
 
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as UserActions from 'actions/user'
+import * as DocumentActions from 'actions/document'
 
-const mapStateToProps = state => state.user
-const mapDispatchToProps = dispatch => bindActionCreators(UserActions, dispatch)
+const mapStateToProps = state => Object.assign({}, state.user, state.doc)
+const mapDispatchToProps = dispatch => bindActionCreators(
+    Object.assign({}, UserActions, DocumentActions
+  ), dispatch)
 
 export class Documents extends Component {
   constructor() {
@@ -24,7 +27,6 @@ export class Documents extends Component {
     this.dataChanged = this.dataChanged.bind(this)
 
     this.state = {
-      documents: [],
       searchKeyword: '',
       selectedDocument: null,
       isNewDocModalOpen: false,
@@ -35,12 +37,13 @@ export class Documents extends Component {
   componentWillMount() {
     DocumentStore.addChangeListener(this.dataChanged)
 
-    const {isAuthenticated, getUser} = this.props
+    const {isAuthenticated, getUser, getDocuments} = this.props
 
     if (!isAuthenticated) {
       getUser()
     } else {
-      DocumentActions.list()
+      getDocuments()
+      // DocumentActions.list()
     }
   }
 
@@ -55,17 +58,18 @@ export class Documents extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {isAuthenticated, failedAuthentication, history} = nextProps
+    const previousDocuments = this.props.documents
+    const {isAuthenticated, isRequestingData, failedAuthentication, history, getDocuments, documents} = nextProps
 
     if (failedAuthentication) {
       history.push('/')
-    } else if (isAuthenticated) {
-      DocumentActions.list()
+    } else if (isAuthenticated && !isRequestingData && (previousDocuments === documents)) {
+      getDocuments()
     }
   }
 
   render() {
-    let documentItems = select(this.state.documents, doc => {
+    let documentItems = select(this.props.documents, doc => {
       if (isEmpty(this.state.searchKeyword)) {
         return true
       } else {
@@ -145,11 +149,11 @@ export class Documents extends Component {
   }
 
   createNewDocument(options) {
-    DocumentActions.create({
-      name: options.name,
-      width: options.width,
-      height: options.height
-    })
+    // DocumentActions.create({
+    //   name: options.name,
+    //   width: options.width,
+    //   height: options.height
+    // })
   }
 
   editDocument() {
@@ -167,7 +171,7 @@ export class Documents extends Component {
     const selectedDocument = this.state.selectedDocument
 
     if (!!selectedDocument) {
-      DocumentActions.remove(selectedDocument)
+      // DocumentActions.remove(selectedDocument)
     }
   }
 

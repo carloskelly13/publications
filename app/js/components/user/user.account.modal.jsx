@@ -107,7 +107,5 @@ export default class UserAccountModal extends Component {
     } else {
       patchData.currentPassword = currentPassword
     }
-
-    UserActions.patch(patchData)
   }
 }
