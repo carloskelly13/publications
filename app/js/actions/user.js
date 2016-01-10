@@ -14,6 +14,8 @@ const requestUser = () => ({
 
 export function login(data = {name: '', password: ''}) {
   return dispatch => {
+    dispatch(requestUser())
+
     fetch('http://api.publicationsapp.com/login', {
       method: 'post',
       headers: {

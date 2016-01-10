@@ -1,4 +1,3 @@
-import UserStore from '../stores/user.store'
 import React, {Component} from 'react'
 import uuid from 'uuid4'
 

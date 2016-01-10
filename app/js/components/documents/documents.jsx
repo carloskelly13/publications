@@ -7,7 +7,6 @@ import DocumentItem from './document.item'
 import NewDocumentModal from './documents.new.modal'
 import UserAccountModal from '../user/user.account.modal'
 import DocumentStore from '../../stores/document.store'
-import UserStore from '../../stores/user.store'
 import InputText from '../ui/input.text'
 
 import DocumentActions from '../../actions/document.actions'
@@ -40,11 +39,12 @@ export class Documents extends Component {
 
     if (!isAuthenticated) {
       getUser()
+    } else {
+      DocumentActions.list()
     }
   }
 
   componentDidMount() {
-    DocumentActions.list()
     document.title = 'Publications — All Documents'
   }
 
@@ -55,12 +55,12 @@ export class Documents extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {failedAuthentication, history} = nextProps
-
-    console.log(failedAuthentication)
+    const {isAuthenticated, failedAuthentication, history} = nextProps
 
     if (failedAuthentication) {
       history.push('/')
+    } else if (isAuthenticated) {
+      DocumentActions.list()
     }
   }
 
@@ -85,6 +85,8 @@ export class Documents extends Component {
     return (
       <div>
         <UserAccountModal
+          userName={this.props.userName}
+          isTemporaryUser={this.props.isTemporaryUser}
           toggleModal={::this.toggleUserAccountModal}
           isOpen={this.state.isUserAccountModalOpen}
         />

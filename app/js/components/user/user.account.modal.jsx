@@ -1,29 +1,18 @@
 import React, {Component, PropTypes, addons} from 'react'
 import InputText from '../ui/input.text'
 import UserActions from '../../actions/user.actions'
-import UserStore from '../../stores/user.store'
 
 export default class UserAccountModal extends Component {
   constructor() {
     super(...arguments)
-    this.userDataChanged = this.userDataChanged.bind(this)
-    this.state = UserStore.getState()
+    this.state = {name: '', password: '', currrentPassword: '', temporary: false}
   }
 
-  componentDidMount() {
-    UserActions.get()
-  }
-
-  componentWillMount() {
-    UserStore.addChangeListener(this.userDataChanged);
-  }
-
-  componentWillUnmount() {
-    UserStore.removeChangeListener(this.userDataChanged);
-  }
-
-  userDataChanged() {
-    this.setState(UserStore.getState())
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      temporary: nextProps.isTemporaryUser,
+      name: nextProps.isTemporaryUser ? '' : nextProps.userName
+    })
   }
 
   render() {
