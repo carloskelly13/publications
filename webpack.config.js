@@ -54,7 +54,8 @@ module.exports = {
       'components': 'components',
       'actions': 'actions',
       'reducers': 'reducers',
-      'stores': 'stores'
+      'stores': 'stores',
+      'services': 'services'
     }
   },
 

@@ -1,6 +1,5 @@
 import {merge, isEmpty, extend, without, cloneDeep, omit} from 'lodash'
 import React, {Component, PropTypes} from 'react'
-import {Router, RouteHandler, Link} from 'react-router'
 
 import Canvas from '../canvas/canvas'
 import DocumentNavbar from './document.navbar'
@@ -145,8 +144,12 @@ export class Document extends Component {
   }
 
   viewAllDocuments(sender) {
-    const {currentDocument, saveDocument, history} = this.props
-    saveDocument(currentDocument, () => history.push('/documents'))
+    const {currentDocument, saveDocument, documentChanged, history} = this.props
+
+    saveDocument(currentDocument, () => {
+      history.push('/documents')
+      documentChanged(null)
+    })
   }
 
   toggleInspector(sender) {
@@ -201,7 +204,7 @@ export class Document extends Component {
       updatedDocument = currentDocument.update('shapes', shapes => {
         shapes.push(shapeToPaste)
         return shapes
-      });
+      })
 
       this.updateDocument(updatedDocument)
       this.updateSelectedCanvasObject(shapeToPaste)

@@ -1,27 +1,27 @@
-import React, {Component, PropTypes} from 'react';
-import ReactDOM from 'react-dom';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import _ from 'lodash';
+import React, {Component, PropTypes} from 'react'
+import {downloadPdfBlob} from 'services/pdf.service'
 
 export default class DocumentPdfViewModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {currentUrl: null};
+  constructor() {
+    super(...arguments)
+    this.state = {currentUrl: null}
+    this.pdfLinkRef = null
   }
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      // DocumentStore.pdf(this.props.doc.get('_id'))
-      //   .then(blob => {
-      //     const
-      //       url = URL.createObjectURL(blob),
-      //       pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink)
-      //
-      //     pdfLink.href = url
-      //     pdfLink.innerHTML = 'Download'
-      //     pdfLink.setAttribute('download', `${this.props.doc.get('name')}.pdf`)
-      //     this.state.currentUrl = url
-      //   })
+      const id = this.props.doc.get('_id')
+
+      downloadPdfBlob(id)
+        .then(blob => {
+          const url = URL.createObjectURL(blob)
+          const {pdfLinkRef} = this
+
+          pdfLinkRef.href = url
+          pdfLinkRef.innerHTML = 'Download'
+          pdfLinkRef.setAttribute('download', `${this.props.doc.get('name')}.pdf`)
+          this.state.currentUrl = url
+        })
     }
   }
 
@@ -36,7 +36,12 @@ export default class DocumentPdfViewModal extends Component {
                 <h3>{this.props.doc.get('name')} has been exported to PDF.</h3>
               </div>
               <div className="modal-form-buttons">
-                <a className="button button-full" role="button" href="#" target="_blank" ref="pdfLink">
+                <a
+                  className="button button-full"
+                  role="button"
+                  href="#"
+                  target="_blank"
+                  ref={pdfLinkRef => this.pdfLinkRef = pdfLinkRef}>
                   Exporting…
                 </a>
                 <button className="button button-full" type="button" onClick={::this.dismiss}>
@@ -56,10 +61,10 @@ export default class DocumentPdfViewModal extends Component {
 
   dismiss() {
     if (this.state.currentUrl) {
-      URL.revokeObjectURL(this.state.currentUrl);
-      this.state.currentUrl = null;
+      URL.revokeObjectURL(this.state.currentUrl)
+      this.state.currentUrl = null
     }
 
-    this.props.togglePdfDownloadModal();
+    this.props.togglePdfDownloadModal()
   }
 }

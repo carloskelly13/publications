@@ -4,8 +4,6 @@ var
   webpack = require('webpack');
 
 module.exports = {
-  watch: true,
-
   entry: [
     './app/js/app.js'
   ],
@@ -44,9 +42,17 @@ module.exports = {
 
   resolve: {
     root: [
-      path.join(__dirname, 'node_modules')
+      path.join(__dirname, 'node_modules'),
+      path.join(__dirname, 'app/js')
     ],
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
+    alias: {
+      'components': 'components',
+      'actions': 'actions',
+      'reducers': 'reducers',
+      'stores': 'stores',
+      'services': 'services'
+    }
   },
 
   plugins: [
