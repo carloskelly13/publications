@@ -15,7 +15,7 @@ export default class AboutAppModal extends Component {
                 <div className="pub-logo-60"></div>
                 <h1>Publications</h1>
                 <h3>Publications is designed, developed and maintained by Mike Kelly and Carlos Paelinck.</h3>
-                <h4>Powered by ReactJS.</h4>
+                <h4>Powered by React + Redux.</h4>
               </div>
               <div className="modal-form-buttons">
                 <button

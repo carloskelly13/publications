@@ -1,6 +1,5 @@
 import React, {Component, PropTypes, addons} from 'react'
 import InputText from '../ui/input.text'
-import UserActions from '../../actions/user.actions'
 
 export default class UserAccountModal extends Component {
   constructor() {

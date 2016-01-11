@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import DocumentStore from '../../stores/document.store';
 import _ from 'lodash';
 
 export default class DocumentPdfViewModal extends Component {
@@ -12,17 +11,17 @@ export default class DocumentPdfViewModal extends Component {
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      DocumentStore.pdf(this.props.doc.get('_id'))
-        .then(blob => {
-          const
-            url = URL.createObjectURL(blob),
-            pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink)
-
-          pdfLink.href = url
-          pdfLink.innerHTML = 'Download'
-          pdfLink.setAttribute('download', `${this.props.doc.get('name')}.pdf`)
-          this.state.currentUrl = url
-        })
+      // DocumentStore.pdf(this.props.doc.get('_id'))
+      //   .then(blob => {
+      //     const
+      //       url = URL.createObjectURL(blob),
+      //       pdfLink = ReactDOM.findDOMNode(this.refs.pdfLink)
+      //
+      //     pdfLink.href = url
+      //     pdfLink.innerHTML = 'Download'
+      //     pdfLink.setAttribute('download', `${this.props.doc.get('name')}.pdf`)
+      //     this.state.currentUrl = url
+      //   })
     }
   }
 

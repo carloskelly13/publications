@@ -1,6 +1,4 @@
 import {merge, isEmpty, extend, without, cloneDeep, omit} from 'lodash'
-import AuthComponent from '../../core/auth-component'
-import DocumentStore from '../../stores/document.store'
 import React, {Component, PropTypes} from 'react'
 import {Router, RouteHandler, Link} from 'react-router'
 
@@ -11,19 +9,24 @@ import RulerHorizontal from '../rulers/ruler.horizontal'
 import RulerVertical from '../rulers/ruler.vertical'
 import DocumentPdfViewModal from './document.pdf.modal'
 
-import DocumentActions from '../../actions/document.actions'
 import ShapeFactory from '../../core/shape.factory'
 
-export default class Document extends Component {
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as UserActions from 'actions/user'
+import * as DocumentActions from 'actions/document'
+
+const mapStateToProps = state => state.doc
+const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
+
+export class Document extends Component {
 
   constructor() {
     super(...arguments)
 
-    this.dataChanged = this.dataChanged.bind(this)
     this.state = {
-      doc: DocumentStore.getDocument(),
       selectedShape: null,
-      showInspector: false,
+      showInspector: true,
       isPdfModalOpen: false,
       zoom: 1.0,
       clipboard: null,
@@ -31,41 +34,23 @@ export default class Document extends Component {
     }
   }
 
-  componentWillMount() {
-    DocumentStore.addChangeListener(this.dataChanged)
-  }
-
   componentDidMount() {
-    DocumentActions.get(this.props.params.id)
+    const {id} = this.props.params
+    this.props.getDocument(id)
   }
 
   componentWillUnmount() {
-    DocumentStore.resetDocument()
-    DocumentStore.removeChangeListener(this.dataChanged)
     document.title = 'Publications'
   }
 
   render() {
+    const {currentDocument} = this.props
     const DPI = 72.0
-    const documentLoaded = !isEmpty(this.state.doc.get('_id'))
 
-    const rulers = documentLoaded ? (
-      <div>
-        <RulerVertical
-          doc={this.state.doc}
-          dpi={DPI}
-          zoom={this.state.zoom} />
-        <RulerHorizontal
-          doc={this.state.doc}
-          dpi={DPI}
-          zoom={this.state.zoom} />
-      </div>
-    ) : null
-
-    return (
-      <div>
+    if (currentDocument) {
+      return <div>
         <DocumentPdfViewModal
-          doc={this.state.doc}
+          doc={currentDocument}
           togglePdfDownloadModal={::this.togglePdfDownloadModal}
           isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
@@ -76,14 +61,14 @@ export default class Document extends Component {
           selectedShape={this.state.selectedShape}
           save={::this.save}
           showInspector={this.state.showInspector}
-          title={this.state.doc.get('name')}
+          title={currentDocument.get('name')}
           toggleInspector={::this.toggleInspector}
           viewAllDocuments={::this.viewAllDocuments}
           zoom={this.state.zoom} />
         <div className="app-content app-content-document">
           <InspectorBase
             addNewShape={::this.addNewShape}
-            doc={this.state.doc}
+            doc={currentDocument}
             dpi={DPI}
             zoom={this.state.zoom}
             selectedShape={this.state.selectedShape}
@@ -91,9 +76,16 @@ export default class Document extends Component {
             updateShape={::this.updateShape}
             updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
             showInspector={this.state.showInspector} />
-          {rulers}
+          <RulerVertical
+            doc={currentDocument}
+            dpi={DPI}
+            zoom={this.state.zoom} />
+          <RulerHorizontal
+            doc={currentDocument}
+            dpi={DPI}
+            zoom={this.state.zoom} />
           <Canvas
-            doc={this.state.doc}
+            doc={currentDocument}
             dpi={DPI}
             zoom={this.state.zoom}
             showInspector={this.state.showInspector}
@@ -103,19 +95,9 @@ export default class Document extends Component {
             updateShape={::this.updateShape} />
         </div>
       </div>
-    )
-  }
 
-  dataChanged() {
-    this.setState({
-      doc: DocumentStore.getDocument(),
-      showInspector: true
-    })
-
-    document.title = `Publications — ${this.state.doc.get('name')}`
-
-    if (this.state.shouldViewAllDocuments) {
-      this.props.history.push('/documents')
+    } else {
+      return <div>Loading</div>
     }
   }
 
@@ -128,7 +110,7 @@ export default class Document extends Component {
   }
 
   updateDocument(sender) {
-    DocumentActions.update(sender)
+    this.props.documentChanged(sender)
   }
 
   updateShape(sender) {
@@ -138,7 +120,8 @@ export default class Document extends Component {
   }
 
   save() {
-    DocumentActions.put(this.props.params.id)
+    const {currentDocument, saveDocument} = this.props
+    saveDocument(currentDocument)
   }
 
   addNewShape(type) {
@@ -152,7 +135,7 @@ export default class Document extends Component {
       newShape = ShapeFactory.rectangle()
     }
 
-    const updatedDocument = this.state.doc.update('shapes', shapes => {
+    const updatedDocument = this.props.currentDocument.update('shapes', shapes => {
       shapes.push(newShape)
       return shapes
     })
@@ -162,8 +145,8 @@ export default class Document extends Component {
   }
 
   viewAllDocuments(sender) {
-    this.setState({shouldViewAllDocuments: true})
-    DocumentActions.put(this.props.params.id)
+    const {currentDocument, saveDocument, history} = this.props
+    saveDocument(currentDocument, () => history.push('/documents'))
   }
 
   toggleInspector(sender) {
@@ -181,22 +164,23 @@ export default class Document extends Component {
   }
 
   clipboardAction(action) {
+    const {currentDocument} = this.props
     let updatedDocument = null
 
     switch (action) {
       case 'cut':
       const shapeToCut = cloneDeep(omit(this.state.selectedShape, '_id'))
-      updatedDocument = this.state.doc.update('shapes', shapes => {
+      updatedDocument = currentDocument.update('shapes', shapes => {
         return without(shapes, this.state.selectedShape)
       })
 
       this.setState({clipboard: shapeToCut})
       this.updateDocument(updatedDocument)
       this.updateSelectedCanvasObject(null)
-      break;
+      break
 
       case 'delete':
-      updatedDocument = this.state.doc.update('shapes', shapes => {
+      updatedDocument = currentDocument.update('shapes', shapes => {
         return without(shapes, this.state.selectedShape)
       })
 
@@ -214,7 +198,7 @@ export default class Document extends Component {
       shapeToPaste.x += 0.25
       shapeToPaste.y += 0.25
 
-      updatedDocument = this.state.doc.update('shapes', shapes => {
+      updatedDocument = currentDocument.update('shapes', shapes => {
         shapes.push(shapeToPaste)
         return shapes
       });
@@ -231,3 +215,5 @@ export default class Document extends Component {
     this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Document)

@@ -1,5 +1,4 @@
-import AuthComponent from '../../core/auth-component'
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
 import {select, contains, isEmpty} from 'lodash'
 
 import DocumentsNavbar from './documents.navbar'
@@ -21,7 +20,6 @@ const mapDispatchToProps = dispatch => bindActionCreators(
 export class Documents extends Component {
   constructor() {
     super(...arguments)
-    this.dataChanged = this.dataChanged.bind(this)
 
     this.state = {
       searchKeyword: '',
@@ -41,6 +39,11 @@ export class Documents extends Component {
     document.title = 'Publications'
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.documents.length > this.props.documents.length) {
+      this.setState({isNewDocModalOpen: false})
+    }
+  }
 
   render() {
     let documentItems = select(this.props.documents, doc => {
@@ -103,13 +106,6 @@ export class Documents extends Component {
     this.setState({searchKeyword: event.target.value})
   }
 
-  dataChanged() {
-    this.setState({
-      documents: DocumentStore.getDocuments(),
-      isNewDocModalOpen: false
-    })
-  }
-
   toggleNewDocumentModal() {
     this.setState({
       isNewDocModalOpen: !this.state.isNewDocModalOpen
@@ -123,11 +119,11 @@ export class Documents extends Component {
   }
 
   createNewDocument(options) {
-    // DocumentActions.create({
-    //   name: options.name,
-    //   width: options.width,
-    //   height: options.height
-    // })
+    this.props.newDocument({
+      name: options.name,
+      width: options.width,
+      height: options.height
+    })
   }
 
   editDocument() {
@@ -136,8 +132,6 @@ export class Documents extends Component {
     if (selectedDocument) {
       const id = selectedDocument.get('_id')
       this.props.history.push(`/documents/${id}/edit`)
-      // this.props.history.pushState
-      // this.context.router.transitionTo('document-edit', {id: })
     }
   }
 
@@ -145,7 +139,8 @@ export class Documents extends Component {
     const selectedDocument = this.state.selectedDocument
 
     if (!!selectedDocument) {
-      // DocumentActions.remove(selectedDocument)
+      this.props.removeDocument(selectedDocument)
+      this.setState({selectedDocument: null})
     }
   }
 
