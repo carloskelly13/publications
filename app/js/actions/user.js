@@ -2,6 +2,8 @@ import fetch from 'isomorphic-fetch'
 
 export const RECIEVE_USER = 'RECIEVE_USER'
 export const REQUEST_USER = 'REQUEST_USER'
+export const PATCH_USER = 'PATCH_USER'
+export const RESET_PATCH_USER = 'RESET_PATCH_USER'
 
 const receiveUser = userJson => ({
   type: RECIEVE_USER,
@@ -10,6 +12,14 @@ const receiveUser = userJson => ({
 
 const requestUser = () => ({
   type: REQUEST_USER
+})
+
+const patchUser = () => ({
+  type: PATCH_USER
+})
+
+const resetPatchUser = () => ({
+  type: RESET_PATCH_USER
 })
 
 export function login(data = {name: '', password: ''}) {
@@ -80,7 +90,7 @@ export function getUser() {
 
     dispatch(requestUser())
 
-    return fetch(`http://api.publicationsapp.com/users/current`, {
+    fetch(`http://api.publicationsapp.com/users/current`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -108,4 +118,57 @@ export function getUser() {
       isAuthenticated: false
     })))
   }
+}
+
+export function createNewUser(user) {
+  return dispatch => {
+
+  }
+}
+
+export function updateUser(updateJson) {
+  return dispatch => {
+    const token = sessionStorage.getItem('access-token')
+
+    if (!token) {
+      return
+    }
+
+    dispatch(patchUser())
+
+    fetch(`http://api.publicationsapp.com/users`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${token}`
+      },
+      body: JSON.stringify(updateJson)
+    })
+    .then(response => {
+      if (response.status === 200) {
+        return response.json()
+      } else {
+        const error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+    })
+    .then(userJson => {
+      dispatch(receiveUser(Object.assign({}, userJson, {
+        isAuthenticated: true,
+        failedUpdate: false
+      })))
+    })
+    .catch(() => {
+      dispatch(receiveUser({
+        isAuthenticated: true,
+        failedUpdate: true
+      }))
+    })
+  }
+}
+
+export function cancelUpdateUser() {
+  return dispatch => dispatch(resetPatchUser())
 }

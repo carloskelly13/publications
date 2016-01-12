@@ -12,6 +12,16 @@ export default class UserAccountModal extends Component {
       temporary: nextProps.isTemporaryUser,
       name: nextProps.isTemporaryUser ? '' : nextProps.userName
     })
+
+    if (this.props.isPatchingUser &&
+        !nextProps.isPatchingUser &&
+        !nextProps.failedUpdate) {
+      this.dismiss()
+    }
+
+    if (nextProps.failedUpdate) {
+      this.setState({password: '', currrentPassword: ''})
+    }
   }
 
   render() {
@@ -36,7 +46,19 @@ export default class UserAccountModal extends Component {
     /> : null
 
     const headerText = temporary ? 'Create Account' : 'Change Password'
-    const descriptionText = temporary ? 'Create a free Publications account.' : `Update password for ${this.state.name}.`
+    const {failedUpdate, isPatchingUser} = this.props
+
+    const descriptionText = (temporary, failedUpdate, name = null) => {
+      if (temporary && !failedUpdate) {
+        return 'Create a free Publications account'
+      } else if (temporary && failedUpdate) {
+        return 'There was an error creating your account. Verify the email is not already in use and try again.'
+      } else if (!temporary && !failedUpdate) {
+        return `Update password for ${name}.`
+      } else if (!temporary && failedUpdate) {
+        return 'There was an error updating your account. Verify the passwords are correct and try again.'
+      }
+    }
 
     if (this.props.isOpen) {
       return (
@@ -45,7 +67,7 @@ export default class UserAccountModal extends Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h1>{headerText}</h1>
-                <h3>{descriptionText}</h3>
+                <h3>{descriptionText(temporary, failedUpdate, this.state.name)}</h3>
               </div>
               <div className="modal-inner-content">
                 <form onSubmit={::this.handleSubmit}>
@@ -59,10 +81,10 @@ export default class UserAccountModal extends Component {
                     valueChanged={::this.formValueChanged}
                   />
                   <div className="modal-form-buttons">
-                    <button className="button button-full" type="submit">
+                    <button disabled={isPatchingUser} className="button button-full" type="submit">
                       {temporary ? 'Create Account' : 'Update'}
                     </button>
-                    <button className="button button-full" type="button" onClick={::this.dismiss}>
+                    <button disabled={isPatchingUser} className="button button-full" type="button" onClick={::this.dismiss}>
                       Close
                     </button>
                   </div>
@@ -90,6 +112,7 @@ export default class UserAccountModal extends Component {
     }
 
     this.setState(clearState)
+    this.props.cancelUpdateUser()
     this.props.toggleModal()
   }
 
@@ -97,14 +120,16 @@ export default class UserAccountModal extends Component {
     event.preventDefault()
 
     const {currentPassword, password} = this.state
-    let patchData = {password}
+    let updateJson = {password}
 
     if (this.state.temporary) {
-      patchData.name = this.state.name
-      patchData.currentPassword = 'password'
-      patchData.temporary = false
+      updateJson.name = this.state.name
+      updateJson.currentPassword = 'password'
+      updateJson.temporary = false
     } else {
-      patchData.currentPassword = currentPassword
+      updateJson.currentPassword = currentPassword
     }
+
+    this.props.updateUser(updateJson)
   }
 }

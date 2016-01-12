@@ -67,6 +67,10 @@ export class Documents extends Component {
       <div>
         <UserAccountModal
           userName={this.props.userName}
+          updateUser={this.props.updateUser}
+          cancelUpdateUser={this.props.cancelUpdateUser}
+          isPatchingUser={this.props.isPatchingUser}
+          failedUpdate={this.props.failedUpdate}
           isTemporaryUser={this.props.isTemporaryUser}
           toggleModal={::this.toggleUserAccountModal}
           isOpen={this.state.isUserAccountModalOpen}
