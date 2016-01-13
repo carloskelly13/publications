@@ -149,8 +149,9 @@ export class Documents extends Component {
   }
 
   logOut() {
-    const {history, logoutUser} = this.props
+    const {history, logoutUser, clearDocuments} = this.props
     logoutUser()
+    clearDocuments()
     history.push('/')
   }
 }

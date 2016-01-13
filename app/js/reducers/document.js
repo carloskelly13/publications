@@ -1,4 +1,4 @@
-import {REQUEST_DOCUMENTS, RECEIVE_DOCUMENTS, POST_DOCUMENT, DELETE_DOCUMENT, REQUEST_DOCUMENT, RECEIVE_DOCUMENT, PATCH_DOCUMENT, UPDATE_DOCUMENT} from 'actions/document'
+import {REQUEST_DOCUMENTS, RECEIVE_DOCUMENTS, POST_DOCUMENT, DELETE_DOCUMENT, REQUEST_DOCUMENT, RECEIVE_DOCUMENT, PATCH_DOCUMENT, UPDATE_DOCUMENT, RESET_DOCUMENTS} from 'actions/document'
 
 export default function documentReducer(state = {
   documents: [],
@@ -34,6 +34,13 @@ export default function documentReducer(state = {
     return Object.assign({}, state, {
       currentDocument: action.doc
     })
+
+  case RESET_DOCUMENTS:
+    return {
+      documents: [],
+      currentDocument: null,
+      isRequestingData: false
+    }
 
   default:
     return state

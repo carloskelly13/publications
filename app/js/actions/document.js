@@ -2,6 +2,7 @@ import {Map} from 'immutable'
 
 export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
 export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
+export const RESET_DOCUMENTS = 'RESET_DOCUMENTS'
 export const POST_DOCUMENT = 'POST_DOCUMENT'
 export const DELETE_DOCUMENT = 'DELETE_DOCUMENT'
 export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
@@ -44,6 +45,10 @@ const putDocument = () => ({
 const updateDocument = doc => ({
   type: UPDATE_DOCUMENT,
   doc
+})
+
+const resetDocuments = () => ({
+  type: RESET_DOCUMENTS
 })
 
 export function getDocuments() {
@@ -165,7 +170,9 @@ export function saveDocument(doc, completion = () => {}) {
 }
 
 export function documentChanged(doc) {
-  return dispatch => {
-    dispatch(updateDocument(doc))
-  }
+  return dispatch => dispatch(updateDocument(doc))
+}
+
+export function clearDocuments() {
+  return dispatch => dispatch(resetDocuments())
 }

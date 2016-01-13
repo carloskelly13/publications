@@ -19,11 +19,11 @@ export class Login extends Component {
   }
 
   createTestDriveAccount() {
-    // UserActions.post({
-    //   name: `${uuid()}@publicationsapp.com`,
-    //   password: 'password',
-    //   temporary: true
-    // })
+    this.props.createNewUser({
+      name: `${uuid()}@publicationsapp.com`,
+      password: 'password',
+      temporary: true
+    })
   }
 
   componentWillReceiveProps(nextProps) {

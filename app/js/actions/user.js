@@ -120,9 +120,31 @@ export function getUser() {
   }
 }
 
-export function createNewUser(user) {
+export function createNewUser(userJson) {
   return dispatch => {
+    dispatch(requestUser())
 
+    fetch(`http://api.publicationsapp.com/users`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(userJson)
+    })
+    .then(response => {
+      if (response.status === 200) {
+        return response.json()
+      } else {
+        const error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+    })
+    .then(() => {
+      const loginData = {name: userJson.name, password: userJson.password}
+      login(loginData)(dispatch)
+    })
   }
 }
 
