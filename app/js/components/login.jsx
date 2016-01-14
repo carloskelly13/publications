@@ -52,22 +52,25 @@ export class Login extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <form onSubmit={::this.logInFormSubmitted}>
-          <h3>Log In</h3>
-          <p>{this.props.isRequestingUser ? 'Checking Login' : ''}</p>
-          <input type="text" name="name" onChange={::this.nameChanged} value={this.state.name} />
-          <input type="password" name="password" onChange={::this.passwordChanged} value={this.state.password} />
-          <button type="submit">Log In</button>
-        </form>
-        <button
-          onClick={::this.createTestDriveAccount}
-          role="button">
-          Test Drive
-        </button>
+    const loginForm = <form onSubmit={::this.logInFormSubmitted}>
+        <h3>Log In</h3>
+        <p>{this.props.isRequestingUser ? 'Checking Login' : ''}</p>
+        <input type="text" name="name" onChange={::this.nameChanged} value={this.state.name} />
+        <input type="password" name="password" onChange={::this.passwordChanged} value={this.state.password} />
+        <button type="submit">Log In</button>
+      </form>
+
+    const testDriveButton = <button
+      onClick={::this.createTestDriveAccount}
+      role="button">
+      Test Drive
+    </button>
+
+    return <div className="index-view">
+      <div className="index-container">
+        <div className="index-logo"></div>
       </div>
-    )
+    </div>
   }
 }
 
