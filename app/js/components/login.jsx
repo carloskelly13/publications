@@ -65,23 +65,25 @@ export class Login extends Component {
         onSubmit={::this.logInFormSubmitted}>
         {//<p>{this.props.isRequestingUser ? 'Checking Login' : ''}</p>
         }
-        <div className="input-container input-container-half">
-          <InputText
-            placeholder="Email address"
-            name="name"
-            theme="light"
-            type="text"
-            value={this.state.name}
-            valueChanged={::this.nameChanged} />
-        </div>
-        <div className="input-container input-container-half">
-          <InputText
-            placeholder="Password"
-            name="password"
-            theme="light"
-            type="password"
-            value={this.state.password}
-            valueChanged={::this.passwordChanged} />
+        <div>
+          <div className="input-container input-container-half">
+            <InputText
+              placeholder="Email address"
+              name="name"
+              theme="light"
+              type="text"
+              value={this.state.name}
+              valueChanged={::this.nameChanged} />
+          </div>
+          <div className="input-container input-container-half">
+            <InputText
+              placeholder="Password"
+              name="password"
+              theme="light"
+              type="password"
+              value={this.state.password}
+              valueChanged={::this.passwordChanged} />
+          </div>
         </div>
         <button
           type="submit"
@@ -102,8 +104,8 @@ export class Login extends Component {
       <div className="index-container">
         <div className="index-logo"></div>
         {loginForm}
-        <p className="index-intro-text">{introText}</p>
       </div>
+      {/*<p className="index-intro-text">{introText}</p>*/}
     </div>
   }
 }
