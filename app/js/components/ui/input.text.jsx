@@ -10,6 +10,7 @@ export default class InputText extends InputBase {
       type,
       validator,
       validatorOptions,
+      placeholder,
       unit
     } = this.props,
     unitLabel,
@@ -23,6 +24,10 @@ export default class InputText extends InputBase {
       unitLabel = <span className="unit-marker">{unit}</span>;
     }
 
+    const label = displayName ? <label htmlFor={name}>
+      {displayName}
+    </label> : null
+
     return (
       <div className={`input-text ${theme}`}>
         <div>
@@ -34,14 +39,13 @@ export default class InputText extends InputBase {
             onBlur={e => this.onComponentDefocus(e)}
             onChange={e => this.valueChanged(e)}
             name={name}
+            placeholder={placeholder || null}
             step={validatorOptions ? validatorOptions.step : null}
             type={type || 'text'}
             value={value} />
           {unitLabel}
         </div>
-        <label htmlFor={name}>
-          {displayName}
-        </label>
+        {label}
       </div>);
   }
 }
