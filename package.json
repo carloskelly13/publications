@@ -55,6 +55,7 @@
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
     "mocha": "^2.2.5",
+    "node-http-proxy": "^0.2.3",
     "path": "^0.11.14",
     "proxyquire": "^1.7.0",
     "proxyquire-universal": "^1.0.8",

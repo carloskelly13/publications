@@ -11,7 +11,7 @@ export default class DocumentItem extends Component {
 
   render() {
     const selected = (!!this.props.selectedDocument &&
-      this.props.selectedDocument.get('_id') == this.props.doc.get('_id'))
+      this.props.selectedDocument.get('id') == this.props.doc.get('id'))
 
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>

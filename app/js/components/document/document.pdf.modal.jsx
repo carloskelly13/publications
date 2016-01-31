@@ -10,7 +10,7 @@ export default class DocumentPdfViewModal extends Component {
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      const id = this.props.doc.get('_id')
+      const id = this.props.doc.get('id')
 
       downloadPdfBlob(id)
         .then(blob => {

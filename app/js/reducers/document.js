@@ -26,7 +26,7 @@ export default function documentReducer(state = {
 
   case DELETE_DOCUMENT:
     return Object.assign({}, state, {
-      documents: state.documents.filter(doc => doc.get('_id') !== action.doc.get('_id'))
+      documents: state.documents.filter(doc => doc.get('id') !== action.doc.get('id'))
     })
 
   case RECEIVE_DOCUMENT:

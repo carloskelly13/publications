@@ -1,4 +1,5 @@
 import {Map} from 'immutable'
+import {Urls} from '../core/constants'
 
 export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
 export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
@@ -53,19 +54,11 @@ const resetDocuments = () => ({
 
 export function getDocuments() {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      return
-    }
-
     dispatch(requestDocuments())
 
-    fetch('http://api.publicationsapp.com/documents', {
+    fetch(`${Urls.ApiBase}/documents`, {
       method: 'get',
-      headers: {
-        'Authorization' : `Bearer ${token}`
-      }
+      credentials: 'include'
     })
     .then(response => response.json())
     .then(json => {
@@ -77,19 +70,13 @@ export function getDocuments() {
 
 export function newDocument(doc) {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      return
-    }
-
-    fetch('http://api.publicationsapp.com/documents', {
+    fetch(`${Urls.ApiBase}/documents`, {
       method: 'post',
       headers: {
-        'Authorization' : `Bearer ${token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(doc)
     })
     .then(response => response.json())
@@ -99,17 +86,9 @@ export function newDocument(doc) {
 
 export function removeDocument(doc) {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      return
-    }
-
-    fetch(`http://api.publicationsapp.com/documents/${doc.get('_id')}`, {
+    fetch(`${Urls.ApiBase}/documents/${doc.get('id')}`, {
       method: 'delete',
-      headers: {
-        'Authorization' : `Bearer ${token}`
-      }
+      credentials: 'include'
     })
     .then(() => dispatch(deleteDocument(doc)))
   }
@@ -117,37 +96,20 @@ export function removeDocument(doc) {
 
 export function getDocument(id) {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      return
-    }
-
     dispatch(requestDocument())
 
-    fetch(`http://api.publicationsapp.com/documents/${id}`, {
+    fetch(`${Urls.ApiBase}/documents/${id}`, {
       method: 'get',
-      headers: {
-        'Authorization' : `Bearer ${token}`
-      }
+      credentials: 'include'
     })
     .then(response => response.json())
-    .then(documentJson => {
-      const doc = Map(documentJson)
-      dispatch(receiveDocument(doc))
-    })
+    .then(documentJson => dispatch(receiveDocument(Map(documentJson))))
   }
 }
 
 export function saveDocument(doc, completion = () => {}) {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      return
-    }
-
-    const id = doc.get('_id')
+    const id = doc.get('id')
 
     const documentJson = {
       name: doc.get('name'),
@@ -156,10 +118,10 @@ export function saveDocument(doc, completion = () => {}) {
       shapes: doc.get('shapes')
     }
 
-    fetch(`http://api.publicationsapp.com/documents/${id}`, {
+    fetch(`${Urls.ApiBase}/documents/${id}`, {
       method: 'put',
+      credentials: 'include',
       headers: {
-        'Authorization' : `Bearer ${token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },

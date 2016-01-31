@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import {Urls} from '../core/constants'
 
 export const RECIEVE_USER = 'RECIEVE_USER'
 export const REQUEST_USER = 'REQUEST_USER'
@@ -22,16 +23,17 @@ const resetPatchUser = () => ({
   type: RESET_PATCH_USER
 })
 
-export function login(data = {name: '', password: ''}) {
+export function login(data = {emailAddress: '', password: ''}) {
   return dispatch => {
     dispatch(requestUser())
 
-    fetch('http://api.publicationsapp.com/login', {
+    fetch(`${Urls.ApiBase}/users/login`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(data)
     })
     .then(response => {
@@ -44,12 +46,14 @@ export function login(data = {name: '', password: ''}) {
       }
     })
     .then(userJson => {
-      sessionStorage.setItem('access-token', userJson.token)
-
-      dispatch(receiveUser(Object.assign({}, userJson, {
+      const dispatchData = Object.assign({}, userJson, {
         failedAuthentication: false,
         isAuthenticated: true
-      })))
+      })
+
+      console.log(dispatchData)
+
+      dispatch(receiveUser(dispatchData))
     })
     .catch(() => dispatch(receiveUser({
       name: '',
@@ -75,27 +79,14 @@ export function logoutUser() {
 
 export function getUser() {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      dispatch(receiveUser({
-        name: '',
-        temporary: false,
-        failedAuthentication: true,
-        isAuthenticated: false
-      }))
-
-      return
-    }
-
     dispatch(requestUser())
 
-    fetch(`http://api.publicationsapp.com/users/current`, {
-      method: 'GET',
+    fetch(`${Urls.ApiBase}/users/current`, {
+      method: 'get',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization' : `Bearer ${token}`
+        'Content-Type': 'application/json'
       }
     })
     .then(response => {
@@ -124,8 +115,9 @@ export function createNewUser(userJson) {
   return dispatch => {
     dispatch(requestUser())
 
-    fetch(`http://api.publicationsapp.com/users`, {
+    fetch(`${Urls.ApiBase}/users`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -158,8 +150,9 @@ export function updateUser(updateJson) {
 
     dispatch(patchUser())
 
-    fetch(`http://api.publicationsapp.com/users`, {
+    fetch(`${Urls.ApiBase}/users`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',

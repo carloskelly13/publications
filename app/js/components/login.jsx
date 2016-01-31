@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(UserActions, dispatch)
 export class Login extends Component {
   constructor() {
     super(...arguments)
-    this.state = {name: '', password: ''}
+    this.state = {emailAddress: '', password: ''}
   }
 
   componentDidMount() {
@@ -22,7 +22,7 @@ export class Login extends Component {
 
   createTestDriveAccount() {
     this.props.createNewUser({
-      name: `${uuid()}@publicationsapp.com`,
+      emailAddress: `${uuid()}@publicationsapp.com`,
       password: 'password',
       temporary: true
     })
@@ -30,6 +30,7 @@ export class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {isAuthenticated, history} = nextProps
+    console.log(isAuthenticated)
 
     if (isAuthenticated) {
       history.push('/documents')
@@ -37,7 +38,7 @@ export class Login extends Component {
   }
 
   nameChanged(event) {
-    this.setState({name: event.target.value});
+    this.setState({emailAddress: event.target.value});
   }
 
   passwordChanged(event) {
@@ -48,7 +49,7 @@ export class Login extends Component {
     event.preventDefault()
 
     this.props.login({
-      name: this.state.name,
+      emailAddress: this.state.emailAddress,
       password: this.state.password
     })
   }
@@ -69,10 +70,10 @@ export class Login extends Component {
           <div className="input-container input-container-half">
             <InputText
               placeholder="Email address"
-              name="name"
+              name="emailAddress"
               theme="light"
               type="text"
-              value={this.state.name}
+              value={this.state.emailAddress}
               valueChanged={::this.nameChanged} />
           </div>
           <div className="input-container input-container-half">

@@ -55,7 +55,7 @@ export class Documents extends Component {
     }).map(doc => {
       return (
         <DocumentItem
-          key={doc.get('_id')}
+          key={doc.get('id')}
           doc={doc}
           editDocument={::this.editDocument}
           selectedDocument={this.state.selectedDocument}
@@ -126,7 +126,8 @@ export class Documents extends Component {
     this.props.newDocument({
       name: options.name,
       width: options.width,
-      height: options.height
+      height: options.height,
+      shapes: options.shapes
     })
   }
 
@@ -134,7 +135,7 @@ export class Documents extends Component {
     const selectedDocument = this.state.selectedDocument
 
     if (selectedDocument) {
-      const id = selectedDocument.get('_id')
+      const id = selectedDocument.get('id')
       this.props.history.push(`/documents/${id}/edit`)
     }
   }

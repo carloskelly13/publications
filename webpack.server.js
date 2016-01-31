@@ -7,7 +7,13 @@ var compile = webpack(webpackDevConfig);
 
 var server = new WebpackDevServer(compile, {
   contentBase: '/dist',
-  stats: {colors: true}
+  stats: {colors: true},
+  proxy: {
+    '*' : {
+      target: 'http://localhost:8080',
+      secure: false
+    }
+  }
 });
 
-server.listen(8080, 'localhost', function() {});
+server.listen(8000, 'localhost', function() {});

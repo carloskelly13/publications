@@ -26,7 +26,7 @@ export default class InspectorBase extends Component {
         updateShape,
         updateSelectedCanvasObject
       } = this.props,
-      documentLoaded = !isEmpty(doc.get('_id'))
+      documentLoaded = !isEmpty(doc.get('id'))
 
     if (documentLoaded) {
       switch (this.state.tab) {
