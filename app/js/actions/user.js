@@ -66,14 +66,18 @@ export function login(data = {emailAddress: '', password: ''}) {
 
 export function logoutUser() {
   return dispatch => {
-    sessionStorage.removeItem('access-token')
-
-    dispatch(receiveUser({
-      name: '',
-      temporary: false,
-      failedAuthentication: false,
-      isAuthenticated: false
-    }))
+    fetch(`${Urls.ApiBase}/users/logout`, {
+      method: 'post',
+      credentials: 'include'
+    })
+    .then(() => {
+      dispatch(receiveUser({
+        name: '',
+        temporary: false,
+        failedAuthentication: false,
+        isAuthenticated: false
+      }))
+    })
   }
 }
 
