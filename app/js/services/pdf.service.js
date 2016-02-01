@@ -1,14 +1,13 @@
 import fetch from 'isomorphic-fetch'
+import {Urls} from '../core/constants'
 
 const PdfService = {
   downloadPdfBlob: id => {
     const token = sessionStorage.getItem('access-token') || ''
 
-    return fetch(`http://api.publicationsapp.com/documents/${id}/pdf`, {
+    return fetch(`${Urls.ApiBase}/documents/${id}/pdf`, {
       method: 'get',
-      headers: {
-        'Authorization' : `Bearer ${token}`
-      }
+      credentials: 'include'
     })
     .then(response => response.blob())
   }
