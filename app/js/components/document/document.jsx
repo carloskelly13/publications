@@ -1,4 +1,4 @@
-import {merge, isEmpty, extend, without, cloneDeep, omit} from 'lodash'
+import {merge, isEmpty, extend, without, cloneDeep, omit, filter} from 'lodash'
 import React, {Component, PropTypes} from 'react'
 
 import Canvas from '../canvas/canvas'
@@ -135,6 +135,7 @@ export class Document extends Component {
     }
 
     const updatedDocument = this.props.currentDocument.update('shapes', shapes => {
+      newShape.z = shapes.length + 1
       shapes.push(newShape)
       return shapes
     })
@@ -172,7 +173,7 @@ export class Document extends Component {
 
     switch (action) {
       case 'cut':
-      const shapeToCut = cloneDeep(omit(this.state.selectedShape, '_id'))
+      const shapeToCut = cloneDeep(omit(this.state.selectedShape, 'id'))
       updatedDocument = currentDocument.update('shapes', shapes => {
         return without(shapes, this.state.selectedShape)
       })
@@ -184,7 +185,10 @@ export class Document extends Component {
 
       case 'delete':
       updatedDocument = currentDocument.update('shapes', shapes => {
-        return without(shapes, this.state.selectedShape)
+        const {selectedShape} = this.state
+        const shapesToAdjust = filter(shapes, s => s.z > selectedShape.z)
+        shapesToAdjust.forEach(s => s.z -= 1)
+        return without(shapes, selectedShape)
       })
 
       this.updateDocument(updatedDocument)
@@ -192,7 +196,7 @@ export class Document extends Component {
       break
 
       case 'copy':
-      const shapeToCopy = cloneDeep(omit(this.state.selectedShape, '_id'))
+      const shapeToCopy = cloneDeep(omit(this.state.selectedShape, 'id'))
       this.setState({clipboard: shapeToCopy})
       break
 

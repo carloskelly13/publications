@@ -22,8 +22,9 @@ export default class Canvas extends Component {
       canvasSelectors = `canvas-container ${showInspector ? 'canvas-container-expanded' : ''} ${selectable ? '' : 'canvas-no-select'}`
 
     const shapeProps = omit(this.props, 'doc')
+    const sortedShapes = doc.get('shapes').sort((lhs, rhs) => lhs.z - rhs.z)
 
-    const shapeElements = doc.get('shapes').map((shape, idx) => {
+    const shapeElements = sortedShapes.map((shape, idx) => {
       switch (shape.type) {
         case 'rect':
         return <ShapeRect {...shapeProps} key={idx} shape={shape} />

@@ -51,8 +51,6 @@ export function login(data = {emailAddress: '', password: ''}) {
         isAuthenticated: true
       })
 
-      console.log(dispatchData)
-
       dispatch(receiveUser(dispatchData))
     })
     .catch(() => dispatch(receiveUser({

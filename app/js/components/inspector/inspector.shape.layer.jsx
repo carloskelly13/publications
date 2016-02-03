@@ -1,50 +1,55 @@
 import React, {Component} from 'react'
-import {indexOf, size} from 'lodash'
+import {cloneDeep, filter} from 'lodash'
 
 export default class InspectorShapeLayer extends Component {
   moveToFront() {
-    const shapeLayerCount = size(this.props.doc.get('shapes'))
-    this.shiftShapeLayer(shapeLayerCount)
+    const shape = this.props.shape
+    const shapes = this.props.doc.get('shapes')
+
+    const shapesToAdjust = filter(shapes, s => s.z > shape.z)
+    shapesToAdjust.forEach(s => s.z -= 1)
+    shape.z = shapes.length
+
+    this.updateDocumentForLayerAdjustments({shapes, shape})
   }
 
   moveToBack() {
+    const shape = this.props.shape
     const shapes = this.props.doc.get('shapes')
-    const idx = indexOf(shapes, this.props.shape)
-    this.shiftShapeLayer(-idx)
+
+    const shapesToAdjust = filter(shapes, s => s.z < shape.z)
+    shapesToAdjust.forEach(s => s.z += 1)
+    shape.z = 1
+
+    this.updateDocumentForLayerAdjustments({shapes, shape})
   }
 
   moveForwards() {
-    this.shiftShapeLayer(1)
+    const shape = this.props.shape
+    const shapes = this.props.doc.get('shapes')
+
+    const shapesToAdjust = filter(shapes, s => s.z === shape.z + 1)
+    shapesToAdjust.forEach(s => s.z -= 1)
+    shape.z += 1
+
+    this.updateDocumentForLayerAdjustments({shapes, shape})
   }
 
   moveBackwards() {
-    this.shiftShapeLayer(-1)
+    const shape = this.props.shape
+    const shapes = this.props.doc.get('shapes')
+
+    const shapesToAdjust = filter(shapes, s => s.z === shape.z - 1)
+    shapesToAdjust.forEach(s => s.z += 1)
+    shape.z -= 1
+
+    this.updateDocumentForLayerAdjustments({shapes, shape})
   }
 
-  shiftShapeLayer(offset) {
-    let shape = this.props.shape
-    let updatedDocument = this.props.doc.update('shapes', shapes => {
-      this.shiftObject(shape, shapes, offset)
-      return shapes
-    })
-
+  updateDocumentForLayerAdjustments(sender) {
+    const updatedDocument = this.props.doc.set('shapes', sender.shapes)
+    this.props.updateSelectedCanvasObject(sender.shape)
     this.props.updateDocument(updatedDocument)
-  }
-
-  shiftObject(object, objects, offset) {
-    const idx = indexOf(objects, object)
-    if (idx === -1) return
-
-    let newIdx = idx + offset
-
-    if (newIdx < 0) {
-      newIdx = 0
-    } else if (newIdx > size(objects)) {
-      newIdx = size(objects)
-    }
-
-    objects.splice(idx, 1)
-    objects.splice(newIdx, 0, object)
   }
 
   render() {

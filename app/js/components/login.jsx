@@ -30,8 +30,7 @@ export class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {isAuthenticated, history} = nextProps
-    console.log(isAuthenticated)
-
+    
     if (isAuthenticated) {
       history.push('/documents')
     }
