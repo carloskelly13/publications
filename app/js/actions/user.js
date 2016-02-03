@@ -11,21 +11,11 @@ const receiveUser = userJson => ({
   userJson
 })
 
-const requestUser = () => ({
-  type: REQUEST_USER
-})
-
-const patchUser = () => ({
-  type: PATCH_USER
-})
-
-const resetPatchUser = () => ({
-  type: RESET_PATCH_USER
-})
-
 export function login(data = {emailAddress: '', password: ''}) {
   return dispatch => {
-    dispatch(requestUser())
+    dispatch({
+      type: REQUEST_USER
+    })
 
     fetch(`${Urls.ApiBase}/users/login`, {
       method: 'post',
@@ -150,7 +140,9 @@ export function updateUser(updateJson) {
       return
     }
 
-    dispatch(patchUser())
+    dispatch({
+      type: PATCH_USER
+    })
 
     fetch(`${Urls.ApiBase}/users`, {
       method: 'PATCH',
@@ -187,5 +179,7 @@ export function updateUser(updateJson) {
 }
 
 export function cancelUpdateUser() {
-  return dispatch => dispatch(resetPatchUser())
+  return dispatch => dispatch({
+    type: RESET_PATCH_USER
+  })
 }

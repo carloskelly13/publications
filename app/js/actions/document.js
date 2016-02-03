@@ -5,65 +5,34 @@ export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
 export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
 export const RESET_DOCUMENTS = 'RESET_DOCUMENTS'
 export const POST_DOCUMENT = 'POST_DOCUMENT'
+export const POST_DOCUMENT_FAILURE = 'POST_DOCUMENT_FAILURE'
+export const RESET_POST_DOCUMENT_FAILURE = 'RESET_POST_DOCUMENT_FAILURE'
 export const DELETE_DOCUMENT = 'DELETE_DOCUMENT'
 export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
-export const PUT_DOCUMENT = 'PUT_DOCUMENT'
 export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
-
-const requestDocuments = () => ({
-  type: REQUEST_DOCUMENTS
-})
-
-const receiveDocuments = documents => ({
-  type: RECEIVE_DOCUMENTS,
-  documents
-})
-
-const postDocument = doc => ({
-  type: POST_DOCUMENT,
-  doc
-})
-
-const deleteDocument = doc => ({
-  type: DELETE_DOCUMENT,
-  doc
-})
-
-const requestDocument = () => ({
-  type: REQUEST_DOCUMENT
-})
-
-const receiveDocument = doc => ({
-  type: RECEIVE_DOCUMENT,
-  doc
-})
-
-const putDocument = () => ({
-  type: PUT_DOCUMENT
-})
-
-const updateDocument = doc => ({
-  type: UPDATE_DOCUMENT,
-  doc
-})
-
-const resetDocuments = () => ({
-  type: RESET_DOCUMENTS
-})
 
 export function getDocuments() {
   return dispatch => {
-    dispatch(requestDocuments())
+    dispatch({
+      type: REQUEST_DOCUMENTS
+    })
 
     fetch(`${Urls.ApiBase}/documents`, {
       method: 'get',
       credentials: 'include'
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 200) {
+        return response.json()
+      }
+    })
     .then(json => {
       const documents = json.map(doc => Map(doc))
-      dispatch(receiveDocuments(documents))
+      dispatch({
+        type: RECEIVE_DOCUMENTS,
+        documents
+      })
     })
   }
 }
@@ -79,9 +48,26 @@ export function newDocument(doc) {
       credentials: 'include',
       body: JSON.stringify(doc)
     })
-    .then(response => response.json())
-    .then(documentJson => dispatch(postDocument(Map(documentJson))))
+    .then(response => {
+      if (response.status === 200) {
+        return response.json()
+      } else {
+        dispatch({
+          type: POST_DOCUMENT_FAILURE
+        })
+      }
+    })
+    .then(documentJson => dispatch({
+      type: POST_DOCUMENT,
+      doc: Map(documentJson)
+    }))
   }
+}
+
+export function clearNewDocumentErrors() {
+  return dispatch => dispatch({
+    type: RESET_POST_DOCUMENT_FAILURE
+  })
 }
 
 export function removeDocument(doc) {
@@ -90,20 +76,32 @@ export function removeDocument(doc) {
       method: 'delete',
       credentials: 'include'
     })
-    .then(() => dispatch(deleteDocument(doc)))
+    .then(() => dispatch({
+      type: DELETE_DOCUMENT,
+      doc
+    }))
   }
 }
 
 export function getDocument(id) {
   return dispatch => {
-    dispatch(requestDocument())
+    dispatch({
+      type: REQUEST_DOCUMENT
+    })
 
     fetch(`${Urls.ApiBase}/documents/${id}`, {
       method: 'get',
       credentials: 'include'
     })
-    .then(response => response.json())
-    .then(documentJson => dispatch(receiveDocument(Map(documentJson))))
+    .then(response => {
+      if (response.status === 200) {
+        return response.json()
+      }
+    })
+    .then(documentJson => dispatch({
+      type: RECEIVE_DOCUMENT,
+      doc: Map(documentJson)
+    }))
   }
 }
 
@@ -132,9 +130,14 @@ export function saveDocument(doc, completion = () => {}) {
 }
 
 export function documentChanged(doc) {
-  return dispatch => dispatch(updateDocument(doc))
+  return dispatch => dispatch({
+    type: UPDATE_DOCUMENT,
+    doc
+  })
 }
 
 export function clearDocuments() {
-  return dispatch => dispatch(resetDocuments())
+  return dispatch => dispatch({
+    type: RESET_DOCUMENTS
+  })
 }
