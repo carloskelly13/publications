@@ -28,6 +28,7 @@ export function getDocuments() {
       }
     })
     .then(json => {
+      console.log(json)
       const documents = json.map(doc => Map(doc))
       dispatch({
         type: RECEIVE_DOCUMENTS,

@@ -16,4 +16,4 @@ var server = new WebpackDevServer(compile, {
   }
 });
 
-server.listen(8000, 'localhost', function() {});
+server.listen(4040, 'localhost', function() {});

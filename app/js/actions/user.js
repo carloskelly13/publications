@@ -71,7 +71,9 @@ export function logoutUser() {
 
 export function getUser() {
   return dispatch => {
-    dispatch(requestUser())
+    dispatch({
+      type: REQUEST_USER
+    })
 
     fetch(`${Urls.ApiBase}/users/current`, {
       method: 'get',
