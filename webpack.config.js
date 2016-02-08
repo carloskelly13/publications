@@ -1,7 +1,6 @@
-var
-  path = require('path'),
+const path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
-  webpack = require('webpack');
+  webpack = require('webpack')
 
 module.exports = {
   watch: true,

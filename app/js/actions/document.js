@@ -1,12 +1,11 @@
 import {Map} from 'immutable'
 import {Urls} from '../core/constants'
+import {addError} from './errors'
 
 export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
 export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
 export const RESET_DOCUMENTS = 'RESET_DOCUMENTS'
 export const POST_DOCUMENT = 'POST_DOCUMENT'
-export const POST_DOCUMENT_FAILURE = 'POST_DOCUMENT_FAILURE'
-export const RESET_POST_DOCUMENT_FAILURE = 'RESET_POST_DOCUMENT_FAILURE'
 export const DELETE_DOCUMENT = 'DELETE_DOCUMENT'
 export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
@@ -28,7 +27,6 @@ export function getDocuments() {
       }
     })
     .then(json => {
-      console.log(json)
       const documents = json.map(doc => Map(doc))
       dispatch({
         type: RECEIVE_DOCUMENTS,
@@ -53,9 +51,7 @@ export function newDocument(doc) {
       if (response.status === 200) {
         return response.json()
       } else {
-        dispatch({
-          type: POST_DOCUMENT_FAILURE
-        })
+        addError('create_doc_error')(dispatch)
       }
     })
     .then(documentJson => dispatch({
@@ -63,12 +59,6 @@ export function newDocument(doc) {
       doc: Map(documentJson)
     }))
   }
-}
-
-export function clearNewDocumentErrors() {
-  return dispatch => dispatch({
-    type: RESET_POST_DOCUMENT_FAILURE
-  })
 }
 
 export function removeDocument(doc) {

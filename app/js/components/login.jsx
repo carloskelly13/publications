@@ -4,11 +4,13 @@ import uuid from 'uuid4'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as UserActions from 'actions/user'
+import * as ErrorsActions from 'actions/errors'
 
 import InputText from './ui/input.text'
 
-const mapStateToProps = state => state.user
-const mapDispatchToProps = dispatch => bindActionCreators(UserActions, dispatch)
+const mapStateToProps = state => Object.assign({}, state.user, {errors: state.errors})
+const mapDispatchToProps = dispatch => bindActionCreators(Object.assign(
+  {}, UserActions, ErrorsActions), dispatch)
 
 export class Login extends Component {
   constructor() {
@@ -29,8 +31,9 @@ export class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {isAuthenticated, history} = nextProps
-    
+    const {isAuthenticated, history, errors} = nextProps
+    this.setState({userAuthError: errors.indexOf('user_auth_error') !== -1})
+
     if (isAuthenticated) {
       history.push('/documents')
     }
@@ -47,6 +50,8 @@ export class Login extends Component {
   logInFormSubmitted(event) {
     event.preventDefault()
 
+    this.props.removeError('user_auth_error')
+
     this.props.login({
       emailAddress: this.state.emailAddress,
       password: this.state.password
@@ -60,11 +65,13 @@ export class Login extends Component {
       Export your documents to vector PDFs that can be shared with anyone.
     `
 
+    const errorMessage = this.state.userAuthError ?
+      <div className="error-msg">The password or email address was incorrect. Please try again.</div> : null
+
     const loginForm = <form
         className=""
         onSubmit={::this.logInFormSubmitted}>
-        {//<p>{this.props.isRequestingUser ? 'Checking Login' : ''}</p>
-        }
+        {errorMessage}
         <div>
           <div className="input-container input-container-half">
             <InputText

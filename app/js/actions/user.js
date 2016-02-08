@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import {Urls} from '../core/constants'
+import {addError} from './errors'
 
 export const RECIEVE_USER = 'RECIEVE_USER'
 export const REQUEST_USER = 'REQUEST_USER'
@@ -28,27 +29,17 @@ export function login(data = {emailAddress: '', password: ''}) {
     })
     .then(response => {
       if (response.status === 200) {
-        return response.json()
+        const dispatchData = Object.assign({}, response.json(), {
+          failedAuthentication: false,
+          isAuthenticated: true
+        })
+
+        dispatch(receiveUser(dispatchData))
+
       } else {
-        const error = new Error(response.statusText)
-        error.response = response
-        throw error
+        addError('user_auth_error')(dispatch)
       }
     })
-    .then(userJson => {
-      const dispatchData = Object.assign({}, userJson, {
-        failedAuthentication: false,
-        isAuthenticated: true
-      })
-
-      dispatch(receiveUser(dispatchData))
-    })
-    .catch(() => dispatch(receiveUser({
-      name: '',
-      temporary: false,
-      failedAuthentication: true,
-      isAuthenticated: false
-    })))
   }
 }
 

@@ -3,7 +3,7 @@ const Constants = {
     'Source Sans Pro'
   ],
   Urls: {
-    ApiBase: 'http://localhost:4040'
+    ApiBase: `http://${window.location.host}`
   }
 }
 

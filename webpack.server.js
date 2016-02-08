@@ -1,11 +1,10 @@
-var
-  webpack = require('webpack'),
+const webpack = require('webpack'),
   webpackDevConfig = require('./webpack.config.js'),
-  WebpackDevServer = require('webpack-dev-server');
+  WebpackDevServer = require('webpack-dev-server')
 
-var compile = webpack(webpackDevConfig);
+const compile = webpack(webpackDevConfig)
 
-var server = new WebpackDevServer(compile, {
+const server = new WebpackDevServer(compile, {
   contentBase: '/dist',
   stats: {colors: true},
   proxy: {
@@ -14,6 +13,6 @@ var server = new WebpackDevServer(compile, {
       secure: false
     }
   }
-});
+})
 
-server.listen(4040, 'localhost', function() {});
+server.listen(4040, 'localhost', () => {})
