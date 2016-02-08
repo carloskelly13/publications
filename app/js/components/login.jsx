@@ -8,7 +8,7 @@ import * as ErrorsActions from 'actions/errors'
 
 import InputText from './ui/input.text'
 
-const mapStateToProps = state => Object.assign({}, state.user, {errors: state.errors})
+const mapStateToProps = state => Object.assign({}, state.user, state.errors)
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign(
   {}, UserActions, ErrorsActions), dispatch)
 
