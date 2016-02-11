@@ -98,10 +98,12 @@ export function getUser() {
 
 export function createNewUser(userJson) {
   return dispatch => {
-    dispatch(requestUser())
+    dispatch({
+      type: REQUEST_USER
+    })
 
     fetch(`${Urls.ApiBase}/users`, {
-      method: 'POST',
+      method: 'post',
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
@@ -111,39 +113,29 @@ export function createNewUser(userJson) {
     })
     .then(response => {
       if (response.status === 200) {
-        return response.json()
-      } else {
-        const error = new Error(response.statusText)
-        error.response = response
-        throw error
+        const loginData = {
+          emailAddress: userJson.emailAddress,
+          password: userJson.password
+        }
+
+        login(loginData)(dispatch)
       }
-    })
-    .then(() => {
-      const loginData = {name: userJson.name, password: userJson.password}
-      login(loginData)(dispatch)
     })
   }
 }
 
 export function updateUser(updateJson) {
   return dispatch => {
-    const token = sessionStorage.getItem('access-token')
-
-    if (!token) {
-      return
-    }
-
     dispatch({
       type: PATCH_USER
     })
 
     fetch(`${Urls.ApiBase}/users`, {
-      method: 'PATCH',
+      method: 'put',
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization' : `Bearer ${token}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(updateJson)
     })

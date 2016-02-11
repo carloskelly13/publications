@@ -4,13 +4,13 @@ import InputText from '../ui/input.text'
 export default class UserAccountModal extends Component {
   constructor() {
     super(...arguments)
-    this.state = {name: '', password: '', currrentPassword: '', temporary: false}
+    this.state = {emailAddress: '', password: '', temporary: false}
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       temporary: nextProps.isTemporaryUser,
-      name: nextProps.isTemporaryUser ? '' : nextProps.userName
+      emailAddress: nextProps.isTemporaryUser ? '' : nextProps.emailAddress
     })
 
     if (this.props.isPatchingUser &&
@@ -20,8 +20,37 @@ export default class UserAccountModal extends Component {
     }
 
     if (nextProps.failedUpdate) {
-      this.setState({password: '', currrentPassword: ''})
+      this.setState({password: ''})
     }
+  }
+
+  formValueChanged(event) {
+    this.state[event.target.name] = event.target.value
+    this.setState(this.state)
+  }
+
+  dismiss() {
+    let clearState = {password: ''}
+
+    if (this.state.temporary) {
+      clearState.emailAddress = ''
+    }
+
+    this.setState(clearState)
+    this.props.cancelUpdateUser()
+    this.props.toggleModal()
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+
+    const {emailAddress, password} = this.state
+
+    this.props.updateUser({
+      emailAddress,
+      password,
+      temporary: false
+    })
   }
 
   render() {
@@ -29,21 +58,12 @@ export default class UserAccountModal extends Component {
 
     const emailField = temporary ? <InputText
       displayName="Email Address"
-      name="name"
+      name="emailAddress"
       theme="light"
       validator='isLength'
       validatorOptions={1}
-      value={this.state.name}
-      valueChanged={::this.formValueChanged}
-    /> : null
-
-    const currentPasswordField = !temporary ? <InputText
-      displayName="Current Password"
-      name="currentPassword"
-      theme="light"
-      value={this.state.currentPassword}
-      valueChanged={::this.formValueChanged}
-    /> : null
+      value={this.state.emailAddress}
+      valueChanged={::this.formValueChanged} /> : null
 
     const headerText = temporary ? 'Create Account' : 'Change Password'
     const {failedUpdate, isPatchingUser} = this.props
@@ -72,14 +92,12 @@ export default class UserAccountModal extends Component {
               <div className="modal-inner-content">
                 <form onSubmit={::this.handleSubmit}>
                   {emailField}
-                  {currentPasswordField}
                   <InputText
-                    displayName="New Password"
+                    displayName="Password"
                     name="password"
                     theme="light"
                     value={this.state.password}
-                    valueChanged={::this.formValueChanged}
-                  />
+                    valueChanged={::this.formValueChanged} />
                   <div className="modal-form-buttons">
                     <button disabled={isPatchingUser} className="button button-full" type="submit">
                       {temporary ? 'Create Account' : 'Update'}
@@ -97,39 +115,5 @@ export default class UserAccountModal extends Component {
     } else {
       return (<div/>)
     }
-  }
-
-  formValueChanged(event) {
-    this.state[event.target.name] = event.target.value
-    this.setState(this.state)
-  }
-
-  dismiss() {
-    let clearState = {currentPassword: '', password: ''}
-
-    if (this.state.temporary) {
-      clearState.name = ''
-    }
-
-    this.setState(clearState)
-    this.props.cancelUpdateUser()
-    this.props.toggleModal()
-  }
-
-  handleSubmit(event) {
-    event.preventDefault()
-
-    const {currentPassword, password} = this.state
-    let updateJson = {password}
-
-    if (this.state.temporary) {
-      updateJson.name = this.state.name
-      updateJson.currentPassword = 'password'
-      updateJson.temporary = false
-    } else {
-      updateJson.currentPassword = currentPassword
-    }
-
-    this.props.updateUser(updateJson)
   }
 }

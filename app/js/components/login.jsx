@@ -99,6 +99,7 @@ export class Login extends Component {
         </button>
         <div className="buttons">
           <button
+            type="button"
             className="button"
             onClick={::this.createTestDriveAccount}
             role="button">

@@ -1,4 +1,9 @@
-import {RECIEVE_USER, REQUEST_USER, PATCH_USER, RESET_PATCH_USER} from 'actions/user'
+import {
+  RECIEVE_USER, 
+  REQUEST_USER,
+  PATCH_USER,
+  RESET_PATCH_USER
+} from 'actions/user'
 
 export default function userReducer(state = {
   userName: '',
