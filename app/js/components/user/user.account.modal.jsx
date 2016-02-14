@@ -10,18 +10,8 @@ export default class UserAccountModal extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       temporary: nextProps.isTemporaryUser,
-      emailAddress: nextProps.isTemporaryUser ? '' : nextProps.emailAddress
+      emailAddress: nextProps.isTemporaryUser ? '' : nextProps.userName
     })
-
-    if (this.props.isPatchingUser &&
-        !nextProps.isPatchingUser &&
-        !nextProps.failedUpdate) {
-      this.dismiss()
-    }
-
-    if (nextProps.failedUpdate) {
-      this.setState({password: ''})
-    }
   }
 
   formValueChanged(event) {
@@ -37,20 +27,22 @@ export default class UserAccountModal extends Component {
     }
 
     this.setState(clearState)
-    this.props.cancelUpdateUser()
+    this.props.removeError('user_auth_error')
     this.props.toggleModal()
   }
 
   handleSubmit(event) {
     event.preventDefault()
-
     const {emailAddress, password} = this.state
 
+    this.props.removeError('user_auth_error')
+
     this.props.updateUser({
+      id: this.props.userId,
       emailAddress,
       password,
       temporary: false
-    })
+    }, () => this.dismiss())
   }
 
   render() {
@@ -66,7 +58,8 @@ export default class UserAccountModal extends Component {
       valueChanged={::this.formValueChanged} /> : null
 
     const headerText = temporary ? 'Create Account' : 'Change Password'
-    const {failedUpdate, isPatchingUser} = this.props
+    const {isPatchingUser, errors} = this.props
+    const failedUpdate = errors.indexOf('user_update_error') !== -1
 
     const descriptionText = (temporary, failedUpdate, name = null) => {
       if (temporary && !failedUpdate) {
@@ -87,7 +80,7 @@ export default class UserAccountModal extends Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h1>{headerText}</h1>
-                <h3>{descriptionText(temporary, failedUpdate, this.state.name)}</h3>
+                <h3>{descriptionText(temporary, failedUpdate, this.state.emailAddress)}</h3>
               </div>
               <div className="modal-inner-content">
                 <form onSubmit={::this.handleSubmit}>
@@ -96,6 +89,7 @@ export default class UserAccountModal extends Component {
                     displayName="Password"
                     name="password"
                     theme="light"
+                    type="password"
                     value={this.state.password}
                     valueChanged={::this.formValueChanged} />
                   <div className="modal-form-buttons">
@@ -113,7 +107,7 @@ export default class UserAccountModal extends Component {
         </div>
       )
     } else {
-      return (<div/>)
+      return <div/>
     }
   }
 }

@@ -29,16 +29,19 @@ export function login(data = {emailAddress: '', password: ''}) {
     })
     .then(response => {
       if (response.status === 200) {
-        const dispatchData = Object.assign({}, response.json(), {
-          failedAuthentication: false,
-          isAuthenticated: true
-        })
-
-        dispatch(receiveUser(dispatchData))
+        return response.json()
 
       } else {
         addError('user_auth_error')(dispatch)
       }
+    })
+    .then(json => {
+      const dispatchData = Object.assign({}, json, {
+        failedAuthentication: false,
+        isAuthenticated: true
+      })
+
+      dispatch(receiveUser(dispatchData))
     })
   }
 }
@@ -124,12 +127,8 @@ export function createNewUser(userJson) {
   }
 }
 
-export function updateUser(updateJson) {
+export function updateUser(updateJson, completion = () => {}) {
   return dispatch => {
-    dispatch({
-      type: PATCH_USER
-    })
-
     fetch(`${Urls.ApiBase}/users`, {
       method: 'put',
       credentials: 'include',
@@ -142,29 +141,18 @@ export function updateUser(updateJson) {
     .then(response => {
       if (response.status === 200) {
         return response.json()
+
       } else {
-        const error = new Error(response.statusText)
-        error.response = response
-        throw error
+        addError('user_update_error')(dispatch)
       }
     })
-    .then(userJson => {
-      dispatch(receiveUser(Object.assign({}, userJson, {
+    .then(json => {
+      dispatch(receiveUser(Object.assign({}, json, {
         isAuthenticated: true,
         failedUpdate: false
       })))
-    })
-    .catch(() => {
-      dispatch(receiveUser({
-        isAuthenticated: true,
-        failedUpdate: true
-      }))
+
+      completion()
     })
   }
-}
-
-export function cancelUpdateUser() {
-  return dispatch => dispatch({
-    type: RESET_PATCH_USER
-  })
 }

@@ -11,10 +11,11 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
+import * as ErrorActions from 'actions/errors'
 
-const mapStateToProps = state => Object.assign({}, state.user, state.doc)
+const mapStateToProps = state => Object.assign({}, state.user, state.doc, state.errors)
 const mapDispatchToProps = dispatch => bindActionCreators(
-    Object.assign({}, UserActions, DocumentActions
+    Object.assign({}, UserActions, DocumentActions, ErrorActions
   ), dispatch)
 
 export class Documents extends Component {
@@ -46,7 +47,7 @@ export class Documents extends Component {
   }
 
   render() {
-    let documentItems = select(this.props.documents, doc => {
+    const documentItems = select(this.props.documents, doc => {
       if (isEmpty(this.state.searchKeyword)) {
         return true
       } else {
@@ -66,11 +67,11 @@ export class Documents extends Component {
     return (
       <div>
         <UserAccountModal
+          userId={this.props.userId}
           userName={this.props.userName}
           updateUser={this.props.updateUser}
-          cancelUpdateUser={this.props.cancelUpdateUser}
-          isPatchingUser={this.props.isPatchingUser}
-          failedUpdate={this.props.failedUpdate}
+          errors={this.props.errors}
+          removeError={this.props.removeError}
           isTemporaryUser={this.props.isTemporaryUser}
           toggleModal={::this.toggleUserAccountModal}
           isOpen={this.state.isUserAccountModalOpen}

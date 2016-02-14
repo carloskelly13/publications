@@ -1,54 +1,38 @@
 import {
-  RECIEVE_USER, 
+  RECIEVE_USER,
   REQUEST_USER,
-  PATCH_USER,
-  RESET_PATCH_USER
+  PATCH_USER
 } from 'actions/user'
 
 export default function userReducer(state = {
+  userId: null,
   userName: '',
   isAuthenticated: false,
   isTemporaryUser: false,
   isRequestingUser: false,
-  isPatchingUser: false,
-  failedAuthentication: false,
-  failedUpdate: false
+  failedAuthentication: false
 }, action) {
 
   switch(action.type) {
   case RECIEVE_USER:
     return Object.assign({}, state, {
+      userId: action.userJson.id,
       userName: action.userJson.emailAddress,
       isAuthenticated: action.userJson.isAuthenticated,
       isTemporaryUser: action.userJson.temporary,
       isRequestingUser: false,
-      isPatchingUser: false,
-      failedAuthentication: action.userJson.failedAuthentication || false,
-      failedUpdate: action.userJson.failedUpdate || false
+      failedAuthentication: action.userJson.failedAuthentication || false
     })
 
   case REQUEST_USER:
     return {
+      userId: null,
       userName: '',
       isAuthenticated: false,
       isTemporaryUser: false,
       isRequestingUser: true,
-      isPatchingUser: false,
-      failedAuthentication: false,
-      failedUpdate: false
+      failedAuthentication: false
     }
-
-  case PATCH_USER:
-    return Object.assign({}, state, {
-      isPatchingUser: true,
-      failedUpdate: false
-    })
-
-  case RESET_PATCH_USER:
-    return Object.assign({}, state, {
-      isPatchingUser: false,
-      failedUpdate: false
-    })
 
   default:
     return state

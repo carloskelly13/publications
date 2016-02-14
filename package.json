@@ -3,6 +3,9 @@
   "version": "3.0.0",
   "description": "",
   "main": "app.js",
+  "scripts": {
+    "start" : "node webpack.server.js"
+  },
   "dependencies": {
     "axios": "^0.5.4",
     "babel-runtime": "^6.0.14",
