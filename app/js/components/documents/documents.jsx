@@ -46,62 +46,6 @@ export class Documents extends Component {
     }
   }
 
-  render() {
-    const documentItems = select(this.props.documents, doc => {
-      if (isEmpty(this.state.searchKeyword)) {
-        return true
-      } else {
-        return contains(doc.get('name').toLowerCase(), this.state.searchKeyword.toLowerCase())
-      }
-    }).map(doc => {
-      return (
-        <DocumentItem
-          key={doc.get('id')}
-          doc={doc}
-          editDocument={::this.editDocument}
-          selectedDocument={this.state.selectedDocument}
-          updateSelectedDocument={::this.updateSelectedDocument} />
-      )
-    })
-
-    return (
-      <div>
-        <UserAccountModal
-          userId={this.props.userId}
-          userName={this.props.userName}
-          updateUser={this.props.updateUser}
-          errors={this.props.errors}
-          removeError={this.props.removeError}
-          isTemporaryUser={this.props.isTemporaryUser}
-          toggleModal={::this.toggleUserAccountModal}
-          isOpen={this.state.isUserAccountModalOpen}
-        />
-        <NewDocumentModal
-          createNewDocument={::this.createNewDocument}
-          toggleNewDocumentModal={::this.toggleNewDocumentModal}
-          isOpen={this.state.isNewDocModalOpen}
-        />
-        <DocumentsNavbar
-          isTemporaryUser={this.props.isTemporaryUser}
-          isAuthenticated={this.props.isAuthenticated}
-          documentIsSelected={this.state.selectedDocument !== null}
-          editDocument={::this.editDocument}
-          deleteDocument={::this.deleteDocument}
-          createNewDocument={::this.toggleNewDocumentModal}
-          searchKeyword={this.state.searchKeyword}
-          searchKeywordChanged={::this.searchKeywordChanged}
-          logOut={::this.logOut}
-          toggleUserAccountModal={::this.toggleUserAccountModal}
-        />
-        <div className="app-content">
-          <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
-            {documentItems}
-          </ul>
-        </div>
-      </div>
-    )
-  }
-
   updateSelectedDocument(sender, event) {
     if (!!event) event.preventDefault()
     this.setState({selectedDocument: sender})
@@ -152,9 +96,63 @@ export class Documents extends Component {
 
   logOut() {
     const {history, logoutUser, clearDocuments} = this.props
-    logoutUser()
-    clearDocuments()
-    history.push('/')
+
+    logoutUser(() => {
+      clearDocuments()
+      this.props.history.push('/')
+    })
+  }
+
+  render() {
+    const documentItems = select(this.props.documents, doc => {
+      if (isEmpty(this.state.searchKeyword)) {
+        return true
+      } else {
+        return contains(doc.get('name').toLowerCase(), this.state.searchKeyword.toLowerCase())
+      }
+    }).map(doc => {
+      return <DocumentItem
+        key={doc.get('id')}
+        doc={doc}
+        editDocument={::this.editDocument}
+        selectedDocument={this.state.selectedDocument}
+        updateSelectedDocument={::this.updateSelectedDocument} />
+    })
+
+    return <div>
+      <UserAccountModal
+        userId={this.props.userId}
+        userName={this.props.userName}
+        updateUser={this.props.updateUser}
+        errors={this.props.errors}
+        removeError={this.props.removeError}
+        isTemporaryUser={this.props.isTemporaryUser}
+        toggleModal={::this.toggleUserAccountModal}
+        isOpen={this.state.isUserAccountModalOpen}
+      />
+      <NewDocumentModal
+        createNewDocument={::this.createNewDocument}
+        toggleNewDocumentModal={::this.toggleNewDocumentModal}
+        isOpen={this.state.isNewDocModalOpen}
+      />
+      <DocumentsNavbar
+        isTemporaryUser={this.props.isTemporaryUser}
+        isAuthenticated={this.props.isAuthenticated}
+        documentIsSelected={this.state.selectedDocument !== null}
+        editDocument={::this.editDocument}
+        deleteDocument={::this.deleteDocument}
+        createNewDocument={::this.toggleNewDocumentModal}
+        searchKeyword={this.state.searchKeyword}
+        searchKeywordChanged={::this.searchKeywordChanged}
+        logOut={::this.logOut}
+        toggleUserAccountModal={::this.toggleUserAccountModal}
+      />
+      <div className="app-content">
+        <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
+          {documentItems}
+        </ul>
+      </div>
+    </div>
   }
 }
 

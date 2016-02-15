@@ -42,64 +42,6 @@ export class Document extends Component {
     document.title = 'Publications'
   }
 
-  render() {
-    const {currentDocument} = this.props
-    const DPI = 72.0
-
-    if (currentDocument) {
-      return <div>
-        <DocumentPdfViewModal
-          doc={currentDocument}
-          togglePdfDownloadModal={::this.togglePdfDownloadModal}
-          isOpen={this.state.isPdfModalOpen} />
-        <DocumentNavbar
-          changeZoom={::this.changeZoom}
-          clipboard={this.state.clipboard}
-          clipboardAction={::this.clipboardAction}
-          downloadPdf={::this.togglePdfDownloadModal}
-          selectedShape={this.state.selectedShape}
-          save={::this.save}
-          showInspector={this.state.showInspector}
-          title={currentDocument.get('name')}
-          toggleInspector={::this.toggleInspector}
-          viewAllDocuments={::this.viewAllDocuments}
-          zoom={this.state.zoom} />
-        <div className="app-content app-content-document">
-          <InspectorBase
-            addNewShape={::this.addNewShape}
-            doc={currentDocument}
-            dpi={DPI}
-            zoom={this.state.zoom}
-            selectedShape={this.state.selectedShape}
-            updateDocument={::this.updateDocument}
-            updateShape={::this.updateShape}
-            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
-            showInspector={this.state.showInspector} />
-          <RulerVertical
-            doc={currentDocument}
-            dpi={DPI}
-            zoom={this.state.zoom} />
-          <RulerHorizontal
-            doc={currentDocument}
-            dpi={DPI}
-            zoom={this.state.zoom} />
-          <Canvas
-            doc={currentDocument}
-            dpi={DPI}
-            zoom={this.state.zoom}
-            showInspector={this.state.showInspector}
-            selectable={true}
-            selectedShape={this.state.selectedShape}
-            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
-            updateShape={::this.updateShape} />
-        </div>
-      </div>
-
-    } else {
-      return <div>Loading</div>
-    }
-  }
-
   updateSelectedCanvasObject(sender, event) {
     if (event) {
       event.preventDefault()
@@ -220,6 +162,64 @@ export class Document extends Component {
 
   togglePdfDownloadModal() {
     this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
+  }
+
+  render() {
+    const {currentDocument} = this.props
+    const DPI = 72.0
+
+    if (currentDocument) {
+      return <div>
+        <DocumentPdfViewModal
+          doc={currentDocument}
+          togglePdfDownloadModal={::this.togglePdfDownloadModal}
+          isOpen={this.state.isPdfModalOpen} />
+        <DocumentNavbar
+          changeZoom={::this.changeZoom}
+          clipboard={this.state.clipboard}
+          clipboardAction={::this.clipboardAction}
+          downloadPdf={::this.togglePdfDownloadModal}
+          selectedShape={this.state.selectedShape}
+          save={::this.save}
+          showInspector={this.state.showInspector}
+          title={currentDocument.get('name')}
+          toggleInspector={::this.toggleInspector}
+          viewAllDocuments={::this.viewAllDocuments}
+          zoom={this.state.zoom} />
+        <div className="app-content app-content-document">
+          <InspectorBase
+            addNewShape={::this.addNewShape}
+            doc={currentDocument}
+            dpi={DPI}
+            zoom={this.state.zoom}
+            selectedShape={this.state.selectedShape}
+            updateDocument={::this.updateDocument}
+            updateShape={::this.updateShape}
+            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
+            showInspector={this.state.showInspector} />
+          <RulerVertical
+            doc={currentDocument}
+            dpi={DPI}
+            zoom={this.state.zoom} />
+          <RulerHorizontal
+            doc={currentDocument}
+            dpi={DPI}
+            zoom={this.state.zoom} />
+          <Canvas
+            doc={currentDocument}
+            dpi={DPI}
+            zoom={this.state.zoom}
+            showInspector={this.state.showInspector}
+            selectable={true}
+            selectedShape={this.state.selectedShape}
+            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
+            updateShape={::this.updateShape} />
+        </div>
+      </div>
+
+    } else {
+      return <div>Loading</div>
+    }
   }
 }
 

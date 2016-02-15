@@ -32,7 +32,7 @@ export function login(data = {emailAddress: '', password: ''}) {
         return response.json()
 
       } else {
-        addError('user_auth_error')(dispatch)
+        throw new Error()
       }
     })
     .then(json => {
@@ -43,10 +43,11 @@ export function login(data = {emailAddress: '', password: ''}) {
 
       dispatch(receiveUser(dispatchData))
     })
+    .catch(() => addError('user_auth_error')(dispatch))
   }
 }
 
-export function logoutUser() {
+export function logoutUser(completion = () => {}) {
   return dispatch => {
     fetch(`${Urls.ApiBase}/users/logout`, {
       method: 'post',
@@ -59,6 +60,8 @@ export function logoutUser() {
         failedAuthentication: false,
         isAuthenticated: false
       }))
+
+      completion()
     })
   }
 }
@@ -143,16 +146,16 @@ export function updateUser(updateJson, completion = () => {}) {
         return response.json()
 
       } else {
-        addError('user_update_error')(dispatch)
+        throw new Error()
       }
     })
     .then(json => {
       dispatch(receiveUser(Object.assign({}, json, {
-        isAuthenticated: true,
-        failedUpdate: false
+        isAuthenticated: true
       })))
 
       completion()
     })
+    .catch(() => addError('user_update_error')(dispatch))
   }
 }
