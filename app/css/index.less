@@ -1,13 +1,13 @@
 .index-view {
+  background: #fff;
+  height: 100%;
+
   .index-container {
-    background: #fff;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    margin: 2em auto;
     max-width: 600px;
     min-width: 500px;
     overflow: hidden;
     padding: 0;
+    margin: 0 auto;
     width: 50%;
 
     .error-msg {
@@ -21,13 +21,18 @@
     }
 
     form {
-      background: #f5f5f5;
-      border-top: 1px solid #bbb;
+      border-top: 1px #616161 solid;
       padding: 1em 2em;
       text-align: center;
 
       .buttons {
+        margin: 1em 0 0;
         text-align: center;
+
+        .test-drive-btn {
+          display: block;
+          margin: 0.5em auto 0;
+        }
       }
 
       .input-container {

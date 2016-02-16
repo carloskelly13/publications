@@ -1,0 +1,49 @@
+.btn {
+  background: transparent;
+  border: 1px solid #616161;
+  border-radius: 4px;
+  box-sizing: border-box;
+  line-height: 1em;
+  font-size: 15px;
+  margin: 0;
+  padding: 4px 16px 5px;
+  text-decoration: none;
+  color: #616161;
+
+  &:hover {
+    border-color: @color-active;
+    color: @color-active;
+  }
+
+  &:active {
+    background: #fff;
+    border-color: @color-active;
+    color: @color-active;
+  }
+
+  &.big {
+    font-size: 18px;
+    font-weight: 500;
+    width: 100%;
+    padding: 7px 32px;
+  }
+
+  &.half {
+    display: inline-block;
+    width: 50%;
+    width: -webkit-calc(50% - 5px);
+    width: calc(~"50% - 5px");
+
+    &.left {
+      margin-right: 5px;
+    }
+
+    &.right {
+      margin-left: 5px;
+    }
+  }
+}
+
+a.btn {
+  padding: 2px 16px 4px;
+}

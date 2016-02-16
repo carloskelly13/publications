@@ -5,14 +5,14 @@ export default class InputSelect extends Component {
     let {
       displayName,
       name,
-      theme,
+      style,
       value,
       options,
       onChange
     } = this.props;
 
     return (
-      <div className={`input-picker ${theme}`}>
+      <div className={`input-picker ${style || 'full'}`}>
         <select
           name={name}
           value={value}

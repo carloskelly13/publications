@@ -93,10 +93,10 @@ export default class UserAccountModal extends Component {
                     value={this.state.password}
                     valueChanged={::this.formValueChanged} />
                   <div className="modal-form-buttons">
-                    <button disabled={isPatchingUser} className="button button-full" type="submit">
+                    <button disabled={isPatchingUser} className="btn" type="submit">
                       {temporary ? 'Create Account' : 'Update'}
                     </button>
-                    <button disabled={isPatchingUser} className="button button-full" type="button" onClick={::this.dismiss}>
+                    <button disabled={isPatchingUser} className="btn" type="button" onClick={::this.dismiss}>
                       Close
                     </button>
                   </div>

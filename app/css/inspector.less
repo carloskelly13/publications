@@ -14,7 +14,7 @@
   h1 {
     font-size: 14px;
     font-weight: 500;
-    padding: 0.5em 0.33em;
+    padding: 0 0 0.75em;
   }
 
   &.light {
@@ -34,8 +34,12 @@
   }
 
   .inspector-content-section {
-    padding: 0.5em;
+    padding: 10px 10px 0;
     border-bottom: 1px solid #999;
+
+    .input-picker, .input-text, .segmented-control, .btn {
+      margin-bottom: 10px;
+    }
   }
 
   .inspector-pane {
@@ -101,36 +105,35 @@
 
     li {
       padding: 0;
+      margin: 10px 0;
       cursor: default;
 
+      &:first-child {
+        margin-top: 0;
+      }
+
       &.layer-active {
-        .row {
-          background: hsla(0, 0%, 0%, 0.05);
-          border-bottom: 1px solid #aaa;
-          border-top: 1px solid #aaa;
+        background: lighten(@color-light-background, 20%);
+        border-radius: 4px;
+
+        .layer-item-size {
+          color: #fff;
         }
-      }
 
-      .row {
-        padding: 0.33em;
-        border-bottom: 1px solid transparent;
-        border-top: 1px solid transparent;
-
-        &:hover {
-          background: hsla(0, 0%, 0%, 0.10);
-          border-bottom: 1px solid #aaa;
-          border-top: 1px solid #aaa;
+        .layer-item-icon {
+          &.layer-item-icon-text {
+            border-color: #fff;
+            background: #fff;
+          }
         }
-      }
-
-      &:last-child {
-        border-bottom: none;
       }
 
       .layer-item-icon {
+        display: inline-block;
         border-radius: 2px;
-        margin: 3px 8px 0;
-        width: 20px; height: 20px;
+        margin: -1px 8px 0 1px;
+        width: 20px; height: 19px;
+        vertical-align: middle;
 
         &.layer-item-icon-ellipse {
           border-radius: 20px;
@@ -144,17 +147,12 @@
         }
       }
 
-      .layer-item-name {
-        display: block;
-        color: #444;
-        padding: 0 0.5em 0 0;
-      }
-
       .layer-item-size {
-        display: block;
+        display: inline-block;
         color: #555;
         font-size: 11px;
-        line-height: 26px;
+        line-height: 24px;
+        vertical-align: middle;
       }
     }
   }

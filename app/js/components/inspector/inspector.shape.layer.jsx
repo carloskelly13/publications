@@ -56,12 +56,10 @@ export default class InspectorShapeLayer extends Component {
     return (
       <div className="inspector-content-section">
         <h1>Move</h1>
-        <div>
-          <button className="button button-full" onClick={::this.moveToFront}>Front</button>
-          <button className="button button-full" onClick={::this.moveToBack}>Back</button>
-          <button className="button button-full" onClick={::this.moveForwards}>Forwards</button>
-          <button className="button button-full" onClick={::this.moveBackwards}>Backwards</button>
-        </div>
+        <button className="btn half left" onClick={::this.moveToFront}>Front</button>
+        <button className="btn half right" onClick={::this.moveToBack}>Back</button>
+        <button className="btn half left" onClick={::this.moveForwards}>Forwards</button>
+        <button className="btn half right" onClick={::this.moveBackwards}>Backwards</button>
       </div>
     )
   }

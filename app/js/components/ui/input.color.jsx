@@ -6,7 +6,7 @@ export default class InputColor extends InputBase {
     let {
       displayName,
       name,
-      theme,
+      style,
       type,
       validator,
       validatorOptions,
@@ -15,7 +15,7 @@ export default class InputColor extends InputBase {
     spanStyle = {background: this.state.value};
 
     return (
-      <div className={`input-text ${theme}`}>
+      <div className={`input-text ${style || 'full'}`}>
         <div>
           <input
             className="has-unit"

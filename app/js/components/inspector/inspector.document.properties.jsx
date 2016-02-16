@@ -1,57 +1,47 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react'
 
-import InputText from '../ui/input.text';
+import InputText from '../ui/input.text'
 
 export default class InspectorDocumentProperties extends Component {
   constructor(props, context) {
-    super(props);
+    super(props)
   }
 
   render() {
-    let {
-      doc,
-      inputValueChanged,
-      theme
-    } = this.props;
+    const {doc, inputValueChanged} = this.props
 
     return (
       <div className="inspector-content-section">
         <h1>Properties</h1>
-        <div className="input-container input-container-full">
-          <InputText
-            displayName="Name"
-            name="name"
-            theme={theme}
-            validator='isLength'
-            validatorOptions={1}
-            value={doc.get('name')}
-            valueChanged={inputValueChanged} />
-        </div>
-        <div className="input-container input-container-half">
-          <InputText
-            displayName="Width"
-            name="width"
-            theme={theme}
-            type="number"
-            unit="in"
-            validator='isFloat'
-            validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
-            value={doc.get('width')}
-            valueChanged={inputValueChanged} />
-        </div>
-        <div className="input-container input-container-half">
-          <InputText
-            displayName="Height"
-            name="height"
-            theme={theme}
-            type="number"
-            unit="in"
-            validator='isFloat'
-            validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
-            value={doc.get('height')}
-            valueChanged={inputValueChanged} />
-        </div>
+        <InputText
+          displayName="Name"
+          name="name"
+          style="full"
+          validator='isLength'
+          validatorOptions={1}
+          value={doc.get('name')}
+          valueChanged={inputValueChanged} />
+        <InputText
+          displayName="Width"
+          name="width"
+          style="half left"
+          type="number"
+          unit="in"
+          validator='isFloat'
+          validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
+          value={doc.get('width')}
+          valueChanged={inputValueChanged} />
+        <InputText
+          displayName="Height"
+          name="height"
+          style="half right"
+          type="number"
+          unit="in"
+          validator='isFloat'
+          validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
+          value={doc.get('height')}
+          valueChanged={inputValueChanged} />
       </div>
-    );
+    )
   }
 }

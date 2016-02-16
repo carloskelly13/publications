@@ -6,7 +6,7 @@ export default class InputText extends InputBase {
     let {
       displayName,
       name,
-      theme,
+      style,
       type,
       validator,
       validatorOptions,
@@ -29,7 +29,7 @@ export default class InputText extends InputBase {
     </label> : null
 
     return (
-      <div className={`input-text ${theme}`}>
+      <div className={`input-text ${style || 'full'}`}>
         <div>
           <input
             className={unit !== undefined ? 'has-unit' : ''}

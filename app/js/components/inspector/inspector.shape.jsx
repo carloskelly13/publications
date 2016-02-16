@@ -23,51 +23,47 @@ export default class InspectorShape extends Component {
 
       switch (type) {
         case 'text':
-        shapeContentSections = (
+        shapeContentSections = <div>
           <InspectorShapeText
             inputValueChanged={::this.inputValueChanged}
             {...this.props} />
-        )
+          <InspectorShapeLayer
+            inputValueChanged={::this.inputValueChanged}
+            {...this.props} />
+        </div>
         break
 
         case 'ellipse':
         case 'rect':
-        shapeContentSections = (
-          <div>
-            <InspectorShapeColor
-              inputValueChanged={::this.inputValueChanged}
-              {...omit(this.props, ['updateDocument', 'doc'])} />
-            <InspectorShapeBorder
-              inputValueChanged={::this.inputValueChanged}
-              {...omit(this.props, ['updateDocument', 'doc'])} />
-            <InspectorShapeLayer
-              inputValueChanged={::this.inputValueChanged}
-              {...this.props} />
-          </div>
-        )
+        shapeContentSections = <div>
+          <InspectorShapeColor
+            inputValueChanged={::this.inputValueChanged}
+            {...omit(this.props, ['updateDocument', 'doc'])} />
+          <InspectorShapeBorder
+            inputValueChanged={::this.inputValueChanged}
+            {...omit(this.props, ['updateDocument', 'doc'])} />
+          <InspectorShapeLayer
+            inputValueChanged={::this.inputValueChanged}
+            {...this.props} />
+        </div>
         break
       }
 
-      inspectorContent = (
-        <div>
+      inspectorContent = <div>
           {shapeMetricsContent}
           {shapeContentSections}
-        </div>
-      )
+      </div>
+
     } else {
-      inspectorContent = (
-        <div className="inspector-pane inspector-pane-no-shape-selected">
-          <div className="icon icon-big-shape-frame"></div>
-          <div className="no-shape-label">No Shape Selected</div>
-        </div>
-      )
+      inspectorContent = <div className="inspector-pane inspector-pane-no-shape-selected">
+        <div className="icon icon-big-shape-frame"></div>
+        <div className="no-shape-label">No Shape Selected</div>
+      </div>
     }
 
-    return (
-      <div className="inspector-pane inspector-pane-document">
-        {inspectorContent}
-      </div>
-    )
+    return <div className="inspector-pane inspector-pane-document">
+      {inspectorContent}
+    </div>
   }
 
   inputValueChanged(event) {

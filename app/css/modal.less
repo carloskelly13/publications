@@ -53,12 +53,10 @@
   .modal-content {
     box-sizing: border-box;
     height: inherit;
-    padding:  0 0 20px;
+    padding:  20px;
     width: inherit;
 
     .modal-header {
-      padding: 1.25em 1.25em 0.25em;
-
       h1 {
         font-size: 18px;
         font-weight: 500;
@@ -79,19 +77,22 @@
     }
 
     .modal-inner-content {
-      padding: 20px 1em 0;
+      .input-picker, .input-text, .segmented-control {
+        margin: 10px 0;
+      }
     }
 
     .modal-form-buttons {
       position: absolute;
-      bottom: 0.8em;
-      left: 0.78em;
-      right: 0.78em;
+      bottom: 20px;
+      left: 20px;
 
-      .button-full {
-        font-size: 14px;
-        height: 30px;
-        line-height: 22px;
+      .btn {
+        margin-right: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
       }
     }
   }

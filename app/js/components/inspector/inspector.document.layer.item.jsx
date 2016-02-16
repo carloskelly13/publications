@@ -1,63 +1,40 @@
 import React, {Component} from 'react'
 import {capitalize} from 'lodash'
 
-export default class InspectorDocumentLayerItem extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    let {shape} = this.props
-    const dimensionsElement = shape => (
-      <span className="layer-item-size">
-        X:&#32;{shape.x.toFixed(2)}&#8221;
-        Y:&#32;{shape.y.toFixed(2)}&#8221;
-        W:&#32;{shape.width.toFixed(2)}&#8221;
-        H:&#32;{shape.height.toFixed(2)}&#8221;
+const InspectorDocumentLayerItem = ({shape, updateSelectedCanvasObject, isSelected}) => {
+  const layerIcon = () => {
+    switch (shape.type) {
+      case 'rect':
+      return <span className="layer-item-icon"
+        style={{background: shape.fill, border: `1px solid ${shape.stroke}`}}>
       </span>
-    )
 
-    return (
-      <li
-        className={this.props.isSelected ? 'layer-active' : null}
-        onClick={::this.layerItemSelected}>
-        {
-          (() => {
-            switch (shape.type) {
-              case 'rect':
-                return (
-                  <div className="row">
-                    <span className="layer-item-icon" style={{background: shape.fill, border: `1px solid ${shape.stroke}`}}></span>
-                    <div className="box">
-                      {dimensionsElement(shape)}
-                    </div>
-                  </div>);
-              case 'ellipse':
-                return (
-                  <div className="row">
-                    <span className="layer-item-icon layer-item-icon-ellipse" style={{background: shape.fill, border: `1px solid ${shape.stroke}`}}></span>
-                    <div className="box">
-                      {dimensionsElement(shape)}
-                    </div>
-                  </div>);
-              case 'text':
-                return (
-                  <div className="row">
-                    <span className="layer-item-icon layer-item-icon-text" style={{color: shape.color}}>Aa</span>
-                    <div className="box">
-                      {dimensionsElement(shape)}
-                    </div>
-                  </div>)
-              default:
-                return <div></div>
-            }
-          })()
-        }
-      </li>
-    )
+      case 'ellipse':
+      return <span className="layer-item-icon layer-item-icon-ellipse"
+        style={{background: shape.fill, border: `1px solid ${shape.stroke}`}}>
+      </span>
+
+      case 'text':
+      return <span className="layer-item-icon layer-item-icon-text"
+        style={{color: shape.color}}>
+        Aa
+      </span>
+
+      default: return <div></div>
+    }
   }
 
-  layerItemSelected(sender) {
-    this.props.updateSelectedCanvasObject(this.props.shape)
-  }
+  return <li
+    className={isSelected ? 'layer-active' : null}
+    onClick={updateSelectedCanvasObject.bind(this, shape)}>
+    {layerIcon()}
+    <span className="layer-item-size">
+      X:&#32;{shape.x.toFixed(2)}&#8221;
+      Y:&#32;{shape.y.toFixed(2)}&#8221;
+      W:&#32;{shape.width.toFixed(2)}&#8221;
+      H:&#32;{shape.height.toFixed(2)}&#8221;
+    </span>
+  </li>
 }
+
+export default InspectorDocumentLayerItem

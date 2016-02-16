@@ -27,40 +27,36 @@ export default class NewDocumentModal extends Component {
                 <InputText
                   displayName="Name"
                   name="name"
-                  theme="light"
+                  style="full"
                   validator='isLength'
                   validatorOptions={1}
                   value={this.state.form.name}
                   valueChanged={::this.formValueChanged} />
-                <div className="input-container input-container-half">
-                  <InputText
-                    displayName="Width"
-                    name="width"
-                    theme="light"
-                    type="number"
-                    unit="in"
-                    validator='isFloat'
-                    validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
-                    value={this.state.form.width}
-                    valueChanged={::this.formValueChanged} />
-                </div>
-                <div className="input-container input-container-half">
-                  <InputText
-                    displayName="Height"
-                    name="height"
-                    theme="light"
-                    type="number"
-                    unit="in"
-                    validator='isFloat'
-                    validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
-                    value={this.state.form.height}
-                    valueChanged={::this.formValueChanged} />
-                </div>
+                <InputText
+                  displayName="Width"
+                  name="width"
+                  style="half left"
+                  type="number"
+                  unit="in"
+                  validator='isFloat'
+                  validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
+                  value={this.state.form.width}
+                  valueChanged={::this.formValueChanged} />
+                <InputText
+                  displayName="Height"
+                  name="height"
+                  style="half right"
+                  type="number"
+                  unit="in"
+                  validator='isFloat'
+                  validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
+                  value={this.state.form.height}
+                  valueChanged={::this.formValueChanged} />
                 <div className="modal-form-buttons">
-                  <button className="button button-full" type="submit">
+                  <button className="btn" type="submit">
                     Create
                   </button>
-                  <button className="button button-full" type="button" onClick={this.props.toggleNewDocumentModal}>
+                  <button className="btn" type="button" onClick={this.props.toggleNewDocumentModal}>
                     Cancel
                   </button>
                 </div>

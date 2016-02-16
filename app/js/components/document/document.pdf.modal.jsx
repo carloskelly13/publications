@@ -37,14 +37,14 @@ export default class DocumentPdfViewModal extends Component {
               </div>
               <div className="modal-form-buttons">
                 <a
-                  className="button button-full"
+                  className="btn"
                   role="button"
                   href="#"
                   target="_blank"
                   ref={pdfLinkRef => this.pdfLinkRef = pdfLinkRef}>
                   Exporting…
                 </a>
-                <button className="button button-full" type="button" onClick={::this.dismiss}>
+                <button className="btn" type="button" onClick={::this.dismiss}>
                   Close
                 </button>
               </div>

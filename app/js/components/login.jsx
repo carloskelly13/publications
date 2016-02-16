@@ -73,34 +73,30 @@ export class Login extends Component {
         onSubmit={::this.logInFormSubmitted}>
         {errorMessage}
         <div>
-          <div className="input-container input-container-half">
-            <InputText
-              placeholder="Email address"
-              name="emailAddress"
-              theme="light"
-              type="text"
-              value={this.state.emailAddress}
-              valueChanged={::this.nameChanged} />
-          </div>
-          <div className="input-container input-container-half">
-            <InputText
-              placeholder="Password"
-              name="password"
-              theme="light"
-              type="password"
-              value={this.state.password}
-              valueChanged={::this.passwordChanged} />
-          </div>
+          <InputText
+            placeholder="Email Address"
+            name="emailAddress"
+            style="half left"
+            type="text"
+            value={this.state.emailAddress}
+            valueChanged={::this.nameChanged} />
+          <InputText
+            placeholder="Password"
+            name="password"
+            style="half right"
+            type="password"
+            value={this.state.password}
+            valueChanged={::this.passwordChanged} />
         </div>
-        <button
-          type="submit"
-          className="button button-full button-full-width">
-          Log In
-        </button>
         <div className="buttons">
           <button
+            type="submit"
+            className="btn big">
+            Log In
+          </button>
+          <button
             type="button"
-            className="button"
+            className="button test-drive-btn"
             onClick={::this.createTestDriveAccount}
             role="button">
             or test drive Publications without an account
