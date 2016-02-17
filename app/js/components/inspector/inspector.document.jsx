@@ -26,7 +26,11 @@ export default class InspectorDocument extends Component {
   }
 
   inputValueChanged(event) {
-    const {doc, updateDocument} = this.props
-    updateDocument(doc.set(event.target.name, event.target.value))
+    const {updateDocument} = this.props
+
+    let delta = {}
+    delta[event.target.name] = event.target.value
+
+    updateDocument(delta)
   }
 }

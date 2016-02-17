@@ -14,7 +14,7 @@ export default class InspectorDocumentLayers extends Component {
       updateSelectedCanvasObject
     } = this.props
 
-    const shapes = doc.get('shapes').sort((lhs, rhs) => lhs.z - rhs.z)
+    const shapes = doc.shapes.sort((lhs, rhs) => lhs.z - rhs.z)
 
     const shapeLayers = shapes.map((shape, idx) => <InspectorDocumentLayerItem
       isSelected={shape === this.props.selectedShape}

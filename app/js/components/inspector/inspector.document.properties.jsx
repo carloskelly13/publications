@@ -19,7 +19,7 @@ export default class InspectorDocumentProperties extends Component {
           style="full"
           validator='isLength'
           validatorOptions={1}
-          value={doc.get('name')}
+          value={doc.name}
           valueChanged={inputValueChanged} />
         <InputText
           displayName="Width"
@@ -29,7 +29,7 @@ export default class InspectorDocumentProperties extends Component {
           unit="in"
           validator='isFloat'
           validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
-          value={doc.get('width')}
+          value={doc.width}
           valueChanged={inputValueChanged} />
         <InputText
           displayName="Height"
@@ -39,7 +39,7 @@ export default class InspectorDocumentProperties extends Component {
           unit="in"
           validator='isFloat'
           validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
-          value={doc.get('height')}
+          value={doc.height}
           valueChanged={inputValueChanged} />
       </div>
     )

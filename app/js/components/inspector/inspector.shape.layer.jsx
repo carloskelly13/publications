@@ -4,7 +4,7 @@ import {cloneDeep, filter} from 'lodash'
 export default class InspectorShapeLayer extends Component {
   moveToFront() {
     const shape = this.props.shape
-    const shapes = this.props.doc.get('shapes')
+    const shapes = this.props.doc.shapes
 
     const shapesToAdjust = filter(shapes, s => s.z > shape.z)
     shapesToAdjust.forEach(s => s.z -= 1)
@@ -15,7 +15,7 @@ export default class InspectorShapeLayer extends Component {
 
   moveToBack() {
     const shape = this.props.shape
-    const shapes = this.props.doc.get('shapes')
+    const shapes = this.props.doc.shapes
 
     const shapesToAdjust = filter(shapes, s => s.z < shape.z)
     shapesToAdjust.forEach(s => s.z += 1)
@@ -26,7 +26,7 @@ export default class InspectorShapeLayer extends Component {
 
   moveForwards() {
     const shape = this.props.shape
-    const shapes = this.props.doc.get('shapes')
+    const shapes = this.props.doc.shapes
 
     const shapesToAdjust = filter(shapes, s => s.z === shape.z + 1)
     shapesToAdjust.forEach(s => s.z -= 1)
@@ -37,7 +37,7 @@ export default class InspectorShapeLayer extends Component {
 
   moveBackwards() {
     const shape = this.props.shape
-    const shapes = this.props.doc.get('shapes')
+    const shapes = this.props.doc.shapes
 
     const shapesToAdjust = filter(shapes, s => s.z === shape.z - 1)
     shapesToAdjust.forEach(s => s.z += 1)
@@ -47,9 +47,8 @@ export default class InspectorShapeLayer extends Component {
   }
 
   updateDocumentForLayerAdjustments(sender) {
-    const updatedDocument = this.props.doc.set('shapes', sender.shapes)
+    this.props.updateDocument({shapes: sender.shapes})
     this.props.updateSelectedCanvasObject(sender.shape)
-    this.props.updateDocument(updatedDocument)
   }
 
   render() {

@@ -19,17 +19,14 @@ const mapStateToProps = state => state.doc
 const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
 
 export class Document extends Component {
-
   constructor() {
     super(...arguments)
 
     this.state = {
-      selectedShape: null,
       showInspector: true,
       isPdfModalOpen: false,
       zoom: 1.0,
-      clipboard: null,
-      shouldViewAllDocuments: false
+      clipboard: null
     }
   }
 
@@ -47,17 +44,11 @@ export class Document extends Component {
       event.preventDefault()
     }
 
-    this.setState({selectedShape: sender})
-  }
-
-  updateDocument(sender) {
-    this.props.documentChanged(sender)
+    this.props.updateSelectedShape(sender)
   }
 
   updateShape(sender) {
-    this.setState({
-      setSelectedShape: merge(this.state.selectedShape, sender)
-    })
+    this.props.updateSelectedShape(sender)
   }
 
   save() {
@@ -76,14 +67,13 @@ export class Document extends Component {
       newShape = ShapeFactory.rectangle()
     }
 
-    const updatedDocument = this.props.currentDocument.update('shapes', shapes => {
-      newShape.z = shapes.length + 1
-      shapes.push(newShape)
-      return shapes
-    })
+    newShape.z = this.props.currentDocument.shapes.length + 1
+    newShape.id = this.props.currentDocument.shapes.length + 1
 
-    this.updateDocument(updatedDocument)
-    this.updateSelectedCanvasObject(newShape, null)
+    this.props.updateDocumentProperty({shapes: [
+      ...this.props.currentDocument.shapes,
+      newShape
+    ]})
   }
 
   viewAllDocuments(sender) {
@@ -165,7 +155,7 @@ export class Document extends Component {
   }
 
   render() {
-    const {currentDocument} = this.props
+    const {currentDocument, selectedShape, updateDocumentProperty} = this.props
     const DPI = 72.0
 
     if (currentDocument) {
@@ -179,10 +169,10 @@ export class Document extends Component {
           clipboard={this.state.clipboard}
           clipboardAction={::this.clipboardAction}
           downloadPdf={::this.togglePdfDownloadModal}
-          selectedShape={this.state.selectedShape}
+          selectedShape={selectedShape}
           save={::this.save}
           showInspector={this.state.showInspector}
-          title={currentDocument.get('name')}
+          title={currentDocument.name}
           toggleInspector={::this.toggleInspector}
           viewAllDocuments={::this.viewAllDocuments}
           zoom={this.state.zoom} />
@@ -192,8 +182,8 @@ export class Document extends Component {
             doc={currentDocument}
             dpi={DPI}
             zoom={this.state.zoom}
-            selectedShape={this.state.selectedShape}
-            updateDocument={::this.updateDocument}
+            selectedShape={selectedShape}
+            updateDocument={updateDocumentProperty}
             updateShape={::this.updateShape}
             updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
             showInspector={this.state.showInspector} />
@@ -211,7 +201,7 @@ export class Document extends Component {
             zoom={this.state.zoom}
             showInspector={this.state.showInspector}
             selectable={true}
-            selectedShape={this.state.selectedShape}
+            selectedShape={selectedShape}
             updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
             updateShape={::this.updateShape} />
         </div>

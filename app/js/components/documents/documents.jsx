@@ -80,7 +80,7 @@ export class Documents extends Component {
     const selectedDocument = this.state.selectedDocument
 
     if (selectedDocument) {
-      const id = selectedDocument.get('id')
+      const {id} = selectedDocument
       this.props.history.push(`/documents/${id}/edit`)
     }
   }
@@ -108,11 +108,11 @@ export class Documents extends Component {
       if (isEmpty(this.state.searchKeyword)) {
         return true
       } else {
-        return contains(doc.get('name').toLowerCase(), this.state.searchKeyword.toLowerCase())
+        return contains(doc.name.toLowerCase(), this.state.searchKeyword.toLowerCase())
       }
     }).map(doc => {
       return <DocumentItem
-        key={doc.get('id')}
+        key={doc.id}
         doc={doc}
         editDocument={::this.editDocument}
         selectedDocument={this.state.selectedDocument}

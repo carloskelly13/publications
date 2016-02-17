@@ -10,7 +10,7 @@ export default class DocumentPdfViewModal extends Component {
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      const id = this.props.doc.get('id')
+      const {id} = this.props.doc
 
       downloadPdfBlob(id)
         .then(blob => {
@@ -19,7 +19,7 @@ export default class DocumentPdfViewModal extends Component {
 
           pdfLinkRef.href = url
           pdfLinkRef.innerHTML = 'Download'
-          pdfLinkRef.setAttribute('download', `${this.props.doc.get('name')}.pdf`)
+          pdfLinkRef.setAttribute('download', `${this.props.doc.name}.pdf`)
           this.state.currentUrl = url
         })
     }
@@ -33,7 +33,7 @@ export default class DocumentPdfViewModal extends Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h1>Export PDF</h1>
-                <h3>{this.props.doc.get('name')} has been exported to PDF.</h3>
+                <h3>{this.props.doc.name} has been exported to PDF.</h3>
               </div>
               <div className="modal-form-buttons">
                 <a

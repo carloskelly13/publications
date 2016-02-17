@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import shallowCompare from 'react-addons-shallow-compare'
+import {eq} from 'lodash'
 
 import ShapeFrame from './shape.frame'
 
@@ -10,8 +10,10 @@ export default class ShapeBase extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const shouldUpdate = nextProps.shape === nextProps.selectedShape ||
-      this.props.selectedShape !== nextProps.selectedShape
+    const shouldUpdate =
+      !eq(this.props.shape, nextProps.shape) ||
+      !nextProps.selectedShape ||
+      !eq((this.props.selectedShape || {}).id, nextProps.selectedShape.id)
 
     return shouldUpdate
   }
@@ -19,11 +21,11 @@ export default class ShapeBase extends Component {
   isShapeSelected() {
     return this.props.selectable &&
            this.props.selectedShape &&
-           this.props.selectedShape === this.props.shape;
+           eq(this.props.selectedShape, this.props.shape)
   }
 
   shapeSelected(event) {
-    event.preventDefault();
-    this.props.updateSelectedCanvasObject(this.props.shape);
+    event.preventDefault()
+    this.props.updateSelectedCanvasObject(this.props.shape)
   }
 }

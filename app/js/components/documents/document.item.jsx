@@ -11,7 +11,7 @@ export default class DocumentItem extends Component {
 
   render() {
     const selected = (!!this.props.selectedDocument &&
-      this.props.selectedDocument.get('id') == this.props.doc.get('id'))
+      this.props.selectedDocument.id == this.props.doc.id)
 
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>
@@ -24,10 +24,10 @@ export default class DocumentItem extends Component {
             zoom={0.2}
             selectable={false} />
           <span className="document-item-name">
-            {this.props.doc.get('name')}
+            {this.props.doc.name}
           </span>
           <span className="document-item-description">
-            {this.props.doc.get('width')}&#8221;&#32;&#215;&#32;{this.props.doc.get('height')}&#8221;
+            {this.props.doc.width}&#8221;&#32;&#215;&#32;{this.props.doc.height}&#8221;
           </span>
         </div>
       </li>
