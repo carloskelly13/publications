@@ -1,38 +1,32 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 
-import ShapeFrame from './shape.frame';
-import ShapeBase from './shape.base';
+import ShapeFrame from './shape.frame'
+import ShapeBase from './shape.base'
 
 export default class ShapeRect extends ShapeBase {
   render() {
-    let {
+    const {
       dpi,
       selectable,
       shape,
       updateShape,
       zoom
-    } = this.props,
-    shapeFrame;
+    } = this.props
 
-    if (super.isShapeSelected()) {
-      shapeFrame = (
-        <ShapeFrame {...this.props} />
-      );
-    }
+    const shapeFrame = () => super.isShapeSelected() ?
+      <ShapeFrame {...this.props} /> : null
 
-    return (
-      <g>
-        <rect
-          onClick={selectable ? this.shapeSelected : null}
-          x={shape.x * dpi * zoom} y={shape.y * dpi * zoom}
-          rx={shape.r * zoom} ry={shape.r * zoom}
-          width={shape.width * dpi * zoom} height={shape.height * dpi * zoom}
-          fill={shape.fill} stroke={shape.stroke}
-          fillOpacity={shape.fillOpacity} strokeOpacity={shape.strokeOpacity}
-          strokeWidth={shape.strokeWidth * zoom}
-        />
-        {shapeFrame}
-      </g>
-    );
+    return <g>
+      <rect
+        onClick={selectable ? this.shapeSelected : null}
+        x={shape.x * dpi * zoom} y={shape.y * dpi * zoom}
+        rx={shape.r * zoom} ry={shape.r * zoom}
+        width={shape.width * dpi * zoom} height={shape.height * dpi * zoom}
+        fill={shape.fill} stroke={shape.stroke}
+        fillOpacity={shape.fillOpacity} strokeOpacity={shape.strokeOpacity}
+        strokeWidth={shape.strokeWidth * zoom}
+      />
+      {shapeFrame()}
+    </g>
   }
 }

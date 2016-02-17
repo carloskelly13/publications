@@ -1,11 +1,19 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
+import shallowCompare from 'react-addons-shallow-compare'
 
-import ShapeFrame from './shape.frame';
+import ShapeFrame from './shape.frame'
 
 export default class ShapeBase extends Component {
-  constructor(props, context) {
-    super(props);
-    this.shapeSelected = this.shapeSelected.bind(this);
+  constructor() {
+    super(...arguments)
+    this.shapeSelected = this.shapeSelected.bind(this)
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const shouldUpdate = nextProps.shape === nextProps.selectedShape ||
+      this.props.selectedShape !== nextProps.selectedShape
+
+    return shouldUpdate
   }
 
   isShapeSelected() {
