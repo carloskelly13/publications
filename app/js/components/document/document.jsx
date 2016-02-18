@@ -19,6 +19,7 @@ const mapStateToProps = state => state.doc
 const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
 
 export class Document extends Component {
+
   constructor() {
     super(...arguments)
 
@@ -29,6 +30,10 @@ export class Document extends Component {
       clipboard: null
     }
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   console.log('I’m getting new props yo!')
+  // }
 
   componentDidMount() {
     const {id} = this.props.params

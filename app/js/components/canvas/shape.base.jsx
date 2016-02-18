@@ -9,15 +9,6 @@ export default class ShapeBase extends Component {
     this.shapeSelected = this.shapeSelected.bind(this)
   }
 
-  shouldComponentUpdate(nextProps) {
-    const shouldUpdate =
-      !eq(this.props.shape, nextProps.shape) ||
-      !nextProps.selectedShape ||
-      !eq((this.props.selectedShape || {}).id, nextProps.selectedShape.id)
-
-    return shouldUpdate
-  }
-
   isShapeSelected() {
     return this.props.selectable &&
            this.props.selectedShape &&
