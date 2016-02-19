@@ -11,11 +11,27 @@ export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
 export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
 export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
 export const UPDATE_SELECTED_SHAPE = 'UPDATE_SELECTED_SHAPE'
+export const ADD_SHAPE = 'ADD_SHAPE'
+export const DELETE_SHAPE = 'DELETE_SHAPE'
 
 export function updateSelectedShape(selectedShape) {
   return dispatch => dispatch({
     type: UPDATE_SELECTED_SHAPE,
     selectedShape
+  })
+}
+
+export function addShape(newShape) {
+  return dispatch => dispatch({
+    type: ADD_SHAPE,
+    newShape
+  })
+}
+
+export function deleteShape(shapeToDelete) {
+  return dispatch => dispatch({
+    type: DELETE_SHAPE,
+    shapeToDelete
   })
 }
 

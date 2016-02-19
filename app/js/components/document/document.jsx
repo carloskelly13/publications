@@ -1,5 +1,6 @@
-import {merge, isEmpty, extend, without, cloneDeep, omit, filter} from 'lodash'
 import React, {Component, PropTypes} from 'react'
+import {merge, isEmpty, extend, without, cloneDeep, omit, filter} from 'lodash'
+import {autobind} from 'core-decorators'
 
 import Canvas from '../canvas/canvas'
 import DocumentNavbar from './document.navbar'
@@ -19,7 +20,6 @@ const mapStateToProps = state => state.doc
 const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
 
 export class Document extends Component {
-
   constructor() {
     super(...arguments)
 
@@ -31,10 +31,6 @@ export class Document extends Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   console.log('I’m getting new props yo!')
-  // }
-
   componentDidMount() {
     const {id} = this.props.params
     this.props.getDocument(id)
@@ -44,6 +40,7 @@ export class Document extends Component {
     document.title = 'Publications'
   }
 
+  @autobind
   updateSelectedCanvasObject(sender, event) {
     if (event) {
       event.preventDefault()
@@ -52,15 +49,18 @@ export class Document extends Component {
     this.props.updateSelectedShape(sender)
   }
 
+  @autobind
   updateShape(sender) {
     this.props.updateSelectedShape(sender)
   }
 
+  @autobind
   save() {
     const {currentDocument, saveDocument} = this.props
     saveDocument(currentDocument)
   }
 
+  @autobind
   addNewShape(type) {
     let newShape = null
 
@@ -75,12 +75,10 @@ export class Document extends Component {
     newShape.z = this.props.currentDocument.shapes.length + 1
     newShape.id = this.props.currentDocument.shapes.length + 1
 
-    this.props.updateDocumentProperty({shapes: [
-      ...this.props.currentDocument.shapes,
-      newShape
-    ]})
+    this.props.addShape(newShape)
   }
 
+  @autobind
   viewAllDocuments(sender) {
     const {currentDocument, saveDocument, documentChanged, history} = this.props
 
@@ -90,10 +88,12 @@ export class Document extends Component {
     })
   }
 
+  @autobind
   toggleInspector(sender) {
     this.setState({showInspector: !this.state.showInspector})
   }
 
+  @autobind
   changeZoom(sender, event) {
     const currentZoom = this.state.zoom
 
@@ -104,6 +104,7 @@ export class Document extends Component {
     }
   }
 
+  @autobind
   clipboardAction(action) {
     const {currentDocument} = this.props
     let updatedDocument = null
@@ -121,15 +122,8 @@ export class Document extends Component {
       break
 
       case 'delete':
-      updatedDocument = currentDocument.update('shapes', shapes => {
-        const {selectedShape} = this.state
-        const shapesToAdjust = filter(shapes, s => s.z > selectedShape.z)
-        shapesToAdjust.forEach(s => s.z -= 1)
-        return without(shapes, selectedShape)
-      })
-
-      this.updateDocument(updatedDocument)
-      this.updateSelectedCanvasObject(null)
+      const {deleteShape, selectedShape} = this.props
+      deleteShape(selectedShape)
       break
 
       case 'copy':
@@ -155,6 +149,7 @@ export class Document extends Component {
     }
   }
 
+  @autobind
   togglePdfDownloadModal() {
     this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
   }
@@ -167,30 +162,30 @@ export class Document extends Component {
       return <div>
         <DocumentPdfViewModal
           doc={currentDocument}
-          togglePdfDownloadModal={::this.togglePdfDownloadModal}
+          togglePdfDownloadModal={this.togglePdfDownloadModal}
           isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
-          changeZoom={::this.changeZoom}
+          changeZoom={this.changeZoom}
           clipboard={this.state.clipboard}
-          clipboardAction={::this.clipboardAction}
-          downloadPdf={::this.togglePdfDownloadModal}
+          clipboardAction={this.clipboardAction}
+          downloadPdf={this.togglePdfDownloadModal}
           selectedShape={selectedShape}
-          save={::this.save}
+          save={this.save}
           showInspector={this.state.showInspector}
           title={currentDocument.name}
-          toggleInspector={::this.toggleInspector}
-          viewAllDocuments={::this.viewAllDocuments}
+          toggleInspector={this.toggleInspector}
+          viewAllDocuments={this.viewAllDocuments}
           zoom={this.state.zoom} />
         <div className="app-content app-content-document">
           <InspectorBase
-            addNewShape={::this.addNewShape}
+            addNewShape={this.addNewShape}
             doc={currentDocument}
             dpi={DPI}
             zoom={this.state.zoom}
             selectedShape={selectedShape}
             updateDocument={updateDocumentProperty}
-            updateShape={::this.updateShape}
-            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
+            updateShape={this.updateShape}
+            updateSelectedCanvasObject={this.updateSelectedCanvasObject}
             showInspector={this.state.showInspector} />
           <RulerVertical
             doc={currentDocument}
@@ -207,8 +202,8 @@ export class Document extends Component {
             showInspector={this.state.showInspector}
             selectable={true}
             selectedShape={selectedShape}
-            updateSelectedCanvasObject={::this.updateSelectedCanvasObject}
-            updateShape={::this.updateShape} />
+            updateSelectedCanvasObject={this.updateSelectedCanvasObject}
+            updateShape={this.updateShape} />
         </div>
       </div>
 

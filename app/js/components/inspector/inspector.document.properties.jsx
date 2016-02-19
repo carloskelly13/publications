@@ -3,8 +3,18 @@ import React, {Component, PropTypes} from 'react'
 import InputText from '../ui/input.text'
 
 export default class InspectorDocumentProperties extends Component {
-  constructor(props, context) {
-    super(props)
+  constructor() {
+    super(...arguments)
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const {doc} = this.props
+    const shouldUpdate =
+      doc.width !== nextProps.doc.width ||
+      doc.height !== nextProps.doc.height ||
+      doc.name !== nextProps.doc.name
+
+    return shouldUpdate
   }
 
   render() {

@@ -1,26 +1,29 @@
-import React, {Component, PropTypes} from 'react';
-import InspectorDocumentLayerItem from './inspector.document.layer.item';
+import React, {Component, PropTypes} from 'react'
+import {eq} from 'lodash'
+import InspectorDocumentLayerItem from './inspector.document.layer.item'
 
 export default class InspectorDocumentLayers extends Component {
   constructor(props, context) {
-    super(props);
+    super(props)
   }
 
   render() {
     const {
-      doc,
+      shapes,
       inputValueChanged,
       theme,
       updateSelectedCanvasObject
     } = this.props
 
-    const shapes = doc.shapes.sort((lhs, rhs) => lhs.z - rhs.z)
-
-    const shapeLayers = shapes.map((shape, idx) => <InspectorDocumentLayerItem
-      isSelected={shape === this.props.selectedShape}
-      key={`inspector-layer-item-${idx}`}
-      shape={shape}
-      updateSelectedCanvasObject={updateSelectedCanvasObject}/>)
+    const shapeLayers = shapes
+      .sort((lhs, rhs) => lhs.z - rhs.z)
+      .map((shape, idx) => (
+        <InspectorDocumentLayerItem
+          isSelected={shape.id === (this.props.selectedShape || {}).id}
+          key={`inspector-layer-item-${idx}`}
+          shape={shape}
+          updateSelectedCanvasObject={updateSelectedCanvasObject}/>
+      ))
 
     return (
       <div className="inspector-content-section">

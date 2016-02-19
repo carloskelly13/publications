@@ -1,4 +1,4 @@
-import {findIndex} from 'lodash'
+import {findIndex, without} from 'lodash'
 
 import {
   REQUEST_DOCUMENTS,
@@ -10,7 +10,9 @@ import {
   PATCH_DOCUMENT,
   UPDATE_DOCUMENT,
   RESET_DOCUMENTS,
-  UPDATE_SELECTED_SHAPE
+  UPDATE_SELECTED_SHAPE,
+  ADD_SHAPE,
+  DELETE_SHAPE
 } from 'actions/document'
 
 export default function documentReducer(state = {
@@ -33,6 +35,31 @@ export default function documentReducer(state = {
       documents: action.documents,
       isRequestingData: false
     })
+
+  case ADD_SHAPE: {
+    const updatedDocument = Object.assign({}, state.currentDocument, {
+      shapes: [
+        ...state.currentDocument.shapes,
+        action.newShape
+      ]
+    })
+
+    return Object.assign({}, state, {
+      currentDocument: updatedDocument,
+      selectedShape: action.newShape
+    })
+  }
+
+  case DELETE_SHAPE: {
+    const updatedDocument = Object.assign({}, state.currentDocument, {
+      shapes: state.currentDocument.shapes.filter(s => s.id !== action.shapeToDelete.id)
+    })
+
+    return Object.assign({}, state, {
+      currentDocument: updatedDocument,
+      selectedShape: null
+    })
+  }
 
   case UPDATE_SELECTED_SHAPE: {
     let updatedState = {}

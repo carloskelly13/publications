@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {range} from 'lodash'
+import {autobind} from 'core-decorators'
 
 import CanvasGridline from './canvas.gridline'
 
 export default class CanvasBackground extends Component {
   constructor() {
     super(...arguments)
-    this.canvasSelected = this.canvasSelected.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -76,6 +76,7 @@ export default class CanvasBackground extends Component {
     </g>
   }
 
+  @autobind
   canvasSelected(event) {
     event.preventDefault()
     this.props.updateSelectedCanvasObject(null, null)

@@ -2,6 +2,7 @@
   .no-select;
   .animation(right, 0.25s);
   bottom: 0;
+  background: fade(#fff, 95%);
   border-left: 1px solid hsla(0, 0%, 0%, 0.33);
   height: inherit;
   position: fixed;
@@ -15,21 +16,10 @@
     font-size: 14px;
     font-weight: 500;
     padding: 0 0 0.75em;
+    color: #444;
   }
 
-  &.light {
-    background: fade(#fff, 95%);
-
-    h1 {
-      color: #444;
-    }
-  }
-
-  &.dark {
-    background: fade(@color-dark-background, 95%);
-  }
-
-  &.inspector-container-visible {
+  &.visible {
     right: 0;
   }
 
@@ -162,14 +152,7 @@
   .inspector-container {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-
-    &.light {
-      background: fade(#fff, 85%);
-    }
-
-    &.dark {
-      background: fade(@color-light-background, 85%);
-    }
+    background: fade(#fff, 85%);
   }
 
   .inspector-tab-bar {
