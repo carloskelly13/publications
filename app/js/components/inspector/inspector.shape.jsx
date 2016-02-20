@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react'
+import {autobind} from 'core-decorators'
 import {omit} from 'lodash'
 
 import InspectorShapeBorder from './inspector.shape.border'
@@ -15,7 +16,7 @@ export default class InspectorShape extends Component {
       const {type} = this.props.shape
       const shapeMetricsContent = (
         <InspectorShapeMetrics
-          inputValueChanged={::this.inputValueChanged}
+          inputValueChanged={this.inputValueChanged}
           {...this.props} />
       )
 
@@ -25,10 +26,10 @@ export default class InspectorShape extends Component {
         case 'text':
         shapeContentSections = <div>
           <InspectorShapeText
-            inputValueChanged={::this.inputValueChanged}
+            inputValueChanged={this.inputValueChanged}
             {...this.props} />
           <InspectorShapeLayer
-            inputValueChanged={::this.inputValueChanged}
+            inputValueChanged={this.inputValueChanged}
             {...this.props} />
         </div>
         break
@@ -37,13 +38,13 @@ export default class InspectorShape extends Component {
         case 'rect':
         shapeContentSections = <div>
           <InspectorShapeColor
-            inputValueChanged={::this.inputValueChanged}
+            inputValueChanged={this.inputValueChanged}
             {...omit(this.props, ['updateDocument', 'doc'])} />
           <InspectorShapeBorder
-            inputValueChanged={::this.inputValueChanged}
+            inputValueChanged={this.inputValueChanged}
             {...omit(this.props, ['updateDocument', 'doc'])} />
           <InspectorShapeLayer
-            inputValueChanged={::this.inputValueChanged}
+            inputValueChanged={this.inputValueChanged}
             {...this.props} />
         </div>
         break
@@ -66,6 +67,7 @@ export default class InspectorShape extends Component {
     </div>
   }
 
+  @autobind
   inputValueChanged(event) {
     const {shape, updateShape} = this.props
     let updatedValue = event.target.value

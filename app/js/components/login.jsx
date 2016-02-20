@@ -3,6 +3,7 @@ import uuid from 'uuid4'
 
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import {autobind} from 'core-decorators'
 import * as UserActions from 'actions/user'
 import * as ErrorsActions from 'actions/errors'
 
@@ -22,6 +23,7 @@ export class Login extends Component {
     this.props.getUser()
   }
 
+  @autobind
   createTestDriveAccount() {
     this.props.createNewUser({
       emailAddress: `${uuid()}@publicationsapp.com`,
@@ -39,14 +41,17 @@ export class Login extends Component {
     }
   }
 
+  @autobind
   nameChanged(event) {
     this.setState({emailAddress: event.target.value});
   }
 
+  @autobind
   passwordChanged(event) {
     this.setState({password: event.target.value});
   }
 
+  @autobind
   logInFormSubmitted(event) {
     event.preventDefault()
 
@@ -70,7 +75,7 @@ export class Login extends Component {
 
     const loginForm = <form
         className=""
-        onSubmit={::this.logInFormSubmitted}>
+        onSubmit={this.logInFormSubmitted}>
         {errorMessage}
         <div>
           <InputText
@@ -79,14 +84,14 @@ export class Login extends Component {
             style="half left"
             type="text"
             value={this.state.emailAddress}
-            valueChanged={::this.nameChanged} />
+            valueChanged={this.nameChanged} />
           <InputText
             placeholder="Password"
             name="password"
             style="half right"
             type="password"
             value={this.state.password}
-            valueChanged={::this.passwordChanged} />
+            valueChanged={this.passwordChanged} />
         </div>
         <div className="buttons">
           <button
@@ -97,7 +102,7 @@ export class Login extends Component {
           <button
             type="button"
             className="button test-drive-btn"
-            onClick={::this.createTestDriveAccount}
+            onClick={this.createTestDriveAccount}
             role="button">
             or test drive Publications without an account
           </button>

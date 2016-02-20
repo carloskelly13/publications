@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {autobind} from 'core-decorators'
 import AboutAppModal from './about.modal'
 
 export default class AboutButton extends Component {
@@ -7,6 +8,7 @@ export default class AboutButton extends Component {
     this.state = {isAboutAppModalOpen: false}
   }
 
+  @autobind
   toggleAboutAppModal() {
     this.setState({isAboutAppModalOpen: !this.state.isAboutAppModalOpen})
   }
@@ -15,10 +17,10 @@ export default class AboutButton extends Component {
     return (
       <div className="about-button">
         <AboutAppModal
-          toggleModal={::this.toggleAboutAppModal}
+          toggleModal={this.toggleAboutAppModal}
           isOpen={this.state.isAboutAppModalOpen}
         />
-        <div className="navbar-logo" onClick={::this.toggleAboutAppModal}>
+        <div className="navbar-logo" onClick={this.toggleAboutAppModal}>
           <div className="navbar-logo-icon"></div>
         </div>
       </div>

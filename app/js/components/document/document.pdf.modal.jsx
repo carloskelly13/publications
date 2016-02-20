@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import {downloadPdfBlob} from 'services/pdf.service'
+import {autobind} from 'core-decorators'
 
 export default class DocumentPdfViewModal extends Component {
   constructor() {
@@ -44,7 +45,7 @@ export default class DocumentPdfViewModal extends Component {
                   ref={pdfLinkRef => this.pdfLinkRef = pdfLinkRef}>
                   Exporting…
                 </a>
-                <button className="btn" type="button" onClick={::this.dismiss}>
+                <button className="btn" type="button" onClick={this.dismiss}>
                   Close
                 </button>
               </div>
@@ -59,6 +60,7 @@ export default class DocumentPdfViewModal extends Component {
     }
   }
 
+  @autobind
   dismiss() {
     if (this.state.currentUrl) {
       URL.revokeObjectURL(this.state.currentUrl)

@@ -1,10 +1,10 @@
 import React, {Component, PropTypes} from 'react'
 import {Router, RouteHandler, Link} from 'react-router'
+import {autobind} from 'core-decorators'
 
 import Canvas from '../canvas/canvas'
 
 export default class DocumentItem extends Component {
-
   constructor() {
     super(...arguments)
   }
@@ -16,8 +16,8 @@ export default class DocumentItem extends Component {
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>
         <div
-          onClick={::this.documentSelected}
-          onDoubleClick={::this.documentDoubleClicked}>
+          onClick={this.documentSelected}
+          onDoubleClick={this.documentDoubleClicked}>
           <Canvas
             doc={this.props.doc}
             dpi={72}
@@ -34,11 +34,13 @@ export default class DocumentItem extends Component {
     )
   }
 
+  @autobind
   documentSelected(event) {
     event.stopPropagation()
     this.props.updateSelectedDocument(this.props.doc, null)
   }
 
+  @autobind
   documentDoubleClicked(event) {
     event.stopPropagation()
     this.props.updateSelectedDocument(this.props.doc, null)

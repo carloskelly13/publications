@@ -1,4 +1,5 @@
 import React, {Component, PropTypes, addons} from 'react'
+import {autobind} from 'core-decorators'
 import InputText from '../ui/input.text'
 
 export default class UserAccountModal extends Component {
@@ -14,11 +15,13 @@ export default class UserAccountModal extends Component {
     })
   }
 
+  @autobind
   formValueChanged(event) {
     this.state[event.target.name] = event.target.value
     this.setState(this.state)
   }
 
+  @autobind
   dismiss() {
     let clearState = {password: ''}
 
@@ -31,6 +34,7 @@ export default class UserAccountModal extends Component {
     this.props.toggleModal()
   }
 
+  @autobind
   handleSubmit(event) {
     event.preventDefault()
     const {emailAddress, password} = this.state
@@ -55,7 +59,7 @@ export default class UserAccountModal extends Component {
       validator='isLength'
       validatorOptions={1}
       value={this.state.emailAddress}
-      valueChanged={::this.formValueChanged} /> : null
+      valueChanged={this.formValueChanged} /> : null
 
     const headerText = temporary ? 'Create Account' : 'Change Password'
     const {isPatchingUser, errors} = this.props
@@ -83,7 +87,7 @@ export default class UserAccountModal extends Component {
                 <h3>{descriptionText(temporary, failedUpdate, this.state.emailAddress)}</h3>
               </div>
               <div className="modal-inner-content">
-                <form onSubmit={::this.handleSubmit}>
+                <form onSubmit={this.handleSubmit}>
                   {emailField}
                   <InputText
                     displayName="Password"
@@ -91,12 +95,12 @@ export default class UserAccountModal extends Component {
                     theme="light"
                     type="password"
                     value={this.state.password}
-                    valueChanged={::this.formValueChanged} />
+                    valueChanged={this.formValueChanged} />
                   <div className="modal-form-buttons">
                     <button disabled={isPatchingUser} className="btn" type="submit">
                       {temporary ? 'Create Account' : 'Update'}
                     </button>
-                    <button disabled={isPatchingUser} className="btn" type="button" onClick={::this.dismiss}>
+                    <button disabled={isPatchingUser} className="btn" type="button" onClick={this.dismiss}>
                       Close
                     </button>
                   </div>

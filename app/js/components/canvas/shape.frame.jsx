@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import _ from 'lodash';
+import {autobind} from 'core-decorators'
+import {contains} from 'lodash';
 
 const frameAnchors = {
   size: 10,
@@ -16,29 +17,23 @@ const frameAnchors = {
 };
 
 export default class ShapeFrame extends Component {
-  constructor(props, context) {
-    super(props)
-
-    this.frameSelected = this.frameSelected.bind(this);
-    this.frameDeselected = this.frameDeselected.bind(this);
-    this.frameDragged = this.frameDragged.bind(this);
-    this.resizeAnchorSelected = this.resizeAnchorSelected.bind(this);
-    this.resizeAnchorDeselected = this.resizeAnchorDeselected.bind(this);
-    this.resizeAnchorDragged = this.resizeAnchorDragged.bind(this);
-
-    this.state = {isEditingText: false};
+  constructor() {
+    super(...arguments)
+    this.state = {isEditingText: false}
   }
 
   componentDidMount() {
     this.resetState();
   }
 
+  @autobind
   frameDoubleClicked() {
     if (this.props.shape.type === 'text') {
       this.setState({isEditingText: true});
     }
   }
 
+  @autobind
   textDidChange(event) {
     this.props.updateShape({text: event.target.value});
   }
@@ -64,7 +59,7 @@ export default class ShapeFrame extends Component {
           fillOpacity="0" stroke="hsla(0, 0%, 0%, 0.5)"
           strokeWidth={1 * zoom}
           onMouseDown={this.frameSelected}
-          onDoubleClick={::this.frameDoubleClicked}
+          onDoubleClick={this.frameDoubleClicked}
         />
         {
           (() => {
@@ -78,7 +73,7 @@ export default class ShapeFrame extends Component {
                     width={width}>
                     <textarea
                       value={shape.text}
-                      onChange={::this.textDidChange}
+                      onChange={this.textDidChange}
                       className="shape-frame-textarea"
                       style={{
                         color: shape.color,
@@ -117,7 +112,8 @@ export default class ShapeFrame extends Component {
                 fillOpacity="1"
                 strokeOpacity="1"
                 style={style}
-                onMouseDown={this.resizeAnchorSelected.bind(this, anchor.coordinate)}
+                data-coordinate={anchor.coordinate}
+                onMouseDown={this.resizeAnchorSelected}
               />
             )
           })
@@ -157,6 +153,7 @@ export default class ShapeFrame extends Component {
     });
   }
 
+  @autobind
   frameSelected(event) {
     this.setState({dragging: true});
     this.updateStateForDragging(event);
@@ -164,7 +161,10 @@ export default class ShapeFrame extends Component {
     document.addEventListener('mouseup', this.frameDeselected);
   }
 
-  resizeAnchorSelected(coordinate, event) {
+  @autobind
+  resizeAnchorSelected(event) {
+    const coordinate = event.nativeEvent.target.attributes.getNamedItem('data-coordinate').value
+
     this.setState({
       resizing: true,
       resizeAnchor: coordinate
@@ -175,21 +175,23 @@ export default class ShapeFrame extends Component {
     document.addEventListener('mouseup', this.resizeAnchorDeselected);
   }
 
+  @autobind
   frameDragged(event) {
     if (!this.state.dragging) return;
 
-    let dX = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
-    let dY = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
+     const x = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom
+     const y = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom
 
-    this.props.updateShape({x: dX, y: dY});
+    this.props.updateShape({x, y});
   }
 
+  @autobind
   resizeAnchorDragged(event) {
     if (!this.state.resizing) return;
 
     let updatedMetrics = {};
 
-    if (_.contains(this.state.resizeAnchor, 'n')) {
+    if (contains(this.state.resizeAnchor, 'n')) {
       updatedMetrics.height = Math.max(this.state.oH +
         ((this.state.eY - event.pageY) / this.props.dpi / this.props.zoom), 0);
 
@@ -197,12 +199,12 @@ export default class ShapeFrame extends Component {
         updatedMetrics.y = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
       }
 
-    } else if (_.contains(this.state.resizeAnchor, 's')) {
+    } else if (contains(this.state.resizeAnchor, 's')) {
       updatedMetrics.height = Math.max(this.state.oH +
         ((event.pageY - this.state.eY) / this.props.dpi / this.props.zoom), 0);
     }
 
-    if (_.contains(this.state.resizeAnchor, 'w')) {
+    if (contains(this.state.resizeAnchor, 'w')) {
       updatedMetrics.width = Math.max(this.state.oW +
         ((this.state.eX - event.pageX) / this.props.dpi / this.props.zoom), 0);
 
@@ -210,7 +212,7 @@ export default class ShapeFrame extends Component {
         updatedMetrics.x = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
       }
 
-    } else if (_.contains(this.state.resizeAnchor, 'e')) {
+    } else if (contains(this.state.resizeAnchor, 'e')) {
       updatedMetrics.width = Math.max(this.state.oW +
         ((event.pageX - this.state.eX) / this.props.dpi / this.props.zoom), 0);
     }
@@ -218,12 +220,14 @@ export default class ShapeFrame extends Component {
     this.props.updateShape(updatedMetrics);
   }
 
+  @autobind
   frameDeselected() {
     this.resetState();
     document.removeEventListener('mousemove', this.frameDragged);
     document.removeEventListener('mouseup', this.frameDeselected);
   }
 
+  @autobind
   resizeAnchorDeselected() {
     this.resetState();
     document.removeEventListener('mousemove', this.resizeAnchorDragged);

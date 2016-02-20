@@ -1,4 +1,5 @@
 import React, {Component, PropTypes, addons} from 'react'
+import {autobind} from 'core-decorators'
 import InputText from '../ui/input.text'
 
 export default class NewDocumentModal extends Component {
@@ -23,7 +24,7 @@ export default class NewDocumentModal extends Component {
               <h3>Specify the name, width and height of your new document.</h3>
             </div>
             <div className="modal-inner-content">
-              <form onSubmit={::this.handleSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <InputText
                   displayName="Name"
                   name="name"
@@ -31,7 +32,7 @@ export default class NewDocumentModal extends Component {
                   validator='isLength'
                   validatorOptions={1}
                   value={this.state.form.name}
-                  valueChanged={::this.formValueChanged} />
+                  valueChanged={this.formValueChanged} />
                 <InputText
                   displayName="Width"
                   name="width"
@@ -41,7 +42,7 @@ export default class NewDocumentModal extends Component {
                   validator='isFloat'
                   validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
                   value={this.state.form.width}
-                  valueChanged={::this.formValueChanged} />
+                  valueChanged={this.formValueChanged} />
                 <InputText
                   displayName="Height"
                   name="height"
@@ -51,7 +52,7 @@ export default class NewDocumentModal extends Component {
                   validator='isFloat'
                   validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
                   value={this.state.form.height}
-                  valueChanged={::this.formValueChanged} />
+                  valueChanged={this.formValueChanged} />
                 <div className="modal-form-buttons">
                   <button className="btn" type="submit">
                     Create
@@ -70,11 +71,13 @@ export default class NewDocumentModal extends Component {
     }
   }
 
+  @autobind
   formValueChanged(event) {
     this.state.form[event.target.name] = event.target.value
     this.setState({form: this.state.form})
   }
 
+  @autobind
   handleSubmit(event) {
     event.preventDefault()
 
