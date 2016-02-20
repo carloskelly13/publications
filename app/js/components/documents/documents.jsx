@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {select, contains, isEmpty} from 'lodash'
+import {autobind} from 'core-decorators'
 
 import DocumentsNavbar from './documents.navbar'
 import DocumentItem from './document.item'
@@ -46,27 +47,32 @@ export class Documents extends Component {
     }
   }
 
+  @autobind
   updateSelectedDocument(sender, event) {
     if (!!event) event.preventDefault()
     this.setState({selectedDocument: sender})
   }
 
+  @autobind
   searchKeywordChanged(event) {
     this.setState({searchKeyword: event.target.value})
   }
 
+  @autobind
   toggleNewDocumentModal() {
     this.setState({
       isNewDocModalOpen: !this.state.isNewDocModalOpen
     })
   }
 
+  @autobind
   toggleUserAccountModal() {
     this.setState({
       isUserAccountModalOpen: !this.state.isUserAccountModalOpen
     })
   }
 
+  @autobind
   createNewDocument(options) {
     this.props.newDocument({
       name: options.name,
@@ -76,6 +82,7 @@ export class Documents extends Component {
     })
   }
 
+  @autobind
   editDocument() {
     const selectedDocument = this.state.selectedDocument
 
@@ -85,6 +92,7 @@ export class Documents extends Component {
     }
   }
 
+  @autobind
   deleteDocument() {
     const selectedDocument = this.state.selectedDocument
 
@@ -94,6 +102,7 @@ export class Documents extends Component {
     }
   }
 
+  @autobind
   logOut() {
     const {history, logoutUser, clearDocuments} = this.props
 
@@ -114,9 +123,9 @@ export class Documents extends Component {
       return <DocumentItem
         key={doc.id}
         doc={doc}
-        editDocument={::this.editDocument}
+        editDocument={this.editDocument}
         selectedDocument={this.state.selectedDocument}
-        updateSelectedDocument={::this.updateSelectedDocument} />
+        updateSelectedDocument={this.updateSelectedDocument} />
     })
 
     return <div>
@@ -127,26 +136,23 @@ export class Documents extends Component {
         errors={this.props.errors}
         removeError={this.props.removeError}
         isTemporaryUser={this.props.isTemporaryUser}
-        toggleModal={::this.toggleUserAccountModal}
-        isOpen={this.state.isUserAccountModalOpen}
-      />
+        toggleModal={this.toggleUserAccountModal}
+        isOpen={this.state.isUserAccountModalOpen} />
       <NewDocumentModal
-        createNewDocument={::this.createNewDocument}
-        toggleNewDocumentModal={::this.toggleNewDocumentModal}
-        isOpen={this.state.isNewDocModalOpen}
-      />
+        createNewDocument={this.createNewDocument}
+        toggleNewDocumentModal={this.toggleNewDocumentModal}
+        isOpen={this.state.isNewDocModalOpen} />
       <DocumentsNavbar
         isTemporaryUser={this.props.isTemporaryUser}
         isAuthenticated={this.props.isAuthenticated}
         documentIsSelected={this.state.selectedDocument !== null}
-        editDocument={::this.editDocument}
-        deleteDocument={::this.deleteDocument}
-        createNewDocument={::this.toggleNewDocumentModal}
+        editDocument={this.editDocument}
+        deleteDocument={this.deleteDocument}
+        createNewDocument={this.toggleNewDocumentModal}
         searchKeyword={this.state.searchKeyword}
-        searchKeywordChanged={::this.searchKeywordChanged}
-        logOut={::this.logOut}
-        toggleUserAccountModal={::this.toggleUserAccountModal}
-      />
+        searchKeywordChanged={this.searchKeywordChanged}
+        logOut={this.logOut}
+        toggleUserAccountModal={this.toggleUserAccountModal} />
       <div className="app-content">
         <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
           {documentItems}
