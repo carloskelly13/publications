@@ -26,8 +26,7 @@ export class Document extends Component {
     this.state = {
       showInspector: true,
       isPdfModalOpen: false,
-      zoom: 1.0,
-      clipboard: null
+      zoom: 1.0
     }
   }
 
@@ -105,51 +104,6 @@ export class Document extends Component {
   }
 
   @autobind
-  clipboardAction(action) {
-    const {currentDocument} = this.props
-    let updatedDocument = null
-
-    switch (action) {
-      case 'cut':
-      const shapeToCut = cloneDeep(omit(this.state.selectedShape, 'id'))
-      updatedDocument = currentDocument.update('shapes', shapes => {
-        return without(shapes, this.state.selectedShape)
-      })
-
-      this.setState({clipboard: shapeToCut})
-      this.updateDocument(updatedDocument)
-      this.updateSelectedCanvasObject(null)
-      break
-
-      case 'delete':
-      const {deleteShape, selectedShape} = this.props
-      deleteShape(selectedShape)
-      break
-
-      case 'copy':
-      const shapeToCopy = cloneDeep(omit(this.state.selectedShape, 'id'))
-      this.setState({clipboard: shapeToCopy})
-      break
-
-      case 'paste':
-      let shapeToPaste = cloneDeep(this.state.clipboard)
-      shapeToPaste.x += 0.25
-      shapeToPaste.y += 0.25
-
-      updatedDocument = currentDocument.update('shapes', shapes => {
-        shapes.push(shapeToPaste)
-        return shapes
-      })
-
-      this.updateDocument(updatedDocument)
-      this.updateSelectedCanvasObject(shapeToPaste)
-      break
-
-      default: break
-    }
-  }
-
-  @autobind
   togglePdfDownloadModal() {
     this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
   }
@@ -159,6 +113,8 @@ export class Document extends Component {
     const DPI = 72.0
 
     if (currentDocument) {
+      console.log(currentDocument.shapes.sort((lhs, rhs) => lhs.z - rhs.z).map(s => `${s.fill} ${s.z}`))
+
       return <div>
         <DocumentPdfViewModal
           doc={currentDocument}
@@ -166,8 +122,11 @@ export class Document extends Component {
           isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
           changeZoom={this.changeZoom}
-          clipboard={this.state.clipboard}
-          clipboardAction={this.clipboardAction}
+          clipboard={this.props.clipboardData}
+          deleteShape={this.props.deleteShape}
+          cutShape={this.props.cutShape}
+          copyShape={this.props.copyShape}
+          pasteShape={this.props.pasteShape}
           downloadPdf={this.togglePdfDownloadModal}
           selectedShape={selectedShape}
           save={this.save}

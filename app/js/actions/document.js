@@ -13,6 +13,9 @@ export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
 export const UPDATE_SELECTED_SHAPE = 'UPDATE_SELECTED_SHAPE'
 export const ADD_SHAPE = 'ADD_SHAPE'
 export const DELETE_SHAPE = 'DELETE_SHAPE'
+export const CUT_SHAPE = 'CUT_SHAPE'
+export const COPY_SHAPE = 'COPY_SHAPE'
+export const PASTE_SHAPE = 'PASTE_SHAPE'
 
 export function updateSelectedShape(selectedShape) {
   return dispatch => dispatch({
@@ -29,10 +32,19 @@ export function addShape(newShape) {
 }
 
 export function deleteShape(shapeToDelete) {
-  return dispatch => dispatch({
-    type: DELETE_SHAPE,
-    shapeToDelete
-  })
+  return dispatch => dispatch({type: DELETE_SHAPE})
+}
+
+export function cutShape(shapeToCut) {
+  return dispatch => dispatch({type: CUT_SHAPE})
+}
+
+export function copyShape(shapeToCopy) {
+  return dispatch => dispatch({type: COPY_SHAPE})
+}
+
+export function pasteShape() {
+  return dispatch => dispatch({type: PASTE_SHAPE})
 }
 
 export function updateDocumentProperty(sender) {

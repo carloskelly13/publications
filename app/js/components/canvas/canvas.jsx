@@ -7,8 +7,8 @@ import ShapeRect from './shape.rect'
 import ShapeText from './shape.text'
 
 export default class Canvas extends Component {
-  constructor(props, context) {
-    super(props)
+  constructor() {
+    super(...arguments)
   }
 
   render() {
@@ -18,8 +18,12 @@ export default class Canvas extends Component {
         selectable,
         showInspector,
         zoom
-      } = this.props,
-      canvasSelectors = `canvas-container ${showInspector ? 'canvas-container-expanded' : ''} ${selectable ? '' : 'canvas-no-select'}`
+      } = this.props
+
+    const canvasSelectors = `
+      canvas-container ${showInspector ? 'canvas-container-expanded' : ''}
+      ${selectable ? '' : 'canvas-no-select'}
+    `
 
     const shapeProps = omit(this.props, 'doc')
     const sortedShapes = doc.shapes.sort((lhs, rhs) => lhs.z - rhs.z)
@@ -40,19 +44,18 @@ export default class Canvas extends Component {
       }
     })
 
-    return (
-      <div id="svg-canvas-container" className={canvasSelectors}>
-        <svg
-          width={doc.width * dpi * zoom}
-          height={doc.height * dpi * zoom}
-          className="canvas-svg"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-        >
-          <g><CanvasBackground {...this.props} /></g>
-          <g>{shapeElements}</g>
-        </svg>
-      </div>
-    )
+    return <div
+      id="svg-canvas-container"
+      className={canvasSelectors}>
+      <svg
+        width={doc.width * dpi * zoom}
+        height={doc.height * dpi * zoom}
+        className="canvas-svg"
+        xmlns="http://www.w3.org/2000/svg"
+        version="1.1">
+        <g><CanvasBackground {...this.props} /></g>
+        <g>{shapeElements}</g>
+      </svg>
+    </div>
   }
 }

@@ -3,10 +3,6 @@ import {eq} from 'lodash'
 import InspectorDocumentLayerItem from './inspector.document.layer.item'
 
 export default class InspectorDocumentLayers extends Component {
-  constructor(props, context) {
-    super(props)
-  }
-
   render() {
     const {
       shapes,
@@ -25,11 +21,9 @@ export default class InspectorDocumentLayers extends Component {
           updateSelectedCanvasObject={updateSelectedCanvasObject}/>
       ))
 
-    return (
-      <div className="inspector-content-section">
-        <h1>Layers</h1>
-        <ul className="inspector-layers">{shapeLayers}</ul>
-      </div>
-    )
+    return <div className="inspector-content-section">
+      <h1>Layers</h1>
+      <ul className="inspector-layers">{shapeLayers}</ul>
+    </div>
   }
 }
