@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react';
-import InputBase from './input.base';
+import React, {Component, PropTypes} from 'react'
+import InputBase from './input.base'
 
 export default class InputText extends InputBase {
   render() {
@@ -17,7 +17,7 @@ export default class InputText extends InputBase {
     value = this.state.value;
 
     if (validator && validator === 'isFloat') {
-      value = parseFloat(value).toFixed(2);
+      value = parseFloat(value).toFixed(2)
     }
 
     if (unit !== undefined) {
@@ -36,8 +36,8 @@ export default class InputText extends InputBase {
             id={name}
             max={validatorOptions ? validatorOptions.max : null}
             min={validatorOptions ? validatorOptions.min : null}
-            onBlur={e => this.onComponentDefocus(e)}
-            onChange={e => this.valueChanged(e)}
+            onBlur={this.onComponentDefocus}
+            onChange={this.valueChanged}
             name={name}
             placeholder={placeholder || null}
             step={validatorOptions ? validatorOptions.step : null}

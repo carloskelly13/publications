@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 
 import InputText from '../ui/input.text'
+import InputNumber from 'components/ui/input.number'
 
 export default class InspectorShapeMetrics extends Component {
   render() {
@@ -19,6 +20,10 @@ export default class InspectorShapeMetrics extends Component {
           validatorOptions={{step: 0.05, min: -64.0, max: 64.0}}
           value={shape.x}
           valueChanged={inputValueChanged} />
+        <InputNumber
+          value={shape.x}
+          valueChanged={inputValueChanged}
+         />
         <InputText
           displayName="Y"
           name="y"

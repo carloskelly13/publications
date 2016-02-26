@@ -22,8 +22,8 @@ export default class InputColor extends InputBase {
             id={name}
             max={validatorOptions ? validatorOptions.max : null}
             min={validatorOptions ? validatorOptions.min : null}
-            onBlur={e => this.onComponentDefocus(e)}
-            onChange={e => this.valueChanged(e)}
+            onBlur={this.onComponentDefocus}
+            onChange={this.valueChanged}
             name={name}
             step={validatorOptions ? validatorOptions.step : null}
             type={type || 'text'}
