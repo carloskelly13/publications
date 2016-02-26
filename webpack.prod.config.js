@@ -47,6 +47,8 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
     alias: {
       'components': 'components',
+      'containers': 'containers',
+      'core': 'core',
       'actions': 'actions',
       'reducers': 'reducers',
       'stores': 'stores',

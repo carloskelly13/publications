@@ -6,10 +6,10 @@ import {syncReduxAndRouter} from 'redux-simple-router'
 import configureStore from 'stores/configureStore'
 import {createHashHistory} from 'history/lib'
 
-import BaseView from '../components/base.view'
-import Login from '../components/login'
-import Documents from '../components/documents/documents'
-import Document from '../components/document/document'
+import BaseView from 'containers/base.view'
+import Login from 'containers/login'
+import Documents from 'containers/documents'
+import Document from 'containers/document'
 
 import {getUser} from 'actions/user'
 
