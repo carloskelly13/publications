@@ -21,6 +21,9 @@ export default class InspectorShapeMetrics extends Component {
           value={shape.x}
           valueChanged={inputValueChanged} />
         <InputNumber
+          displayName="X"
+          property="x"
+          validatorOptions={{step: 0.05, min: -64.0, max: 64.0}}
           value={shape.x}
           valueChanged={inputValueChanged}
          />
