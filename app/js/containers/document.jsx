@@ -113,8 +113,6 @@ export class Document extends Component {
     const DPI = 72.0
 
     if (currentDocument) {
-      console.log(currentDocument.shapes.sort((lhs, rhs) => lhs.z - rhs.z).map(s => `${s.fill} ${s.z}`))
-
       return <div>
         <DocumentPdfViewModal
           doc={currentDocument}

@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 
-import InputText from '../ui/input.text'
+import InputText from 'components/ui/input.text'
+import InputFloat from 'components/ui/input.float'
 
 export default class InspectorDocumentProperties extends Component {
   constructor() {
@@ -31,23 +32,19 @@ export default class InspectorDocumentProperties extends Component {
           validatorOptions={1}
           value={doc.name}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Width"
-          name="width"
+          property="width"
           style="half left"
-          type="number"
           unit="in"
-          validator='isFloat'
           validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
           value={doc.width}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Height"
-          name="height"
+          property="height"
           style="half right"
-          type="number"
           unit="in"
-          validator='isFloat'
           validatorOptions={{step: 0.25, min: 1.0, max: 64.0}}
           value={doc.height}
           valueChanged={inputValueChanged} />

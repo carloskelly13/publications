@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 
-import InputText from '../ui/input.text'
+import InputFloat from 'components/ui/input.float'
 
 export default class InspectorShapeMetrics extends Component {
   render() {
@@ -9,43 +9,35 @@ export default class InspectorShapeMetrics extends Component {
     return (
       <div className="inspector-content-section">
         <h1>Metrics</h1>
-        <InputText
+        <InputFloat
           displayName="X"
-          name="x"
+          property="x"
           style="half left"
-          type="number"
           unit="in"
-          validator='isFloat'
           validatorOptions={{step: 0.05, min: -64.0, max: 64.0}}
           value={shape.x}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Y"
-          name="y"
+          property="y"
           style="half right"
-          type="number"
           unit="in"
-          validator='isFloat'
           validatorOptions={{step: 0.05, min: -64.0, max: 64.0}}
           value={shape.y}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Width"
-          name="width"
+          property="width"
           style="half left"
-          type="number"
           unit="in"
-          validator='isFloat'
           validatorOptions={{step: 0.05, min: 1.0, max: 64.0}}
           value={shape.width}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Height"
-          name="height"
+          property="height"
           style="half right"
-          type="number"
           unit="in"
-          validator='isFloat'
           validatorOptions={{step: 0.05, min: 1.0, max: 64.0}}
           value={shape.height}
           valueChanged={inputValueChanged} />
