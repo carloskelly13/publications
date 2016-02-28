@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {autobind} from 'core-decorators'
 import {isFloat} from 'validator'
 
-export default class InputNumber extends Component {
+export default class InputFloat extends Component {
   static propTypes = {
     value: PropTypes.number.isRequired,
     valueChanged: PropTypes.func.isRequired
@@ -12,7 +12,8 @@ export default class InputNumber extends Component {
     super(...arguments)
 
     this.state = {
-      value: this.props.value
+      value: this.props.value,
+      previousValue: this.props.value
     }
   }
 
@@ -27,10 +28,20 @@ export default class InputNumber extends Component {
     const value = event.target.value
 
     if (isFloat(value, this.props.validatorOptions || {})) {
+      this.setState({previousValue: value})
       this.props.valueChanged(event)
     }
 
     this.setState({value})
+  }
+
+  @autobind
+  onBlur(event) {
+    const value = event.target.value
+
+    if (!isFloat(value, this.props.validatorOptions || {})) {
+      this.setState({value: this.state.previousValue})
+    }
   }
 
   render() {
@@ -40,8 +51,9 @@ export default class InputNumber extends Component {
       style,
       unit,
       validatorOptions,
-      value
     } = this.props
+
+    const {value} = this.state
 
     const unitLabel = () => typeof unit !== 'undefined' ?
       <span className="unit-marker">{unit}</span> : undefined
@@ -53,6 +65,7 @@ export default class InputNumber extends Component {
         name={property}
         value={value}
         onChange={this.onChange}
+        onBlur={this.onBlur}
         {...validatorOptions} />
       {unitLabel()}
       <label htmlFor={property}>

@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import {eq} from 'lodash'
 import {autobind} from 'core-decorators'
+import {isFloat} from 'validator'
 
 import InspectorDocumentProperties from './inspector.document.properties'
 import InspectorDocumentLayers from './inspector.document.layers'
@@ -26,8 +27,14 @@ export default class InspectorDocument extends Component {
   inputValueChanged(event) {
     const {updateDocument} = this.props
 
+    let value = event.target.value
+
+    if (isFloat(value)) {
+      value = parseFloat(parseFloat(value).toFixed(2))
+    }
+
     let delta = {}
-    delta[event.target.name] = event.target.value
+    delta[event.target.name] = value
 
     updateDocument(delta)
   }
