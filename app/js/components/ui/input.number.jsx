@@ -34,13 +34,30 @@ export default class InputNumber extends Component {
   }
 
   render() {
-    return <div>
+    const {
+      displayName,
+      property,
+      style,
+      unit,
+      validatorOptions,
+      value
+    } = this.props
+
+    const unitLabel = () => typeof unit !== 'undefined' ?
+      <span className="unit-marker">{unit}</span> : undefined
+
+    return <div className={`input-text ${style || 'full'}`}>
       <input
+        className={typeof unit !== 'undefined' ? 'has-unit' : undefined}
         type="number"
-        name={this.props.property}
-        value={this.state.value}
+        name={property}
+        value={value}
         onChange={this.onChange}
-        {...this.props.validatorOptions} />
+        {...validatorOptions} />
+      {unitLabel()}
+      <label htmlFor={property}>
+        {displayName}
+      </label>
     </div>
   }
 }

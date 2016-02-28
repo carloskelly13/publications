@@ -38,8 +38,6 @@ export default class InputBase extends Component {
   validate(event) {
     let validatorMethod = this.props.validator;
 
-    console.log(validatorMethod)
-
     if (!validatorMethod) {
       return true;
     } else {

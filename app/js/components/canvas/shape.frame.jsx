@@ -183,8 +183,8 @@ export default class ShapeFrame extends Component {
      const y = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom
 
     this.props.updateShape({
-      x: parseFloat(x.toFixed(3)),
-      y: parseFloat(y.toFixed(3))
+      x: parseFloat(x.toFixed(2)),
+      y: parseFloat(y.toFixed(2))
     });
   }
 
@@ -224,7 +224,7 @@ export default class ShapeFrame extends Component {
 
     for (let idx = updatedProperties.length - 1; idx >= 0; idx--) {
       const value = updatedMetrics[updatedProperties[idx]]
-      updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(3))
+      updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2))
     }
 
     this.props.updateShape(updatedMetrics);
