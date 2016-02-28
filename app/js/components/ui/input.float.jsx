@@ -6,7 +6,7 @@ export default class InputFloat extends Component {
   static propTypes = {
     value: PropTypes.number.isRequired,
     valueChanged: PropTypes.func.isRequired
-  }
+  };
 
   constructor() {
     super(...arguments)
