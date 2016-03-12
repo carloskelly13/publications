@@ -1,17 +1,12 @@
-### Publications 3.0
+### Publications
 ##### A web app for screen layout and print design.
 
-This is a rewrite of the current running application at [publicationsapp.com](http://www.publicationsapp.com). It is a client-side application uses React, React Router and Flux. It uses Karma, Chai and Mocha for testing. It connects to the Publications API service at [api.publicationsapp.com](http://api.publicationsapp.com).
+The application is running at [publicationsapp.com](http://www.publicationsapp.com). This is the client-side source that uses React, React Router and Redux. It connects to the [Publications Spring Boot Service](https://github.com/carlospaelinck/publications-spring).
 
-##### To build and run Publications 3.0
+##### To build and run Publications
 ```
 $ npm install
-$ webpack
-$ http-server
+$ npm start # Runs on localhost:4040
 ```
 
-##### To test Publications 3.0
-```
-$ npm install
-$ gulp test
-```
+
