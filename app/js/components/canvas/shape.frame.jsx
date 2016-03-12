@@ -56,8 +56,8 @@ export default class ShapeFrame extends Component {
           y={y}
           height={height}
           width={width}
-          fillOpacity="0" stroke="hsla(0, 0%, 0%, 0.5)"
-          strokeWidth={1 * zoom}
+          fill-opacity="0" stroke="hsla(0, 0%, 0%, 0.5)"
+          stroke-width={1 * zoom}
           onMouseDown={this.frameSelected}
           onDoubleClick={this.frameDoubleClicked}
         />
@@ -107,10 +107,10 @@ export default class ShapeFrame extends Component {
                 width={frameAnchors.size}
                 height={frameAnchors.size}
                 stroke="hsla(0, 0%, 0%, 0.5)"
-                strokeWidth="1"
+                stroke-width="1"
                 fill="#fff"
-                fillOpacity="1"
-                strokeOpacity="1"
+                fill-opacity="1"
+                stroke-opacity="1"
                 style={style}
                 data-coordinate={anchor.coordinate}
                 onMouseDown={this.resizeAnchorSelected}

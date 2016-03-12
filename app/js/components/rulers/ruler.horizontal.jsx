@@ -64,7 +64,7 @@ export default class RulerHorizontal extends Component {
                   label = (
                     <text
                       fill="#444"
-                      fontSize="12"
+                      font-size="12"
                       x={mark + 27}
                       y={12}>
                       {idx / 4}

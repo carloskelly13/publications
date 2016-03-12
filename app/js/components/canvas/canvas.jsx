@@ -50,7 +50,7 @@ export default class Canvas extends Component {
       <svg
         width={doc.width * dpi * zoom}
         height={doc.height * dpi * zoom}
-        className="canvas-svg"
+        class="canvas-svg"
         xmlns="http://www.w3.org/2000/svg"
         version="1.1">
         <g><CanvasBackground {...this.props} /></g>

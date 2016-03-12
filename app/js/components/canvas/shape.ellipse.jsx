@@ -21,10 +21,13 @@ export default class ShapeEllipse extends ShapeBase {
         onClick={selectable ? this.shapeSelected : null}
         cx={(shape.x * dpi * zoom) + (shape.width / 2.0 * dpi * zoom)}
         cy={(shape.y * dpi * zoom) + (shape.height / 2.0 * dpi * zoom)}
-        rx={shape.width / 2.0 * dpi * zoom} ry={shape.height / 2.0 * dpi * zoom}
-        fill={shape.fill} stroke={shape.stroke}
-        fillOpacity={shape.fillOpacity} strokeOpacity={shape.strokeOpacity}
-        strokeWidth={shape.strokeWidth * zoom}
+        rx={shape.width / 2.0 * dpi * zoom}
+        ry={shape.height / 2.0 * dpi * zoom}
+        fill={shape.fill}
+        stroke={shape.stroke}
+        fill-opacity={shape.fillOpacity}
+        stroke-opacity={shape.strokeOpacity}
+        stroke-width={shape.strokeWidth * zoom}
       />
     {shapeFrame()}
     </g>

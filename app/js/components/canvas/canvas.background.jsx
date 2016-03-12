@@ -69,7 +69,7 @@ export default class CanvasBackground extends Component {
         x="0"
         fill="#fff"
         stroke="0"
-        strokeWidth="0"
+        stroke-width="0"
         width={doc.width * dpi * zoom}
         height={doc.height * dpi * zoom} />
       {gridlines}

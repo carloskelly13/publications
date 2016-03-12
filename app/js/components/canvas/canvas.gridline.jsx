@@ -6,7 +6,7 @@ export default class CanvasGridline extends Component {
 
     return (
       <path
-        className={classString}
+        class={classString}
         d={`M${this.props.mX},${this.props.mY} ${this.props.direction}${this.props.dX},${this.props.dY} Z`} />
     );
   }
