@@ -1,7 +1,8 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component } from 'react'
 
-import InputColor from '../ui/input.color'
-import InputText from '../ui/input.text'
+import InputColor from 'components/ui/input.color'
+import InputText from 'components/ui/input.text'
+import InputFloat from 'components/ui/input.float'
 
 export default class InspectorShapeColor extends Component {
   render() {
@@ -24,21 +25,17 @@ export default class InspectorShapeColor extends Component {
           validator='isHexColor'
           value={shape.stroke}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Fill Opacity"
-          name="fillOpacity"
+          property="fillOpacity"
           style="half left"
-          type="number"
-          validator='isFloat'
           validatorOptions={{step: 0.01, min: 0.0, max: 1.0}}
           value={shape.fillOpacity}
           valueChanged={inputValueChanged} />
-        <InputText
+        <InputFloat
           displayName="Border Opacity"
-          name="strokeOpacity"
+          property="strokeOpacity"
           style="half right"
-          type="number"
-          validator='isFloat'
           validatorOptions={{step: 0.01, min: 0.0, max: 1.0}}
           value={shape.strokeOpacity}
           valueChanged={inputValueChanged} />

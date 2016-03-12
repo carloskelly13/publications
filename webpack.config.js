@@ -1,15 +1,52 @@
-const path = require('path'),
-  HtmlWebpackPlugin = require('html-webpack-plugin'),
-  webpack = require('webpack')
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
+
+const nodeEnv = process.env.NODE_ENV || 'development'
+const isProd = nodeEnv === 'production'
+
+const plugins = [
+  new webpack.DefinePlugin({
+    'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+  }),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: Infinity,
+    filename: 'vendor.bundle.js'
+  }),
+  new webpack.NoErrorsPlugin(),
+  new HtmlWebpackPlugin({
+    template: 'app/index.html',
+    inject: 'body'
+  })
+];
+
+if (isProd) {
+  plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    },
+    sourceMap: false,
+    minimize: true,
+    comments: false,
+    mangle: true,
+    unused: true
+  }))
+}
 
 module.exports = {
   watch: true,
 
-  devtool: 'source-map',
+  devtool: isProd ? undefined : 'source-map',
 
-  entry: [
-    './app/js/app.js'
-  ],
+  entry: {
+    js: './app/js/app.js',
+    vendor: [
+      'react', 'react-dom', 'redux', 'redux-thunk',
+      'redux-simple-router', 'lodash', 'core-decorators',
+      'isomorphic-fetch'
+    ]
+  },
 
   output: {
     path: __dirname + '/dist',
@@ -60,11 +97,5 @@ module.exports = {
     }
   },
 
-  plugins: [
-    new webpack.NoErrorsPlugin(),
-    new HtmlWebpackPlugin({
-      template: 'app/index.html',
-      inject: 'body'
-    })
-  ]
+  plugins
 };

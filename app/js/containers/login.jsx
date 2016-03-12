@@ -9,10 +9,6 @@ import * as ErrorsActions from 'actions/errors'
 
 import InputText from 'components/ui/input.text'
 
-const mapStateToProps = state => Object.assign({}, state.user, state.errors)
-const mapDispatchToProps = dispatch => bindActionCreators(Object.assign(
-  {}, UserActions, ErrorsActions), dispatch)
-
 export class Login extends Component {
   constructor() {
     super(...arguments)
@@ -118,5 +114,11 @@ export class Login extends Component {
     </div>
   }
 }
+
+const mapStateToProps = state => Object.assign({}, state.user, state.errors)
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+  Object.assign({}, UserActions, ErrorsActions),
+  dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

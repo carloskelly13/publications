@@ -94,7 +94,9 @@
     margin: 0;
 
     li {
-      padding: 0;
+      border: 1px transparent solid;
+      box-sizing: border-box;
+      padding: 2px;
       margin: 10px 0;
       cursor: default;
 
@@ -103,19 +105,19 @@
       }
 
       &.layer-active {
-        background: lighten(@color-light-background, 20%);
+        border-color: #999;
         border-radius: 4px;
 
-        .layer-item-size {
-          color: #fff;
-        }
-
-        .layer-item-icon {
-          &.layer-item-icon-text {
-            border-color: #fff;
-            background: #fff;
-          }
-        }
+        // .layer-item-size {
+        //   color: #fff;
+        // }
+        //
+        // .layer-item-icon {
+        //   &.layer-item-icon-text {
+        //     border-color: #fff;
+        //     background: #fff;
+        //   }
+        // }
       }
 
       .layer-item-icon {
