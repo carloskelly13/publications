@@ -24,13 +24,14 @@ const plugins = [
 if (isProd) {
   plugins.push(new webpack.optimize.UglifyJsPlugin({
     compress: {
-      warnings: false
+      warnings: false,
+      drop_console: true,
+      unused: true
     },
     sourceMap: false,
     minimize: true,
     comments: false,
-    mangle: true,
-    unused: true
+    mangle: true
   }))
 }
 

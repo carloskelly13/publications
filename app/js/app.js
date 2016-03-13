@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import AppRouter from './router';
+import React from 'react'
+import AppRouter from './router'
+import '../css/_style.less'
 
-require('!style!css!less!../css/_style.less');
+new AppRouter().run()
 
-new AppRouter().run();
+console.debug(`Starting Publications with React ${React.version}.`)
