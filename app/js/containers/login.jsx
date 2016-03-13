@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import uuid from 'uuid4'
 
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {autobind} from 'core-decorators'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { autobind } from 'core-decorators'
 import * as UserActions from 'actions/user'
 import * as ErrorsActions from 'actions/errors'
 
@@ -38,13 +38,10 @@ export class Login extends Component {
   }
 
   @autobind
-  nameChanged(event) {
-    this.setState({emailAddress: event.target.value});
-  }
-
-  @autobind
-  passwordChanged(event) {
-    this.setState({password: event.target.value});
+  loginFormValueChanged(event) {
+    this.setState({
+      [event.target.name] : event.target.value
+    })
   }
 
   @autobind
@@ -80,14 +77,14 @@ export class Login extends Component {
             style="half left"
             type="text"
             value={this.state.emailAddress}
-            valueChanged={this.nameChanged} />
+            valueChanged={this.loginFormValueChanged} />
           <InputText
             placeholder="Password"
             name="password"
             style="half right"
             type="password"
             value={this.state.password}
-            valueChanged={this.passwordChanged} />
+            valueChanged={this.loginFormValueChanged} />
         </div>
         <div className="buttons">
           <button
@@ -115,7 +112,8 @@ export class Login extends Component {
   }
 }
 
-const mapStateToProps = state => Object.assign({}, state.user, state.errors)
+const mapStateToProps = state => Object.assign({},
+  state.user, state.errors)
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   Object.assign({}, UserActions, ErrorsActions),
