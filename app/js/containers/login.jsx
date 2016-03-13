@@ -105,9 +105,9 @@ export class Login extends Component {
     return <div className="index-view">
       <div className="index-container">
         <div className="index-logo"></div>
+        <p className="index-intro-text">{introText}</p>
         {loginForm}
       </div>
-      {/*<p className="index-intro-text">{introText}</p>*/}
     </div>
   }
 }
