@@ -1,6 +1,7 @@
-import React, {Component} from 'react'
-import {select, contains, isEmpty} from 'lodash'
-import {autobind} from 'core-decorators'
+import React, { Component } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { select, contains, isEmpty } from 'lodash'
+import { autobind } from 'core-decorators'
 
 import DocumentsNavbar from 'components/documents/documents.navbar'
 import DocumentItem from 'components/documents/document.item'
@@ -155,7 +156,14 @@ export class Documents extends Component {
         toggleUserAccountModal={this.toggleUserAccountModal} />
       <div className="app-content">
         <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
-          {documentItems}
+          <ReactCSSTransitionGroup
+            transitionName="document-item-animation"
+            transitionAppear={true}
+            transitionAppearTimeout={0}
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300} >
+            {documentItems}
+          </ReactCSSTransitionGroup>
         </ul>
       </div>
     </div>

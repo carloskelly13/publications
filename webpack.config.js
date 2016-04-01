@@ -44,6 +44,7 @@ module.exports = {
     js: './app/js/app.js',
     vendor: [
       'react', 'react-dom', 'redux', 'redux-thunk',
+      'react-router', 'react-addons-css-transition-group',
       'redux-simple-router', 'lodash', 'core-decorators',
       'isomorphic-fetch'
     ]

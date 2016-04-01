@@ -113,3 +113,21 @@ ul.document-items {
 .canvas-container.canvas-container-expanded svg {
   margin: 26px (@inspector-width + 15px) 15px 25px;
 }
+
+.document-item-animation-enter {
+  opacity: 0.01;
+}
+
+.document-item-animation-enter.document-item-animation-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.document-item-animation-leave {
+  opacity: 1;
+}
+
+.document-item-animation-leave.document-item-animation-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}

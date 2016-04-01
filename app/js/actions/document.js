@@ -98,7 +98,7 @@ export function newDocument(doc) {
     })
     .then(documentJson => dispatch({
       type: POST_DOCUMENT,
-      doc: Map(documentJson)
+      doc: documentJson
     }))
   }
 }
