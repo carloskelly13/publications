@@ -64,7 +64,7 @@ export default class RulerVertical extends Component {
                   label = (
                     <text
                       fill="#444"
-                      font-size="12"
+                      fontSize="12"
                       x={5}
                       y={mark - 5}>
                       {idx / 4}

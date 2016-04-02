@@ -1,6 +1,7 @@
 import {Map} from 'immutable'
 import {Urls} from '../core/constants'
 import {addError} from './errors'
+import NProgress from 'nprogress'
 
 export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
 export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
@@ -56,6 +57,8 @@ export function updateDocumentProperty(sender) {
 
 export function getDocuments() {
   return dispatch => {
+    NProgress.start()
+
     dispatch({
       type: REQUEST_DOCUMENTS
     })
@@ -70,6 +73,8 @@ export function getDocuments() {
       }
     })
     .then(documents => {
+      NProgress.done()
+
       dispatch({
         type: RECEIVE_DOCUMENTS,
         documents
@@ -142,6 +147,8 @@ export function saveDocument(doc, completion = () => {}) {
   return dispatch => {
     const {id} = doc
 
+    NProgress.start()
+
     const documentJson = {
       name: doc.name,
       width: doc.width,
@@ -158,7 +165,10 @@ export function saveDocument(doc, completion = () => {}) {
       },
       body: JSON.stringify(documentJson)
     })
-    .then(completion)
+    .then(() => {
+      NProgress.done()
+      completion()
+    })
   }
 }
 

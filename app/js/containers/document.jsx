@@ -4,6 +4,7 @@ import {autobind} from 'core-decorators'
 
 import Canvas from 'components/canvas/canvas'
 import DocumentNavbar from 'components/document/document.navbar'
+import DocumentLoadingNavbar from 'components/document/document.loadingNavbar'
 import InspectorBase from 'components/inspector/inspector.base'
 import RulerHorizontal from 'components/rulers/ruler.horizontal'
 import RulerVertical from 'components/rulers/ruler.vertical'
@@ -15,9 +16,6 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
-
-const mapStateToProps = state => state.doc
-const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
 
 export class Document extends Component {
   constructor() {
@@ -165,9 +163,15 @@ export class Document extends Component {
       </div>
 
     } else {
-      return <div>Loading</div>
+      return <div>
+        <DocumentLoadingNavbar />
+        <div className="app-content app-content-document"></div>
+      </div>
     }
   }
 }
+
+const mapStateToProps = state => state.doc
+const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Document)
