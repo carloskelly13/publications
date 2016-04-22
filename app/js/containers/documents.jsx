@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import { select, contains, isEmpty } from 'lodash'
+import { contains, isEmpty } from 'lodash'
 import { autobind } from 'core-decorators'
 
 import DocumentsNavbar from 'components/documents/documents.navbar'
@@ -114,20 +114,25 @@ export class Documents extends Component {
   }
 
   render() {
-    const documentItems = select(this.props.documents, doc => {
-      if (isEmpty(this.state.searchKeyword)) {
-        return true
-      } else {
-        return contains(doc.name.toLowerCase(), this.state.searchKeyword.toLowerCase())
-      }
-    }).map(doc => {
-      return <DocumentItem
-        key={doc.id}
-        doc={doc}
-        editDocument={this.editDocument}
-        selectedDocument={this.state.selectedDocument}
-        updateSelectedDocument={this.updateSelectedDocument} />
-    })
+    const { documents } = this.props
+
+    const documentItems = documents
+      .filter(doc => {
+        if (isEmpty(this.state.searchKeyword)) {
+          return true
+        } else {
+          return contains(doc.name.toLowerCase(), this.state.searchKeyword.toLowerCase())
+        }
+      })
+      .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
+      .map(doc => {
+        return <DocumentItem
+          key={doc.id}
+          doc={doc}
+          editDocument={this.editDocument}
+          selectedDocument={this.state.selectedDocument}
+          updateSelectedDocument={this.updateSelectedDocument} />
+      })
 
     return <div>
       <UserAccountModal
