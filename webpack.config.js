@@ -5,24 +5,8 @@ const webpack = require('webpack')
 const nodeEnv = process.env.NODE_ENV || 'development'
 const isProd = nodeEnv === 'production'
 
-const plugins = [
-  new webpack.DefinePlugin({
-    'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
-  }),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity,
-    filename: 'vendor.bundle.js'
-  }),
-  new webpack.NoErrorsPlugin(),
-  new HtmlWebpackPlugin({
-    template: 'app/index.html',
-    inject: 'body'
-  })
-];
-
-if (isProd) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
+const prodPlugins = isProd ? [
+  new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false,
       drop_console: true,
@@ -32,13 +16,13 @@ if (isProd) {
     minimize: true,
     comments: false,
     mangle: true
-  }))
-}
+  })
+] : []
 
 module.exports = {
   watch: true,
 
-  devtool: isProd ? undefined : 'source-map',
+  devtool: isProd ? undefined : 'eval-source-map',
 
   entry: {
     js: './app/js/app.js',
@@ -99,5 +83,24 @@ module.exports = {
     }
   },
 
-  plugins
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+    }),
+
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: Infinity,
+      filename: 'vendor.bundle.js'
+    }),
+
+    new webpack.NoErrorsPlugin(),
+
+    new HtmlWebpackPlugin({
+      template: 'app/index.html',
+      inject: 'body'
+    }),
+
+    ...prodPlugins
+  ]
 };

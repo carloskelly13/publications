@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import { contains, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { autobind } from 'core-decorators'
 
 import DocumentsNavbar from 'components/documents/documents.navbar'
@@ -9,8 +9,8 @@ import NewDocumentModal from 'components/documents/documents.new.modal'
 import UserAccountModal from 'components/user/user.account.modal'
 import InputText from 'components/ui/input.text'
 
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 import * as ErrorActions from 'actions/errors'
@@ -99,7 +99,7 @@ export class Documents extends Component {
 
     if (!!selectedDocument) {
       this.props.removeDocument(selectedDocument)
-      this.setState({selectedDocument: null})
+      this.setState({ selectedDocument: null })
     }
   }
 
@@ -121,7 +121,8 @@ export class Documents extends Component {
         if (isEmpty(this.state.searchKeyword)) {
           return true
         } else {
-          return contains(doc.name.toLowerCase(), this.state.searchKeyword.toLowerCase())
+          const searchKeyword = this.state.searchKeyword.toLowerCase()
+          return doc.name.toLowerCase().includes(searchKeyword)
         }
       })
       .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
