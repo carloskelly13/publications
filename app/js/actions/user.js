@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
-import {Urls} from '../core/constants'
-import {addError} from './errors'
+import { Urls } from '../core/constants'
+import { addError } from './errors'
 
 export const RECIEVE_USER = 'RECIEVE_USER'
 export const REQUEST_USER = 'REQUEST_USER'

@@ -22,7 +22,7 @@ const prodPlugins = isProd ? [
 module.exports = {
   watch: true,
 
-  devtool: isProd ? undefined : 'eval-source-map',
+  devtool: isProd ? undefined : 'source-map',
 
   entry: {
     js: './app/js/app.js',
@@ -30,7 +30,7 @@ module.exports = {
       'react', 'react-dom', 'redux', 'redux-thunk',
       'react-router', 'react-addons-css-transition-group',
       'redux-simple-router', 'lodash', 'core-decorators',
-      'isomorphic-fetch'
+      'isomorphic-fetch', 'object-assign'
     ]
   },
 
@@ -46,7 +46,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, 'app/js')
         ],
-        loader: 'babel-loader?optional[]=runtime&stage=0'
+        loader: 'babel'
       },
       {
         test: /\.jsx?$/,
@@ -57,21 +57,29 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loader: "style!css!less"
+        loader: 'style!css!less'
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css'
       },
       {
         test: /\.(eot|woff|ttf|svg|png|otf)$/,
         loader: 'url?limit=1000'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
       }
     ]
   },
 
   resolve: {
+    extensions: ['', '.js', '.jsx'],
     root: [
       path.join(__dirname, 'node_modules'),
       path.join(__dirname, 'app/js')
     ],
-    extensions: ['', '.js', '.jsx'],
     alias: {
       'components': 'components',
       'containers': 'containers',

@@ -1,10 +1,7 @@
-const Constants = {
-  Typefaces: [
-    'Source Sans Pro'
-  ],
-  Urls: {
-    ApiBase: `http://${window.location.host}`
-  }
+export const Urls = {
+  ApiBase: `http://${window.location.host}`
 }
 
-export default Constants
+export const Typefaces = [
+  'Source Sans Pro'
+]

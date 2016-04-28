@@ -13,6 +13,8 @@ export default class DocumentItem extends Component {
     const selected = (!!this.props.selectedDocument &&
       this.props.selectedDocument.id == this.props.doc.id)
 
+    const lastModifiedDate = new Date(this.props.doc.lastModified)
+
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>
         <div
