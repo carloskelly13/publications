@@ -30,7 +30,7 @@ module.exports = {
       'react', 'react-dom', 'redux', 'redux-thunk',
       'react-router', 'react-addons-css-transition-group',
       'redux-simple-router', 'lodash', 'core-decorators',
-      'isomorphic-fetch', 'object-assign'
+      'isomorphic-fetch', 'object-assign', 'moment'
     ]
   },
 
