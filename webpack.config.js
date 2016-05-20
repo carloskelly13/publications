@@ -22,7 +22,7 @@ const prodPlugins = isProd ? [
 module.exports = {
   watch: true,
 
-  devtool: isProd ? undefined : 'source-map',
+  devtool: isProd ? null : 'cheap-module-source-map',
 
   entry: {
     js: './app/js/app.js',
@@ -88,7 +88,11 @@ module.exports = {
       'reducers': 'reducers',
       'stores': 'stores',
       'services': 'services'
-    }
+    },
+    modules: [
+      path.join(__dirname, 'node_modules'),
+      path.join(__dirname, 'app/js')
+    ]
   },
 
   plugins: [
