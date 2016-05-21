@@ -42,7 +42,7 @@ export default class InspectorShapeText extends Component {
           validator='isHexColor'
           value={shape.color}
           valueChanged={inputValueChanged} />
-        <div className={`segmented-control segmented-control-3`}>
+        <div className="segmented-control segmented-control-3">
           <div className="segmented-control-btn-container">
             <button className={shape.textAlign === 'left' ? 'active' : null} onClick={e => this.changeFontFormatting(e, 'textAlign', 'left')}>
               <span className={`icon icon-align-left ${shape.textAlign === 'left' ? 'active' : null}`}></span>
@@ -58,7 +58,7 @@ export default class InspectorShapeText extends Component {
             Alignment
           </label>
         </div>
-        <div className={`segmented-control segmented-control-3`}>
+        <div className="segmented-control segmented-control-3">
           <div className="segmented-control-btn-container">
             <button className={shape.fontWeight == 600 ? 'active' : null} onClick={e => this.changeFontFormatting(e, 'fontWeight', (shape.fontWeight == 600 ? 400 : 600))}>
               <span className={`icon icon-bold ${shape.fontWeight == 600 ? 'active' : null}`}></span>
