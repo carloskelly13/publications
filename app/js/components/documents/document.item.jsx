@@ -12,7 +12,8 @@ export default class DocumentItem extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (nextProps.selectedDocument && nextProps.selectedDocument.id === this.props.doc.id) ||
-      (this.props.selectedDocument && this.props.selectedDocument.id === this.props.doc.id)
+      (this.props.selectedDocument && this.props.selectedDocument.id === this.props.doc.id) ||
+      (this.props.doc !== nextProps.doc)
   }
 
   render() {

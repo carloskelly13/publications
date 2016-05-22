@@ -22,10 +22,12 @@ const prodPlugins = isProd ? [
 module.exports = {
   watch: true,
 
-  devtool: isProd ? undefined : 'source-map',
+  devtool: isProd ? undefined : 'cheap-module-source-map',
+
+  debug: !isProd,
 
   entry: {
-    js: './app/js/app.js',
+    app: './app/js/app.js',
     vendor: [
       'react', 'react-dom', 'redux', 'redux-thunk',
       'react-router', 'react-addons-css-transition-group',
@@ -36,7 +38,9 @@ module.exports = {
 
   output: {
     path: __dirname + '/dist',
-    filename: 'app.js'
+    sourceMapFilename: '[name].map',
+    filename: '[name].js',
+    chunkFilename: '[id].chunk.js'
   },
 
   module: {
@@ -97,9 +101,8 @@ module.exports = {
     }),
 
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: [ 'app', 'vendor' ],
       minChunks: Infinity,
-      filename: 'vendor.bundle.js'
     }),
 
     new webpack.NoErrorsPlugin(),
