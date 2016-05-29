@@ -17,9 +17,8 @@ const frameAnchors = {
 }
 
 export default class ShapeFrame extends Component {
-  constructor() {
-    super(...arguments)
-    this.state = { isEditingText: false }
+  state = {
+    isEditingText: false
   }
 
   componentDidMount() {
@@ -34,23 +33,23 @@ export default class ShapeFrame extends Component {
   }
 
   @autobind
-  textDidChange(event) {
-    this.props.updateShape({ text: event.target.value })
+  textDidChange({ target }) {
+    this.props.updateShape({ text: target.value })
   }
 
-  updateStateForDragging(event) {
+  updateStateForDragging({ pageX, pageY }) {
     this.setState({
-      eX: event.pageX,
-      eY: event.pageY,
+      eX: pageX,
+      eY: pageY,
       oX: this.props.shape.x,
       oY: this.props.shape.y
     })
   }
 
-  updateStateForResizing(event) {
+  updateStateForResizing({ pageX, pageY }) {
     this.setState({
-      eX: event.pageX,
-      eY: event.pageY,
+      eX: pageX,
+      eY: pageY,
       oX: this.props.shape.x,
       oY: this.props.shape.y,
       oW: this.props.shape.width,
