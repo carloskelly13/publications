@@ -22,12 +22,12 @@ const prodPlugins = isProd ? [
 module.exports = {
   watch: true,
 
-  devtool: isProd ? undefined : 'cheap-module-source-map',
+  devtool: isProd ? undefined : 'inline-source-map',
 
   debug: !isProd,
 
   entry: {
-    app: './app/js/app.js',
+    app: [ './app/js/app.js' ],
     vendor: [
       'react', 'react-dom', 'redux', 'redux-thunk',
       'react-router', 'react-addons-css-transition-group',
