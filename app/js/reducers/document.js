@@ -130,7 +130,7 @@ export default function documentReducer(state = {
        * Update shape action only send the delta, so create a new shape object
        * with the previous and new properties merged
        */
-      const selectedShape = Object.assign({}, state.selectedShape, sender)
+      const selectedShape = { ...state.selectedShape, ...sender }
       const currentShapes = state.currentDocument.shapes
 
       /**
@@ -148,7 +148,7 @@ export default function documentReducer(state = {
           selectedShape
         ]
 
-        updatedState.currentDocument = Object.assign({}, state.currentDocument, {shapes})
+        updatedState.currentDocument = { ...state.currentDocument, shapes };
       }
 
       updatedState.selectedShape = selectedShape
@@ -160,7 +160,7 @@ export default function documentReducer(state = {
       updatedState.selectedShape = null
     }
 
-    return Object.assign({}, state, updatedState)
+    return { ...state, ...updatedState }
   }
 
   case POST_DOCUMENT:
