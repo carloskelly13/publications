@@ -1,22 +1,24 @@
-import React, {Component, PropTypes} from 'react'
-import {downloadPdfBlob} from 'services/pdf.service'
-import {autobind} from 'core-decorators'
+import React, { Component } from 'react'
+import { downloadPdfBlob } from 'services/pdf.service'
+import { autobind } from 'core-decorators'
 
 export default class DocumentPdfViewModal extends Component {
-  constructor() {
-    super(...arguments)
-    this.state = {currentUrl: null}
-    this.pdfLinkRef = null
+  state = {
+    currentUrl: null
   }
+
+  pdfLinkRef = null
 
   componentDidUpdate() {
     if (this.props.isOpen) {
-      const {id} = this.props.doc
+      const { id } = this.props.doc
 
       downloadPdfBlob(id)
         .then(blob => {
           const url = URL.createObjectURL(blob)
-          const {pdfLinkRef} = this
+          const { pdfLinkRef } = this
+
+          console.debug(blob, url)
 
           pdfLinkRef.href = url
           pdfLinkRef.innerHTML = 'Download'
@@ -42,7 +44,7 @@ export default class DocumentPdfViewModal extends Component {
                   role="button"
                   href="#"
                   target="_blank"
-                  ref={pdfLinkRef => this.pdfLinkRef = pdfLinkRef}>
+                  ref={ pdfLinkRef => this.pdfLinkRef = pdfLinkRef }>
                   Exporting…
                 </a>
                 <button className="btn" type="button" onClick={this.dismiss}>
@@ -54,9 +56,7 @@ export default class DocumentPdfViewModal extends Component {
         </div>
       )
     } else {
-      return (
-        <div />
-      )
+      return <div />
     }
   }
 
