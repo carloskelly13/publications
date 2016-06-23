@@ -1,6 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {isEmpty} from 'lodash'
-import {autobind} from 'core-decorators'
+import React, { Component, PropTypes } from 'react'
+import { autobind } from 'core-decorators'
 import InspectorDocument from './inspector.document'
 import InspectorShape from './inspector.shape'
 import InspectorTabBar from './inspector.tabbar'
@@ -23,8 +22,7 @@ export default class InspectorBase extends Component {
       selectedShape,
       showInspector,
       updateDocument,
-      updateShape,
-      updateSelectedCanvasObject
+      updateShape
     } = this.props
 
     const documentLoaded = doc.id
@@ -37,7 +35,7 @@ export default class InspectorBase extends Component {
           shape={selectedShape}
           theme={this.state.theme}
           updateDocument={updateDocument}
-          updateSelectedCanvasObject={updateSelectedCanvasObject} />
+          updateShape={updateShape} />
 
       } else if (documentLoaded && this.state.tab === 'shape') {
         return <InspectorShape
@@ -45,8 +43,7 @@ export default class InspectorBase extends Component {
           shape={selectedShape}
           theme={this.state.theme}
           updateDocument={updateDocument}
-          updateShape={updateShape}
-          updateSelectedCanvasObject={updateSelectedCanvasObject} />
+          updateShape={updateShape} />
       }
     }
 

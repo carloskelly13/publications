@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import uuid from 'uuid4'
+import uuid from 'node-uuid'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -22,7 +22,7 @@ export class Login extends Component {
   @autobind
   createTestDriveAccount() {
     this.props.createNewUser({
-      emailAddress: `${uuid()}@publicationsapp.com`,
+      emailAddress: `${uuid.v4()}@publicationsapp.com`,
       password: 'password',
       temporary: true
     })

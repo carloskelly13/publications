@@ -1,5 +1,4 @@
-import React, {Component} from 'react'
-import {omit} from 'lodash'
+import React, { Component } from 'react'
 
 import CanvasBackground from './canvas.background'
 import ShapeEllipse from './shape.ellipse'
@@ -20,7 +19,6 @@ export default class Canvas extends Component {
       dpi,
       selectable,
       updateShape: this.props.updateShape,
-      updateSelectedCanvasObject: this.props.updateSelectedCanvasObject,
       zoom
     }
 

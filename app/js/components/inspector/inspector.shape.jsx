@@ -1,6 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {autobind} from 'core-decorators'
-import {omit} from 'lodash'
+import React, { Component, PropTypes } from 'react'
+import { autobind } from 'core-decorators'
 
 import InspectorShapeBorder from './inspector.shape.border'
 import InspectorShapeColor from './inspector.shape.color'
@@ -13,14 +12,19 @@ export default class InspectorShape extends Component {
     let inspectorContent = null
 
     if (this.props.shape) {
-      const {type} = this.props.shape
+      const { type } = this.props.shape
       const shapeMetricsContent = (
         <InspectorShapeMetrics
           inputValueChanged={this.inputValueChanged}
           {...this.props} />
       )
 
-      let shapeContentSections = null
+      let shapeContentSections
+
+      const shapeStyleProps = {
+        shape: this.props.shape,
+        updateShape: this.updateShape
+      }
 
       switch (type) {
         case 'text':
@@ -39,10 +43,10 @@ export default class InspectorShape extends Component {
         shapeContentSections = <div>
           <InspectorShapeColor
             inputValueChanged={this.inputValueChanged}
-            {...omit(this.props, ['updateDocument', 'doc'])} />
+            {...shapeStyleProps} />
           <InspectorShapeBorder
             inputValueChanged={this.inputValueChanged}
-            {...omit(this.props, ['updateDocument', 'doc'])} />
+            {...shapeStyleProps} />
           <InspectorShapeLayer
             inputValueChanged={this.inputValueChanged}
             {...this.props} />

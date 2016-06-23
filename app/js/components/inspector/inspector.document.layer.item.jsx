@@ -1,6 +1,5 @@
-import React, {Component} from 'react'
-import {autobind} from 'core-decorators'
-import {eq} from 'lodash'
+import React, { Component } from 'react'
+import { autobind } from 'core-decorators'
 
 export default class InspectorDocumentLayerItem extends Component {
   constructor() {
@@ -8,8 +7,8 @@ export default class InspectorDocumentLayerItem extends Component {
   }
 
   @autobind
-  updateSelectedCanvasObject() {
-    this.props.updateSelectedCanvasObject(this.props.shape)
+  updateShape() {
+    this.props.updateShape(this.props.shape)
   }
 
   render() {
@@ -39,7 +38,7 @@ export default class InspectorDocumentLayerItem extends Component {
 
     return <li
       className={isSelected ? 'layer-active' : null}
-      onClick={this.updateSelectedCanvasObject}>
+      onClick={this.updateShape}>
       {layerIcon()}
       <span className="layer-item-size">
         X:&#32;{shape.x.toFixed(2)}&#8221;

@@ -1,44 +1,41 @@
-import {eq, range} from 'lodash';
-import React, {Component, PropTypes} from 'react';
-import ReactDOM from 'react-dom';
-import CanvasGridline from '../canvas/canvas.gridline';
+import React, {Component, PropTypes} from 'react'
+import { range } from 'lodash'
+import ReactDOM from 'react-dom'
+import CanvasGridline from '../canvas/canvas.gridline'
 
 
 export default class RulerHorizontal extends Component {
-  constructor(props) {
-    super(props);
-    this.handleScroll = this.handleScroll.bind(this);
+  constructor() {
+    super(...arguments)
+    this.handleScroll = this.handleScroll.bind(this)
   }
 
   componentDidMount() {
-    let scrollContainer = document.getElementById('svg-canvas-container');
-    scrollContainer.addEventListener('scroll', this.handleScroll);
+    const scrollContainer = document.getElementById('svg-canvas-container')
+    scrollContainer.addEventListener('scroll', this.handleScroll)
   }
 
   componentWillUnmount() {
-    let scrollContainer = document.getElementById('svg-canvas-container');
-    scrollContainer.removeEventListener('scroll', this.handleScroll);
+    const scrollContainer = document.getElementById('svg-canvas-container')
+    scrollContainer.removeEventListener('scroll', this.handleScroll)
   }
 
   handleScroll(event) {
-    ReactDOM.findDOMNode(this.refs.rulerContainer)
-      .style.left = `${-1 - event.target.scrollLeft}px`;
+    ReactDOM
+      .findDOMNode(this.refs.rulerContainer)
+      .style.left = `${-1 - event.target.scrollLeft}px`
   }
 
   shouldComponentUpdate(nextProps) {
-    let widthChanged = this.props.doc.width != nextProps.doc.width;
-    let heightChanged = this.props.doc.height != nextProps.doc.height;
-    let zoomChanged = this.props.zoom != nextProps.zoom;
-    return (widthChanged || heightChanged || zoomChanged);
+    const widthChanged = this.props.doc.width != nextProps.doc.width
+    const heightChanged = this.props.doc.height != nextProps.doc.height
+    const zoomChanged = this.props.zoom != nextProps.zoom
+    return (widthChanged || heightChanged || zoomChanged)
   }
 
   render() {
-    let {
-      doc,
-      dpi,
-      zoom
-    } = this.props,
-    xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom);
+    const { doc, dpi, zoom } = this.props
+    const xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom)
 
     return (
       <div
@@ -69,7 +66,7 @@ export default class RulerHorizontal extends Component {
                       y={12}>
                       {idx / 4}
                     </text>
-                  );
+                  )
                 }
 
                 return (
@@ -82,12 +79,12 @@ export default class RulerHorizontal extends Component {
                       dY={major ? 0 : 15}
                       direction={'V'} />
                   </g>
-                );
+                )
               })
             }
           </g>
         </svg>
       </div>
-    );
+    )
   }
 }

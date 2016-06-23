@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {range} from 'lodash'
-import {autobind} from 'core-decorators'
+import React, { Component } from 'react'
+import { range } from 'lodash'
+import { autobind } from 'core-decorators'
 
 import CanvasGridline from './canvas.gridline'
 
@@ -79,6 +79,6 @@ export default class CanvasBackground extends Component {
   @autobind
   canvasSelected(event) {
     event.preventDefault()
-    this.props.updateSelectedCanvasObject(null, null)
+    this.props.updateShape(null, null)
   }
 }

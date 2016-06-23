@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { autobind } from 'core-decorators'
-import { contains } from 'lodash'
 
 const frameAnchors = {
   size: 10,
@@ -113,7 +112,7 @@ export default class ShapeFrame extends Component {
 
     let updatedMetrics = {}
 
-    if (contains(this.state.resizeAnchor, 'n')) {
+    if (this.state.resizeAnchor.includes('n')) {
       updatedMetrics.height = Math.max(this.state.oH +
         ((this.state.eY - event.pageY) / this.props.dpi / this.props.zoom), 0)
 
@@ -121,12 +120,12 @@ export default class ShapeFrame extends Component {
         updatedMetrics.y = this.state.oY + (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom
       }
 
-    } else if (contains(this.state.resizeAnchor, 's')) {
+    } else if (this.state.resizeAnchor.includes('s')) {
       updatedMetrics.height = Math.max(this.state.oH +
         ((event.pageY - this.state.eY) / this.props.dpi / this.props.zoom), 0)
     }
 
-    if (contains(this.state.resizeAnchor, 'w')) {
+    if (this.state.resizeAnchor.includes('w')) {
       updatedMetrics.width = Math.max(this.state.oW +
         ((this.state.eX - event.pageX) / this.props.dpi / this.props.zoom), 0)
 
@@ -134,7 +133,7 @@ export default class ShapeFrame extends Component {
         updatedMetrics.x = this.state.oX + (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom
       }
 
-    } else if (contains(this.state.resizeAnchor, 'e')) {
+    } else if (this.state.resizeAnchor.includes('e')) {
       updatedMetrics.width = Math.max(this.state.oW +
         ((event.pageX - this.state.eX) / this.props.dpi / this.props.zoom), 0)
     }

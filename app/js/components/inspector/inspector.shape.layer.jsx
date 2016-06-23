@@ -1,6 +1,5 @@
-import React, {Component} from 'react'
-import {cloneDeep, filter} from 'lodash'
-import {autobind} from 'core-decorators'
+import React, { Component } from 'react'
+import { autobind } from 'core-decorators'
 
 export default class InspectorShapeLayer extends Component {
 
@@ -9,7 +8,7 @@ export default class InspectorShapeLayer extends Component {
     const shape = this.props.shape
     const shapes = this.props.doc.shapes
 
-    const shapesToAdjust = filter(shapes, s => s.z > shape.z)
+    const shapesToAdjust = shapes.filter(s => s.z > shape.z)
     shapesToAdjust.forEach(s => s.z -= 1)
     shape.z = shapes.length
 
@@ -21,7 +20,7 @@ export default class InspectorShapeLayer extends Component {
     const shape = this.props.shape
     const shapes = this.props.doc.shapes
 
-    const shapesToAdjust = filter(shapes, s => s.z < shape.z)
+    const shapesToAdjust = shapes.filter(s => s.z < shape.z)
     shapesToAdjust.forEach(s => s.z += 1)
     shape.z = 1
 
@@ -33,7 +32,7 @@ export default class InspectorShapeLayer extends Component {
     const shape = this.props.shape
     const shapes = this.props.doc.shapes
 
-    const shapesToAdjust = filter(shapes, s => s.z === shape.z + 1)
+    const shapesToAdjust = shapes.filter(s => s.z === shape.z + 1)
     shapesToAdjust.forEach(s => s.z -= 1)
     shape.z += 1
 
@@ -45,7 +44,7 @@ export default class InspectorShapeLayer extends Component {
     const shape = this.props.shape
     const shapes = this.props.doc.shapes
 
-    const shapesToAdjust = filter(shapes, s => s.z === shape.z - 1)
+    const shapesToAdjust = shapes.filter(s => s.z === shape.z - 1)
     shapesToAdjust.forEach(s => s.z += 1)
     shape.z -= 1
 
@@ -54,7 +53,7 @@ export default class InspectorShapeLayer extends Component {
 
   updateDocumentForLayerAdjustments(sender) {
     this.props.updateDocument({shapes: sender.shapes})
-    this.props.updateSelectedCanvasObject(sender.shape)
+    this.props.updateShape(sender.shape)
   }
 
   render() {

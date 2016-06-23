@@ -1,7 +1,5 @@
-import React, {Component} from 'react'
-import {eq} from 'lodash'
-import {autobind} from 'core-decorators'
-
+import React, { Component } from 'react'
+import { autobind } from 'core-decorators'
 import ShapeFrame from './shape.frame'
 
 export default class ShapeBase extends Component {
@@ -25,6 +23,6 @@ export default class ShapeBase extends Component {
   @autobind
   shapeSelected(event) {
     event.preventDefault()
-    this.props.updateSelectedCanvasObject(this.props.shape)
+    this.props.updateShape(this.props.shape)
   }
 }

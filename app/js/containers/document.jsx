@@ -1,6 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {merge, isEmpty, extend, without, cloneDeep, omit, filter} from 'lodash'
-import {autobind} from 'core-decorators'
+import React, { Component, PropTypes } from 'react'
+import { autobind } from 'core-decorators'
 
 import Canvas from 'components/canvas/canvas'
 import DocumentNavbar from 'components/document/document.navbar'
@@ -9,41 +8,27 @@ import InspectorBase from 'components/inspector/inspector.base'
 import RulerHorizontal from 'components/rulers/ruler.horizontal'
 import RulerVertical from 'components/rulers/ruler.vertical'
 import DocumentPdfViewModal from 'components/document/document.pdf.modal'
-
 import ShapeFactory from 'core/shape.factory'
 
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 
 export class Document extends Component {
-  constructor() {
-    super(...arguments)
-
-    this.state = {
-      showInspector: true,
-      isPdfModalOpen: false,
-      zoom: 1.0
-    }
+  state = {
+    showInspector: true,
+    isPdfModalOpen: false,
+    zoom: 1.0
   }
 
   componentDidMount() {
-    const {id} = this.props.params
+    const { id } = this.props.params
     this.props.getDocument(id)
   }
 
   componentWillUnmount() {
     document.title = 'Publications'
-  }
-
-  @autobind
-  updateSelectedCanvasObject(sender, event) {
-    if (event) {
-      event.preventDefault()
-    }
-
-    this.props.updateSelectedShape(sender)
   }
 
   @autobind
@@ -53,13 +38,12 @@ export class Document extends Component {
 
   @autobind
   save() {
-    const {currentDocument, saveDocument} = this.props
-    saveDocument(currentDocument)
+    this.props.saveDocument(this.props.currentDocument)
   }
 
   @autobind
   addNewShape(type) {
-    let newShape = null
+    let newShape
 
     if (type === 'ellipse') {
       newShape = ShapeFactory.ellipse()
@@ -77,21 +61,19 @@ export class Document extends Component {
 
   @autobind
   viewAllDocuments(sender) {
-    const {currentDocument, saveDocument, documentChanged, history} = this.props
-
-    saveDocument(currentDocument, () => {
-      history.push('/documents')
-      documentChanged(null)
+    this.props.saveDocument(this.props.currentDocument, () => {
+      this.props.history.push('/documents')
+      this.props.documentChanged(null)
     })
   }
 
   @autobind
-  toggleInspector(sender) {
-    this.setState({showInspector: !this.state.showInspector})
+  toggleInspector() {
+    this.setState({ showInspector: !this.state.showInspector })
   }
 
   @autobind
-  changeZoom(sender, event) {
+  changeZoom(sender) {
     const currentZoom = this.state.zoom
 
     if (sender === 'zoom-in' && currentZoom < 5.0) {
@@ -103,11 +85,11 @@ export class Document extends Component {
 
   @autobind
   togglePdfDownloadModal() {
-    this.setState({isPdfModalOpen: !this.state.isPdfModalOpen})
+    this.setState({ isPdfModalOpen: !this.state.isPdfModalOpen })
   }
 
   render() {
-    const {currentDocument, selectedShape, updateDocumentProperty} = this.props
+    const { currentDocument, selectedShape, updateDocumentProperty } = this.props
     const DPI = 72.0
 
     if (currentDocument) {
@@ -140,7 +122,7 @@ export class Document extends Component {
             selectedShape={selectedShape}
             updateDocument={updateDocumentProperty}
             updateShape={this.updateShape}
-            updateSelectedCanvasObject={this.updateSelectedCanvasObject}
+            updateShape={this.updateShape}
             showInspector={this.state.showInspector} />
           <RulerVertical
             doc={currentDocument}
@@ -157,7 +139,7 @@ export class Document extends Component {
             showInspector={this.state.showInspector}
             selectable={true}
             selectedShape={selectedShape}
-            updateSelectedCanvasObject={this.updateSelectedCanvasObject}
+            updateShape={this.updateShape}
             updateShape={this.updateShape} />
         </div>
       </div>
