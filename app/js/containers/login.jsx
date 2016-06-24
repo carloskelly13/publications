@@ -112,11 +112,9 @@ export class Login extends Component {
   }
 }
 
-const mapStateToProps = state => Object.assign({},
-  state.user, state.errors)
+const mapStateToProps = state => ({ ...state.user, ...state.errors })
 
 const mapDispatchToProps = dispatch => bindActionCreators(
-  Object.assign({}, UserActions, ErrorsActions),
-  dispatch)
+  { ...UserActions, ...ErrorsActions }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

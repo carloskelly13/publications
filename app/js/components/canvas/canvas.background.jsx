@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { range } from 'lodash'
+import range from 'lodash.range'
 import { autobind } from 'core-decorators'
 
 import CanvasGridline from './canvas.gridline'
@@ -17,15 +17,10 @@ export default class CanvasBackground extends Component {
   }
 
   render() {
-    let {
-        doc,
-        dpi,
-        selectable,
-        zoom
-      } = this.props,
-      xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom),
-      yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom),
-      gridlines = null
+    const { doc, dpi, selectable, zoom } = this.props
+    const xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom)
+    const yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom)
+    let gridlines = null
 
     if (selectable) {
       gridlines = (

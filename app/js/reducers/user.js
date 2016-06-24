@@ -15,14 +15,15 @@ export default function userReducer(state = {
 
   switch(action.type) {
   case RECIEVE_USER:
-    return Object.assign({}, state, {
+    return {
+      ...state,
       userId: action.userJson.id,
       userName: action.userJson.emailAddress,
       isAuthenticated: action.userJson.isAuthenticated,
       isTemporaryUser: action.userJson.temporary,
       isRequestingUser: false,
       failedAuthentication: action.userJson.failedAuthentication || false
-    })
+    }
 
   case REQUEST_USER:
     return {

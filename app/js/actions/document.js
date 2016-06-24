@@ -51,7 +51,7 @@ export function pasteShape() {
 export function updateDocumentProperty(sender) {
   return (dispatch, getState) => dispatch({
     type: UPDATE_DOCUMENT,
-    doc: Object.assign({}, getState().doc.currentDocument, sender)
+    doc: { ...getState().doc.currentDocument, ...sender }
   })
 }
 

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import { range } from 'lodash'
+import range from 'lodash.range'
 import ReactDOM from 'react-dom'
 import CanvasGridline from '../canvas/canvas.gridline'
 

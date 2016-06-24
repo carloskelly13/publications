@@ -9,7 +9,7 @@ const extractCSS = new ExtractTextPlugin('vendor.css')
 const vendor = [
   'react', 'react-dom', 'redux', 'redux-thunk',
   'react-router', 'react-addons-css-transition-group',
-  'redux-simple-router', 'lodash', 'core-decorators',
+  'redux-simple-router', 'lodash.range', 'core-decorators',
   'isomorphic-fetch', 'object-assign', 'nprogress',
   'validator', 'react-redux', 'history/lib', 'node-uuid'
 ]

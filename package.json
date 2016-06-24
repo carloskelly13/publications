@@ -15,7 +15,7 @@
     "history": "^1.17.0",
     "immutable": "^3.7.5",
     "isomorphic-fetch": "^2.2.0",
-    "lodash": "^4.13.1",
+    "lodash.range": "^3.1.5",
     "moment": "^2.13.0",
     "node-uuid": "^1.4.7",
     "nprogress": "^0.2.0",

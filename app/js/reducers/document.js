@@ -1,5 +1,3 @@
-import {findIndex, without} from 'lodash'
-
 import {
   REQUEST_DOCUMENTS,
   RECEIVE_DOCUMENTS,
@@ -139,9 +137,10 @@ export default function documentReducer(state = {
        */
       if (state.selectedShape !== null && (
           typeof sender.id === 'undefined' ||
-          sender.id == state.selectedShape.id)) {
+          sender.id === state.selectedShape.id)) {
 
-        const idx = findIndex(currentShapes, shape => state.selectedShape.id == shape.id)
+        const idx = currentShapes.findIndex(shape => state.selectedShape.id === shape.id)
+
         const shapes = [
           ...currentShapes.slice(0, idx),
           ...currentShapes.slice(idx + 1, currentShapes.length),

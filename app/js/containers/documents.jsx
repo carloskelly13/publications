@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import { isEmpty } from 'lodash'
 import { autobind } from 'core-decorators'
 
 import DocumentsNavbar from 'components/documents/documents.navbar'
@@ -15,10 +14,9 @@ import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 import * as ErrorActions from 'actions/errors'
 
-const mapStateToProps = state => Object.assign({}, state.user, state.doc, state.errors)
+const mapStateToProps = state => ({ ...state.user, ...state.doc, ...state.errors })
 const mapDispatchToProps = dispatch => bindActionCreators(
-    Object.assign({}, UserActions, DocumentActions, ErrorActions
-  ), dispatch)
+    { ...UserActions, ...DocumentActions, ...ErrorActions }, dispatch)
 
 export class Documents extends Component {
   constructor() {
@@ -118,7 +116,7 @@ export class Documents extends Component {
 
     const documentItems = documents
       .filter(doc => {
-        if (isEmpty(this.state.searchKeyword)) {
+        if (!this.state.searchKeyword.length) {
           return true
         } else {
           const searchKeyword = this.state.searchKeyword.toLowerCase()

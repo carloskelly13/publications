@@ -36,12 +36,13 @@ export function login(data = {emailAddress: '', password: ''}) {
       }
     })
     .then(json => {
-      const dispatchData = Object.assign({}, json, {
+      const data = {
+        ...json,
         failedAuthentication: false,
         isAuthenticated: true
-      })
+      }
 
-      dispatch(receiveUser(dispatchData))
+      dispatch(receiveUser(data))
     })
     .catch(() => addError('user_auth_error')(dispatch))
   }
@@ -89,10 +90,11 @@ export function getUser() {
         throw error
       }
     })
-    .then(userJson => dispatch(receiveUser(Object.assign({}, userJson, {
+    .then(userJson => dispatch(receiveUser({
+      ...userJson,
       failedAuthentication: false,
       isAuthenticated: true
-    }))))
+    })))
     .catch(() => dispatch(receiveUser({
       name: '',
       temporary: false,
@@ -150,9 +152,10 @@ export function updateUser(updateJson, completion = () => {}) {
       }
     })
     .then(json => {
-      dispatch(receiveUser(Object.assign({}, json, {
+      dispatch(receiveUser({
+        ...json,
         isAuthenticated: true
-      })))
+      }))
 
       completion()
     })
