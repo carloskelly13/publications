@@ -14,13 +14,13 @@ const vendor = [
   'validator', 'react-redux', 'history/lib', 'node-uuid'
 ]
 
-module.exports = {
-  // const addPlugin = (add, plugin) => add ? plugin : undefined
-  // const ifProd = plugin => addPlugin(options.prod, plugin)
-  // const removeEmpty = array => array.filter(el => !!el)
+module.exports = env => {
+  const addPlugin = (add, plugin) => add ? plugin : undefined
+  const ifProd = plugin => addPlugin(env.prod, plugin)
+  const removeEmpty = array => array.filter(el => !!el)
 
-  // return {
-    // devtool: isProd ? undefined : 'cheap-module-source-map',
+  return {
+    devtool: env.prod ? undefined : 'cheap-module-source-map',
 
     entry: {
       app: [ './app/js/app.js' ],
@@ -64,34 +64,34 @@ module.exports = {
       ]
     },
 
-    plugins: [
+    plugins: removeEmpty([
       extractLESS, extractCSS,
 
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor'
       }),
 
-      new webpack.optimize.DedupePlugin(),
+      ifProd(new webpack.optimize.DedupePlugin()),
 
-      new webpack.LoaderOptionsPlugin({
+      ifProd(new webpack.LoaderOptionsPlugin({
         minimize: true,
         debug: false,
         quiet: true,
-      }),
+      })),
 
       new webpack.DefinePlugin({
         'process.env': { NODE_ENV: '"production"', },
       }),
 
-      new webpack.optimize.UglifyJsPlugin({
+      ifProd(new webpack.optimize.UglifyJsPlugin({
         compress: { screw_ie8: true, warnings: false },
-      }),
+      })),
 
       new HtmlWebpackPlugin({
         template: 'app/index.html',
         inject: 'body'
       })
-    ],
+    ]),
 
     node: {
       global: 'window',
@@ -100,5 +100,5 @@ module.exports = {
       clearImmediate: false,
       setImmediate: false
     }
-  // }
+  }
 }

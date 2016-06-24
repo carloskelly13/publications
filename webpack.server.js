@@ -1,5 +1,5 @@
 const webpack = require('webpack')
-const webpackDevConfig = require('./webpack.config.js')
+const webpackDevConfig = require('./webpack.config.js')({ dev: true })
 const WebpackDevServer = require('webpack-dev-server')
 
 webpackDevConfig.entry.app.unshift('webpack-dev-server/client?http://localhost:4040/', 'webpack/hot/dev-server')
@@ -9,7 +9,7 @@ const compile = webpack(webpackDevConfig)
 
 const server = new WebpackDevServer(compile, {
   contentBase: '/dist',
-  stats: {colors: true},
+  stats: { colors: true, progress: true, chunks: true, modules: false },
   inline: true,
   hot: true,
   proxy: {

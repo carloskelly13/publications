@@ -21,7 +21,7 @@ export default class DocumentItem extends Component {
       this.props.selectedDocument.id == this.props.doc.id)
 
     const lastModifiedDate = new Date(this.props.doc.lastModified)
-    const formattedDate = '123'//moment(lastModifiedDate).format('MMM D, h:mm A')
+    const formattedDate = ''//moment(lastModifiedDate).format('MMM D, h:mm A')
 
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>
