@@ -14,10 +14,6 @@ import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 import * as ErrorActions from 'actions/errors'
 
-const mapStateToProps = state => ({ ...state.user, ...state.doc, ...state.errors })
-const mapDispatchToProps = dispatch => bindActionCreators(
-    { ...UserActions, ...DocumentActions, ...ErrorActions }, dispatch)
-
 export class Documents extends Component {
   constructor() {
     super(...arguments)
@@ -112,66 +108,75 @@ export class Documents extends Component {
   }
 
   render() {
-    const { documents } = this.props
+    const { documents, children } = this.props
 
-    const documentItems = documents
-      .filter(doc => {
-        if (!this.state.searchKeyword.length) {
-          return true
-        } else {
-          const searchKeyword = this.state.searchKeyword.toLowerCase()
-          return doc.name.toLowerCase().includes(searchKeyword)
-        }
-      })
-      .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
-      .map(doc => {
-        return <DocumentItem
-          key={doc.id}
-          doc={doc}
+    if (children) {
+      return <div>{ children }</div>
+
+    } else {
+      const documentItems = documents
+         .filter(doc => {
+           if (!this.state.searchKeyword.length) {
+             return true
+           } else {
+             const searchKeyword = this.state.searchKeyword.toLowerCase()
+             return doc.name.toLowerCase().includes(searchKeyword)
+           }
+         })
+         .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
+         .map(doc => {
+           return <DocumentItem
+             key={doc.id}
+             doc={doc}
+             editDocument={this.editDocument}
+             selectedDocument={this.state.selectedDocument}
+             updateSelectedDocument={this.updateSelectedDocument} />
+         })
+
+      return <div>
+        <UserAccountModal
+          userId={this.props.userId}
+          userName={this.props.userName}
+          updateUser={this.props.updateUser}
+          errors={this.props.errors}
+          removeError={this.props.removeError}
+          isTemporaryUser={this.props.isTemporaryUser}
+          toggleModal={this.toggleUserAccountModal}
+          isOpen={this.state.isUserAccountModalOpen} />
+        <NewDocumentModal
+          createNewDocument={this.createNewDocument}
+          toggleNewDocumentModal={this.toggleNewDocumentModal}
+          isOpen={this.state.isNewDocModalOpen} />
+        <DocumentsNavbar
+          isTemporaryUser={this.props.isTemporaryUser}
+          isAuthenticated={this.props.isAuthenticated}
+          documentIsSelected={this.state.selectedDocument !== null}
           editDocument={this.editDocument}
-          selectedDocument={this.state.selectedDocument}
-          updateSelectedDocument={this.updateSelectedDocument} />
-      })
-
-    return <div>
-      <UserAccountModal
-        userId={this.props.userId}
-        userName={this.props.userName}
-        updateUser={this.props.updateUser}
-        errors={this.props.errors}
-        removeError={this.props.removeError}
-        isTemporaryUser={this.props.isTemporaryUser}
-        toggleModal={this.toggleUserAccountModal}
-        isOpen={this.state.isUserAccountModalOpen} />
-      <NewDocumentModal
-        createNewDocument={this.createNewDocument}
-        toggleNewDocumentModal={this.toggleNewDocumentModal}
-        isOpen={this.state.isNewDocModalOpen} />
-      <DocumentsNavbar
-        isTemporaryUser={this.props.isTemporaryUser}
-        isAuthenticated={this.props.isAuthenticated}
-        documentIsSelected={this.state.selectedDocument !== null}
-        editDocument={this.editDocument}
-        deleteDocument={this.deleteDocument}
-        createNewDocument={this.toggleNewDocumentModal}
-        searchKeyword={this.state.searchKeyword}
-        searchKeywordChanged={this.searchKeywordChanged}
-        logOut={this.logOut}
-        toggleUserAccountModal={this.toggleUserAccountModal} />
-      <div className="app-content">
-        <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
-          <ReactCSSTransitionGroup
+          deleteDocument={this.deleteDocument}
+          createNewDocument={this.toggleNewDocumentModal}
+          searchKeyword={this.state.searchKeyword}
+          searchKeywordChanged={this.searchKeywordChanged}
+          logOut={this.logOut}
+          toggleUserAccountModal={this.toggleUserAccountModal} />
+        <div className="app-content">
+          <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
+            <ReactCSSTransitionGroup
             transitionName="document-item-animation"
             transitionAppear={true}
             transitionAppearTimeout={0}
             transitionEnterTimeout={500}
-            transitionLeaveTimeout={300} >
-            {documentItems}
-          </ReactCSSTransitionGroup>
-        </ul>
-      </div>
-    </div>
+            transitionLeaveTimeout={300}>
+              {documentItems}
+            </ReactCSSTransitionGroup>
+          </ul>
+          </div>
+        </div>
+    }
   }
 }
+
+const mapStateToProps = state => ({ ...state.user, ...state.doc, ...state.errors })
+const mapDispatchToProps = dispatch => bindActionCreators(
+    { ...UserActions, ...DocumentActions, ...ErrorActions }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Documents)

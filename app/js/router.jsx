@@ -1,17 +1,17 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import {Provider} from 'react-redux'
-import {Router, IndexRoute, Route} from 'react-router'
-import {syncReduxAndRouter} from 'redux-simple-router'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { Router, IndexRoute, Route } from 'react-router'
+import { syncReduxAndRouter } from 'redux-simple-router'
 import configureStore from 'stores/configureStore'
-import {createHashHistory} from 'history/lib'
+import { createHashHistory } from 'history/lib'
 
 import BaseView from 'containers/base.view'
 import Login from 'containers/login'
 import Documents from 'containers/documents'
 import Document from 'containers/document'
 
-import {getUser} from 'actions/user'
+import { getUser } from 'actions/user'
 
 const history = createHashHistory()
 const store = configureStore()
@@ -29,27 +29,38 @@ const requireAuth = (nextState, replaceState, callback) => {
     } else if (isAuthenticated) {
       unsubscribe()
     }
+    
     callback()
   })
 }
 
-export default class AppRouter {
-  constructor() {
-    syncReduxAndRouter(history, store, state => state.router)
-
-    this.router = <Provider store={store}>
-        <Router history={history}>
-          <Route path="/" component={BaseView}>
-            <IndexRoute component={Login} />
-            <Route path="login" component={Login} />
-            <Route path="documents" component={Documents} onEnter={requireAuth} />
-            <Route path="documents/:id/edit" component={Document} onEnter={requireAuth} />
-          </Route>
-        </Router>
-    </Provider>
+export const startAppRouter = () => {
+  syncReduxAndRouter(history, store, state => state.router)
+  
+  const routes = {
+    path: '/',
+    component: BaseView,
+    indexRoute: { component: Login },
+    childRoutes: [
+      { path: 'login', component: Login },
+      {
+        path: 'documents',
+        component: Documents,
+        onEnter: requireAuth,
+        childRoutes: [
+          {
+            path: ':id/edit',
+            component: Document,
+            onEnter: requireAuth
+          }
+        ]
+      }
+    ]
   }
 
-  run() {
-    ReactDOM.render(this.router, document.getElementById('pub-app'))
-  }
+  const router = <Provider store={ store }>
+    <Router history={ history } routes={ routes } />
+  </Provider>
+  
+  render(router, document.getElementById('pub-app'))
 }

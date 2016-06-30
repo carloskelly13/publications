@@ -31,6 +31,12 @@ export class Document extends Component {
     document.title = 'Publications'
   }
 
+  componentWillReceiveProps({ currentDocument }) {
+    if (currentDocument) {
+      document.title = `Publications — ${currentDocument.name}`
+    }
+  }
+
   @autobind
   updateShape(sender) {
     this.props.updateSelectedShape(sender)
@@ -60,10 +66,11 @@ export class Document extends Component {
   }
 
   @autobind
-  viewAllDocuments(sender) {
+  viewAllDocuments() {
     this.props.saveDocument(this.props.currentDocument, () => {
-      this.props.history.push('/documents')
+      this.props.getDocuments()
       this.props.documentChanged(null)
+      this.props.history.push('/documents')
     })
   }
 
@@ -74,7 +81,7 @@ export class Document extends Component {
 
   @autobind
   changeZoom(sender) {
-    const currentZoom = this.state.zoom
+    const { zoom: currentZoom } = this.state
 
     if (sender === 'zoom-in' && currentZoom < 5.0) {
       this.setState({zoom: currentZoom + 0.25})
