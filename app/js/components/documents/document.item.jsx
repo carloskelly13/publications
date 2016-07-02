@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Router, RouteHandler, Link } from 'react-router'
 import { autobind } from 'core-decorators'
-// import moment from 'moment'
-
+import { Urls } from 'core/constants'
 import Canvas from '../canvas/canvas'
 
 export default class DocumentItem extends Component {
@@ -36,6 +35,7 @@ export default class DocumentItem extends Component {
           <span className="document-item-name">
             {this.props.doc.name}
           </span>
+          <a href={ `${Urls.ApiBase}/documents/${this.props.doc.id}/pdf` }>PDF</a>
           <span className="document-item-description">
             { formattedDate }
           </span>

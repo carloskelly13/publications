@@ -29,14 +29,14 @@ const requireAuth = (nextState, replaceState, callback) => {
     } else if (isAuthenticated) {
       unsubscribe()
     }
-    
+
     callback()
   })
 }
 
 export const startAppRouter = () => {
   syncReduxAndRouter(history, store, state => state.router)
-  
+
   const routes = {
     path: '/',
     component: BaseView,
@@ -61,6 +61,6 @@ export const startAppRouter = () => {
   const router = <Provider store={ store }>
     <Router history={ history } routes={ routes } />
   </Provider>
-  
+
   render(router, document.getElementById('pub-app'))
 }

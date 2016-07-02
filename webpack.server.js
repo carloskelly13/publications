@@ -9,8 +9,6 @@ const compile = webpack(webpackDevConfig)
 
 const server = new WebpackDevServer(compile, {
   contentBase: '/dist',
-  stats: { colors: true, progress: true },
-  inline: true,
   hot: true,
   proxy: {
     '*' : {

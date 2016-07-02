@@ -28,6 +28,7 @@ export function login(data = {emailAddress: '', password: ''}) {
       body: JSON.stringify(data)
     })
     .then(response => {
+      console.debug(response)
       if (response.status === 200) {
         return response.json()
 

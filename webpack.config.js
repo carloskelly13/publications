@@ -20,7 +20,7 @@ module.exports = env => {
   const removeEmpty = array => array.filter(el => !!el)
 
   return {
-    devtool: env.prod ? undefined : 'cheap-module-source-map',
+    devtool: env.prod ? undefined : 'inline-source-map',
 
     entry: {
       app: [ './app/js/app.js' ],
