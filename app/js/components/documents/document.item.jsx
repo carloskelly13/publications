@@ -3,7 +3,7 @@ import { Router, RouteHandler, Link } from 'react-router'
 import { autobind } from 'core-decorators'
 import { Urls } from 'core/constants'
 import Canvas from '../canvas/canvas'
-import moment from 'moment'
+import { format as formatDate } from 'fecha'
 
 export default class DocumentItem extends Component {
   constructor() {
@@ -21,7 +21,7 @@ export default class DocumentItem extends Component {
       this.props.selectedDocument.id == this.props.doc.id)
 
     const lastModifiedDate = new Date(this.props.doc.lastModified)
-    const formattedDate = moment(lastModifiedDate).format('MMM D, h:mm A')
+    const formattedDate = formatDate(lastModifiedDate, 'MMM D, h:mm A')
 
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>

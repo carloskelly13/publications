@@ -6,25 +6,21 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const extractLESS = new ExtractTextPlugin('app.css')
 const extractCSS = new ExtractTextPlugin('vendor.css')
 
-const vendor = [
-  'react', 'react-dom', 'redux', 'redux-thunk',
-  'react-router', 'react-addons-css-transition-group',
-  'redux-simple-router', 'lodash.range', 'core-decorators',
-  'isomorphic-fetch', 'object-assign', 'nprogress',
-  'validator', 'react-redux', 'history/lib', 'node-uuid'
-]
-
 module.exports = env => {
   const addPlugin = (add, plugin) => add ? plugin : undefined
   const ifProd = plugin => addPlugin(env.prod, plugin)
+  const ifDev = plugin => addPlugin(env.dev, plugin)
   const removeEmpty = array => array.filter(el => !!el)
 
   return {
     devtool: env.prod ? undefined : 'inline-source-map',
 
     entry: {
-      app: [ './app/js/app.js' ],
-      vendor
+      app: removeEmpty([
+        './app/js/app.js',
+        ifDev('webpack-hot-middleware/client?reload=true')
+      ]),
+      vendor: [ './app/js/vendor.js' ]
     },
 
     output: {
@@ -79,6 +75,8 @@ module.exports = env => {
         quiet: true,
       })),
 
+      ifDev(new webpack.HotModuleReplacementPlugin()),
+
       new webpack.DefinePlugin({
         'process.env': { NODE_ENV: '"production"', },
       }),
@@ -100,5 +98,23 @@ module.exports = env => {
       clearImmediate: false,
       setImmediate: false
     }
+
+    // devServer: {
+    //   port: 4040,
+    //   contentBase: 'dist/',
+    //   proxy: {
+    //     '*': {
+    //       target: {
+    //         host: 'localhost',
+    //         protocol: 'http',
+    //         port: 8080
+    //       },
+    //       ignorePath: true,
+    //       changeOrigin: true,
+    //       secure: false
+    //     }
+    //   }
+    // }
+
   }
 }

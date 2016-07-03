@@ -1,5 +1,5 @@
 export const Urls = {
-  ApiBase: `http://${window.location.host}`
+  ApiBase: `http://${window.location.host}/api`
 }
 
 export const Typefaces = [
