@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import AboutButton from '../ui/about.button'
+import { Urls } from 'core/constants'
 
 export default class DocumentsNavbar extends Component {
   constructor() {
@@ -7,7 +8,7 @@ export default class DocumentsNavbar extends Component {
   }
 
   render() {
-    const {isTemporaryUser, isAuthenticated} = this.props
+    const { isTemporaryUser, isAuthenticated, selectedDocument } = this.props
     const testDrive = isTemporaryUser && isAuthenticated
 
     const accountButton = isAuthenticated ? <button
@@ -21,6 +22,12 @@ export default class DocumentsNavbar extends Component {
       onClick={this.props.logOut}>
       {testDrive ? 'Exit Test Drive' : 'Log Out'}
     </button> : null
+
+    const pdfUrl = selectedDocument ? `${Urls.ApiBase}/documents/${selectedDocument.id}/pdf` : undefined
+
+    const userName = !isTemporaryUser ? <div className="user-name">
+      { this.props.userName }
+    </div> : undefined
 
     return <div className="navbar-container">
       <div className="navbar-controls-left">
@@ -36,21 +43,23 @@ export default class DocumentsNavbar extends Component {
           onClick={this.props.editDocument}>
           Edit
         </button>
+        <a
+          className={ `button ${this.props.documentIsSelected ? '' : 'disabled'}` }
+          href={ pdfUrl }
+          target="_blank">
+          PDF
+        </a>
         <button
           className="button button-destructive"
           disabled={!this.props.documentIsSelected}
           onClick={this.props.deleteDocument}>
           Delete
         </button>
-        {accountButton}
-        {exitButton}
       </div>
       <div className="navbar-controls-right">
-        <input
-          className="input-text-search"
-          value={this.props.searchKeyword}
-          onChange={this.props.searchKeywordChanged}
-          placeholder="Search for Documents"/>
+        { userName }
+        { accountButton }
+        { exitButton }
       </div>
     </div>
   }

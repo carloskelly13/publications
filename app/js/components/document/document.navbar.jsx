@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import {autobind} from 'core-decorators'
 import AboutButton from '../ui/about.button'
+import { Urls } from 'core/constants'
 
 export default class DocumentNavbar extends Component {
   @autobind
@@ -19,7 +20,12 @@ export default class DocumentNavbar extends Component {
         <div className="navbar-controls-left">
           <AboutButton />
           <button className="button" onClick={this.props.save}>Save</button>
-          <button className="button" onClick={this.props.downloadPdf}>PDF</button>
+          <a
+            className="button"
+            href={ `${Urls.ApiBase}/documents/${this.props.doc.id}/pdf` }
+            target="_blank">
+            PDF
+          </a>
           <button className="button" onClick={this.props.viewAllDocuments}>All Documents</button>
         </div>
         <div className="navbar-controls-right">

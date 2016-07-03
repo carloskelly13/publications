@@ -154,12 +154,20 @@ export class Documents extends Component {
           editDocument={this.editDocument}
           deleteDocument={this.deleteDocument}
           createNewDocument={this.toggleNewDocumentModal}
+          selectedDocument={this.state.selectedDocument}
           searchKeyword={this.state.searchKeyword}
           searchKeywordChanged={this.searchKeywordChanged}
+          userName={this.props.userName}
           logOut={this.logOut}
           toggleUserAccountModal={this.toggleUserAccountModal} />
         <div className="app-content">
           <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
+            <div className="input-text-search">
+              <input
+                value={this.state.searchKeyword}
+                onChange={this.searchKeywordChanged}
+                placeholder="Search for Documents"/>
+            </div>
             <ReactCSSTransitionGroup
             transitionName="document-item-animation"
             transitionAppear={true}

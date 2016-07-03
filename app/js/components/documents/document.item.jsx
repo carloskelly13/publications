@@ -3,6 +3,7 @@ import { Router, RouteHandler, Link } from 'react-router'
 import { autobind } from 'core-decorators'
 import { Urls } from 'core/constants'
 import Canvas from '../canvas/canvas'
+import moment from 'moment'
 
 export default class DocumentItem extends Component {
   constructor() {
@@ -20,7 +21,7 @@ export default class DocumentItem extends Component {
       this.props.selectedDocument.id == this.props.doc.id)
 
     const lastModifiedDate = new Date(this.props.doc.lastModified)
-    const formattedDate = ''//moment(lastModifiedDate).format('MMM D, h:mm A')
+    const formattedDate = moment(lastModifiedDate).format('MMM D, h:mm A')
 
     return (
       <li className={`document-item ${selected ? 'selected' : ''}`}>
@@ -35,7 +36,6 @@ export default class DocumentItem extends Component {
           <span className="document-item-name">
             {this.props.doc.name}
           </span>
-          <a href={ `${Urls.ApiBase}/documents/${this.props.doc.id}/pdf` }>PDF</a>
           <span className="document-item-description">
             { formattedDate }
           </span>

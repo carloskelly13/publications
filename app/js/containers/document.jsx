@@ -7,7 +7,6 @@ import DocumentLoadingNavbar from 'components/document/document.loadingNavbar'
 import InspectorBase from 'components/inspector/inspector.base'
 import RulerHorizontal from 'components/rulers/ruler.horizontal'
 import RulerVertical from 'components/rulers/ruler.vertical'
-import DocumentPdfViewModal from 'components/document/document.pdf.modal'
 import ShapeFactory from 'core/shape.factory'
 
 import { connect } from 'react-redux'
@@ -18,7 +17,6 @@ import * as DocumentActions from 'actions/document'
 export class Document extends Component {
   state = {
     showInspector: true,
-    isPdfModalOpen: false,
     zoom: 1.0
   }
 
@@ -90,29 +88,20 @@ export class Document extends Component {
     }
   }
 
-  @autobind
-  togglePdfDownloadModal() {
-    this.setState({ isPdfModalOpen: !this.state.isPdfModalOpen })
-  }
-
   render() {
     const { currentDocument, selectedShape, updateDocumentProperty } = this.props
     const DPI = 72.0
 
     if (currentDocument) {
       return <div>
-        <DocumentPdfViewModal
-          doc={currentDocument}
-          togglePdfDownloadModal={this.togglePdfDownloadModal}
-          isOpen={this.state.isPdfModalOpen} />
         <DocumentNavbar
+          doc={currentDocument}
           changeZoom={this.changeZoom}
           clipboard={this.props.clipboardData}
           deleteShape={this.props.deleteShape}
           cutShape={this.props.cutShape}
           copyShape={this.props.copyShape}
           pasteShape={this.props.pasteShape}
-          downloadPdf={this.togglePdfDownloadModal}
           selectedShape={selectedShape}
           save={this.save}
           showInspector={this.state.showInspector}
