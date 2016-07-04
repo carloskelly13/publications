@@ -99,22 +99,5 @@ module.exports = env => {
       setImmediate: false
     }
 
-    // devServer: {
-    //   port: 4040,
-    //   contentBase: 'dist/',
-    //   proxy: {
-    //     '*': {
-    //       target: {
-    //         host: 'localhost',
-    //         protocol: 'http',
-    //         port: 8080
-    //       },
-    //       ignorePath: true,
-    //       changeOrigin: true,
-    //       secure: false
-    //     }
-    //   }
-    // }
-
   }
 }

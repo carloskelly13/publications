@@ -44,7 +44,6 @@ export default class InspectorShapeLayer extends Component {
       case 'backwards':
         if (shape.id === id) {
           shape.z = Math.max(shape.z - 1, 1)
-          console.log(shape.z)
         } else if (shape.z === z - 1) {
           shape.z = shape.z + 1
         }

@@ -17,6 +17,85 @@
   }
 }
 
+.input-text {
+  .color-picker {
+    background: #fff;
+    position: absolute;
+    width: 80%;
+    z-index: 9000;
+    padding: 4px;
+    border-radius: 4px;
+    margin: 10px 0 0;
+    box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.4), 0 1px 10px hsla(0, 0%, 0%, 0.25);
+    text-align: center;
+
+    &:after, &:before {
+    	bottom: 100%;
+    	left: 50%;
+      left: -webkit-calc(50% - 1px);
+      left: calc(~"50% - 1px");
+    	border: solid transparent;
+    	content: ' ';
+    	height: 0;
+    	width: 0;
+    	position: absolute;
+    	pointer-events: none;
+    }
+
+    &:after {
+    	border-color: transparent;
+    	border-bottom-color: #fff;
+    	border-width: 10px;
+    	margin-left: -10px;
+    }
+
+    &:before {
+    	border-color: transparent;
+    	border-bottom-color: hsla(0, 0%, 0%, 0.4);
+    	border-width: 11px;
+    	margin-left: -11px;
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      margin: 4px;
+      box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.25);
+      border-radius: 2px;
+
+      &:hover {
+        box-shadow: inset 0 0 0 2px hsla(0, 0%, 0%, 0.25);
+      }
+    }
+  }
+
+  &.right .color-picker {
+    margin-left: -40%;
+    margin-left: -webkit-calc(-40% + 5px);
+    margin-left: calc(~"-40% + 5px");
+    border-radius: 4px 1px 4px 4px;
+
+    &:after, &:before {
+      left: auto;
+      right: 0;
+    }
+
+    &:before {
+      margin-left: auto;
+      margin-right: -1px;
+    }
+  }
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .input-text .color-picker {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: fade(#fff, 85%);
+  }
+}
+
 .input-text, .segmented-control, .input-picker {
   &.full {
     width: 100%;
@@ -112,6 +191,13 @@
       box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.33);
       border-radius: 20px;
       margin-top: 5px;
+      background-image: url("../img/icons/navigate-down.svg");
+      background-repeat: no-repeat;
+      background-position: 5px 8px;
+
+      &:hover {
+        box-shadow: inset 0 0 0 10px hsla(0, 0%, 0%, 0.25);
+      }
     }
   }
 }

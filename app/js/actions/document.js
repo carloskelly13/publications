@@ -68,8 +68,6 @@ export function getDocuments() {
       credentials: 'include'
     })
     .then(response => {
-      console.log(response)
-
       if (response.status === 200) {
         setCsrfHeaders(response.headers)(dispatch)
         return response.json()
