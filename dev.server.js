@@ -27,4 +27,4 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(webpackHotMiddleware(compiler))
 
-app.listen(4040, () => console.log('App started on 4040.'))
+app.listen(4040, () => console.log('Publications started on 4040.'))

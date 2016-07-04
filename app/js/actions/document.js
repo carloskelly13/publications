@@ -1,6 +1,6 @@
-import {Map} from 'immutable'
-import {Urls} from '../core/constants'
-import {addError} from './errors'
+import { Urls } from '../core/constants'
+import { addError } from './errors'
+import { setCsrfHeaders } from './security'
 import NProgress from 'nprogress'
 
 export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
@@ -68,7 +68,10 @@ export function getDocuments() {
       credentials: 'include'
     })
     .then(response => {
+      console.log(response)
+
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       }
     })
@@ -84,18 +87,22 @@ export function getDocuments() {
 }
 
 export function newDocument(doc) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { csrfHeaders } = getState().security
+
     fetch(`${Urls.ApiBase}/documents`, {
       method: 'post',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...csrfHeaders
       },
       credentials: 'include',
       body: JSON.stringify(doc)
     })
     .then(response => {
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       } else {
         addError('create_doc_error')(dispatch)
@@ -109,10 +116,13 @@ export function newDocument(doc) {
 }
 
 export function removeDocument(doc) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { csrfHeaders } = getState().security
+
     fetch(`${Urls.ApiBase}/documents/${doc.id}`, {
       method: 'delete',
-      credentials: 'include'
+      credentials: 'include',
+      headers: csrfHeaders
     })
     .then(() => dispatch({
       type: DELETE_DOCUMENT,
@@ -133,6 +143,7 @@ export function getDocument(id) {
     })
     .then(response => {
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       }
     })
@@ -144,8 +155,9 @@ export function getDocument(id) {
 }
 
 export function saveDocument(doc, completion = () => {}) {
-  return dispatch => {
-    const {id} = doc
+  return (dispatch, getState) => {
+    const { id } = doc
+    const { csrfHeaders } = getState().security
 
     NProgress.start()
 
@@ -161,7 +173,8 @@ export function saveDocument(doc, completion = () => {}) {
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...csrfHeaders
       },
       body: JSON.stringify(documentJson)
     })

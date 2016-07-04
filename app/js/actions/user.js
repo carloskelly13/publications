@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { Urls } from '../core/constants'
 import { addError } from './errors'
+import { setCsrfHeaders } from './security'
 
 export const RECIEVE_USER = 'RECIEVE_USER'
 export const REQUEST_USER = 'REQUEST_USER'
@@ -28,8 +29,8 @@ export function login(data = {emailAddress: '', password: ''}) {
       body: JSON.stringify(data)
     })
     .then(response => {
-      console.debug(response)
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
         return response.json()
 
       } else {
@@ -84,6 +85,7 @@ export function getUser() {
     })
     .then(response => {
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       } else {
         const error = new Error(response.statusText)
@@ -122,6 +124,8 @@ export function createNewUser(userJson) {
     })
     .then(response => {
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
+
         const loginData = {
           emailAddress: userJson.emailAddress,
           password: userJson.password
@@ -134,18 +138,22 @@ export function createNewUser(userJson) {
 }
 
 export function updateUser(updateJson, completion = () => {}) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { csrfHeaders } = getState().security
+
     fetch(`${Urls.ApiBase}/users`, {
       method: 'put',
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...csrfHeaders
       },
       body: JSON.stringify(updateJson)
     })
     .then(response => {
       if (response.status === 200) {
+        setCsrfHeaders(response.headers)(dispatch)
         return response.json()
 
       } else {
