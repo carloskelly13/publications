@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import uuid from 'node-uuid'
+import { LoginAboutBox } from '../components/login/about'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -56,6 +57,46 @@ export class Login extends Component {
     })
   }
 
+  renderLoginForm() {
+    const errorMessage = this.state.userAuthError ?
+      <div className="error-msg">The password or email address was incorrect. Please try again.</div> : undefined
+
+    return <form
+      onSubmit={this.logInFormSubmitted}>
+      { errorMessage }
+      <div>
+        <InputText
+          placeholder="Email Address"
+          name="emailAddress"
+          style="half left"
+          type="text"
+          value={this.state.emailAddress}
+          valueChanged={this.loginFormValueChanged} />
+        <InputText
+          placeholder="Password"
+          name="password"
+          style="half right"
+          type="password"
+          value={ this.state.password }
+          valueChanged={ this.loginFormValueChanged } />
+      </div>
+      <div className="buttons">
+        <button
+          type="submit"
+          className="btn big">
+          Log In
+        </button>
+        <button
+          type="button"
+          className="button test-drive-btn"
+          onClick={ this.createTestDriveAccount }
+          role="button">
+          or test drive Publications without an account
+        </button>
+      </div>
+    </form>
+  }
+
   render() {
     const introText = `
       Publications includes all the tools to create documents with shapes and text.
@@ -63,50 +104,12 @@ export class Login extends Component {
       Export your documents to vector PDFs that can be shared with anyone.
     `
 
-    const errorMessage = this.state.userAuthError ?
-      <div className="error-msg">The password or email address was incorrect. Please try again.</div> : null
-
-    const loginForm = <form
-        className=""
-        onSubmit={this.logInFormSubmitted}>
-        {errorMessage}
-        <div>
-          <InputText
-            placeholder="Email Address"
-            name="emailAddress"
-            style="half left"
-            type="text"
-            value={this.state.emailAddress}
-            valueChanged={this.loginFormValueChanged} />
-          <InputText
-            placeholder="Password"
-            name="password"
-            style="half right"
-            type="password"
-            value={this.state.password}
-            valueChanged={this.loginFormValueChanged} />
-        </div>
-        <div className="buttons">
-          <button
-            type="submit"
-            className="btn big">
-            Log In
-          </button>
-          <button
-            type="button"
-            className="button test-drive-btn"
-            onClick={this.createTestDriveAccount}
-            role="button">
-            or test drive Publications without an account
-          </button>
-        </div>
-      </form>
-
     return <div className="index-view">
       <div className="index-container">
         <div className="index-logo"></div>
-        <p className="index-intro-text">{introText}</p>
-        {loginForm}
+        <p className="index-intro-text">{ introText }</p>
+        { this.renderLoginForm() }
+        <LoginAboutBox />
       </div>
     </div>
   }
