@@ -118,7 +118,6 @@ export class Document extends Component {
             selectedShape={selectedShape}
             updateDocument={updateDocumentProperty}
             updateShape={this.updateShape}
-            updateShape={this.updateShape}
             showInspector={this.state.showInspector} />
           <RulerVertical
             doc={currentDocument}
@@ -135,7 +134,6 @@ export class Document extends Component {
             showInspector={this.state.showInspector}
             selectable={true}
             selectedShape={selectedShape}
-            updateShape={this.updateShape}
             updateShape={this.updateShape} />
         </div>
       </div>
