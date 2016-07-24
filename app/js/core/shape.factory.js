@@ -1,5 +1,5 @@
 export default class ShapeFactory {
-  static rectangle() {
+  static Rectangle() {
     return {
       type: 'rect',
       x: 0.25,
@@ -16,7 +16,7 @@ export default class ShapeFactory {
     };
   }
 
-  static ellipse() {
+  static Ellipse() {
     return {
       type: 'ellipse',
       x: 0.25,
@@ -33,7 +33,7 @@ export default class ShapeFactory {
     };
   }
 
-  static text() {
+  static Text() {
     return {
       type: 'text',
       x: 0.25,

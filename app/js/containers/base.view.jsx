@@ -1,6 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
-const BaseView = ({children}) => <div className="app-container">{children}</div>
-BaseView.propTypes = { children: PropTypes.element }
-
-export default BaseView
+export default ({ children }) => <div className="app-container">
+  { children }
+</div>

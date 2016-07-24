@@ -5,9 +5,6 @@ import { autobind } from 'core-decorators'
 import CanvasGridline from './canvas.gridline'
 
 export default class CanvasBackground extends Component {
-  constructor() {
-    super(...arguments)
-  }
 
   shouldComponentUpdate(nextProps) {
     const widthChanged = this.props.doc.width != nextProps.doc.width
@@ -16,64 +13,59 @@ export default class CanvasBackground extends Component {
     return (widthChanged || heightChanged || zoomChanged)
   }
 
-  render() {
-    const { doc, dpi, selectable, zoom } = this.props
-    const xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom)
-    const yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom)
-    let gridlines = null
+  @autobind
+  canvasSelected(event) {
+    event.preventDefault()
+    this.props.updateShape(null, null)
+  }
 
-    if (selectable) {
-      gridlines = (
-        <g>
-          <g id="horizontal-gridlines">
-            {
-              xRange.map((mark, idx) => {
-                return (<CanvasGridline
-                          key={`v-grid-${idx}`}
-                          major={(idx % 4 === 0) && (idx > 0)}
-                          mX={mark - 0.5}
-                          mY="0"
-                          dX={mark - 0.5}
-                          dY={doc.height * dpi * zoom}
-                          direction={'V'} />);
-              })
-            }
-          </g>
-          <g id="vertical-gridlines">
-            {
-              yRange.map((mark, idx) => {
-                return (<CanvasGridline
-                          key={`h-grid-${idx}`}
-                          major={(idx % 4 === 0) && (idx > 0)}
-                          mX="0"
-                          mY={mark - 0.5}
-                          dX={doc.width * dpi * zoom}
-                          dY={mark - 0.5}
-                          direction={'H'} />);
-              })
-            }
-          </g>
-        </g>
-      )
+  renderGridlines() {
+    if (!this.props.selectable) {
+      return undefined
     }
 
+    const { doc, dpi, zoom } = this.props
+    const xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom)
+    const yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom)
+
+    const xGridlines = xRange.map((mark, idx) => <CanvasGridline
+        key={ `v-grid-${idx}` }
+        major={ (idx % 4 === 0) && (idx > 0) }
+        mX={ mark - 0.5 }
+        mY="0"
+        dX={ mark - 0.5 }
+        dY={ doc.height * dpi * zoom }
+        direction={ 'V' } />)
+
+    const yGridlines = yRange.map((mark, idx) => <CanvasGridline
+        key={ `h-grid-${idx}` }
+        major={ (idx % 4 === 0) && (idx > 0) }
+        mX="0"
+        mY={ mark - 0.5 }
+        dX={ doc.width * dpi * zoom }
+        dY={ mark - 0.5 }
+        direction={ 'H' } />)
+
+    return <g>
+      <g id="horizontal-gridlines">{ xGridlines }</g>
+      <g id="vertical-gridlines">{ yGridlines }</g>
+    </g>
+  }
+
+  render() {
+    const { doc, dpi, selectable, zoom } = this.props
+
     return <g id="canvas-background"
-      onClick={selectable ? this.canvasSelected : null} >
+      onClick={ selectable ? this.canvasSelected : null } >
       <rect
         y="0"
         x="0"
         fill="#fff"
         stroke="0"
         stroke-width="0"
-        width={doc.width * dpi * zoom}
-        height={doc.height * dpi * zoom} />
-      {gridlines}
+        width={ doc.width * dpi * zoom }
+        height={ doc.height * dpi * zoom } />
+      { this.renderGridlines() }
     </g>
-  }
-
-  @autobind
-  canvasSelected(event) {
-    event.preventDefault()
-    this.props.updateShape(null, null)
   }
 }

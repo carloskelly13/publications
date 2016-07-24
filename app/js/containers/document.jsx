@@ -50,11 +50,11 @@ export class Document extends Component {
     let newShape
 
     if (type === 'ellipse') {
-      newShape = ShapeFactory.ellipse()
+      newShape = ShapeFactory.Ellipse()
     } else if (type === 'text') {
-      newShape = ShapeFactory.text()
+      newShape = ShapeFactory.Text()
     } else {
-      newShape = ShapeFactory.rectangle()
+      newShape = ShapeFactory.Rectangle()
     }
 
     newShape.z = this.props.currentDocument.shapes.length + 1

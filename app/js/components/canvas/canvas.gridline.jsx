@@ -1,13 +1,9 @@
-import React, {Component} from 'react';
+import React from 'react'
 
-export default class CanvasGridline extends Component {
-  render() {
-    let classString = this.props.major ? 'inch-mark' : '';
+const CanvasGridline = ({
+  mX, mY, major, direction, dX, dY
+}) => <path
+  className={ major ? 'inchmark' : null }
+  d={ `M${mX},${mY} ${direction}${dX},${dY} Z` } />
 
-    return (
-      <path
-        class={classString}
-        d={`M${this.props.mX},${this.props.mY} ${this.props.direction}${this.props.dX},${this.props.dY} Z`} />
-    );
-  }
-}
+export default CanvasGridline
