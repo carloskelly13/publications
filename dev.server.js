@@ -14,7 +14,7 @@ const compiler = webpack(webpackConfig)
 app.use(history())
 
 app.use(proxy('/api', {
-  target: 'http://api.publicationsapp.com',
+  target: 'http://localhost:8080',
   changeOrigin: true,
   pathRewrite: {
     '^/api' : ''

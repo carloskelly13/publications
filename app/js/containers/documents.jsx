@@ -169,11 +169,11 @@ export class Documents extends Component {
                 placeholder="Search for Documents"/>
             </div>
             <ReactCSSTransitionGroup
-            transitionName="document-item-animation"
-            transitionAppear={true}
-            transitionAppearTimeout={0}
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}>
+              transitionName="document-item-animation"
+              transitionAppear={true}
+              transitionAppearTimeout={0}
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={300}>
               {documentItems}
             </ReactCSSTransitionGroup>
           </ul>

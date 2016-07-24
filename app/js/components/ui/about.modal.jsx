@@ -1,12 +1,18 @@
-import React, {PropTypes} from 'react'
+import React from 'react'
+import { version } from '../../../../package.json'
 
-const AboutAppModal = ({isOpen, toggleModal}) => isOpen ?
-  <div className="modal-cover">
+const AboutAppModal = ({ isOpen, toggleModal }) => {
+  if (!isOpen) {
+    return <div></div>
+  }
+
+  return <div className="modal-cover">
     <div className="modal modal-about">
       <div className="modal-content">
         <div className="modal-header">
           <div className="pub-logo-73"></div>
           <h1>Publications</h1>
+          <div className="app-version">Version { version }</div>
           <h3>Publications is designed, developed and maintained by Mike Kelly and Carlos Paelinck.</h3>
           <h4>Powered by React, Redux and Spring Boot.</h4>
         </div>
@@ -20,11 +26,7 @@ const AboutAppModal = ({isOpen, toggleModal}) => isOpen ?
         </div>
       </div>
     </div>
-  </div> : <div />
-
-AboutAppModal.propTypes = {
-  isOpen: PropTypes.bool,
-  toggleModal: PropTypes.func
+  </div>
 }
 
 export default AboutAppModal
