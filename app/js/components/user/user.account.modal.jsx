@@ -3,9 +3,10 @@ import {autobind} from 'core-decorators'
 import InputText from '../ui/input.text'
 
 export default class UserAccountModal extends Component {
-  constructor() {
-    super(...arguments)
-    this.state = {emailAddress: '', password: '', temporary: false}
+  state = {
+    emailAddress: '',
+    password: '',
+    temporary: false
   }
 
   componentWillReceiveProps(nextProps) {
@@ -23,7 +24,7 @@ export default class UserAccountModal extends Component {
 
   @autobind
   dismiss() {
-    let clearState = {password: ''}
+    let clearState = { password: '' }
 
     if (this.state.temporary) {
       clearState.emailAddress = ''
@@ -37,7 +38,7 @@ export default class UserAccountModal extends Component {
   @autobind
   handleSubmit(event) {
     event.preventDefault()
-    const {emailAddress, password} = this.state
+    const { emailAddress, password } = this.state
 
     this.props.removeError('user_auth_error')
 
@@ -49,69 +50,74 @@ export default class UserAccountModal extends Component {
     }, () => this.dismiss())
   }
 
-  render() {
-    const {temporary} = this.state
+  renderErrorMessage(temporary, failedUpdate, name = null) {
+    if (temporary && !failedUpdate) {
+      return 'Create a free Publications account'
+    } else if (temporary && failedUpdate) {
+      return 'There was an error creating your account. Verify the email is not already in use and try again.'
+    } else if (!temporary && !failedUpdate) {
+      return `Update password for ${ name }.`
+    } else if (!temporary && failedUpdate) {
+      return 'There was an error updating your account. Verify the passwords are correct and try again.'
+    }
+  }
 
-    const emailField = temporary ? <InputText
+  renderEmailField() {
+    if (!this.state.temporary) {
+      return undefined
+    }
+
+    return <InputText
       displayName="Email Address"
       name="emailAddress"
       theme="light"
       validator='isLength'
       validatorOptions={1}
       value={this.state.emailAddress}
-      valueChanged={this.formValueChanged} /> : null
+      valueChanged={this.formValueChanged} />
+  }
 
-    const headerText = temporary ? 'Create Account' : 'Change Password'
-    const {isPatchingUser, errors} = this.props
-    const failedUpdate = errors.indexOf('user_update_error') !== -1
-
-    const descriptionText = (temporary, failedUpdate, name = null) => {
-      if (temporary && !failedUpdate) {
-        return 'Create a free Publications account'
-      } else if (temporary && failedUpdate) {
-        return 'There was an error creating your account. Verify the email is not already in use and try again.'
-      } else if (!temporary && !failedUpdate) {
-        return `Update password for ${name}.`
-      } else if (!temporary && failedUpdate) {
-        return 'There was an error updating your account. Verify the passwords are correct and try again.'
-      }
+  render() {
+    if (!this.props.isOpen) {
+      return <div></div>
     }
 
-    if (this.props.isOpen) {
-      return (
-        <div className="modal-cover">
-          <div className="modal modal-new-document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h1>{headerText}</h1>
-                <h3>{descriptionText(temporary, failedUpdate, this.state.emailAddress)}</h3>
+    const { temporary } = this.state
+    const emailField = this.renderEmailField()
+    const headerText = temporary ? 'Create Account' : 'Change Password'
+    const { isPatchingUser, errors } = this.props
+    const failedUpdate = errors.indexOf('user_update_error') !== -1
+    const descriptionText = this.renderErrorMessage(temporary, failedUpdate, this.state.emailAddress)
+
+    return <div className="modal-cover">
+      <div className="modal modal-new-document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h1>{ headerText }</h1>
+            <h3>{ descriptionText }</h3>
+          </div>
+          <div className="modal-inner-content">
+            <form onSubmit={ this.handleSubmit }>
+              { emailField }
+              <InputText
+                displayName="Password"
+                name="password"
+                theme="light"
+                type="password"
+                value={ this.state.password }
+                valueChanged={ this.formValueChanged } />
+              <div className="modal-form-buttons">
+                <button disabled={ isPatchingUser } className="btn" type="submit">
+                  { temporary ? 'Create Account' : 'Update' }
+                </button>
+                <button disabled={ isPatchingUser } className="btn" type="button" onClick={this.dismiss}>
+                  Close
+                </button>
               </div>
-              <div className="modal-inner-content">
-                <form onSubmit={this.handleSubmit}>
-                  {emailField}
-                  <InputText
-                    displayName="Password"
-                    name="password"
-                    theme="light"
-                    type="password"
-                    value={this.state.password}
-                    valueChanged={this.formValueChanged} />
-                  <div className="modal-form-buttons">
-                    <button disabled={isPatchingUser} className="btn" type="submit">
-                      {temporary ? 'Create Account' : 'Update'}
-                    </button>
-                    <button disabled={isPatchingUser} className="btn" type="button" onClick={this.dismiss}>
-                      Close
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
-      )
-    } else {
-      return <div/>
-    }
+      </div>
+    </div>
   }
 }

@@ -6,29 +6,24 @@ import DocumentsNavbar from 'components/documents/documents.navbar'
 import DocumentItem from 'components/documents/document.item'
 import NewDocumentModal from 'components/documents/documents.new.modal'
 import UserAccountModal from 'components/user/user.account.modal'
-import InputText from 'components/ui/input.text'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 import * as ErrorActions from 'actions/errors'
 
 export class Documents extends Component {
-  constructor() {
-    super(...arguments)
-
-    this.state = {
-      searchKeyword: '',
-      selectedDocument: null,
-      isNewDocModalOpen: false,
-      isUserAccountModalOpen: false
-    }
+  state = {
+    searchKeyword: '',
+    selectedDocument: null,
+    isNewDocModalOpen: false,
+    isUserAccountModalOpen: false
   }
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(DocumentActions.getDocuments())
     document.title = 'Publications — All Documents'
-    this.props.getDocuments()
   }
 
   componentWillUnmount() {
@@ -38,14 +33,14 @@ export class Documents extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.documents.length > this.props.documents.length) {
-      this.setState({isNewDocModalOpen: false})
+      this.setState({ isNewDocModalOpen: false })
     }
   }
 
   @autobind
   updateSelectedDocument(sender, event) {
     if (!!event) event.preventDefault()
-    this.setState({selectedDocument: sender})
+    this.setState({ selectedDocument: sender })
   }
 
   @autobind
@@ -69,12 +64,14 @@ export class Documents extends Component {
 
   @autobind
   createNewDocument(options) {
-    this.props.newDocument({
+    const { dispatch } = this.props
+
+    dispatch(DocumentActions.newDocument({
       name: options.name,
       width: options.width,
       height: options.height,
       shapes: options.shapes
-    })
+    }))
   }
 
   @autobind
@@ -82,7 +79,7 @@ export class Documents extends Component {
     const selectedDocument = this.state.selectedDocument
 
     if (selectedDocument) {
-      const {id} = selectedDocument
+      const { id } = selectedDocument
       this.props.history.push(`/documents/${id}/edit`)
     }
   }
@@ -90,56 +87,66 @@ export class Documents extends Component {
   @autobind
   deleteDocument() {
     const selectedDocument = this.state.selectedDocument
+    const { dispatch } = this.props
 
     if (!!selectedDocument) {
-      this.props.removeDocument(selectedDocument)
+      dispatch(DocumentActions.removeDocument(selectedDocument))
       this.setState({ selectedDocument: null })
     }
   }
 
   @autobind
   logOut() {
-    const {history, logoutUser, clearDocuments} = this.props
+    const { dispatch, history } = this.props
+    dispatch(UserActions.logoutUser(() => history.push('/')));
+    dispatch(DocumentActions.clearDocuments());
+  }
 
-    logoutUser(() => {
-      clearDocuments()
-      this.props.history.push('/')
-    })
+  @autobind
+  removeError(error) {
+    const { dispatch } = this.props
+    dispatch(ErrorActions.removeError(error))
+  }
+
+  @autobind
+  updateUser(user, completion) {
+    const { dispatch } = this.props
+    dispatch(UserActions.updateUser(user, completion))
+  }
+
+  renderDocumentItems() {
+    return this.props.documents
+      .filter(doc => {
+        if (!this.state.searchKeyword.length) {
+          return true
+        } else {
+          const searchKeyword = this.state.searchKeyword.toLowerCase()
+          return doc.name.toLowerCase().includes(searchKeyword)
+        }
+      })
+      .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
+      .map(doc => {
+        return <DocumentItem
+          key={doc.id}
+          doc={doc}
+          editDocument={this.editDocument}
+          selectedDocument={this.state.selectedDocument}
+          updateSelectedDocument={this.updateSelectedDocument} />
+      })
   }
 
   render() {
-    const { documents, children } = this.props
-
-    if (children) {
-      return <div>{ children }</div>
+    if (this.props.children) {
+      return <div>{ this.props.children }</div>
 
     } else {
-      const documentItems = documents
-         .filter(doc => {
-           if (!this.state.searchKeyword.length) {
-             return true
-           } else {
-             const searchKeyword = this.state.searchKeyword.toLowerCase()
-             return doc.name.toLowerCase().includes(searchKeyword)
-           }
-         })
-         .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
-         .map(doc => {
-           return <DocumentItem
-             key={doc.id}
-             doc={doc}
-             editDocument={this.editDocument}
-             selectedDocument={this.state.selectedDocument}
-             updateSelectedDocument={this.updateSelectedDocument} />
-         })
-
       return <div>
         <UserAccountModal
           userId={this.props.userId}
           userName={this.props.userName}
-          updateUser={this.props.updateUser}
+          updateUser={this.updateUser}
           errors={this.props.errors}
-          removeError={this.props.removeError}
+          removeError={this.removeError}
           isTemporaryUser={this.props.isTemporaryUser}
           toggleModal={this.toggleUserAccountModal}
           isOpen={this.state.isUserAccountModalOpen} />
@@ -161,11 +168,11 @@ export class Documents extends Component {
           logOut={this.logOut}
           toggleUserAccountModal={this.toggleUserAccountModal} />
         <div className="app-content">
-          <ul className="document-items" onClick={() => this.updateSelectedDocument(null, event)}>
+          <ul className="document-items" onClick={ () => this.updateSelectedDocument(null, event) }>
             <div className="input-text-search">
               <input
-                value={this.state.searchKeyword}
-                onChange={this.searchKeywordChanged}
+                value={ this.state.searchKeyword }
+                onChange={ this.searchKeywordChanged }
                 placeholder="Search for Documents"/>
             </div>
             <ReactCSSTransitionGroup
@@ -174,17 +181,15 @@ export class Documents extends Component {
               transitionAppearTimeout={0}
               transitionEnterTimeout={500}
               transitionLeaveTimeout={300}>
-              {documentItems}
+              { this.renderDocumentItems() }
             </ReactCSSTransitionGroup>
           </ul>
-          </div>
         </div>
+      </div>
     }
   }
 }
 
-const mapStateToProps = state => ({ ...state.user, ...state.doc, ...state.errors })
-const mapDispatchToProps = dispatch => bindActionCreators(
-    { ...UserActions, ...DocumentActions, ...ErrorActions }, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(Documents)
+export default connect(state => ({
+  ...state.user, ...state.doc, ...state.errors
+}))(Documents)
