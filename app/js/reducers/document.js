@@ -5,7 +5,6 @@ import {
   DELETE_DOCUMENT,
   REQUEST_DOCUMENT,
   RECEIVE_DOCUMENT,
-  PATCH_DOCUMENT,
   UPDATE_DOCUMENT,
   RESET_DOCUMENTS,
   UPDATE_SELECTED_SHAPE,
@@ -16,14 +15,16 @@ import {
   PASTE_SHAPE
 } from 'actions/document'
 
-export default function documentReducer(state = {
+const defaultState = {
   documents: [],
   currentDocument: null,
   selectedShape: null,
   clipboardData: null,
   isRequestingData: false,
   postDocumentFailure: false
-}, action) {
+}
+
+export default function documentReducer(state = defaultState, action) {
 
   switch (action.type) {
   case REQUEST_DOCUMENTS:
@@ -162,27 +163,26 @@ export default function documentReducer(state = {
     return { ...state, ...updatedState }
   }
 
-  case POST_DOCUMENT:
-    return Object.assign({}, state, {
-      documents: [...state.documents, action.doc]
-    })
+  case POST_DOCUMENT: {
+    const updatedState = { documents: [...state.documents, action.doc] }
+    return { ...state, ...updatedState }
+  }
 
-  case DELETE_DOCUMENT:
-    return Object.assign({}, state, {
-      documents: state.documents.filter(doc => doc.id !== action.doc.id)
-    })
+  case DELETE_DOCUMENT: {
+    const updatedState = { documents: state.documents.filter(doc => doc.id !== action.doc.id) }
+    return { ...state, ...updatedState }
+  }
 
   case RECEIVE_DOCUMENT:
   case UPDATE_DOCUMENT: {
-    let updatedState = {currentDocument: action.doc}
-
+    let updatedState = { currentDocument: action.doc }
 
     if (!action.doc) {
       updatedState.selectedShape = null
       updatedState.clipboardData = null
     }
 
-    return Object.assign({}, state, updatedState)
+    return { ...state, ...updatedState }
   }
 
   case RESET_DOCUMENTS:
