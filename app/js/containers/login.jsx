@@ -1,100 +1,55 @@
 import React, { Component } from 'react'
 import uuid from 'node-uuid'
 import { LoginAboutBox } from '../components/login/about'
+import { LoginForm } from '../components/login/loginForm'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { autobind } from 'core-decorators'
 import * as UserActions from 'actions/user'
 import * as ErrorsActions from 'actions/errors'
 
-import InputText from 'components/ui/input.text'
-
 export class Login extends Component {
-  constructor() {
-    super(...arguments)
-    this.state = {emailAddress: '', password: ''}
+  state = {
+    emailAddress: '',
+    password: ''
   }
 
   componentDidMount() {
-    this.props.getUser()
+    const { dispatch } = this.props
+    dispatch(UserActions.getUser())
   }
 
   @autobind
   createTestDriveAccount() {
-    this.props.createNewUser({
+    const { dispatch } = this.props
+    dispatch(UserActions.createNewUser({
       emailAddress: `${uuid.v4()}@publicationsapp.com`,
       password: 'password',
       temporary: true
-    })
+    }))
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {isAuthenticated, history, errors} = nextProps
-    this.setState({userAuthError: errors.indexOf('user_auth_error') !== -1})
-
+  componentWillReceiveProps({ isAuthenticated }) {
     if (isAuthenticated) {
-      history.push('/documents')
+      this.props.history.push('/documents')
     }
   }
 
   @autobind
-  loginFormValueChanged(event) {
-    this.setState({
-      [event.target.name] : event.target.value
-    })
+  loginFormValueChanged({ target }) {
+    this.setState({ [target.name] : target.value })
   }
 
   @autobind
   logInFormSubmitted(event) {
+    const { dispatch } = this.props
     event.preventDefault()
 
-    this.props.removeError('user_auth_error')
-
-    this.props.login({
+    dispatch(ErrorsActions.removeError('user_auth_error'))
+    dispatch(UserActions.login({
       emailAddress: this.state.emailAddress,
       password: this.state.password
-    })
-  }
-
-  renderLoginForm() {
-    const errorMessage = this.state.userAuthError ?
-      <div className="error-msg">The password or email address was incorrect. Please try again.</div> : undefined
-
-    return <form
-      onSubmit={this.logInFormSubmitted}>
-      { errorMessage }
-      <div>
-        <InputText
-          placeholder="Email Address"
-          name="emailAddress"
-          style="half left"
-          type="text"
-          value={this.state.emailAddress}
-          valueChanged={this.loginFormValueChanged} />
-        <InputText
-          placeholder="Password"
-          name="password"
-          style="half right"
-          type="password"
-          value={ this.state.password }
-          valueChanged={ this.loginFormValueChanged } />
-      </div>
-      <div className="buttons">
-        <button
-          type="submit"
-          className="btn big">
-          Log In
-        </button>
-        <button
-          type="button"
-          className="button test-drive-btn"
-          onClick={ this.createTestDriveAccount }
-          role="button">
-          or test drive Publications without an account
-        </button>
-      </div>
-    </form>
+    }))
   }
 
   render() {
@@ -108,16 +63,19 @@ export class Login extends Component {
       <div className="index-container">
         <div className="index-logo"></div>
         <p className="index-intro-text">{ introText }</p>
-        { this.renderLoginForm() }
+        <LoginForm
+          errors={this.props.errors}
+          emailAddress={this.state.emailAddress}
+          password={this.state.password}
+          formSubmitted={this.logInFormSubmitted}
+          formValueChanged={this.loginFormValueChanged}
+          createTestDriveAccount={this.createTestDriveAccount} />
         <LoginAboutBox />
       </div>
     </div>
   }
 }
 
-const mapStateToProps = state => ({ ...state.user, ...state.errors })
-
-const mapDispatchToProps = dispatch => bindActionCreators(
-  { ...UserActions, ...ErrorsActions }, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(state => ({
+  ...state.user, ...state.errors
+}))(Login)

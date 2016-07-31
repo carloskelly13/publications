@@ -10,8 +10,6 @@ import RulerVertical from 'components/rulers/ruler.vertical'
 import ShapeFactory from 'core/shape.factory'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 
 export class Document extends Component {
@@ -21,8 +19,8 @@ export class Document extends Component {
   }
 
   componentDidMount() {
-    const { id } = this.props.params
-    this.props.getDocument(id)
+    const { params, dispatch } = this.props
+    dispatch(DocumentActions.getDocument(params.id))
   }
 
   componentWillUnmount() {
@@ -37,39 +35,45 @@ export class Document extends Component {
 
   @autobind
   updateShape(sender) {
-    this.props.updateSelectedShape(sender)
+    const { dispatch } = this.props
+    dispatch(DocumentActions.updateSelectedShape(sender))
   }
 
   @autobind
   save() {
-    this.props.saveDocument(this.props.currentDocument)
+    const { currentDocument, dispatch } = this.props
+    dispatch(DocumentActions.saveDocument(currentDocument))
   }
 
   @autobind
   addNewShape(type) {
-    let newShape
+    const { currentDocument, dispatch } = this.props
 
-    if (type === 'ellipse') {
-      newShape = ShapeFactory.Ellipse()
-    } else if (type === 'text') {
-      newShape = ShapeFactory.Text()
-    } else {
-      newShape = ShapeFactory.Rectangle()
+    const newShapeOfType = type => {
+      if (type === 'ellipse') {
+        return ShapeFactory.Ellipse()
+      } else if (type === 'text') {
+        return ShapeFactory.Text()
+      } else {
+        return ShapeFactory.Rectangle()
+      }
     }
 
-    newShape.z = this.props.currentDocument.shapes.length + 1
-    newShape.id = this.props.currentDocument.shapes.length + 1
-
-    this.props.addShape(newShape)
+    const newShape = newShapeOfType(type)
+    newShape.z = currentDocument.shapes.length + 1
+    newShape.id = currentDocument.shapes.length + 1
+    dispatch(DocumentActions.addShape(newShape))
   }
 
   @autobind
   viewAllDocuments() {
-    this.props.saveDocument(this.props.currentDocument, () => {
-      this.props.getDocuments()
-      this.props.documentChanged(null)
-      this.props.history.push('/documents')
-    })
+    const { dispatch, currentDocument, history } = this.props
+
+    dispatch(DocumentActions.saveDocument(currentDocument, () => {
+      dispatch(DocumentActions.getDocuments())
+      dispatch(DocumentActions.documentChanged(null))
+      history.push('/documents')
+    }))
   }
 
   @autobind
@@ -79,17 +83,47 @@ export class Document extends Component {
 
   @autobind
   changeZoom(sender) {
-    const { zoom: currentZoom } = this.state
+    const { zoom } = this.state
 
-    if (sender === 'zoom-in' && currentZoom < 5.0) {
-      this.setState({zoom: currentZoom + 0.25})
-    } else if (sender === 'zoom-out' && currentZoom > 0.25) {
-      this.setState({zoom: currentZoom - 0.25})
+    if (sender === 'zoom-in' && zoom < 5.0) {
+      this.setState({zoom: zoom + 0.25})
+    } else if (sender === 'zoom-out' && zoom > 0.25) {
+      this.setState({zoom: zoom - 0.25})
     }
   }
 
+  @autobind
+  updateDocumentProperty(sender) {
+    const { dispatch } = this.props
+    dispatch(DocumentActions.updateDocumentProperty(sender))
+  }
+
+  @autobind
+  deleteShape(shape) {
+    const { dispatch } = this.props
+    dispatch(DocumentActions.deleteShape(shape))
+  }
+
+  @autobind
+  cutShape(shape) {
+    const { dispatch } = this.props
+    dispatch(DocumentActions.cutShape(shape))
+  }
+
+  @autobind
+  copyShape(shape) {
+    const { dispatch } = this.props
+    dispatch(DocumentActions.copyShape(shape))
+  }
+
+  @autobind
+  pasteShape() {
+    const { dispatch } = this.props
+    dispatch(DocumentActions.pasteShape())
+  }
+
   render() {
-    const { currentDocument, selectedShape, updateDocumentProperty } = this.props
+    const { currentDocument, selectedShape } = this.props
     const DPI = 72.0
 
     if (currentDocument) {
@@ -98,10 +132,10 @@ export class Document extends Component {
           doc={currentDocument}
           changeZoom={this.changeZoom}
           clipboard={this.props.clipboardData}
-          deleteShape={this.props.deleteShape}
-          cutShape={this.props.cutShape}
-          copyShape={this.props.copyShape}
-          pasteShape={this.props.pasteShape}
+          deleteShape={this.deleteShape}
+          cutShape={this.cutShape}
+          copyShape={this.copyShape}
+          pasteShape={this.pasteShape}
           selectedShape={selectedShape}
           save={this.save}
           showInspector={this.state.showInspector}
@@ -116,7 +150,7 @@ export class Document extends Component {
             dpi={DPI}
             zoom={this.state.zoom}
             selectedShape={selectedShape}
-            updateDocument={updateDocumentProperty}
+            updateDocument={this.updateDocumentProperty}
             updateShape={this.updateShape}
             showInspector={this.state.showInspector} />
           <RulerVertical
@@ -147,7 +181,4 @@ export class Document extends Component {
   }
 }
 
-const mapStateToProps = state => state.doc
-const mapDispatchToProps = dispatch => bindActionCreators(DocumentActions, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(Document)
+export default connect(({ doc }) => doc)(Document)

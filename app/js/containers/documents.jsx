@@ -21,7 +21,7 @@ export class Documents extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch } = this.props
     dispatch(DocumentActions.getDocuments())
     document.title = 'Publications — All Documents'
   }
