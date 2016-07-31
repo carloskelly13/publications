@@ -1,34 +1,37 @@
-module.exports = function(config) {
+const webpackConfig = require('./webpack.config')
+const testWebpackConfig = Object.assign({}, webpackConfig, {
+  devtool: 'inline-source-map',
+  entry: {},
+  watch: true
+})
+
+module.exports = config => {
   config.set({
+    basePath: './test/',
 
-    basePath: './app/js/',
-
-    frameworks: ['mocha', 'browserify'],
+    frameworks: [ 'mocha', 'chai' ],
 
     files: [
-      '../../node_modules/chai/chai.js',
-      '../../node_modules/sinon/pkg/sinon.js',
-      '../../node_modules/sinon-chai/lib/sinon-chai.js',
-      '../../config/test.globals.js',
       '**/*.spec.js'
     ],
 
     preprocessors: {
-     '**/*.spec.js': ['browserify']
-   },
+      '**/*.spec.js' : [ 'webpack' ]
+    },
 
+    webpack: testWebpackConfig,
 
-   browserify: {
-     debug: true,
-     transform: [ 'babelify', 'reactify' ],
-     plugin: ['proxyquire-universal'],
-     extensions: ['.js', '.jsx']
-   },
+    colors: true,
 
-   colors: true,
+    browsers: [ 'Chrome' ],
 
-   browsers: ['ChromeCanary'],
+    singleRun: true,
 
-   singleRun: false
-  });
-};
+    plugins: [
+      'karma-webpack',
+      'karma-mocha',
+      'karma-chai',
+      'karma-chrome-launcher'
+    ]
+  })
+}
