@@ -27,10 +27,10 @@
     "react-addons-shallow-compare": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^4.0.6",
-    "react-router": "^1.0.3",
+    "react-router": "^2.6.1",
+    "react-router-redux": "^4.0.5",
     "redux": "^3.0.5",
-    "redux-simple-router": "^1.0.2",
-    "redux-thunk": "^1.0.3",
+    "redux-thunk": "^2.1.0",
     "uuid4": "^1.0.0",
     "validator": "^4.0.2"
   },

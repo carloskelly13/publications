@@ -1,8 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { Router, IndexRoute, Route } from 'react-router'
-import { syncReduxAndRouter } from 'redux-simple-router'
+import { Router } from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
 import configureStore from 'stores/configureStore'
 import { createHashHistory } from 'history/lib'
 
@@ -13,7 +13,6 @@ import Document from 'containers/document'
 
 import { getUser } from 'actions/user'
 
-const history = createHashHistory()
 const store = configureStore()
 
 const requireAuth = (nextState, replaceState, callback) => {
@@ -35,7 +34,7 @@ const requireAuth = (nextState, replaceState, callback) => {
 }
 
 export const startAppRouter = () => {
-  syncReduxAndRouter(history, store, state => state.router)
+  const history = syncHistoryWithStore(createHashHistory(), store)
 
   const routes = {
     path: '/',
@@ -58,8 +57,8 @@ export const startAppRouter = () => {
     ]
   }
 
-  const router = <Provider store={ store }>
-    <Router history={ history } routes={ routes } />
+  const router = <Provider store={store}>
+    <Router history={history} routes={routes} />
   </Provider>
 
   render(router, document.getElementById('pub-app'))
