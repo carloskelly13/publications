@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { autobind } from 'core-decorators'
+import { Urls } from 'core/constants'
 
 import DocumentsNavbar from 'components/documents/documents.navbar'
 import DocumentItem from 'components/documents/document.item'
@@ -15,9 +16,12 @@ import * as ErrorActions from 'actions/errors'
 export class Documents extends Component {
   state = {
     searchKeyword: '',
-    selectedDocument: null,
     isNewDocModalOpen: false,
     isUserAccountModalOpen: false
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
   componentDidMount() {
@@ -31,7 +35,7 @@ export class Documents extends Component {
     document.title = 'Publications'
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps, nextState) {
     if (nextProps.documents.length > this.props.documents.length) {
       this.setState({ isNewDocModalOpen: false })
     }
@@ -40,7 +44,8 @@ export class Documents extends Component {
   @autobind
   updateSelectedDocument(sender, event) {
     if (!!event) event.preventDefault()
-    this.setState({ selectedDocument: sender })
+    const { dispatch } = this.props
+    dispatch(DocumentActions.updateCurrentDocument(sender))
   }
 
   @autobind
@@ -76,29 +81,29 @@ export class Documents extends Component {
 
   @autobind
   editDocument() {
-    const selectedDocument = this.state.selectedDocument
+    const { currentDocument } = this.props
 
-    if (selectedDocument) {
-      const { id } = selectedDocument
-      this.props.history.push(`/documents/${id}/edit`)
+    if (!!currentDocument) {
+      const { id } = currentDocument
+      this.context.router.push(`/documents/${id}/edit`)
     }
   }
 
   @autobind
   deleteDocument() {
-    const selectedDocument = this.state.selectedDocument
+    const { currentDocument } = this.props
     const { dispatch } = this.props
 
-    if (!!selectedDocument) {
-      dispatch(DocumentActions.removeDocument(selectedDocument))
+    if (!!currentDocument) {
+      dispatch(DocumentActions.removeDocument(currentDocument))
       this.setState({ selectedDocument: null })
     }
   }
 
   @autobind
   logOut() {
-    const { dispatch, history } = this.props
-    dispatch(UserActions.logoutUser(() => history.push('/')));
+    const { dispatch } = this.props
+    dispatch(UserActions.logoutUser(() => this.context.router.push('/')));
     dispatch(DocumentActions.clearDocuments());
   }
 
@@ -130,9 +135,48 @@ export class Documents extends Component {
           key={doc.id}
           doc={doc}
           editDocument={this.editDocument}
-          selectedDocument={this.state.selectedDocument}
+          selectedDocument={this.props.currentDocument}
           updateSelectedDocument={this.updateSelectedDocument} />
       })
+  }
+
+  renderModals() {
+    return <div>
+      <UserAccountModal
+        userId={this.props.userId}
+        userName={this.props.userName}
+        updateUser={this.updateUser}
+        errors={this.props.errors}
+        removeError={this.removeError}
+        isTemporaryUser={this.props.isTemporaryUser}
+        toggleModal={this.toggleUserAccountModal}
+        isOpen={this.state.isUserAccountModalOpen} />
+      <NewDocumentModal
+        createNewDocument={this.createNewDocument}
+        toggleNewDocumentModal={this.toggleNewDocumentModal}
+        isOpen={this.state.isNewDocModalOpen} />
+    </div>
+  }
+
+  renderPageContent() {
+    return <div className="app-content">
+      <ul className="document-items" onClick={ () => this.updateSelectedDocument(null, event) }>
+        <div className="input-text-search">
+          <input
+            value={ this.state.searchKeyword }
+            onChange={ this.searchKeywordChanged }
+            placeholder="Search for Documents"/>
+        </div>
+        <ReactCSSTransitionGroup
+          transitionName="document-item-animation"
+          transitionAppear={true}
+          transitionAppearTimeout={0}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
+          { this.renderDocumentItems() }
+        </ReactCSSTransitionGroup>
+      </ul>
+    </div>
   }
 
   render() {
@@ -141,19 +185,6 @@ export class Documents extends Component {
 
     } else {
       return <div>
-        <UserAccountModal
-          userId={this.props.userId}
-          userName={this.props.userName}
-          updateUser={this.updateUser}
-          errors={this.props.errors}
-          removeError={this.removeError}
-          isTemporaryUser={this.props.isTemporaryUser}
-          toggleModal={this.toggleUserAccountModal}
-          isOpen={this.state.isUserAccountModalOpen} />
-        <NewDocumentModal
-          createNewDocument={this.createNewDocument}
-          toggleNewDocumentModal={this.toggleNewDocumentModal}
-          isOpen={this.state.isNewDocModalOpen} />
         <DocumentsNavbar
           isTemporaryUser={this.props.isTemporaryUser}
           isAuthenticated={this.props.isAuthenticated}
@@ -166,30 +197,15 @@ export class Documents extends Component {
           searchKeywordChanged={this.searchKeywordChanged}
           userName={this.props.userName}
           logOut={this.logOut}
-          toggleUserAccountModal={this.toggleUserAccountModal} />
-        <div className="app-content">
-          <ul className="document-items" onClick={ () => this.updateSelectedDocument(null, event) }>
-            <div className="input-text-search">
-              <input
-                value={ this.state.searchKeyword }
-                onChange={ this.searchKeywordChanged }
-                placeholder="Search for Documents"/>
-            </div>
-            <ReactCSSTransitionGroup
-              transitionName="document-item-animation"
-              transitionAppear={true}
-              transitionAppearTimeout={0}
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={300}>
-              { this.renderDocumentItems() }
-            </ReactCSSTransitionGroup>
-          </ul>
-        </div>
+          toggleUserAccountModal={this.toggleUserAccountModal}
+        />
+        { this.renderModals() }
+        { this.renderPageContent() }
       </div>
     }
   }
 }
 
 export default connect(state => ({
-  ...state.user, ...state.doc, ...state.errors
+  ...state.user, ...state.doc, ...state.errors, ...state.ui
 }))(Documents)

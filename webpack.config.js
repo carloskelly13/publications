@@ -78,7 +78,7 @@ module.exports = env => {
       ifDev(new webpack.HotModuleReplacementPlugin()),
 
       new webpack.DefinePlugin({
-        'process.env': { NODE_ENV: '"production"', },
+        'process.env': { NODE_ENV: '"development"', },
       }),
 
       ifProd(new webpack.optimize.UglifyJsPlugin({

@@ -9,8 +9,7 @@ export default function userReducer(state = {
   userName: '',
   isAuthenticated: false,
   isTemporaryUser: false,
-  isRequestingUser: false,
-  failedAuthentication: false
+  isRequestingUser: false
 }, action) {
 
   switch(action.type) {
@@ -21,8 +20,7 @@ export default function userReducer(state = {
       userName: action.userJson.emailAddress,
       isAuthenticated: action.userJson.isAuthenticated,
       isTemporaryUser: action.userJson.temporary,
-      isRequestingUser: false,
-      failedAuthentication: action.userJson.failedAuthentication || false
+      isRequestingUser: false
     }
 
   case REQUEST_USER:
@@ -31,8 +29,7 @@ export default function userReducer(state = {
       userName: '',
       isAuthenticated: false,
       isTemporaryUser: false,
-      isRequestingUser: true,
-      failedAuthentication: false
+      isRequestingUser: true
     }
 
   default:

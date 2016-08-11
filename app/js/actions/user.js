@@ -40,7 +40,6 @@ export function login(data = {emailAddress: '', password: ''}) {
     .then(json => {
       const data = {
         ...json,
-        failedAuthentication: false,
         isAuthenticated: true
       }
 
@@ -60,7 +59,6 @@ export function logoutUser(completion = () => {}) {
       dispatch(receiveUser({
         name: '',
         temporary: false,
-        failedAuthentication: false,
         isAuthenticated: false
       }))
 
@@ -95,13 +93,11 @@ export function getUser() {
     })
     .then(userJson => dispatch(receiveUser({
       ...userJson,
-      failedAuthentication: false,
       isAuthenticated: true
     })))
     .catch(() => dispatch(receiveUser({
       name: '',
       temporary: false,
-      failedAuthentication: true,
       isAuthenticated: false
     })))
   }

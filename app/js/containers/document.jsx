@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { autobind } from 'core-decorators'
+import { Urls } from 'core/constants'
 
 import Canvas from 'components/canvas/canvas'
 import DocumentNavbar from 'components/document/document.navbar'
@@ -16,6 +17,10 @@ export class Document extends Component {
   state = {
     showInspector: true,
     zoom: 1.0
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
   componentDidMount() {
@@ -67,12 +72,12 @@ export class Document extends Component {
 
   @autobind
   viewAllDocuments() {
-    const { dispatch, currentDocument, history } = this.props
+    const { dispatch, currentDocument } = this.props
 
     dispatch(DocumentActions.saveDocument(currentDocument, () => {
       dispatch(DocumentActions.getDocuments())
       dispatch(DocumentActions.documentChanged(null))
-      history.push('/documents')
+      this.context.router.push('/documents')
     }))
   }
 

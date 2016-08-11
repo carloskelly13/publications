@@ -206,7 +206,7 @@ export default class ShapeFrame extends Component {
         width={frameAnchors.size}
         height={frameAnchors.size}
         stroke="hsla(0, 0%, 0%, 0.5)"
-        stroke-width="1"
+        strokeWidth="1"
         fill="#fff"
         fill-opacity="1"
         stroke-opacity="1"
@@ -224,7 +224,7 @@ export default class ShapeFrame extends Component {
         fill="hsla(0, 0%, 0%, 0.0)"
         fill-opacity="0"
         stroke="hsla(0, 0%, 0%, 0.5)"
-        stroke-width={1}
+        strokeWidth={1}
         onMouseDown={this.frameSelected}
         onDoubleClick={this.frameDoubleClicked} />
       { textEditingFrame() }

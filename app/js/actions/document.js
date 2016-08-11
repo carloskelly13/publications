@@ -25,6 +25,13 @@ export function updateSelectedShape(selectedShape) {
   })
 }
 
+export function updateCurrentDocument(doc) {
+  return dispatch => dispatch({
+    type: RECEIVE_DOCUMENT,
+    doc
+  })
+}
+
 export function addShape(newShape) {
   return dispatch => dispatch({
     type: ADD_SHAPE,

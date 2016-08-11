@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import uuid from 'node-uuid'
 import { LoginAboutBox } from '../components/login/about'
 import { LoginForm } from '../components/login/loginForm'
@@ -12,6 +12,10 @@ export class Login extends Component {
   state = {
     emailAddress: '',
     password: ''
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
   componentDidMount() {
@@ -31,7 +35,7 @@ export class Login extends Component {
 
   componentWillReceiveProps({ isAuthenticated }) {
     if (isAuthenticated) {
-      this.props.history.push('/documents')
+      this.context.router.push('/documents')
     }
   }
 
