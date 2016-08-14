@@ -6,7 +6,7 @@
   border-left: 1px solid hsla(0, 0%, 0%, 0.33);
   height: inherit;
   position: fixed;
-  right: -@inspector-width;
+  right: -@inspector-width - 1px;
   top: 40px;
   width: @inspector-width;
   z-index: 8000;
@@ -25,7 +25,7 @@
 
   .inspector-content-section {
     padding: 10px 10px 0;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid #aaa;
 
     .input-picker, .input-text, .segmented-control, .btn {
       margin-bottom: 10px;
@@ -39,7 +39,7 @@
     bottom: 0;
     right: 0;
     left: 0;
-    padding-top: 30px;
+    padding-top: 35px;
     width: 100%;
     z-index: 1;
 
@@ -66,8 +66,8 @@
 
     .tab-button {
       cursor: pointer;
-      border-right: 1px solid #999;
-      border-bottom: 1px solid #999;
+      border-right: 1px solid #aaa;
+      border-bottom: 1px solid #aaa;
       box-sizing: border-box;
       display: inline-block;
       padding: 0.7em 0 0.5em;
@@ -79,8 +79,7 @@
       }
 
       &.active {
-        background: #aaa;
-        color: #fff;
+        background: #ddd;
       }
 
       &:last-child {
