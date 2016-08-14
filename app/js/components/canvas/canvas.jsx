@@ -50,10 +50,11 @@ const Canvas = ({
       version="1.1">
       <g>
         <CanvasBackground
-          selectable={ selectable }
-          doc={ doc }
-          dpi={ dpi }
-          zoom={ zoom } />
+          updateShape={updateShape}
+          selectable={selectable}
+          doc={doc}
+          dpi={dpi}
+          zoom={zoom} />
       </g>
       <g>{ shapeElements(shapeProps, doc) }</g>
     </svg>
