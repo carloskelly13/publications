@@ -16,9 +16,8 @@ export default class DocumentNavbar extends Component {
 
   render() {
     return (
-      <div className="navbar-container">
-        <div className="navbar-controls-left">
-          <AboutButton />
+      <div className="toolbar">
+        <div className="scroll-view">
           <button className="button" onClick={this.props.save}>Save</button>
           <a
             className="button"
@@ -27,8 +26,7 @@ export default class DocumentNavbar extends Component {
             PDF
           </a>
           <button className="button" onClick={this.props.viewAllDocuments}>All Documents</button>
-        </div>
-        <div className="navbar-controls-right">
+          <div className="spacer"></div>
           <button className="button button-icon" onClick={this.zoomIn}>
             <span className="icon icon-zoom-in"></span>
           </button>
@@ -50,7 +48,7 @@ export default class DocumentNavbar extends Component {
             <span className="icon icon-delete"></span>
           </button>
           <div className="spacer"></div>
-          <button className="button button-icon" onClick={this.props.toggleInspector}>
+          <button className="button button-icon button--inspector" onClick={this.props.toggleInspector}>
             <span className={`icon icon-inspector ${this.props.showInspector ? 'active' : ''}`}></span>
           </button>
         </div>

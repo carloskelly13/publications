@@ -3,14 +3,13 @@ import {autobind} from 'core-decorators'
 import AboutAppModal from './about.modal'
 
 export default class AboutButton extends Component {
-  constructor() {
-    super(...arguments)
-    this.state = {isAboutAppModalOpen: false}
+  state = {
+    isAboutAppModalOpen: false
   }
 
   @autobind
   toggleAboutAppModal() {
-    this.setState({isAboutAppModalOpen: !this.state.isAboutAppModalOpen})
+    this.setState({ isAboutAppModalOpen: !this.state.isAboutAppModalOpen })
   }
 
   render() {
@@ -20,7 +19,10 @@ export default class AboutButton extends Component {
           toggleModal={this.toggleAboutAppModal}
           isOpen={this.state.isAboutAppModalOpen}
         />
-        <div className="navbar-logo" onClick={this.toggleAboutAppModal}>
+        <div
+          className="navbar-logo"
+          onClick={this.toggleAboutAppModal}
+        >
           <div className="navbar-logo-icon"></div>
         </div>
       </div>

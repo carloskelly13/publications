@@ -4,12 +4,12 @@
     <title>infomation-circle-blue</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="info-circle-blue" sketch:type="MSLayerGroup" stroke="#0000C4">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="#fff" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="info-circle-blue" sketch:type="MSLayerGroup">
             <g id="Group" sketch:type="MSShapeGroup">
-                <circle id="Oval" cx="11.5" cy="11.5" r="11"></circle>
-                <path d="M8.5,18.5 L14.5,18.5 M9.5,9.5 L11.5,9.5 L11.5,18" id="Shape"></path>
-                <path d="M11,5 C10.723,5 10.5,5.225 10.5,5.5 C10.5,5.777 10.723,6 11,6 C11.275,6 11.5,5.777 11.5,5.5 C11.5,5.225 11.275,5 11,5 L11,5 Z" id="Shape"></path>
+                <circle stroke="#fff" id="Oval" cx="11.5" cy="11.5" r="11"></circle>
+                <path stroke="#000" d="M8.5,18.5 L14.5,18.5 M9.5,9.5 L11.5,9.5 L11.5,18" id="Shape"></path>
+                <path stroke="#000" d="M11,5 C10.723,5 10.5,5.225 10.5,5.5 C10.5,5.777 10.723,6 11,6 C11.275,6 11.5,5.777 11.5,5.5 C11.5,5.225 11.275,5 11,5 L11,5 Z" id="Shape"></path>
             </g>
         </g>
     </g>

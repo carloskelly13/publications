@@ -208,8 +208,8 @@ export default class ShapeFrame extends Component {
         stroke="hsla(0, 0%, 0%, 0.5)"
         strokeWidth="1"
         fill="#fff"
-        fill-opacity="1"
-        stroke-opacity="1"
+        fillOpacity="1"
+        strokeOpacity="1"
         style={style}
         data-coordinate={anchor.coordinate}
         onMouseDown={this.resizeAnchorSelected} />
@@ -222,7 +222,7 @@ export default class ShapeFrame extends Component {
         height={height}
         width={width}
         fill="hsla(0, 0%, 0%, 0.0)"
-        fill-opacity="0"
+        fillOpacity="0"
         stroke="hsla(0, 0%, 0%, 0.5)"
         strokeWidth={1}
         onMouseDown={this.frameSelected}

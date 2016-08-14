@@ -1,0 +1,63 @@
+.toolbar {
+  .valign-container-space-between;
+
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  background: fade(#000, 85%);
+  .retina-background('white-logo-26', 26px, 26px);
+  background-position: 8px center;
+  height: 40px;
+  position: fixed;
+  width: 100%;
+  z-index: 9000;
+
+  .scroll-view {
+    color: #fff;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin: 0 0 0 40px;
+    white-space: nowrap;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .button {
+      color: #ddd;
+
+      &:hover, &:active {
+        color: #fff;
+      }
+
+      &:disabled {
+        color: #777;
+      }
+    }
+
+    .spacer {
+      display: inline-block;
+      width: 25px;
+    }
+
+    .button--inspector, .button--logout {
+      float: right;
+      margin: 8px 3px 0 0px;
+    }
+
+    .button--logout {
+      margin-top: 11px;
+    }
+  }
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .toolbar {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: fade(#000, 85%);
+    .retina-background('white-logo-26', 26px, 26px);
+    background-position: 8px center;
+  }
+}

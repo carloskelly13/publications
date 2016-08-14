@@ -12,8 +12,8 @@ import Document from 'containers/document'
 
 import { getUser } from 'actions/user'
 
-
 export const startAppRouter = () => {
+
   const getRoutes = store => {
 
     const requireAuth = (nextState, replace, callback) => {

@@ -5,7 +5,7 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="info-circle" sketch:type="MSLayerGroup" stroke="#444444">
+        <g id="info-circle" sketch:type="MSLayerGroup" stroke="#fff">
             <g id="Group" sketch:type="MSShapeGroup">
                 <circle id="Oval" cx="11.5" cy="11.5" r="11"></circle>
                 <path d="M8.5,18.5 L14.5,18.5 M9.5,9.5 L11.5,9.5 L11.5,18" id="Shape"></path>
