@@ -1,3 +1,6 @@
+@import 'support';
+@import 'variables';
+
 .inspector-container {
   .no-select;
   .animation(right, 0.25s);
@@ -13,10 +16,11 @@
   overflow: hidden;
 
   h1 {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
-    padding: 0 0 0.75em;
-    color: #444;
+    padding: 0 0 10px;
+    color: #656773;
+    text-transform: uppercase;
   }
 
   &.visible {
@@ -25,7 +29,7 @@
 
   .inspector-content-section {
     padding: 10px 10px 0;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid #b8b7b9;
 
     .input-picker, .input-text, .segmented-control, .btn {
       margin-bottom: 10px;
@@ -66,8 +70,8 @@
 
     .tab-button {
       cursor: pointer;
-      border-right: 1px solid #aaa;
-      border-bottom: 1px solid #aaa;
+      border-right: 1px solid #b8b7b9;
+      border-bottom: 1px solid #b8b7b9;
       box-sizing: border-box;
       display: inline-block;
       padding: 0.7em 0 0.5em;
@@ -75,11 +79,11 @@
       width: 50%;
 
       &:hover {
-        background: #eee;
+        .gradient(#fff, #f2f2f2);
       }
 
       &.active {
-        background: #ddd;
+        .gradient(#f7f7f7, #f0f0f0);
       }
 
       &:last-child {
@@ -95,7 +99,7 @@
     li {
       border: 1px transparent solid;
       box-sizing: border-box;
-      padding: 2px;
+      padding: 0;
       margin: 10px 0;
       cursor: default;
 
@@ -104,25 +108,16 @@
       }
 
       &.layer-active {
-        border-color: #999;
+        .gradient(#fff, #f2f2f2);
+        border: 1px solid #d3d2d4;
+        border-bottom-color: #b8b7b9;
         border-radius: 4px;
-
-        // .layer-item-size {
-        //   color: #fff;
-        // }
-        //
-        // .layer-item-icon {
-        //   &.layer-item-icon-text {
-        //     border-color: #fff;
-        //     background: #fff;
-        //   }
-        // }
       }
 
       .layer-item-icon {
         display: inline-block;
         border-radius: 2px;
-        margin: -1px 8px 0 1px;
+        margin: -1px 8px 0 2px;
         width: 20px; height: 19px;
         vertical-align: middle;
 

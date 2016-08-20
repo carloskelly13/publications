@@ -1,3 +1,6 @@
+@import 'variables';
+@import 'support';
+
 .input-text-search {
   text-align: center;
 
@@ -9,8 +12,9 @@
     font-weight: 400;
     font-size: 15px;
     display: inline-block;
-    background: transparent;
-    border: 1px #aaa solid;
+    .gradient(#fff, #f2f2f2);
+    border: 1px solid #d3d2d4;
+    border-bottom-color: #b8b7b9;
     border-radius: 4px;
     line-height: 29px;
     height: 29px;
@@ -138,18 +142,17 @@
   input[type="number"],
   input[type="password"],
   select {
-    background: transparent;
-    border: 1px transparent solid;
     border-radius: 4px;
     box-sizing: border-box;
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1em;
     margin: 0;
-    padding: 4px 4px 5px;
+    padding: 6px;
     vertical-align: middle;
     width: 100%;
-    background: #fff;
-    border-color: #616161;
+    .gradient(#f9f9f9, #fff);
+    border: 1px solid #d3d2d4;
+    border-bottom-color: #b8b7b9;
     color: #444;
 
     &.has-unit {

@@ -1,13 +1,17 @@
+@import 'variables';
+@import 'support';
+
 .toolbar {
   .valign-container-space-between;
 
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  background: fade(#000, 85%);
-  .retina-background('white-logo-26', 26px, 26px);
-  background-position: 8px center;
+  background: #fff;
+  .retina-background('publications-logo-27', 27px, 27px);
+  background-position: 7px center;
   height: 40px;
+  border-bottom: 1px #b8b7b9 solid;
   position: fixed;
   width: 100%;
   z-index: 9000;
@@ -25,10 +29,10 @@
     }
 
     .button {
-      color: #ddd;
+      color: #3c3d3f;
 
       &:hover, &:active {
-        color: #fff;
+        color: #000;
       }
 
       &:disabled {
@@ -49,15 +53,5 @@
     .button--logout {
       margin-top: 11px;
     }
-  }
-}
-
-@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-  .toolbar {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    background: fade(#000, 85%);
-    .retina-background('white-logo-26', 26px, 26px);
-    background-position: 8px center;
   }
 }
