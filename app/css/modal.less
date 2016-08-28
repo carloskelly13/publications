@@ -33,21 +33,40 @@
   &.modal-new-document {
     height: 300px;
     width: 360px;
+
+    @media all and (max-width: 767px) {
+      width: 100%;
+      height: auto;
+    }
   }
 
   &.modal-pdf {
     height: 180px;
     width: 360px;
+
+    @media all and (max-width: 767px) {
+      width: 100%;
+      height: auto;
+    }
   }
 
   &.modal-about {
     width: 360px;
     height: 300px;
 
+    @media all and (max-width: 767px) {
+      width: 100%;
+      height: auto;
+    }
+
     .pub-logo-73 {
       .retina-picture('pub-logo-73-72', 73px, 72px, block);
       margin: 0 0 10px;
     }
+  }
+
+  @media all and (max-width: 767px) {
+    border-radius: 0;
   }
 
   .modal-content {
@@ -104,14 +123,6 @@
   }
 }
 
-@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-  .modal {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    background-color: hsla(0, 0%, 100%, 0.7);
-  }
-}
-
 .modal-cover {
   background: hsla(0, 0%, 0%, 0.33);
   bottom: 0;
@@ -122,4 +133,35 @@
   top: 0;
   width: 100%;
   z-index: 9500;
+}
+
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .modal {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: hsla(0, 0%, 100%, 0.7);
+  }
+
+  @media all and (max-width: 767px) {
+    .modal {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      background: transparent;
+      box-shadow: none;
+      top: 0;
+
+      .modal-form-buttons {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        padding: 10px 0 0 0;
+      }
+    }
+
+    .modal-cover {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background-color: hsla(0, 0%, 100%, 0.65);
+    }
+  }
 }

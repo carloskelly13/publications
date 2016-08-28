@@ -35,7 +35,7 @@
         color: #000;
       }
 
-      &:disabled {
+      &:disabled, &.disabled {
         color: #777;
       }
     }
@@ -48,10 +48,19 @@
     .button--inspector, .button--logout {
       float: right;
       margin: 8px 3px 0 0px;
+
+      @media all and (max-width: 767px) {
+        float: none;
+        margin: 0;
+      }
     }
 
     .button--logout {
       margin-top: 11px;
+
+      @media all and (max-width: 767px) {
+        margin-top: 0;
+      }
     }
   }
 }

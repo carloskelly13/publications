@@ -187,11 +187,11 @@ export class Documents extends Component {
         <DocumentsNavbar
           isTemporaryUser={this.props.isTemporaryUser}
           isAuthenticated={this.props.isAuthenticated}
-          documentIsSelected={this.state.selectedDocument !== null}
+          documentIsSelected={this.props.currentDocument !== null}
           editDocument={this.editDocument}
           deleteDocument={this.deleteDocument}
           createNewDocument={this.toggleNewDocumentModal}
-          selectedDocument={this.state.selectedDocument}
+          selectedDocument={this.props.currentDocument}
           searchKeyword={this.state.searchKeyword}
           searchKeywordChanged={this.searchKeywordChanged}
           userName={this.props.userName}

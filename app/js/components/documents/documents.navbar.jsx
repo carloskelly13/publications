@@ -9,6 +9,9 @@ export default function DocumentsNavbar({
   userName, toggleUserAccountModal, logOut
 }) {
 
+  const url = selectedDocument && 'id' in selectedDocument ?
+    `${Urls.ApiBase}/documents/${selectedDocument.id}/pdf` : null
+
   const testDrive = isTemporaryUser && isAuthenticated
 
   return (
@@ -29,8 +32,8 @@ export default function DocumentsNavbar({
           Edit
         </button>
         <a
-          className={`button button--pdf ${documentIsSelected ? '' : 'disabled'}`}
-          href={selectedDocument ? `${Urls.ApiBase}/documents/${selectedDocument.id}/pdf` : ''}
+          className={`button button--pdf ${url ? '' : 'disabled'}`}
+          href={url}
           target="_blank"
         >
           PDF
