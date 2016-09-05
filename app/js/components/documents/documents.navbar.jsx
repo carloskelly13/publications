@@ -1,66 +1,63 @@
-import React, {Component} from 'react'
+import React from 'react'
 import AboutButton from '../ui/about.button'
 import { Urls } from 'core/constants'
 
-export default class DocumentsNavbar extends Component {
-  constructor() {
-    super(...arguments)
-  }
+export default function DocumentsNavbar({
+  isTemporaryUser, isAuthenticated,
+  selectedDocument, documentIsSelected,
+  createNewDocument, editDocument, deleteDocument,
+  userName, toggleUserAccountModal, logOut
+}) {
 
-  render() {
-    const { isTemporaryUser, isAuthenticated, selectedDocument } = this.props
-    const testDrive = isTemporaryUser && isAuthenticated
+  const url = selectedDocument && 'id' in selectedDocument ?
+    `${Urls.ApiBase}/documents/${selectedDocument.id}/pdf` : null
 
-    const accountButton = isAuthenticated ? <button
-      className="button"
-      onClick={this.props.toggleUserAccountModal}>
-      {isTemporaryUser ? 'Create Account' : 'Change Password'}
-    </button> : null
+  const testDrive = isTemporaryUser && isAuthenticated
 
-    const exitButton = isAuthenticated ? <button
-      className="button"
-      onClick={this.props.logOut}>
-      {testDrive ? 'Exit Test Drive' : 'Log Out'}
-    </button> : null
-
-    const pdfUrl = selectedDocument ? `${Urls.ApiBase}/documents/${selectedDocument.id}/pdf` : undefined
-
-    const userName = !isTemporaryUser ? <div className="user-name">
-      { this.props.userName }
-    </div> : undefined
-
-    return <div className="navbar-container">
-      <div className="navbar-controls-left">
+  return (
+    <div className="toolbar">
+      <div className="scroll-view">
         <AboutButton />
         <button
-          className="button"
-          onClick={this.props.createNewDocument}>
+          className="button button--new"
+          onClick={createNewDocument}
+        >
           New
         </button>
         <button
-          className="button"
-          disabled={!this.props.documentIsSelected}
-          onClick={this.props.editDocument}>
+          className="button button--edit"
+          disabled={!documentIsSelected}
+          onClick={editDocument}
+        >
           Edit
         </button>
         <a
-          className={ `button ${this.props.documentIsSelected ? '' : 'disabled'}` }
-          href={ pdfUrl }
-          target="_blank">
+          className={`button button--pdf ${url ? '' : 'disabled'}`}
+          href={url}
+          target="_blank"
+        >
           PDF
         </a>
         <button
-          className="button button-destructive"
-          disabled={!this.props.documentIsSelected}
-          onClick={this.props.deleteDocument}>
+          className="button button--delete button-destructive"
+          disabled={!documentIsSelected}
+          onClick={deleteDocument}
+        >
           Delete
         </button>
-      </div>
-      <div className="navbar-controls-right">
-        { userName }
-        { accountButton }
-        { exitButton }
+        <button
+          className="button button--account"
+          onClick={toggleUserAccountModal}
+        >
+          { isTemporaryUser ? 'Create Account' : 'Account' }
+        </button>
+        <button
+          className="button button--logout"
+          onClick={logOut}
+        >
+          { testDrive ? 'Exit Test Drive' : 'Log Out' }
+        </button>
       </div>
     </div>
-  }
+  )
 }

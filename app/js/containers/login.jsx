@@ -80,6 +80,7 @@ export class Login extends Component {
   }
 }
 
-export default connect(state => ({
+const mapState = state => ({
   ...state.user, ...state.errors
-}))(Login)
+})
+export default connect(mapState)(Login)

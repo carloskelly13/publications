@@ -56,7 +56,8 @@ module.exports = env => {
       extensions: ['', '.js', '.jsx'],
       modules: [
         path.join(__dirname, 'node_modules'),
-        path.join(__dirname, 'app/js')
+        path.join(__dirname, 'app/js'),
+        path.join(__dirname, 'app/css')
       ]
     },
 

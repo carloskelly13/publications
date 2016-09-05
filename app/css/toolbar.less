@@ -1,0 +1,66 @@
+@import 'variables';
+@import 'support';
+
+.toolbar {
+  .valign-container-space-between;
+
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  background: #fff;
+  .retina-background('publications-logo-27', 27px, 27px);
+  background-position: 7px center;
+  height: 40px;
+  border-bottom: 1px #b8b7b9 solid;
+  position: fixed;
+  width: 100%;
+  z-index: 9000;
+
+  .scroll-view {
+    color: #fff;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin: 0 0 0 40px;
+    white-space: nowrap;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .button {
+      color: #3c3d3f;
+
+      &:hover, &:active {
+        color: #000;
+      }
+
+      &:disabled, &.disabled {
+        color: #777;
+      }
+    }
+
+    .spacer {
+      display: inline-block;
+      width: 25px;
+    }
+
+    .button--inspector, .button--logout {
+      float: right;
+      margin: 8px 3px 0 0px;
+
+      @media all and (max-width: 767px) {
+        float: none;
+        margin: 0;
+      }
+    }
+
+    .button--logout {
+      margin-top: 11px;
+
+      @media all and (max-width: 767px) {
+        margin-top: 0;
+      }
+    }
+  }
+}

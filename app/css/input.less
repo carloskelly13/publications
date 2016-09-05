@@ -1,5 +1,14 @@
+@import 'variables';
+@import 'support';
+
 .input-text-search {
   text-align: center;
+
+  @media all and (max-width: 767px) {
+    padding: 6px;
+    background: #b8b7b9;
+    border-bottom: 1px solid #aaa;
+  }
 
   input {
     width: 40%;
@@ -9,11 +18,21 @@
     font-weight: 400;
     font-size: 15px;
     display: inline-block;
-    background: transparent;
-    border: 1px #aaa solid;
+    .gradient(#f9f9f9, #fff);
+    border: 1px solid #d3d2d4;
+    border-bottom-color: #b8b7b9;
     border-radius: 4px;
     line-height: 29px;
     height: 29px;
+
+    @media all and (max-width: 767px) {
+      border-radius: 4px;
+      border: none;
+      margin: 0;
+      background: #fff;
+      width: 100%;
+      padding: 0;
+    }
   }
 }
 
@@ -131,18 +150,17 @@
   input[type="number"],
   input[type="password"],
   select {
-    background: transparent;
-    border: 1px transparent solid;
     border-radius: 4px;
     box-sizing: border-box;
-    font-size: 15px;
+    font-size: 13px;
     line-height: 1em;
     margin: 0;
-    padding: 4px 4px 5px;
+    padding: 6px;
     vertical-align: middle;
     width: 100%;
-    background: #fff;
-    border-color: #616161;
+    .gradient(#f9f9f9, #fff);
+    border: 1px solid #d3d2d4;
+    border-bottom-color: #b8b7b9;
     color: #444;
 
     &.has-unit {
@@ -205,22 +223,37 @@
 .segmented-control {
   button {
     float: left;
-    border: 1px solid transparent;
-    box-shadow: 0 0 0 1px #616161;
     border-radius: 0;
     background: #fff;
     margin: 0;
+    .gradient(#fff, #f2f2f2);
+    border: 1px solid #d3d2d4;
+    border-right: none;
+    border-bottom-color: #b8b7b9;
+    padding: 5px 0;
+
+    &:hover {
+      background: #f2f2f2;
+      .gradient(#f7f7f7, #f0f0f0);
+    }
+
+    &:active {
+      border-top-color: #ccc;
+      .gradient(#ececec, #f2f2f2);
+    }
 
     &:first-child {
-      border-radius: 2px 0 0 2px;
+      border-radius: 4px 0 0 4px;
     }
 
     &:last-child {
-      border-radius: 0 2px 2px 0;
+      border-radius: 0 4px 4px 0;
+      border-right: 1px solid #d3d2d4;
     }
 
     &.active {
-      background: lighten(@color-light-background, 20%);
+      background: @color-active;
+      .gradient(@color-active, darken(@color-active, 5%));
     }
   }
 
@@ -250,16 +283,6 @@
       content: ' ';
       clear: both;
       display: block;
-    }
-  }
-
-  &.segmented-control-2, &.segmented-control-3 {
-    button {
-      .icon {
-        background-size: 16px;
-        width: 16px;
-        height: 16px;
-      }
     }
   }
 }

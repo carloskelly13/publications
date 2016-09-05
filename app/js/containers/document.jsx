@@ -15,7 +15,7 @@ import * as DocumentActions from 'actions/document'
 
 export class Document extends Component {
   state = {
-    showInspector: true,
+    showInspector: false,
     zoom: 1.0
   }
 
@@ -24,6 +24,10 @@ export class Document extends Component {
   }
 
   componentDidMount() {
+    if (window.screen.availWidth >= 768) {
+      this.setState({ showInspector: true })
+    }
+
     const { params, dispatch } = this.props
     dispatch(DocumentActions.getDocument(params.id))
   }
@@ -186,4 +190,5 @@ export class Document extends Component {
   }
 }
 
-export default connect(({ doc }) => doc)(Document)
+const mapState = state => state.doc
+export default connect(mapState)(Document)

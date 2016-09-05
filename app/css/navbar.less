@@ -46,6 +46,13 @@
       margin: 0 0 0 8px;
       vertical-align: middle;
       height: 100%;
+
+      &.button--new,
+      &.button--delete {
+        @media all and (max-width: 767px) {
+          display: none;
+        }
+      }
     }
   }
 
@@ -63,12 +70,22 @@
       font-weight: 500;
       color: #777;
       cursor: default;
+
+      @media all and (max-width: 767px) {
+        display: none;
+      }
     }
 
     .button {
       margin: 0 4px;
       vertical-align: middle;
       height: 100%;
+
+      &.button--account {
+        @media all and (max-width: 767px) {
+          display: none;
+        }
+      }
     }
 
     .spacer {

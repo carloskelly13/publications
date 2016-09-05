@@ -1,9 +1,3 @@
-const webpackConfig = require('./webpack.config')
-const testWebpackConfig = Object.assign({}, webpackConfig, {
-  devtool: 'inline-source-map',
-  entry: {},
-  watch: true
-})
 
 module.exports = config => {
   config.set({
@@ -19,7 +13,14 @@ module.exports = config => {
       '**/*.spec.js' : [ 'webpack' ]
     },
 
-    webpack: testWebpackConfig,
+    webpack: {
+      module: {
+        loaders: [
+          { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel' }
+        ]
+      },
+      watch: true
+    },
 
     colors: true,
 

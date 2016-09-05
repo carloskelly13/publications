@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { autobind } from 'core-decorators'
-import { Urls } from 'core/constants'
 
 import DocumentsNavbar from 'components/documents/documents.navbar'
 import DocumentItem from 'components/documents/document.item'
@@ -188,11 +187,11 @@ export class Documents extends Component {
         <DocumentsNavbar
           isTemporaryUser={this.props.isTemporaryUser}
           isAuthenticated={this.props.isAuthenticated}
-          documentIsSelected={this.state.selectedDocument !== null}
+          documentIsSelected={this.props.currentDocument !== null}
           editDocument={this.editDocument}
           deleteDocument={this.deleteDocument}
           createNewDocument={this.toggleNewDocumentModal}
-          selectedDocument={this.state.selectedDocument}
+          selectedDocument={this.props.currentDocument}
           searchKeyword={this.state.searchKeyword}
           searchKeywordChanged={this.searchKeywordChanged}
           userName={this.props.userName}
@@ -206,6 +205,7 @@ export class Documents extends Component {
   }
 }
 
-export default connect(state => ({
+const mapState = state => ({
   ...state.user, ...state.doc, ...state.errors, ...state.ui
-}))(Documents)
+})
+export default connect(mapState)(Documents)
