@@ -39,6 +39,21 @@
 
     .input-picker, .input-text, .segmented-control, .btn {
       margin-bottom: 10px;
+
+      &.btn--deselect {
+        margin: 0;
+        font-size: 12px;
+        padding: 3px 16px 2px 16px;
+        float: right;
+      }
+    }
+
+    &.section--layers {
+      padding: 0;
+
+      h1 {
+        padding: 10px 10px 5px 10px;
+      }
     }
   }
 
@@ -89,7 +104,9 @@
       }
 
       &.active {
-        .gradient(#f7f7f7, #f0f0f0);
+        background: @color-active;
+        .gradient(@color-active, darken(@color-active, 5%));
+        color: #fff;
       }
 
       &:last-child {
@@ -105,19 +122,11 @@
     li {
       border: 1px transparent solid;
       box-sizing: border-box;
-      padding: 0;
-      margin: 10px 0;
+      padding: 5px 10px 5px 8px;
       cursor: default;
 
       &:first-child {
         margin-top: 0;
-      }
-
-      &.layer-active {
-        .gradient(#fff, #f2f2f2);
-        border: 1px solid #d3d2d4;
-        border-bottom-color: #b8b7b9;
-        border-radius: 4px;
       }
 
       .layer-item-icon {
@@ -145,6 +154,23 @@
         font-size: 11px;
         line-height: 24px;
         vertical-align: middle;
+      }
+
+      &.layer-active {
+        background: @color-active;
+
+        .layer-item-size {
+          color: #fff;
+        }
+
+        .layer-item-icon {
+          box-shadow: 0 0 0 1px #fff;
+        }
+
+        .layer-item-icon-text {
+          border: 1px solid #fff;
+          background: #fff;
+        }
       }
     }
   }

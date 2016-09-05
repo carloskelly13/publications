@@ -223,22 +223,37 @@
 .segmented-control {
   button {
     float: left;
-    border: 1px solid transparent;
-    box-shadow: 0 0 0 1px #616161;
     border-radius: 0;
     background: #fff;
     margin: 0;
+    .gradient(#fff, #f2f2f2);
+    border: 1px solid #d3d2d4;
+    border-right: none;
+    border-bottom-color: #b8b7b9;
+    padding: 5px 0;
+
+    &:hover {
+      background: #f2f2f2;
+      .gradient(#f7f7f7, #f0f0f0);
+    }
+
+    &:active {
+      border-top-color: #ccc;
+      .gradient(#ececec, #f2f2f2);
+    }
 
     &:first-child {
-      border-radius: 2px 0 0 2px;
+      border-radius: 4px 0 0 4px;
     }
 
     &:last-child {
-      border-radius: 0 2px 2px 0;
+      border-radius: 0 4px 4px 0;
+      border-right: 1px solid #d3d2d4;
     }
 
     &.active {
-      background: lighten(@color-light-background, 20%);
+      background: @color-active;
+      .gradient(@color-active, darken(@color-active, 5%));
     }
   }
 
@@ -268,16 +283,6 @@
       content: ' ';
       clear: both;
       display: block;
-    }
-  }
-
-  &.segmented-control-2, &.segmented-control-3 {
-    button {
-      .icon {
-        background-size: 16px;
-        width: 16px;
-        height: 16px;
-      }
     }
   }
 }

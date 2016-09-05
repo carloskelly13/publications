@@ -205,6 +205,7 @@ export class Documents extends Component {
   }
 }
 
-export default connect(state => ({
+const mapState = state => ({
   ...state.user, ...state.doc, ...state.errors, ...state.ui
-}))(Documents)
+})
+export default connect(mapState)(Documents)

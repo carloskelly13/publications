@@ -1,3 +1,5 @@
+@import "variables";
+
 ul.document-items {
   margin: 0 auto;
   padding: 60px 0 20px;
@@ -26,6 +28,11 @@ ul.document-items {
     vertical-align: bottom;
     width: 25%;
 
+    @media all and (max-width: 767px) {
+      border-bottom: 1px solid #ccc;
+      width: 100%;
+    }
+
     .canvas-container svg {
       border-radius: 4px;
       overflow: hidden;
@@ -49,10 +56,6 @@ ul.document-items {
         box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.15), 0 0 0 3px @color-active-bright;
         border-radius: 4px;
         overflow: hidden;
-      }
-
-      .document-item-name {
-        color: @color-active;
       }
     }
   }
