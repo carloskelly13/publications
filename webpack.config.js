@@ -53,7 +53,7 @@ module.exports = env => {
     },
 
     resolve: {
-      extensions: ['', '.js', '.jsx'],
+      extensions: ['.js', '.jsx'],
       modules: [
         path.join(__dirname, 'node_modules'),
         path.join(__dirname, 'app/js'),
@@ -93,7 +93,7 @@ module.exports = env => {
     ]),
 
     node: {
-      global: 'window',
+      global: true,
       crypto: 'empty',
       module: false,
       clearImmediate: false,
