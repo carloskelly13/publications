@@ -8,19 +8,32 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   background: #fff;
-  .retina-background('publications-logo-27', 27px, 27px);
-  background-position: 7px center;
   height: 40px;
   border-bottom: 1px #b8b7b9 solid;
   position: fixed;
   width: 100%;
   z-index: 9000;
 
+  .navbar-logo {
+    height: 40px;
+    margin: 0;
+    vertical-align: middle;
+    width: 40px;
+    display: inline-block;
+
+    .navbar-logo-icon {
+      .retina-background('publications-logo-27', 27px, 27px);
+      width: 40px;
+      height: 40px;
+      background-position: 7px center;
+    }
+  }
+
   .scroll-view {
     color: #fff;
     overflow-x: scroll;
     overflow-y: hidden;
-    margin: 0 0 0 40px;
+    margin: 0;
     white-space: nowrap;
     width: 100%;
 

@@ -48,6 +48,12 @@ export class Documents extends Component {
   }
 
   @autobind
+  clearSelectedDocument() {
+    const { dispatch } = this.props
+    dispatch(DocumentActions.updateCurrentDocument(null))
+  }
+
+  @autobind
   searchKeywordChanged(event) {
     this.setState({searchKeyword: event.target.value})
   }
@@ -159,11 +165,14 @@ export class Documents extends Component {
 
   renderPageContent() {
     return <div className="app-content">
-      <ul className="document-items" onClick={ () => this.updateSelectedDocument(null, event) }>
+      <ul
+        className="document-items"
+        onClick={this.clearSelectedDocument}
+      >
         <div className="input-text-search">
           <input
-            value={ this.state.searchKeyword }
-            onChange={ this.searchKeywordChanged }
+            value={this.state.searchKeyword}
+            onChange={this.searchKeywordChanged}
             placeholder="Search for Documents"/>
         </div>
         <ReactCSSTransitionGroup

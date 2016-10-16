@@ -1,6 +1,7 @@
 import React, {Component, PropTypes, addons} from 'react'
 import {autobind} from 'core-decorators'
 import InputText from '../ui/input.text'
+import InputFloat from 'components/ui/input.float'
 
 export default class NewDocumentModal extends Component {
   constructor(props, context) {
@@ -33,25 +34,21 @@ export default class NewDocumentModal extends Component {
                   validatorOptions={1}
                   value={this.state.form.name}
                   valueChanged={this.formValueChanged} />
-                <InputText
+                <InputFloat
                   displayName="Width"
-                  name="width"
+                  property="width"
                   style="half left"
-                  type="number"
                   unit="in"
-                  validator='isFloat'
-                  validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
-                  value={this.state.form.width}
+                  validatorOptions={{step: 0.05, min: -2.0, max: 64.0}}
+                  value={parseFloat(this.state.form.width)}
                   valueChanged={this.formValueChanged} />
-                <InputText
+                <InputFloat
                   displayName="Height"
-                  name="height"
+                  property="height"
                   style="half right"
-                  type="number"
                   unit="in"
-                  validator='isFloat'
-                  validatorOptions={{step: 0.05, min: 2.0, max: 64.0}}
-                  value={this.state.form.height}
+                  validatorOptions={{step: 0.05, min: -2.0, max: 64.0}}
+                  value={parseFloat(this.state.form.height)}
                   valueChanged={this.formValueChanged} />
                 <div className="modal-form-buttons">
                   <button className="btn" type="submit">

@@ -9,6 +9,7 @@ export default class AboutButton extends Component {
 
   @autobind
   toggleAboutAppModal() {
+    console.log('hi')
     this.setState({ isAboutAppModalOpen: !this.state.isAboutAppModalOpen })
   }
 

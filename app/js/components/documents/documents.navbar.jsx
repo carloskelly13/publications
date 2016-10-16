@@ -1,5 +1,5 @@
 import React from 'react'
-import AboutButton from '../ui/about.button'
+import AboutButton from 'components/ui/about.button'
 import { Urls } from 'core/constants'
 
 export default function DocumentsNavbar({
