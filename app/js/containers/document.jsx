@@ -9,6 +9,7 @@ import InspectorBase from 'components/inspector/inspector.base'
 import RulerHorizontal from 'components/rulers/ruler.horizontal'
 import RulerVertical from 'components/rulers/ruler.vertical'
 import ShapeFactory from 'core/shape.factory'
+import AboutAppModal from 'components/ui/about.modal'
 
 import { connect } from 'react-redux'
 import * as DocumentActions from 'actions/document'
@@ -16,7 +17,8 @@ import * as DocumentActions from 'actions/document'
 export class Document extends Component {
   state = {
     showInspector: false,
-    zoom: 1.0
+    zoom: 1.0,
+    isAboutAppModalOpen: false
   }
 
   static contextTypes = {
@@ -46,6 +48,11 @@ export class Document extends Component {
   updateShape(sender) {
     const { dispatch } = this.props
     dispatch(DocumentActions.updateSelectedShape(sender))
+  }
+
+  @autobind
+  toggleAboutAppModal() {
+    this.setState({ isAboutAppModalOpen: !this.state.isAboutAppModalOpen })
   }
 
   @autobind
@@ -137,6 +144,10 @@ export class Document extends Component {
 
     if (currentDocument) {
       return <div>
+        <AboutAppModal
+          toggleModal={this.toggleAboutAppModal}
+          isOpen={this.state.isAboutAppModalOpen}
+        />
         <DocumentNavbar
           doc={currentDocument}
           changeZoom={this.changeZoom}
@@ -150,8 +161,10 @@ export class Document extends Component {
           showInspector={this.state.showInspector}
           title={currentDocument.name}
           toggleInspector={this.toggleInspector}
+          toggleAboutAppModal={this.toggleAboutAppModal}
           viewAllDocuments={this.viewAllDocuments}
-          zoom={this.state.zoom} />
+          zoom={this.state.zoom}
+        />
         <div className="app-content app-content-document">
           <InspectorBase
             addNewShape={this.addNewShape}

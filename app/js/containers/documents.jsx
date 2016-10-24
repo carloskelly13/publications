@@ -6,6 +6,7 @@ import DocumentsNavbar from 'components/documents/documents.navbar'
 import DocumentItem from 'components/documents/document.item'
 import NewDocumentModal from 'components/documents/documents.new.modal'
 import UserAccountModal from 'components/user/user.account.modal'
+import AboutAppModal from 'components/ui/about.modal'
 
 import { connect } from 'react-redux'
 import * as UserActions from 'actions/user'
@@ -16,7 +17,8 @@ export class Documents extends Component {
   state = {
     searchKeyword: '',
     isNewDocModalOpen: false,
-    isUserAccountModalOpen: false
+    isUserAccountModalOpen: false,
+    isAboutAppModalOpen: false
   }
 
   static contextTypes = {
@@ -38,6 +40,11 @@ export class Documents extends Component {
     if (nextProps.documents.length > this.props.documents.length) {
       this.setState({ isNewDocModalOpen: false })
     }
+  }
+
+  @autobind
+  toggleAboutAppModal() {
+    this.setState({ isAboutAppModalOpen: !this.state.isAboutAppModalOpen })
   }
 
   @autobind
@@ -155,11 +162,17 @@ export class Documents extends Component {
         removeError={this.removeError}
         isTemporaryUser={this.props.isTemporaryUser}
         toggleModal={this.toggleUserAccountModal}
-        isOpen={this.state.isUserAccountModalOpen} />
+        isOpen={this.state.isUserAccountModalOpen}
+      />
       <NewDocumentModal
         createNewDocument={this.createNewDocument}
         toggleNewDocumentModal={this.toggleNewDocumentModal}
-        isOpen={this.state.isNewDocModalOpen} />
+        isOpen={this.state.isNewDocModalOpen}
+      />
+      <AboutAppModal
+        toggleModal={this.toggleAboutAppModal}
+        isOpen={this.state.isAboutAppModalOpen}
+      />
     </div>
   }
 
@@ -205,6 +218,7 @@ export class Documents extends Component {
           searchKeywordChanged={this.searchKeywordChanged}
           userName={this.props.userName}
           logOut={this.logOut}
+          toggleAboutAppModal={this.toggleAboutAppModal}
           toggleUserAccountModal={this.toggleUserAccountModal}
         />
         { this.renderModals() }

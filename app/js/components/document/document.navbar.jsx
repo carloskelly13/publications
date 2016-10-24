@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import { autobind } from 'core-decorators'
-import AboutButton from 'components/ui/about.button'
+import { AboutButton } from 'components/ui/about.button'
 import { Urls } from 'core/constants'
 
 export default class DocumentNavbar extends Component {
@@ -18,7 +18,9 @@ export default class DocumentNavbar extends Component {
     return (
       <div className="toolbar">
         <div className="scroll-view">
-          <AboutButton />
+          <AboutButton
+            toggleAboutAppModal={this.props.toggleAboutAppModal}
+          />
           <button
             className="button"
             onClick={this.props.save}

@@ -1,12 +1,12 @@
 import React from 'react'
-import AboutButton from 'components/ui/about.button'
+import { AboutButton } from 'components/ui/about.button'
 import { Urls } from 'core/constants'
 
 export default function DocumentsNavbar({
   isTemporaryUser, isAuthenticated,
   selectedDocument, documentIsSelected,
   createNewDocument, editDocument, deleteDocument,
-  userName, toggleUserAccountModal, logOut
+  userName, toggleUserAccountModal, toggleAboutAppModal, logOut
 }) {
 
   const url = selectedDocument && 'id' in selectedDocument ?
@@ -17,7 +17,9 @@ export default function DocumentsNavbar({
   return (
     <div className="toolbar">
       <div className="scroll-view">
-        <AboutButton />
+        <AboutButton
+          toggleAboutAppModal={toggleAboutAppModal}
+        />
         <button
           className="button button--new"
           onClick={createNewDocument}
