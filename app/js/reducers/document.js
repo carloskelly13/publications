@@ -81,7 +81,7 @@ export default function documentReducer(state = defaultState, action) {
       shapes: updatedShapes.filter(s => s.id !== shapeToCut.id)
     })
 
-    const copiedShape = Object.assign({}, shapeToCut, {id: null, z: null})
+    const copiedShape = Object.assign({}, shapeToCut, { id: null, z: null })
 
     return Object.assign({}, state, {
       currentDocument: updatedDocument,
@@ -92,8 +92,8 @@ export default function documentReducer(state = defaultState, action) {
 
   case COPY_SHAPE: {
     const shapeToCopy = state.selectedShape
-    const copiedShape = Object.assign({}, shapeToCopy, {id: null, z: null})
-    return Object.assign({}, state, {clipboardData: copiedShape})
+    const copiedShape = Object.assign({}, shapeToCopy, { id: null, z: null })
+    return { ...state, clipboardData: copiedShape }
   }
 
   case PASTE_SHAPE: {
@@ -141,12 +141,7 @@ export default function documentReducer(state = defaultState, action) {
           sender.id === state.selectedShape.id)) {
 
         const idx = currentShapes.findIndex(shape => state.selectedShape.id === shape.id)
-
-        const shapes = [
-          ...currentShapes.slice(0, idx),
-          ...currentShapes.slice(idx + 1, currentShapes.length),
-          selectedShape
-        ]
+        const shapes = Object.assign([], currentShapes, { [idx] : selectedShape })
 
         updatedState.currentDocument = { ...state.currentDocument, shapes };
       }
