@@ -10,13 +10,13 @@ const shapeElements = (shapeProps, doc) => doc.shapes
   .map((shape, idx) => {
     switch (shape.type) {
       case 'rect':
-        return <ShapeRect { ...shapeProps } key={ idx } shape={ shape } />
+        return <ShapeRect {...shapeProps} key={idx} shape={shape} />
 
       case 'ellipse':
-        return <ShapeEllipse { ...shapeProps } key={ idx } shape={ shape } />
+        return <ShapeEllipse {...shapeProps} key={idx} shape={shape} />
 
       case 'text':
-        return <ShapeText { ...shapeProps } key={ idx } shape={ shape } />
+        return <ShapeText {...shapeProps} key={idx} shape={shape} />
 
       default:
         return undefined
@@ -41,10 +41,10 @@ const Canvas = ({
 
   return <div
     id="svg-canvas-container"
-    className={ canvasSelectors }>
+    className={canvasSelectors}>
     <svg
-      width={ doc.width * dpi * zoom }
-      height={ doc.height * dpi * zoom }
+      width={doc.width * dpi * zoom}
+      height={doc.height * dpi * zoom}
       className="canvas-svg"
       xmlns="http://www.w3.org/2000/svg"
       version="1.1">
