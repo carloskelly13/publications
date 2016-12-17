@@ -36,7 +36,7 @@ module.exports = env => {
           include: [
             path.resolve(__dirname, 'app/js')
           ],
-          loader: 'babel'
+          loader: 'babel-loader'
         },
         {
           test: /\.jsx?$/,
@@ -45,10 +45,10 @@ module.exports = env => {
           ],
           loader: 'eslint-loader'
         },
-        { test: /\.less$/, loader: extractLESS.extract([ 'css', 'less' ]) },
-        { test: /\.css$/, loader: extractCSS.extract([ 'css' ]) },
-        { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: 'url?limit=64' },
-        { test: /\.json$/, loader: 'json' }
+        { test: /\.less$/, loader: extractLESS.extract([ 'css-loader', 'less-loader' ]) },
+        { test: /\.css$/, loader: extractCSS.extract([ 'css-loader' ]) },
+        { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: 'url-loader?limit=64' },
+        { test: /\.json$/, loader: 'json-loader' }
       ]
     },
 
