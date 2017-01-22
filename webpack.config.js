@@ -1,10 +1,10 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const webpack = require('webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const webpack = require("webpack")
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
-const extractLESS = new ExtractTextPlugin('app.css')
-const extractCSS = new ExtractTextPlugin('vendor.css')
+const extractLESS = new ExtractTextPlugin("app.css")
+const extractCSS = new ExtractTextPlugin("vendor.css")
 
 module.exports = env => {
   const addPlugin = (add, plugin) => add ? plugin : undefined
@@ -13,51 +13,50 @@ module.exports = env => {
   const removeEmpty = array => array.filter(el => !!el)
 
   return {
-    devtool: env.prod ? undefined : 'inline-source-map',
+    devtool: env.prod ? undefined : "inline-source-map",
 
     entry: {
       app: removeEmpty([
-        './app/js/app.js',
-        ifDev('webpack-hot-middleware/client?reload=true')
+        "./app/js/app.js",
+        ifDev("webpack-hot-middleware/client?reload=true")
       ]),
-      vendor: [ './app/js/vendor.js' ]
+      vendor: [ "./app/js/vendor.js" ]
     },
 
     output: {
-      path: __dirname + '/dist',
-      sourceMapFilename: '[name].map',
-      filename: '[name].js',
-      chunkFilename: '[id].chunk.js'
+      path: __dirname + "/dist",
+      sourceMapFilename: "[name].map",
+      filename: "[hash].[name].js",
     },
 
     module: {
       loaders: [
         { test: /\.jsx?$/,
           include: [
-            path.resolve(__dirname, 'app/js')
+            path.resolve(__dirname, "app/js")
           ],
-          loader: 'babel-loader'
+          loader: "babel-loader"
         },
         {
           test: /\.jsx?$/,
           include: [
-            path.resolve(__dirname, 'app/js')
+            path.resolve(__dirname, "app/js")
           ],
-          loader: 'eslint-loader'
+          loader: "eslint-loader"
         },
-        { test: /\.less$/, loader: extractLESS.extract([ 'css-loader', 'less-loader' ]) },
-        { test: /\.css$/, loader: extractCSS.extract([ 'css-loader' ]) },
-        { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: 'url-loader?limit=64' },
-        { test: /\.json$/, loader: 'json-loader' }
+        { test: /\.less$/, loader: extractLESS.extract([ "css-loader", "less-loader" ]) },
+        { test: /\.css$/, loader: extractCSS.extract([ "css-loader" ]) },
+        { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: "url-loader?limit=64" },
+        { test: /\.json$/, loader: "json-loader" }
       ]
     },
 
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: [".js", ".jsx"],
       modules: [
-        path.join(__dirname, 'node_modules'),
-        path.join(__dirname, 'app/js'),
-        path.join(__dirname, 'app/css')
+        path.join(__dirname, "node_modules"),
+        path.join(__dirname, "app/js"),
+        path.join(__dirname, "app/css")
       ]
     },
 
@@ -65,10 +64,8 @@ module.exports = env => {
       extractLESS, extractCSS,
 
       new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor'
+        name: [ "vendor", "manifest" ]
       }),
-
-      ifProd(new webpack.optimize.DedupePlugin()),
 
       ifProd(new webpack.LoaderOptionsPlugin({
         minimize: true,
@@ -79,7 +76,7 @@ module.exports = env => {
       ifDev(new webpack.HotModuleReplacementPlugin()),
 
       new webpack.DefinePlugin({
-        'process.env': { NODE_ENV: '"development"', },
+        "process.env": { NODE_ENV: `${env.prod ? '"production"' : '"development"'}`, },
       }),
 
       ifProd(new webpack.optimize.UglifyJsPlugin({
@@ -87,14 +84,14 @@ module.exports = env => {
       })),
 
       new HtmlWebpackPlugin({
-        template: 'app/index.html',
-        inject: 'body'
+        template: "app/index.html",
+        inject: "body"
       })
     ]),
 
     node: {
       global: true,
-      crypto: 'empty',
+      crypto: "empty",
       module: false,
       clearImmediate: false,
       setImmediate: false
