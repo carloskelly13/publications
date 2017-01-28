@@ -1,5 +1,6 @@
-import React from 'react'
-import InputText from 'components/ui/input.text'
+import React from "react"
+import InputText from "components/ui/input.text"
+import { FramedButton, TextButton } from "components/ui/pub-button"
 
 export const LoginForm = ({
   errors,
@@ -32,18 +33,18 @@ export const LoginForm = ({
         valueChanged={formValueChanged} />
     </div>
     <div className="buttons">
-      <button
+      <FramedButton
+        big
         type="submit"
-        className="btn big">
+      >
         Log In
-      </button>
-      <button
+      </FramedButton>
+      <TextButton
         type="button"
-        className="button test-drive-btn"
         onClick={createTestDriveAccount}
-        role="button">
+      >
         or test drive Publications without an account
-      </button>
+      </TextButton>
     </div>
   </form>
 }

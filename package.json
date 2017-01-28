@@ -1,13 +1,13 @@
 {
   "name": "publications",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "description": "A web app for page layout and design.",
   "main": "app.js",
   "scripts": {
     "build:prod": "node ./node_modules/webpack/bin/webpack.js --env.prod --progress",
     "build:dev": "node ./node_modules/webpack/bin/webpack.js --env.dev --progress",
-    "start": "node ./dev.server.js",
-    "test": "./node_modules/karma/bin/karma --conf karma.conf.js start"
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env.dev --port 4040",
+    "test": ""
   },
   "dependencies": {
     "core-decorators": "^0.12.0",
@@ -33,6 +33,7 @@
     "react-test-renderer": "15.4.2",
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
+    "styled-components": "^1.4.1",
     "uuid4": "^1.0.0",
     "validator": "^4.0.2"
   },
@@ -80,6 +81,7 @@
     "url-loader": "^0.5.7",
     "webpack": "2.2.0",
     "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "2.2.0",
     "webpack-hot-middleware": "2.15.0"
   },
   "author": "Carlos Paelinck",

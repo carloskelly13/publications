@@ -29,6 +29,18 @@ module.exports = env => {
       filename: "[hash].[name].js",
     },
 
+    devServer: {
+      proxy: {
+        "/api": {
+          target: "http://api.publicationsapp.com",
+          changeOrigin: true,
+          pathRewrite: {
+            "^/api" : ""
+          }
+        }
+      }
+    },
+
     module: {
       loaders: [
         { test: /\.jsx?$/,
