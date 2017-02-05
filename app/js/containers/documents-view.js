@@ -13,7 +13,7 @@ import * as UserActions from 'actions/user'
 import * as DocumentActions from 'actions/document'
 import * as ErrorActions from 'actions/errors'
 
-export class Documents extends Component {
+class DocumentsView extends Component {
   state = {
     searchKeyword: '',
     isNewDocModalOpen: false,
@@ -94,10 +94,9 @@ export class Documents extends Component {
   @autobind
   editDocument() {
     const { currentDocument } = this.props
-
     if (!!currentDocument) {
       const { id } = currentDocument
-      this.context.router.push(`/documents/${id}/edit`)
+      this.context.router.push(`/documents/${id}`)
     }
   }
 
@@ -115,8 +114,11 @@ export class Documents extends Component {
   @autobind
   logOut() {
     const { dispatch } = this.props
-    dispatch(UserActions.logoutUser(() => this.context.router.push('/')));
-    dispatch(DocumentActions.clearDocuments());
+    dispatch(UserActions.logout())
+      .then(() => {
+        dispatch(DocumentActions.clearDocuments())
+        this.context.router.replace("/")
+      })
   }
 
   @autobind
@@ -142,14 +144,15 @@ export class Documents extends Component {
         }
       })
       .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
-      .map(doc => {
-        return <DocumentItem
+      .map(doc => (
+        <DocumentItem
           key={doc.id}
           doc={doc}
           editDocument={this.editDocument}
           selectedDocument={this.props.currentDocument}
-          updateSelectedDocument={this.updateSelectedDocument} />
-      })
+          updateSelectedDocument={this.updateSelectedDocument}
+        />
+      ))
   }
 
   renderModals() {
@@ -201,11 +204,8 @@ export class Documents extends Component {
   }
 
   render() {
-    if (this.props.children) {
-      return <div>{ this.props.children }</div>
-
-    } else {
-      return <div>
+    return (
+      <div>
         <DocumentsNavbar
           isTemporaryUser={this.props.isTemporaryUser}
           isAuthenticated={this.props.isAuthenticated}
@@ -224,11 +224,11 @@ export class Documents extends Component {
         { this.renderModals() }
         { this.renderPageContent() }
       </div>
-    }
+    )
   }
 }
 
 const mapState = state => ({
   ...state.user, ...state.doc, ...state.errors, ...state.ui
 })
-export default connect(mapState)(Documents)
+export default connect(mapState)(DocumentsView)

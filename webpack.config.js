@@ -27,6 +27,7 @@ module.exports = env => {
       path: __dirname + "/dist",
       sourceMapFilename: "[name].map",
       filename: "[hash].[name].js",
+      publicPath: "/"
     },
 
     devServer: {
@@ -38,7 +39,8 @@ module.exports = env => {
             "^/api" : ""
           }
         }
-      }
+      },
+      historyApiFallback: true
     },
 
     module: {

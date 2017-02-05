@@ -14,7 +14,7 @@ import AboutAppModal from 'components/ui/about.modal'
 import { connect } from 'react-redux'
 import * as DocumentActions from 'actions/document'
 
-export class Document extends Component {
+class DocumentView extends Component {
   state = {
     showInspector: false,
     zoom: 1.0,
@@ -29,9 +29,8 @@ export class Document extends Component {
     if (window.screen.availWidth >= 768) {
       this.setState({ showInspector: true })
     }
-
-    const { params, dispatch } = this.props
-    dispatch(DocumentActions.getDocument(params.id))
+    const { match: { params: { uuid } }, dispatch } = this.props
+    dispatch(DocumentActions.getDocument(uuid))
   }
 
   componentWillUnmount() {
@@ -204,4 +203,4 @@ export class Document extends Component {
 }
 
 const mapState = state => state.doc
-export default connect(mapState)(Document)
+export default connect(mapState)(DocumentView)

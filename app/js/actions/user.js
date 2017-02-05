@@ -13,12 +13,9 @@ const receiveUser = userJson => ({
   userJson
 })
 
-export function login(data = {emailAddress: '', password: ''}) {
-  return dispatch => {
-    dispatch({
-      type: REQUEST_USER
-    })
-
+export function login(data = { emailAddress: "", password: "" }) {
+  return dispatch => new Promise((resolve, reject) => {
+    dispatch({ type: REQUEST_USER })
     fetch(`${Urls.ApiBase}/users/login`, {
       method: 'post',
       headers: {
@@ -38,19 +35,19 @@ export function login(data = {emailAddress: '', password: ''}) {
       }
     })
     .then(json => {
-      const data = {
-        ...json,
-        isAuthenticated: true
-      }
-
+      const data = { ...json, isAuthenticated: true }
       dispatch(receiveUser(data))
+      resolve()
     })
-    .catch(() => addError('user_auth_error')(dispatch))
-  }
+    .catch(() => {
+      addError('user_auth_error')(dispatch)
+      reject()
+    })
+  })
 }
 
-export function logoutUser(completion = () => {}) {
-  return dispatch => {
+export function logout() {
+  return dispatch => new Promise(resolve => {
     fetch(`${Urls.ApiBase}/users/logout`, {
       method: 'post',
       credentials: 'include'
@@ -61,10 +58,9 @@ export function logoutUser(completion = () => {}) {
         temporary: false,
         isAuthenticated: false
       }))
-
-      completion()
+      resolve()
     })
-  }
+  })
 }
 
 export function getUser() {

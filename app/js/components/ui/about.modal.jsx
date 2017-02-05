@@ -14,7 +14,7 @@ const AboutAppModal = ({ isOpen, toggleModal }) => {
           <h1>Publications</h1>
           <div className="app-version">Version { version }</div>
           <h3>Publications is designed, developed and maintained by Mike Kelly and Carlos Paelinck.</h3>
-          <h4>Powered by React, Redux and Spring Boot.</h4>
+          <h4>Built with React, Spring Boot and Webpack</h4>
         </div>
         <div className="modal-form-buttons">
           <button

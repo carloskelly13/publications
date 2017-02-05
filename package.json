@@ -1,6 +1,6 @@
 {
   "name": "publications",
-  "version": "4.5.1",
+  "version": "4.6.0-Beta.1",
   "description": "A web app for page layout and design.",
   "main": "app.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "events": "^1.1.1",
     "fbjs": "^0.8.3",
     "fecha": "^2.1.0",
-    "history": "3.2.1",
+    "history": "4.5.1",
     "immutable": "^3.7.5",
     "isomorphic-fetch": "^2.2.1",
     "lodash.range": "^3.1.5",
@@ -28,7 +28,8 @@
     "react-addons-shallow-compare": "15.4.2",
     "react-dom": "15.4.2",
     "react-redux": "^4.0.6",
-    "react-router": "^3.0.2",
+    "react-router": "next",
+    "react-router-dom": "next",
     "react-router-redux": "^4.0.5",
     "react-test-renderer": "15.4.2",
     "redux": "^3.0.5",
