@@ -70,7 +70,8 @@ module.exports = env => {
       modules: [
         path.join(__dirname, "node_modules"),
         path.join(__dirname, "app/js"),
-        path.join(__dirname, "app/css")
+        path.join(__dirname, "app/css"),
+        path.join(__dirname, "app/img")
       ]
     },
 

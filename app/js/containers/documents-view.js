@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { autobind } from 'core-decorators'
 
+import { ToolbarProgress } from "components/ui/toolbar-progress"
 import DocumentsNavbar from 'components/documents/documents.navbar'
 import DocumentItem from 'components/documents/document.item'
 import NewDocumentModal from 'components/documents/documents.new.modal'
@@ -26,8 +27,7 @@ class DocumentsView extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(DocumentActions.getDocuments())
+    this.props.dispatch(UserActions.getUser())
     document.title = 'Publications — All Documents'
   }
 
@@ -39,6 +39,22 @@ class DocumentsView extends Component {
   componentWillReceiveProps(nextProps, nextState) {
     if (nextProps.documents.length > this.props.documents.length) {
       this.setState({ isNewDocModalOpen: false })
+    }
+
+    /**
+     * Only attempt to get documents if the current user request is complete
+     * and we have a valid authenticated user.
+     */
+    const { user: { isRequestingUser, isAuthenticated } } = nextProps
+    if (this.props.user.isRequestingUser && !isRequestingUser && isAuthenticated) {
+      this.props.dispatch(DocumentActions.getDocuments())
+    }
+    /**
+     * If we have requested the user and there is no valid authentication session
+     * redirect to the login page.
+     */
+    else if (this.props.user.isRequestingUser && !isRequestingUser && !isAuthenticated) {
+      this.context.router.replace("/")
     }
   }
 
@@ -158,8 +174,8 @@ class DocumentsView extends Component {
   renderModals() {
     return <div>
       <UserAccountModal
-        userId={this.props.userId}
-        userName={this.props.userName}
+        userId={this.props.user.userId}
+        userName={this.props.user.userName}
         updateUser={this.updateUser}
         errors={this.props.errors}
         removeError={this.removeError}
@@ -203,20 +219,24 @@ class DocumentsView extends Component {
     </div>
   }
 
-  render() {
+  _renderAllDocuments() {
+    const {
+      currentDocument,
+      user: { isRequestingUser, isAuthenticated, isTemporaryUser, userName }
+    } = this.props
     return (
       <div>
         <DocumentsNavbar
-          isTemporaryUser={this.props.isTemporaryUser}
-          isAuthenticated={this.props.isAuthenticated}
-          documentIsSelected={this.props.currentDocument !== null}
+          isTemporaryUser={isTemporaryUser}
+          isAuthenticated={isAuthenticated}
+          documentIsSelected={currentDocument !== null}
           editDocument={this.editDocument}
           deleteDocument={this.deleteDocument}
           createNewDocument={this.toggleNewDocumentModal}
-          selectedDocument={this.props.currentDocument}
+          selectedDocument={currentDocument}
           searchKeyword={this.state.searchKeyword}
           searchKeywordChanged={this.searchKeywordChanged}
-          userName={this.props.userName}
+          userName={userName}
           logOut={this.logOut}
           toggleAboutAppModal={this.toggleAboutAppModal}
           toggleUserAccountModal={this.toggleUserAccountModal}
@@ -226,9 +246,19 @@ class DocumentsView extends Component {
       </div>
     )
   }
+
+  render() {
+    const { user: { isRequestingUser, isAuthenticated } } = this.props
+    if (isRequestingUser) {
+      return <ToolbarProgress />
+    } else if (isAuthenticated) {
+      return this._renderAllDocuments();
+    }
+    return <div />
+  }
 }
 
 const mapState = state => ({
-  ...state.user, ...state.doc, ...state.errors, ...state.ui
+  user: state.user, ...state.doc, ...state.errors, ...state.ui
 })
 export default connect(mapState)(DocumentsView)

@@ -1,6 +1,7 @@
 import React from "react"
 import { render } from "react-dom"
 import { Provider } from "react-redux"
+import { TransitionMotion, spring } from "react-motion"
 import NProgress from "nprogress"
 import configureStore from "stores/configureStore"
 
@@ -18,6 +19,8 @@ import {
 } from "react-router-dom"
 
 const store = configureStore()
+
+const willLeave = () => ({ zIndex: 1, opacity: spring(0) })
 
 const App = () => (
   <Provider store={store}>

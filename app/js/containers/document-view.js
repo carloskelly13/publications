@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { autobind } from 'core-decorators'
 import { Urls } from 'core/constants'
 
+import { ToolbarProgress } from "components/ui/toolbar-progress"
 import Canvas from 'components/canvas/canvas'
 import DocumentNavbar from 'components/document/document.navbar'
 import DocumentLoadingNavbar from 'components/document/document.loadingNavbar'
@@ -13,6 +14,9 @@ import AboutAppModal from 'components/ui/about.modal'
 
 import { connect } from 'react-redux'
 import * as DocumentActions from 'actions/document'
+import * as UserActions from 'actions/user'
+
+const DPI = 72.0 /* This could become variable at one point. */
 
 class DocumentView extends Component {
   state = {
@@ -29,17 +33,36 @@ class DocumentView extends Component {
     if (window.screen.availWidth >= 768) {
       this.setState({ showInspector: true })
     }
-    const { match: { params: { uuid } }, dispatch } = this.props
-    dispatch(DocumentActions.getDocument(uuid))
+    this.props.dispatch(UserActions.getUser())
   }
 
   componentWillUnmount() {
     document.title = 'Publications'
   }
 
-  componentWillReceiveProps({ currentDocument }) {
-    if (currentDocument) {
-      document.title = `Publications — ${currentDocument.name}`
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentDocument) {
+      document.title = `Publications — ${nextProps.currentDocument.name}`
+    }
+
+    /**
+     * Only attempt to get documents if the current user request is complete
+     * and we have a valid authenticated user.
+     */
+    const {
+      dispatch,
+      match: { params: { uuid } },
+      user: { isRequestingUser, isAuthenticated }
+    } = nextProps
+    if (this.props.user.isRequestingUser && !isRequestingUser && isAuthenticated) {
+      dispatch(DocumentActions.getDocument(uuid))
+    }
+    /**
+     * If we have requested the user and there is no valid authentication session
+     * redirect to the login page.
+     */
+    else if (this.props.user.isRequestingUser && !isRequestingUser && !isAuthenticated) {
+      this.context.router.replace("/")
     }
   }
 
@@ -137,70 +160,76 @@ class DocumentView extends Component {
     dispatch(DocumentActions.pasteShape())
   }
 
-  render() {
-    const { currentDocument, selectedShape } = this.props
-    const DPI = 72.0
-
-    if (currentDocument) {
-      return <div>
+  _renderDocument() {
+    const { currentDocument, clipboardData, selectedShape } = this.props
+    const { isAboutAppModalOpen, showInspector, zoom } = this.state
+    return (
+      <div>
         <AboutAppModal
           toggleModal={this.toggleAboutAppModal}
-          isOpen={this.state.isAboutAppModalOpen}
+          isOpen={isAboutAppModalOpen}
         />
         <DocumentNavbar
           doc={currentDocument}
           changeZoom={this.changeZoom}
-          clipboard={this.props.clipboardData}
+          clipboard={clipboardData}
           deleteShape={this.deleteShape}
           cutShape={this.cutShape}
           copyShape={this.copyShape}
           pasteShape={this.pasteShape}
           selectedShape={selectedShape}
           save={this.save}
-          showInspector={this.state.showInspector}
+          showInspector={showInspector}
           title={currentDocument.name}
           toggleInspector={this.toggleInspector}
           toggleAboutAppModal={this.toggleAboutAppModal}
           viewAllDocuments={this.viewAllDocuments}
-          zoom={this.state.zoom}
+          zoom={zoom}
         />
         <div className="app-content app-content-document">
           <InspectorBase
             addNewShape={this.addNewShape}
             doc={currentDocument}
             dpi={DPI}
-            zoom={this.state.zoom}
+            zoom={zoom}
             selectedShape={selectedShape}
             updateDocument={this.updateDocumentProperty}
             updateShape={this.updateShape}
-            showInspector={this.state.showInspector} />
+            showInspector={showInspector} />
           <RulerVertical
             doc={currentDocument}
             dpi={DPI}
-            zoom={this.state.zoom} />
+            zoom={zoom} />
           <RulerHorizontal
             doc={currentDocument}
             dpi={DPI}
-            zoom={this.state.zoom} />
+            zoom={zoom} />
           <Canvas
             doc={currentDocument}
             dpi={DPI}
-            zoom={this.state.zoom}
-            showInspector={this.state.showInspector}
+            zoom={zoom}
+            showInspector={showInspector}
             selectable={true}
             selectedShape={selectedShape}
             updateShape={this.updateShape} />
         </div>
       </div>
+    )
+  }
 
-    } else {
-      return <div>
-        <DocumentLoadingNavbar />
-        <div className="app-content app-content-document"></div>
-      </div>
+  render() {
+    const {
+      user: { isRequestingUser, isAuthenticated },
+      currentDocument
+    } = this.props
+    if (isRequestingUser || (isAuthenticated && !currentDocument)) {
+      return <ToolbarProgress />
+    } else if (isAuthenticated && currentDocument) {
+      return this._renderDocument();
     }
+    return <div />
   }
 }
 
-const mapState = state => state.doc
+const mapState = state => ({ ...state.doc, user: state.user })
 export default connect(mapState)(DocumentView)

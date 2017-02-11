@@ -138,9 +138,7 @@ export function removeDocument(doc) {
 
 export function getDocument(id) {
   return dispatch => {
-    dispatch({
-      type: REQUEST_DOCUMENT
-    })
+    dispatch({ type: REQUEST_DOCUMENT })
 
     fetch(`${Urls.ApiBase}/documents/${id}`, {
       method: 'get',
