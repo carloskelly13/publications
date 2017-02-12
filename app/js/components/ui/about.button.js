@@ -9,13 +9,17 @@ const Logo = styled.div`
   width: 27px;
 `
 
+const AboutButtonContent = styled.div`
+  display: inline-block;
+  height: 40px;
+  margin: 0;
+  padding: 0 10px 0 4px;
+  vertical-align: middle;
+  width: 28px;
+`
+
 export const AboutButton = ({ toggleAboutAppModal = () => {} }) => (
-  <div className="about-button">
-    <div
-      className="navbar-logo"
-      onClick={toggleAboutAppModal}
-    >
-      <Logo />
-    </div>
-  </div>
+  <AboutButtonContent onClick={toggleAboutAppModal}>
+    <Logo />
+  </AboutButtonContent>
 )
