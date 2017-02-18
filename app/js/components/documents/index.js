@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react'
+import { findDOMNode } from "react-dom"
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { autobind } from 'core-decorators'
 
-import { ToolbarProgress } from "components/ui/toolbar-progress"
-import DocumentsNavbar from 'components/documents/documents.navbar'
-import DocumentItem from 'components/documents/document.item'
-import NewDocumentModal from 'components/documents/documents.new.modal'
-import UserAccountModal from 'components/user/user.account.modal'
-import AboutAppModal from 'components/ui/about.modal'
+import { ToolbarProgress } from "../ui/toolbar-progress"
+import { Toolbar } from "./toolbar"
+import DocumentsNavbar from './navbar'
+import DocumentItem from './document-item'
+import NewDocumentModal from './new-modal'
+import UserAccountModal from '../user/user.account.modal'
+import AboutAppModal from '../ui/about.modal'
+import { Search } from "./search"
 
 import { connect } from 'react-redux'
 import * as UserActions from 'actions/user'
@@ -56,6 +59,11 @@ class DocumentsView extends Component {
     else if (this.props.user.isRequestingUser && !isRequestingUser && !isAuthenticated) {
       this.context.router.replace("/")
     }
+  }
+
+  @autobind
+  attachEventToViewContainer(ref) {
+    console.debug(ref)
   }
 
   @autobind
@@ -196,27 +204,29 @@ class DocumentsView extends Component {
   }
 
   renderPageContent() {
-    return <div className="app-content">
-      <ul
-        className="document-items"
-        onClick={this.clearSelectedDocument}
+    return (
+      <div
+        className="app-content"
       >
-        <div className="input-text-search">
-          <input
-            value={this.state.searchKeyword}
-            onChange={this.searchKeywordChanged}
-            placeholder="Search for Documents"/>
-        </div>
-        <ReactCSSTransitionGroup
-          transitionName="document-item-animation"
-          transitionAppear={true}
-          transitionAppearTimeout={0}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}>
-          { this.renderDocumentItems() }
-        </ReactCSSTransitionGroup>
-      </ul>
-    </div>
+        <ul
+          className="document-items"
+          onClick={this.clearSelectedDocument}
+        >
+          <Search
+            keyword={this.state.searchKeyword}
+            keywordChanged={this.searchKeywordChanged}
+          />
+          <ReactCSSTransitionGroup
+            transitionName="document-item-animation"
+            transitionAppear={true}
+            transitionAppearTimeout={0}
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}>
+            { this.renderDocumentItems() }
+          </ReactCSSTransitionGroup>
+        </ul>
+      </div>
+    )
   }
 
   _renderAllDocuments() {
@@ -226,7 +236,7 @@ class DocumentsView extends Component {
     } = this.props
     return (
       <div>
-        <DocumentsNavbar
+        { /* <DocumentsNavbar
           isTemporaryUser={isTemporaryUser}
           isAuthenticated={isAuthenticated}
           documentIsSelected={currentDocument !== null}
@@ -234,12 +244,13 @@ class DocumentsView extends Component {
           deleteDocument={this.deleteDocument}
           createNewDocument={this.toggleNewDocumentModal}
           selectedDocument={currentDocument}
-          searchKeyword={this.state.searchKeyword}
-          searchKeywordChanged={this.searchKeywordChanged}
           userName={userName}
           logOut={this.logOut}
           toggleAboutAppModal={this.toggleAboutAppModal}
           toggleUserAccountModal={this.toggleUserAccountModal}
+        /> */ }
+        <Toolbar
+
         />
         { this.renderModals() }
         { this.renderPageContent() }

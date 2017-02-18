@@ -1,26 +1,19 @@
 import React from "react"
 import { render } from "react-dom"
 import { Provider } from "react-redux"
-import { TransitionMotion, spring } from "react-motion"
-import NProgress from "nprogress"
 import configureStore from "stores/configureStore"
 
-import "../../node_modules/nprogress/nprogress.css"
 import "../css/_style.less"
 
-import IndexView from "./containers/index-view"
-import DocumentsView from "./containers/documents-view"
-import DocumentView from "./containers/document-view"
+import IndexView from "./components/index"
+import DocumentsView from "./components/documents"
+import DocumentView from "./components/document"
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch
-} from "react-router-dom"
+import Router from "react-router-dom/BrowserRouter"
+import Switch from "react-router-dom/Switch"
+import Route from "react-router-dom/Route"
 
 const store = configureStore()
-
-const willLeave = () => ({ zIndex: 1, opacity: spring(0) })
 
 const App = () => (
   <Provider store={store}>
@@ -35,5 +28,4 @@ const App = () => (
 )
 
 render(<App />, document.getElementById("pub-app"))
-NProgress.configure({ showSpinner: false })
 console.debug(`Starting Publications with React ${React.version}.`)

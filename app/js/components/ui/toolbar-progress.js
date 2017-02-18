@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Toolbar } from "./toolbar"
-import { AboutButton } from 'components/ui/about.button'
+import { AboutButton } from "./about.button"
 
 class ToolbarProgress extends Component {
   componentDidMount() {

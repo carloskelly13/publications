@@ -2,8 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import range from 'lodash.range'
 import { autobind } from 'core-decorators'
 import ReactDOM from 'react-dom'
-import CanvasGridline from '../canvas/canvas.gridline'
-
+import { GridLine } from "../../components/canvas/grid-line"
 
 export default class RulerVertical extends Component {
   componentDidMount() {
@@ -42,10 +41,12 @@ export default class RulerVertical extends Component {
           height: `${doc.height * zoom * dpi}px`
         }}
         className="ruler ruler-vertical">
-        <svg width="25"
+        <svg
+          width="25"
           height={doc.height * dpi * zoom}
           xmlns="http://www.w3.org/2000/svg"
-          version="1.1">
+          version="1.1"
+        >
           <g id="horizontal-gridlines">
             {
               yRange.map((mark, idx) => {
@@ -69,12 +70,13 @@ export default class RulerVertical extends Component {
                 return (
                   <g key={`h-ruler-line-${idx}`}>
                     {label}
-                    <CanvasGridline
-                            mX={15}
-                            mY={mark - 0.5}
-                            dX={major ? 0 : 15}
-                            dY={25}
-                            direction={'H'} />
+                    <GridLine
+                      mX={15}
+                      mY={mark - 0.5}
+                      dX={major ? 0 : 15}
+                      dY={25}
+                      direction={'H'}
+                    />
                   </g>
                 )
               })

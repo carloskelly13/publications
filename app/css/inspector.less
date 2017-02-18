@@ -10,9 +10,9 @@
   height: inherit;
   position: fixed;
   right: -@inspector-width - 1px;
-  top: 40px;
+  top: 0;
   width: @inspector-width;
-  z-index: 8000;
+  z-index: 9005;
   overflow: hidden;
 
   @media all and (max-width: 767px) {
@@ -82,31 +82,28 @@
   }
 
   .inspector-tab-bar {
-    background: fade(#fff, 95%);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 400;
     position: absolute;
     width: 100%;
     z-index: 2;
 
     .tab-button {
+      background: #eee;
       cursor: pointer;
       border-right: 1px solid #b8b7b9;
-      border-bottom: 1px solid #b8b7b9;
+      box-shadow: inset 0 -1px 0 #b8b7b9;
       box-sizing: border-box;
       display: inline-block;
-      padding: 0.7em 0 0.5em;
+      height: 41px;
+      line-height: 41px;
       text-align: center;
       width: 50%;
 
-      &:hover {
-        .gradient(#fff, #f2f2f2);
-      }
-
       &.active {
-        background: @color-active;
-        .gradient(@color-active, darken(@color-active, 5%));
-        color: #fff;
+        background: #fff;
+        box-shadow: none;
+        font-weight: bold;
       }
 
       &:last-child {

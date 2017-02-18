@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react"
 import { connect } from "react-redux"
-import { LoginForm } from "components/login/login-form"
+import { LoginForm } from "./login-form"
 import { autobind } from "core-decorators"
 
 import * as UserActions from "actions/user"

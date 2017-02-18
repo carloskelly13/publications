@@ -1,8 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import range from 'lodash.range'
 import ReactDOM from 'react-dom'
-import CanvasGridline from '../canvas/canvas.gridline'
-
+import { GridLine } from "../../components/canvas/grid-line"
 
 export default class RulerHorizontal extends Component {
   constructor() {
@@ -45,10 +44,12 @@ export default class RulerHorizontal extends Component {
           width: `${(doc.width * zoom * dpi) + 26}px`
         }}
         className="ruler ruler-horizontal">
-        <svg width={(doc.width * dpi * zoom) + 26}
+        <svg
+          width={(doc.width * dpi * zoom) + 26}
           height="25"
           xmlns="http://www.w3.org/2000/svg"
-          version="1.1">
+          version="1.1"
+        >
           <g id="horizontal-gridlines">
             {
               xRange.map((mark, idx) => {
@@ -72,12 +73,13 @@ export default class RulerHorizontal extends Component {
                 return (
                   <g key={`v-ruler-line-${idx}`}>
                     {label}
-                    <CanvasGridline
+                    <GridLine
                       mX={mark + 25.5}
                       mY={15}
                       dX={25}
                       dY={major ? 0 : 15}
-                      direction={'V'} />
+                      direction={'V'}
+                    />
                   </g>
                 )
               })

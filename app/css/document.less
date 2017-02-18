@@ -15,24 +15,6 @@ ul.document-items {
   }
 
   li.document-item {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    box-sizing: border-box;
-    cursor: default;
-    display: inline-block;
-    margin: 0em;
-    padding: 1.5em 2%;
-    text-align: center;
-    user-select: none;
-    vertical-align: bottom;
-    width: 25%;
-
-    @media all and (max-width: 767px) {
-      border-bottom: 1px solid #ccc;
-      width: 100%;
-    }
-
     .canvas-container svg {
       border-radius: 4px;
       overflow: hidden;
@@ -53,7 +35,7 @@ ul.document-items {
 
     &.selected {
       .canvas-container svg {
-        box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.15), 0 0 0 3px @color-active-bright;
+        box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.15), 0 0 0 3px @color-active;
         border-radius: 4px;
         overflow: hidden;
       }
@@ -61,42 +43,42 @@ ul.document-items {
   }
 }
 
-.canvas-container svg {
-  .animation(margin, 0.25s);
-  border: 1px solid #bbb;
-  margin: 26px 15px 15px 25px;
+// .canvas-container svg {
+//   .animation(margin, 0.25s);
+//   border: 1px solid #bbb;
+//   margin: 26px 15px 15px 25px;
 
-  #horizontal-gridlines,
-  #vertical-gridlines {
-    path {
-      fill: none;
-      stroke: hsla(0, 0%, 0%, 0.075);
-      stroke-width: 1;
-      shape-rendering: crispEdges;
+//   #horizontal-gridlines,
+//   #vertical-gridlines {
+//     path {
+//       fill: none;
+//       stroke: hsla(0, 0%, 0%, 0.075);
+//       stroke-width: 1;
+//       shape-rendering: crispEdges;
 
-      &.inch-mark {
-        stroke: #bbdefb;
-      }
-    }
-  }
+//       &.inch-mark {
+//         stroke: #bbdefb;
+//       }
+//     }
+//   }
 
-  .shape-frame-textarea {
-    height: 100%;
-    resize: none;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    border: none;
+//   .shape-frame-textarea {
+//     height: 100%;
+//     resize: none;
+//     width: 100%;
+//     padding: 0;
+//     margin: 0;
+//     border: none;
 
-    &.shape-frame-textarea-no-edit {
-      background: transparent;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-  }
-}
+//     &.shape-frame-textarea-no-edit {
+//       background: transparent;
+//       -webkit-user-select: none;
+//       -moz-user-select: none;
+//       -ms-user-select: none;
+//       user-select: none;
+//     }
+//   }
+// }
 
 .canvas-no-select svg {
   margin: 0;

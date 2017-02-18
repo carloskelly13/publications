@@ -2,15 +2,14 @@ import React, { Component, PropTypes } from 'react'
 import { autobind } from 'core-decorators'
 import { Urls } from 'core/constants'
 
-import { ToolbarProgress } from "components/ui/toolbar-progress"
-import Canvas from 'components/canvas/canvas'
-import DocumentNavbar from 'components/document/document.navbar'
-import DocumentLoadingNavbar from 'components/document/document.loadingNavbar'
-import InspectorBase from 'components/inspector/inspector.base'
-import RulerHorizontal from 'components/rulers/ruler.horizontal'
-import RulerVertical from 'components/rulers/ruler.vertical'
-import ShapeFactory from 'core/shape.factory'
-import AboutAppModal from 'components/ui/about.modal'
+import { ToolbarProgress } from "../ui/toolbar-progress"
+import Canvas from '../canvas/canvas'
+import DocumentNavbar from './navbar'
+import InspectorBase from '../inspector/inspector.base'
+import RulerHorizontal from '../rulers/ruler.horizontal'
+import RulerVertical from '../rulers/ruler.vertical'
+import ShapeFactory from '../../core/shape.factory'
+import AboutAppModal from '../ui/about.modal'
 
 import { connect } from 'react-redux'
 import * as DocumentActions from 'actions/document'
@@ -169,6 +168,15 @@ class DocumentView extends Component {
           toggleModal={this.toggleAboutAppModal}
           isOpen={isAboutAppModalOpen}
         />
+        <InspectorBase
+          addNewShape={this.addNewShape}
+          doc={currentDocument}
+          dpi={DPI}
+          zoom={zoom}
+          selectedShape={selectedShape}
+          updateDocument={this.updateDocumentProperty}
+          updateShape={this.updateShape}
+          showInspector={showInspector} />
         <DocumentNavbar
           doc={currentDocument}
           changeZoom={this.changeZoom}
@@ -187,15 +195,6 @@ class DocumentView extends Component {
           zoom={zoom}
         />
         <div className="app-content app-content-document">
-          <InspectorBase
-            addNewShape={this.addNewShape}
-            doc={currentDocument}
-            dpi={DPI}
-            zoom={zoom}
-            selectedShape={selectedShape}
-            updateDocument={this.updateDocumentProperty}
-            updateShape={this.updateShape}
-            showInspector={showInspector} />
           <RulerVertical
             doc={currentDocument}
             dpi={DPI}
@@ -205,13 +204,13 @@ class DocumentView extends Component {
             dpi={DPI}
             zoom={zoom} />
           <Canvas
+            allowsEditing
             doc={currentDocument}
-            dpi={DPI}
             zoom={zoom}
-            showInspector={showInspector}
-            selectable={true}
             selectedShape={selectedShape}
-            updateShape={this.updateShape} />
+            selectable={true}
+            updateShape={this.updateShape}
+          />
         </div>
       </div>
     )
