@@ -206,9 +206,7 @@ class DocumentView extends Component {
           <Canvas
             allowsEditing
             doc={currentDocument}
-            zoom={zoom}
-            selectedShape={selectedShape}
-            selectable={true}
+            selectable
             updateShape={this.updateShape}
           />
         </div>

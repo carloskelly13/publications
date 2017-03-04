@@ -2,34 +2,23 @@ import React, {Component, PropTypes} from 'react'
 import range from 'lodash.range'
 import ReactDOM from 'react-dom'
 import { GridLine } from "../../components/canvas/grid-line"
+import styled from "styled-components"
+import ReactOutsideEvent from "react-outside-event"
 
-export default class RulerHorizontal extends Component {
-  constructor() {
-    super(...arguments)
-    this.handleScroll = this.handleScroll.bind(this)
-  }
+const RulerContainer = styled.div`
+  background: #f4f4f4;
+  position: fixed;
+  left: 25vw;
+  border-bottom: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  height: 25px;
+  z-index: 1;
+`
 
-  componentDidMount() {
-    const scrollContainer = document.getElementById('svg-canvas-container')
-    scrollContainer.addEventListener('scroll', this.handleScroll)
-  }
-
-  componentWillUnmount() {
-    const scrollContainer = document.getElementById('svg-canvas-container')
-    scrollContainer.removeEventListener('scroll', this.handleScroll)
-  }
-
-  handleScroll(event) {
-    ReactDOM
-      .findDOMNode(this.refs.rulerContainer)
-      .style.left = `${-1 - event.target.scrollLeft}px`
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const widthChanged = this.props.doc.width != nextProps.doc.width
-    const heightChanged = this.props.doc.height != nextProps.doc.height
-    const zoomChanged = this.props.zoom != nextProps.zoom
-    return (widthChanged || heightChanged || zoomChanged)
+export default class Ruler extends Component {
+  static defaultProps = {
+    dpi: 72,
+    zoom: 1.0
   }
 
   render() {
@@ -37,13 +26,12 @@ export default class RulerHorizontal extends Component {
     const xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom)
 
     return (
-      <div
-        ref="rulerContainer"
+      <RulerContainer
         style={{
-          left: '-1px',
-          width: `${(doc.width * zoom * dpi) + 26}px`
+          width: `${(doc.width * zoom * dpi) + 26}px`,
+          left: `calc(25vw - ${this.props.scrollOffset.scrollLeft}px)`
         }}
-        className="ruler ruler-horizontal">
+      >
         <svg
           width={(doc.width * dpi * zoom) + 26}
           height="25"
@@ -86,7 +74,7 @@ export default class RulerHorizontal extends Component {
             }
           </g>
         </svg>
-      </div>
+      </RulerContainer>
     )
   }
 }

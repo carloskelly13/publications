@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react"
 import styled from "styled-components"
+import { AppColors } from "../../core/constants"
 
 const _width = ({ big = false, half = false }) => {
   if (big) { return "100%" }
@@ -9,29 +10,28 @@ const _width = ({ big = false, half = false }) => {
 
 export const FramedButton = styled.button`
   background: #fff;
-  background: linear-gradient(top, #fff, #f2f2f2);
-  border: 1px solid #d3d2d4;
-  border-bottom-color: #b8b7b9;
-  border-radius: 4px;
+  border: 1px solid ${({ primary }) => primary ? AppColors.Active : "#ccc"};
+  border-radius: 2px;
   box-sizing: border-box;
   line-height: 1em;
   font-size: ${({ big }) => big ? "18px" : "13px"};
   font-weight: 500;
-  margin: 0;
+  margin: ${({ margin }) => margin ? "0 5px" : "0"};
   padding: ${({ big }) => big ? "9px 32px 8px" : "6px 16px" };
   text-decoration: none;
-  color: #616161;
+  color: ${({ primary }) => primary ? AppColors.Active : "#616161"};
   width: ${_width};
 
   &:hover {
-    background: #f7f7f7;
-    background: linear-gradient(top, #f7f7f7, #f0f0f0);
+    background: ${({ primary }) => primary ? AppColors.ActiveLight : "#f7f7f7"};
+    border-color: ${({ primary }) => primary ? AppColors.ActiveDark : "#aaa"};
+    color: ${({ primary }) => primary ? "#fff" : "#424242"};
   }
 
   &:active {
-    border-top-color: #ccc;
-    background: #ececec;
-    background: linear-gradient(top, #ececec, #f2f2f2);
+    background: ${({ primary }) => primary ? AppColors.Active : "#f0f0f0"};
+    border-color: ${({ primary }) => primary ? AppColors.ActiveDark : "#aaa"};
+    color: ${({ primary }) => primary ? "#fff" : "#424242"};
   }
 `
 

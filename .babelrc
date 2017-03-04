@@ -5,6 +5,7 @@
     "stage-0"
   ],
   "plugins": [
+    "react-hot-loader/babel",
     "syntax-async-functions",
     "transform-async-to-generator",
     "transform-decorators-legacy",

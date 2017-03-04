@@ -1,91 +1,76 @@
-import React, { Component, PropTypes } from "react"
-import { Router, RouteHandler, Link } from "react-router"
-import { autobind } from "core-decorators"
-import { Urls } from "core/constants"
-import Canvas from "../canvas/canvas"
+import React from "react"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
+import { connect } from "react-redux"
 import { format as formatDate } from "fecha"
+import { MediumText, Text } from "../ui/text"
+import { currentDocumentSelector } from "../../selectors"
+import {
+  updateCurrentDocument as setSelectedDocumentAction
+} from "../../actions/document"
+import { AppColors } from "../../core/constants"
 import styled from "styled-components"
 
 const DocumentItemContent = styled.li`
-  box-sizing: border-box;
   cursor: default;
-  display: inline-block;
-  margin: 0em;
-  padding: 1.5em 2%;
-  text-align: center;
   user-select: none;
-  vertical-align: bottom;
-  width: 25%;
-
-  @media all and (max-width: 767px) {
-    border-bottom: 1px solid #ccc;
-    width: 100%;
-  }
+  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0.85em 1em;
+  background: ${({ selected }) => selected ? AppColors.Active : "transparent"};
+  box-shadow: 0 1px 0 ${({ selected }) => selected ? AppColors.ActiveDark : "#ccc"};
 `
 
-const Name = styled.div`
-  display: block;
-  font-size: 15px;
-  font-weight: 500;
-  margin: 0.25em 0 0 0;
-`
-
-const InfoLine = styled.div`
-  display: block;
-  font-size: 12px;
-  margin: 0;
-`
-
-export default class DocumentItem extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return (nextProps.selectedDocument && nextProps.selectedDocument.id === this.props.doc.id) ||
-      (this.props.selectedDocument && this.props.selectedDocument.id === this.props.doc.id) ||
-      (this.props.doc !== nextProps.doc)
+const formattedDateString = date => {
+  const oneWeekAgo = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7)
+  if (date < oneWeekAgo) {
+    return formatDate(date, "MMM D, YYYY, h:mm A")
   }
-
-  render() {
-    const {
-      selectedDocument,
-      doc: { id }
-    } = this.props
-    const selected = !!selectedDocument && selectedDocument.id == id
-    const lastModifiedDate = new Date(this.props.doc.lastModified)
-    const formattedDate = formatDate(lastModifiedDate, "MMM D, h:mm A")
-
-    return (
-      <DocumentItemContent>
-        <div
-          onClick={this.documentSelected}
-          onDoubleClick={this.documentDoubleClicked}>
-          <Canvas
-            doc={this.props.doc}
-            zoom={0.2}
-            selected={selected}
-          />
-          <Name>
-            {this.props.doc.name}
-          </Name>
-          <InfoLine>
-            { formattedDate }
-          </InfoLine>
-          <InfoLine>
-            {this.props.doc.width}&#8221;&#32;&#215;&#32;{this.props.doc.height}&#8221;
-          </InfoLine>
-        </div>
-      </DocumentItemContent>
-    )
-  }
-
-  @autobind
-  documentSelected(event) {
-    event.stopPropagation()
-    this.props.updateSelectedDocument(this.props.doc, null)
-  }
-
-  @autobind
-  documentDoubleClicked(event) {
-    event.stopPropagation()
-    this.props.updateSelectedDocument(this.props.doc, null)
-    this.props.editDocument()
-  }
+  return formatDate(date, "dddd, h:mm A")
 }
+
+const DocumentItem = ({
+  setSelectedDocument, selectedDocument, doc
+}) => {
+  const selected = !!selectedDocument && selectedDocument.id == doc.id
+  const lastModifiedDate = new Date(doc.lastModified)
+
+
+  return (
+    <DocumentItemContent
+      selected={selected}
+      onClick={event => {
+        event.stopPropagation()
+        setSelectedDocument(doc)
+      }}
+    >
+      <MediumText
+        white={selected}
+        size="0.95em"
+        mb="0.25em"
+      >
+        { doc.name }
+      </MediumText>
+      <Text
+        white={selected}
+        size="0.825em"
+      >
+        { formattedDateString(lastModifiedDate) }
+      </Text>
+    </DocumentItemContent>
+  )
+}
+
+const mapStateToProps = state => ({
+  selectedDocument: currentDocumentSelector(state)
+})
+
+const mapDispatchToProps = {
+  setSelectedDocument: setSelectedDocumentAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentItem)
+
+

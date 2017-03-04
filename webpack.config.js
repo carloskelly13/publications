@@ -1,10 +1,6 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
-
-const extractLESS = new ExtractTextPlugin("app.css")
-const extractCSS = new ExtractTextPlugin("vendor.css")
 
 module.exports = env => {
   const addPlugin = (add, plugin) => add ? plugin : undefined
@@ -13,13 +9,19 @@ module.exports = env => {
   const removeEmpty = array => array.filter(el => !!el)
 
   return {
-    devtool: env.prod ? undefined : "inline-source-map",
+    devtool: env.prod ? false : "inline-source-map",
 
     entry: {
-      app: removeEmpty([
-        "./app/js/app.js",
-        ifDev("webpack-hot-middleware/client?reload=true")
-      ]),
+      app: removeEmpty(
+        [
+          ...(env.dev ? [
+            "react-hot-loader/patch",
+            "webpack-dev-server/client?http://localhost:4040",
+            "webpack/hot/only-dev-server",
+          ] : []),
+          "./app/js/index.js"
+        ]
+      ),
       vendor: [ "./app/js/vendor.js" ]
     },
 
@@ -40,7 +42,8 @@ module.exports = env => {
           }
         }
       },
-      historyApiFallback: true
+      historyApiFallback: true,
+      hot: true
     },
 
     module: {
@@ -58,8 +61,7 @@ module.exports = env => {
           ],
           loader: "eslint-loader"
         },
-        { test: /\.less$/, loader: extractLESS.extract([ "css-loader", "less-loader" ]) },
-        { test: /\.css$/, loader: extractCSS.extract([ "css-loader" ]) },
+        { test: /\.css$/, loader: "css-loader" },
         { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: "url-loader?limit=64" },
         { test: /\.json$/, loader: "json-loader" }
       ]
@@ -76,8 +78,6 @@ module.exports = env => {
     },
 
     plugins: removeEmpty([
-      extractLESS, extractCSS,
-
       new webpack.optimize.CommonsChunkPlugin({
         name: [ "vendor", "manifest" ]
       }),
@@ -90,12 +90,16 @@ module.exports = env => {
 
       ifDev(new webpack.HotModuleReplacementPlugin()),
 
+      ifDev(new webpack.NamedModulesPlugin()),
+
+      new webpack.NoEmitOnErrorsPlugin(),
+
       new webpack.DefinePlugin({
         "process.env": { NODE_ENV: `${env.prod ? '"production"' : '"development"'}`, },
       }),
 
       ifProd(new webpack.optimize.UglifyJsPlugin({
-        compress: { screw_ie8: true, warnings: false },
+        compress: { screw_ie8: true, warnings: false }
       })),
 
       new HtmlWebpackPlugin({
@@ -111,6 +115,5 @@ module.exports = env => {
       clearImmediate: false,
       setImmediate: false
     }
-
   }
 }

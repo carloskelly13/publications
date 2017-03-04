@@ -1,16 +1,17 @@
 import styled from "styled-components"
+import { AppColors } from "../../core/constants"
 
 const Toolbar = styled.div`
   align-items: center;
-  background: #fff;
+  background: ${AppColors.DarkGray};
   box-pack: justify;
   display: flex;
   height: 40px;
   justify-content: space-between;
-  position: fixed;
+  top: 0;
   user-select: none;
-  width: 100%;
-  z-index: 9000;
+  padding: 0 1em;
+  width: calc(100% - 2em);
 `
 
 export { Toolbar }

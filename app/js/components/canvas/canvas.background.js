@@ -5,7 +5,6 @@ import { autobind } from 'core-decorators'
 import { GridLine } from './grid-line'
 
 export default class CanvasBackground extends Component {
-
   shouldComponentUpdate(nextProps) {
     const widthChanged = this.props.doc.width != nextProps.doc.width
     const heightChanged = this.props.doc.height != nextProps.doc.height
@@ -51,28 +50,28 @@ export default class CanvasBackground extends Component {
       />
     )
 
-    return (
-      <g>
-        { xGridlines }
-        { yGridlines }
-      </g>
-    )
+    return <g>{ [ ...xGridlines, ...yGridlines ] }</g>
   }
 
   render() {
     const { doc, dpi, selectable, zoom } = this.props
 
-    return <g id="canvas-background"
-      onClick={ selectable ? this.canvasSelected : null } >
-      <rect
-        y="0"
-        x="0"
-        fill="#fff"
-        stroke="0"
-        strokeWidth="0"
-        width={ doc.width * dpi * zoom }
-        height={ doc.height * dpi * zoom } />
-      { this.renderGridlines() }
-    </g>
+    return (
+      <g
+        id="canvas-background"
+        onClick={selectable ? this.canvasSelected : null}
+      >
+        <rect
+          y="0"
+          x="0"
+          fill="#fff"
+          stroke="0"
+          strokeWidth="0"
+          width={doc.width * dpi * zoom}
+          height={doc.height * dpi * zoom}
+        />
+        { this.renderGridlines() }
+      </g>
+    )
   }
 }

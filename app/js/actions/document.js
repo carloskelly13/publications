@@ -64,12 +64,7 @@ export function updateDocumentProperty(sender) {
 
 export function getDocuments() {
   return dispatch => {
-    NProgress.start()
-
-    dispatch({
-      type: REQUEST_DOCUMENTS
-    })
-
+    dispatch({ type: REQUEST_DOCUMENTS })
     fetch(`${Urls.ApiBase}/documents`, {
       method: 'get',
       credentials: 'include'
@@ -81,8 +76,6 @@ export function getDocuments() {
       }
     })
     .then(documents => {
-      NProgress.done()
-
       dispatch({
         type: RECEIVE_DOCUMENTS,
         documents
