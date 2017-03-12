@@ -15,6 +15,9 @@ const AppView = styled.div`
   position: absolute;
   overflow: hidden;
   top: 0; left: 0; right: 0; bottom: 0;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "dlig" 1;
+  -moz-font-feature-settings: "kern" 1, "dlig" 1;
 `
 
 import {

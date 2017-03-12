@@ -5,7 +5,9 @@
 
 import {
   activeModalSelector,
-  activeModalPropsSelector
+  activeModalPropsSelector,
+  editModeActiveSelector,
+  sidePanelVisibleSelector
 } from "./app-ui"
 
 import {
@@ -24,5 +26,7 @@ export {
   allDocumentsSelector,
   currentDocumentSelector,
   currentUserSelector,
-  selectedShapeSelector
+  selectedShapeSelector,
+  editModeActiveSelector,
+  sidePanelVisibleSelector
 }

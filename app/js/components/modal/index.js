@@ -1,9 +1,31 @@
 import React, { PropTypes } from "react"
-import styled from "styled-components"
+import styled, { injectGlobal } from "styled-components"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { hideModal as hideModalAction } from "../../actions/app-ui"
 import { connect } from "react-redux"
-import "./modal.css"
+import {
+  activeModalPropsSelector
+} from "../../selectors"
+
+injectGlobal`
+  .modal-transition-enter {
+    opacity: 0;
+  }
+
+  .modal-transition-enter.modal-transition-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .modal-transition-leave {
+    opacity: 1;
+  }
+
+  .modal-transition-leave.modal-transition-leave-active {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+`
 
 const ModalContainer = styled.div`
   align-items: center;
@@ -44,7 +66,7 @@ const handleHideModal = (event, hideModalAction) => {
 
 const Modal = ({
   component: ModalComponent,
-  componentProps = {}
+  activeModalProps: componentProps
 }) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
@@ -59,4 +81,8 @@ const Modal = ({
   </ReactCSSTransitionGroup>
 )
 
-export default Modal
+const mapStateToProps = state => ({
+  activeModalProps: activeModalPropsSelector(state)
+})
+
+export default connect(mapStateToProps)(Modal)

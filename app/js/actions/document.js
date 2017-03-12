@@ -17,6 +17,7 @@ export const DELETE_SHAPE = 'DELETE_SHAPE'
 export const CUT_SHAPE = 'CUT_SHAPE'
 export const COPY_SHAPE = 'COPY_SHAPE'
 export const PASTE_SHAPE = 'PASTE_SHAPE'
+export const REPLACE_DOCUMENT = "REPLACE_DOCUMENT"
 
 export function updateSelectedShape(selectedShape) {
   return dispatch => dispatch({
@@ -150,19 +151,15 @@ export function getDocument(id) {
   }
 }
 
-export function saveDocument(doc, completion = () => {}) {
+export function saveDocument(doc) {
   return (dispatch, getState) => {
-    const { id } = doc
+    const { id, width, height, shapes, name } = doc
     const { csrfHeaders } = getState().security
 
-    NProgress.start()
-
-    const documentJson = {
-      name: doc.name,
-      width: doc.width,
-      height: doc.height,
-      shapes: doc.shapes
-    }
+    dispatch({
+      type: "REPLACE_DOCUMENT",
+      payload: { ...doc, lastModified: (new Date()).getTime() }
+    })
 
     fetch(`${Urls.ApiBase}/documents/${id}`, {
       method: 'put',
@@ -172,11 +169,7 @@ export function saveDocument(doc, completion = () => {}) {
         'Content-Type': 'application/json',
         ...csrfHeaders
       },
-      body: JSON.stringify(documentJson)
-    })
-    .then(() => {
-      NProgress.done()
-      completion()
+      body: JSON.stringify({ width, height, shapes, name })
     })
   }
 }

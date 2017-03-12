@@ -19,6 +19,8 @@ export const MarginText = styled.span`
 
 export const Text = styled(MarginText)`
   font-size: ${({ size }) => size || '1em'};
+  text-align: left;
+  font-weight: 400;
   color: ${props => {
     if (props.white) return "#fff"
     return AppColors.DarkGray

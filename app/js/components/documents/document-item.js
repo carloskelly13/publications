@@ -4,9 +4,6 @@ import { connect } from "react-redux"
 import { format as formatDate } from "fecha"
 import { MediumText, Text } from "../ui/text"
 import { currentDocumentSelector } from "../../selectors"
-import {
-  updateCurrentDocument as setSelectedDocumentAction
-} from "../../actions/document"
 import { AppColors } from "../../core/constants"
 import styled from "styled-components"
 
@@ -20,7 +17,7 @@ const DocumentItemContent = styled.li`
   flex-direction: column;
   padding: 0.85em 1em;
   background: ${({ selected }) => selected ? AppColors.Active : "transparent"};
-  box-shadow: 0 1px 0 ${({ selected }) => selected ? AppColors.ActiveDark : "#ccc"};
+  box-shadow: 0 1px 0 ${({ selected }) => selected ? AppColors.ActiveDark : "hsla(0, 0%, 0%, 0.25)"};
 `
 
 const formattedDateString = date => {
@@ -32,19 +29,15 @@ const formattedDateString = date => {
 }
 
 const DocumentItem = ({
-  setSelectedDocument, selectedDocument, doc
+  selectedDocument, doc, onClick
 }) => {
   const selected = !!selectedDocument && selectedDocument.id == doc.id
   const lastModifiedDate = new Date(doc.lastModified)
 
-
   return (
     <DocumentItemContent
       selected={selected}
-      onClick={event => {
-        event.stopPropagation()
-        setSelectedDocument(doc)
-      }}
+      onClick={onClick}
     >
       <MediumText
         white={selected}
@@ -67,10 +60,6 @@ const mapStateToProps = state => ({
   selectedDocument: currentDocumentSelector(state)
 })
 
-const mapDispatchToProps = {
-  setSelectedDocument: setSelectedDocumentAction
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentItem)
+export default connect(mapStateToProps)(DocumentItem)
 
 

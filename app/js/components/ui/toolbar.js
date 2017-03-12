@@ -12,6 +12,7 @@ const Toolbar = styled.div`
   user-select: none;
   padding: 0 1em;
   width: calc(100% - 2em);
+  z-index: 5;
 `
 
 export { Toolbar }

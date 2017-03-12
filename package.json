@@ -10,6 +10,7 @@
     "test": ""
   },
   "dependencies": {
+    "clone-deep": "^0.2.4",
     "core-decorators": "^0.12.0",
     "es6-promise": "^3.1.2",
     "events": "^1.1.1",
@@ -18,7 +19,9 @@
     "history": "4.5.1",
     "immutable": "^3.7.5",
     "isomorphic-fetch": "^2.2.1",
+    "lodash.differencewith": "^4.5.0",
     "lodash.get": "^4.4.2",
+    "lodash.isequal": "^4.5.0",
     "lodash.isstring": "^4.0.1",
     "lodash.partial": "^4.2.1",
     "lodash.range": "^3.1.5",
@@ -32,6 +35,7 @@
     "react-addons-shallow-compare": "15.4.2",
     "react-dom": "15.4.2",
     "react-motion": "^0.4.7",
+    "react-outside-event": "^1.2.4",
     "react-redux": "^4.0.6",
     "react-router": "4.0.0-beta.6",
     "react-router-dom": "4.0.0-beta.6",

@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import BaseView from "./components/base"
 import IndexView from "./components/index"
 import DocumentsView from "./components/documents"
-// import DocumentView from "./components/document"
+import { injectGlobal } from "styled-components"
 
 import Router from "react-router-dom/BrowserRouter"
 import Switch from "react-router-dom/Switch"
@@ -18,7 +18,6 @@ export const App = ({ store }) => (
         <Switch>
           <Route exact path="/" component={IndexView} />
           <Route exact path="/documents" component={DocumentsView} />
-          {/*<Route path="/documents/:uuid" component={DocumentView} />*/}
         </Switch>
       </Router>
     </BaseView>

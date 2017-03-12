@@ -12,12 +12,14 @@ import {
   DELETE_SHAPE,
   CUT_SHAPE,
   COPY_SHAPE,
-  PASTE_SHAPE
+  PASTE_SHAPE,
+  REPLACE_DOCUMENT
 } from 'actions/document'
+import { newDocument } from "../core/constants"
 
 const defaultState = {
   documents: [],
-  currentDocument: null,
+  currentDocument: newDocument,
   selectedShape: null,
   clipboardData: null,
   isRequestingData: false,
@@ -114,6 +116,13 @@ export default function documentReducer(state = defaultState, action) {
       currentDocument: updatedDocument,
       selectedShape: pasteShape
     })
+  }
+
+  case REPLACE_DOCUMENT: {
+    const replacedDoc = action.payload
+    const idx = state.documents.findIndex(doc => doc.id === replacedDoc.id)
+    const documents = Object.assign([], state.documents, { [idx] : replacedDoc })
+    return { ...state, documents, currentDocument: replacedDoc }
   }
 
   case UPDATE_SELECTED_SHAPE: {

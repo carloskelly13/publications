@@ -1,9 +1,6 @@
 import React, { PropTypes } from "react"
 import styled from "styled-components"
-import CanvasBackground from "./canvas.background"
-import ShapeEllipse from "./shape.ellipse"
-import ShapeRect from "./shape.rect"
-import ShapeText from "./shape.text"
+import CanvasBackground from "./background"
 import { connect } from "react-redux"
 import get from "lodash.get"
 import {
@@ -11,28 +8,24 @@ import {
 } from "../../selectors"
 import { updateSelectedShape as updateShapeAction } from "../../actions/document"
 
+import {
+  Rectangle, Ellipse
+} from "../shapes"
+
 const CanvasSVG = styled.svg`
   border: 1px solid #a5a5a5;
-  margin: 25px 1em 1em 25px;
+  margin: 25px 1em 1em 24px;
   overflow: hidden;
 `
 
-const shapeElements = (shapeProps, doc) => doc.shapes
-  .sort((lhs, rhs) => lhs.z - rhs.z)
-  .map((shape, idx) => {
-    switch (shape.type) {
-      case "rect":
-        return <ShapeRect {...shapeProps} key={idx} shape={shape} />
-
-      case "ellipse":
-        return <ShapeEllipse {...shapeProps} key={idx} shape={shape} />
-
-      case "text":
-        return <ShapeText {...shapeProps} key={idx} shape={shape} />
-
-      default: return null
-    }
-  })
+const renderShape = props => {
+  if (props.shape.type === "rect") {
+    return <Rectangle {...props} />
+  } else if (props.shape.type === "ellipse") {
+    return <Ellipse {...props} />
+  }
+  return null
+}
 
 const zoomForDocumentSize = ({ width, height }) => {
   if (width >= 32 || height >= 32) {
@@ -53,15 +46,11 @@ const Canvas = ({
     zoom = zoomForDocumentSize(doc)
   }
 
-  const shapeProps = {
-    selectedShapeId: !!selectedShape ? selectedShape.id : -1,
-    dpi,
-    selectable: allowsEditing,
-    updateShape,
-    zoom
-  }
-
   const isCurrentDocument = get(currentDocument, "id", -1) === doc.id
+
+  const shapes = doc.shapes.map((shape, index) => renderShape({
+    shape, zoom, dpi, selectable: allowsEditing, key: index
+  }))
 
   return (
     <div
@@ -80,14 +69,13 @@ const Canvas = ({
       >
         <g>
           <CanvasBackground
-            updateShape={updateShape}
             selectable={allowsEditing}
             doc={doc}
             dpi={dpi}
             zoom={zoom}
           />
         </g>
-        <g>{ shapeElements(shapeProps, doc) }</g>
+        <g>{ shapes }</g>
       </CanvasSVG>
     </div>
   )

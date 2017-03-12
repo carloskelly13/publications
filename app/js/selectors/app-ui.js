@@ -8,3 +8,9 @@ export const activeModalSelector = state =>
 
 export const activeModalPropsSelector = state =>
   state.appUi.activeModalProps
+
+export const editModeActiveSelector = state =>
+  state.appUi.editModeActive
+
+export const sidePanelVisibleSelector = state =>
+  state.appUi.sidePanelVisible

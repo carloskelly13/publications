@@ -3,9 +3,11 @@ import ReactDOM from "react-dom"
 import styled from "styled-components"
 import get from "lodash.get"
 import { connect } from "react-redux"
+import { rightPanelWidth } from "../../core/constants"
 import {
   currentDocumentSelector,
-  selectedShapeSelector
+  selectedShapeSelector,
+  editModeActiveSelector
 } from "../../selectors"
 import Canvas from "../canvas"
 import Ruler from "../rulers"
@@ -14,7 +16,8 @@ const Container = styled.div`
   background: #fff;
   flex: 1 1 auto;
   overflow: scroll;
-  width: 75vw;
+  width: ${rightPanelWidth};
+  z-index: 1;
 `
 
 class EditorView extends Component {
@@ -29,7 +32,9 @@ class EditorView extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (get(this.props.currentDocument, "id") !== get(nextProps.currentDocument, "id")) {
-      this.setState({ scrollOffset: { scrollLeft: 0, scrollTop: 0 } })
+      const containerEl = ReactDOM.findDOMNode(this.containerRef)
+      containerEl.scrollTop = 0
+      containerEl.scrollLeft = 0
     }
   }
 
@@ -51,7 +56,7 @@ class EditorView extends Component {
 
   render() {
     const {
-      props: { currentDocument, selectedShape },
+      props: { currentDocument, selectedShape, editModeActive },
       state: { scrollOffset }
     } = this
     return (
@@ -61,6 +66,7 @@ class EditorView extends Component {
         { currentDocument && (
           <div>
             <Ruler
+              showDetail={editModeActive}
               scrollOffset={scrollOffset}
               doc={currentDocument}
             />
@@ -77,7 +83,8 @@ class EditorView extends Component {
 
 const mapStateToProps = state => ({
   currentDocument: currentDocumentSelector(state),
-  selectedShape: selectedShapeSelector(state)
+  selectedShape: selectedShapeSelector(state),
+  editModeActive: editModeActiveSelector(state)
 })
 
 export default connect(mapStateToProps)(EditorView)
