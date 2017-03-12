@@ -3,7 +3,8 @@ import { Toolbar as ToolbarBase } from "../ui/toolbar"
 import { AboutButton } from "../ui/about.button"
 import {
   GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
-  PasteIconButton, DeleteIconButton, DocumentsIconButton, CloseIconButton
+  PasteIconButton, DeleteIconButton, DocumentsIconButton, CloseIconButton,
+  ShapeAddIconButton, IconContainer
 } from "../ui/icon-buttons"
 import {
   currentDocumentSelector, editModeActiveSelector, sidePanelVisibleSelector
@@ -47,11 +48,11 @@ class Toolbar extends Component {
       <ToolbarBase>
         <StrongText white size="1.1em">Publications</StrongText>
         { currentDocument && (
-          <div>
-            <DiskIconButton
+          <IconContainer>
+            <ShapeAddIconButton
               margin
-              onClick={() => saveDocument(currentDocument)}
             />
+            
             <CutIconButton
               margin
               onClick={() => {}}
@@ -73,14 +74,22 @@ class Toolbar extends Component {
               onClick={this.handleGridButton}
               active={editModeActive}
             />
-          </div>
+          </IconContainer>
         ) }
-        <div>
+        <IconContainer>
+          { currentDocument && (
+            <IconContainer>
+              <DiskIconButton
+                margin
+                onClick={() => saveDocument(currentDocument)}
+              />
+            </IconContainer>
+          ) }
           <DocumentsIconButton
             onClick={this.handleSidePanelButton}
             active={sidePanelVisible}
           />
-        </div>
+        </IconContainer>
       </ToolbarBase>
     )
   }
