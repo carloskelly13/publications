@@ -1,5 +1,7 @@
 import React from "react"
 import { IconButton } from "./icon-button"
+import { Text } from "../text"
+import { AppColors } from "../../../core/constants"
 
 export const CutIconButton = ({ onClick, margin, active }) => (
   <IconButton
@@ -8,7 +10,7 @@ export const CutIconButton = ({ onClick, margin, active }) => (
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
       <g
-        stroke={active ? "#fff" : "#aaa"}
+        stroke={active ? AppColors.DarkGray : "#aaa"}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit="10"
@@ -20,5 +22,6 @@ export const CutIconButton = ({ onClick, margin, active }) => (
         <path d="M11.035 10.731l12.352 7.355c-.561.951-1.953 1.312-2.905.75l-15.837-9.336"/>
       </g>
     </svg>
+    <Text block center color={active ? AppColors.DarkGray : "#aaa"}>Cut</Text>
   </IconButton>
 )

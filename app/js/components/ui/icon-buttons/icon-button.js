@@ -6,11 +6,10 @@ export const IconButton = styled.button`
   box-sizing: border-box;
   cursor: pointer;
   display: inline-block;
-  height: 25px;
-  width: 25px;
   margin: 0 ${({ margin }) => margin ? "1.5em" : 0} 0 0;
   padding: 0;
   outline: none;
+  text-align: center;
 
   &:active {
     transform: scale(0.95);

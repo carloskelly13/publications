@@ -1,5 +1,7 @@
 import React from "react"
 import { IconButton } from "./icon-button"
+import { Text } from "../text"
+import { AppColors } from "../../../core/constants"
 
 export const GridIconButton = ({ onClick, active, margin }) => (
   <IconButton
@@ -13,7 +15,7 @@ export const GridIconButton = ({ onClick, active, margin }) => (
       viewBox="0 0 24 24"
     >
       <g
-        stroke={active ? "#fff" : "#aaa"}
+        stroke={active ? AppColors.Highlight : "#fff"}
         strokeWidth={1}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -25,5 +27,8 @@ export const GridIconButton = ({ onClick, active, margin }) => (
         />
       </g>
     </svg>
+    <Text block color={active ? AppColors.Highlight : "#fff"}>
+      Grid
+    </Text>
   </IconButton>
 )

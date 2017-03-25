@@ -19,11 +19,17 @@ export const MarginText = styled.span`
 
 export const Text = styled(MarginText)`
   font-size: ${({ size }) => size || '1em'};
-  text-align: left;
+  text-align: ${({ center }) => center ? "center" : "left"};
+  display: ${({ block }) => block ? "block" : "inline-block"};
   font-weight: 400;
   color: ${props => {
+    if (props.color) return props.color
     if (props.white) return "#fff"
     return AppColors.DarkGray
+  }};
+  text-transform: ${props => {
+    if (props.uppercase) return "uppercase"
+    return "none"
   }};
 `
 

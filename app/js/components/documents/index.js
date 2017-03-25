@@ -20,7 +20,7 @@ const ViewContainer = styled.div`
 
 const ViewContent = styled.div`
   display: flex;
-  flex: 1 0 calc(100% - 40px);
+  flex: 1 0 calc(100% - 55px);
 `
 
 class DocumentsView extends Component {

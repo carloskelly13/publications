@@ -18,8 +18,10 @@ export const colors = [
 
 export const breakpointLg = "min-width: 768px"
 
-export const leftPanelWidth = "25vw"
-export const rightPanelWidth = "100vw"
+const _sidePanelWidth = 25
+export const sidePanelWidth = `${_sidePanelWidth}vw`
+export const contentPanelWidthFull = "100vw"
+export const contentPanelWidthPartial = `${100 - _sidePanelWidth}vw`
 
 export const AppColors = {
   Active: "#5856d6",
@@ -28,8 +30,9 @@ export const AppColors = {
   LightGray: "#f5f5f5",
   Gray: "#e5e5e5",
   DarkGray: "#263238",
-  Highlight: "#f6e102",
-  LightActive: "#e9e8f5"
+  Highlight: "#5856d6",
+  LightActive: "#e9e8f5",
+  IconColor: "#444"
 }
 
 export const newDocument = {
@@ -38,4 +41,53 @@ export const newDocument = {
   height: 11,
   shapes: [],
   new: true
+}
+
+export const Shapes = {
+  Rectangle: {
+    type: 'rect',
+      x: 0.25,
+      y: 0.25,
+      r: 0,
+      angle: 0,
+      width: 1,
+      height: 1,
+      fill: '#609eeb',
+      stroke: '#4e8bda',
+      strokeWidth: 1,
+      strokeOpacity: 1.0,
+      fillOpacity: 1.0
+  },
+  Ellipse: {
+    type: 'ellipse',
+    x: 0.25,
+    y: 0.25,
+    r: 0,
+    angle: 0,
+    width: 1,
+    height: 1,
+    fill: '#609eeb',
+    stroke: '#4e8bda',
+    strokeWidth: 1,
+    strokeOpacity: 1.0,
+    fillOpacity: 1.0
+  },
+  Text: {
+    type: 'text',
+    x: 0.25,
+    y: 0.25,
+    r: 0,
+    text: 'Double click to insert text',
+    fontFamily: 'Source Sans Pro',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    angle: 0,
+    width: 2,
+    height: 1,
+    strokeWidth: 0,
+    color: '#434a54',
+    opacity: 1.0,
+    textAlign: 'left'
+  }
 }

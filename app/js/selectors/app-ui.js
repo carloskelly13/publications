@@ -14,3 +14,6 @@ export const editModeActiveSelector = state =>
 
 export const sidePanelVisibleSelector = state =>
   state.appUi.sidePanelVisible
+
+export const zoomSelector = state =>
+  state.appUi.zoom

@@ -1,16 +1,18 @@
 import React, { Component, PropTypes } from "react"
 import { Toolbar as ToolbarBase } from "../ui/toolbar"
 import { AboutButton } from "../ui/about.button"
+import NewShapeMenu from "./new-shape"
+import ZoomMenu from "./zoom"
 import {
   GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
   PasteIconButton, DeleteIconButton, DocumentsIconButton, CloseIconButton,
-  ShapeAddIconButton, IconContainer
+  IconContainer, WindowIconButton
 } from "../ui/icon-buttons"
 import {
   currentDocumentSelector, editModeActiveSelector, sidePanelVisibleSelector
 } from "../../selectors"
 import { connect } from "react-redux"
-import { StrongText } from "../ui/text"
+import { Text } from "../ui/text"
 import {
   showModal as showModalAction,
   hideModal as hideModalAction,
@@ -46,46 +48,37 @@ class Toolbar extends Component {
     } = this.props
     return (
       <ToolbarBase>
-        <StrongText white size="1.1em">Publications</StrongText>
-        { currentDocument && (
-          <IconContainer>
-            <ShapeAddIconButton
-              margin
-            />
-            
-            <CutIconButton
-              margin
-              onClick={() => {}}
-            />
-            <CopyIconButton
-              margin
-              onClick={() => {}}
-            />
-            <PasteIconButton
-              margin
-              onClick={() => {}}
-            />
-            <DeleteIconButton
-              margin
-              onClick={() => {}}
-            />
-            <GridIconButton
-              margin
-              onClick={this.handleGridButton}
-              active={editModeActive}
-            />
-          </IconContainer>
-        ) }
         <IconContainer>
-          { currentDocument && (
-            <IconContainer>
-              <DiskIconButton
-                margin
-                onClick={() => saveDocument(currentDocument)}
-              />
-            </IconContainer>
-          ) }
-          <DocumentsIconButton
+          <NewShapeMenu />
+          <CutIconButton
+            margin
+            onClick={() => {}}
+          />
+          <CopyIconButton
+            margin
+            onClick={() => {}}
+          />
+          <PasteIconButton
+            margin
+            onClick={() => {}}
+          />
+          <DeleteIconButton
+            margin
+            onClick={() => {}}
+          />
+        </IconContainer>
+        <IconContainer>
+          <ZoomMenu />
+          <GridIconButton
+            margin
+            onClick={this.handleGridButton}
+            active={editModeActive}
+          />
+          <DiskIconButton
+            margin
+            onClick={() => saveDocument(currentDocument)}
+          />
+          <WindowIconButton
             onClick={this.handleSidePanelButton}
             active={sidePanelVisible}
           />

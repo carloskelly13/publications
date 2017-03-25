@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom'
 import { GridLine } from "../../components/canvas/grid-line"
 import styled from "styled-components"
 import ReactOutsideEvent from "react-outside-event"
-import { leftPanelWidth } from "../../core/constants"
+import { sidePanelWidth } from "../../core/constants"
+import { connect } from "react-redux"
+import { zoomSelector } from "../../selectors"
 
 const RulerContainer = styled.div`
   background: #f4f4f4;
@@ -25,10 +27,9 @@ const RulerContainer = styled.div`
 
 const isMajor = index => index % 4 === 0 && index > 0
 
-export default class Ruler extends Component {
+class Ruler extends Component {
   static defaultProps = {
-    dpi: 72,
-    zoom: 1.0
+    dpi: 72
   }
 
   renderRulerMarks(range, direction) {
@@ -71,7 +72,7 @@ export default class Ruler extends Component {
         <RulerContainer
           style={{
             width: `${(doc.width * zoom * dpi) + 25}px`,
-            left: `${this.props.scrollOffset.scrollLeft}px`
+            left: `${-this.props.scrollOffset.scrollLeft}px`
           }}
         >
           <svg
@@ -85,7 +86,7 @@ export default class Ruler extends Component {
         </RulerContainer>
         <RulerContainer
           style={{
-            top: `${65 - this.props.scrollOffset.scrollTop}px`,
+            top: `${80 - this.props.scrollOffset.scrollTop}px`,
             height: `${(doc.height * zoom * dpi) + 1}px`,
             zIndex: 0,
             left: 0
@@ -104,3 +105,9 @@ export default class Ruler extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  zoom: zoomSelector(state)
+})
+
+export default connect(mapStateToProps)(Ruler)

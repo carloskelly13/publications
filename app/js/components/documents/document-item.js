@@ -2,7 +2,7 @@ import React from "react"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { connect } from "react-redux"
 import { format as formatDate } from "fecha"
-import { MediumText, Text } from "../ui/text"
+import { Text } from "../ui/text"
 import { currentDocumentSelector } from "../../selectors"
 import { AppColors } from "../../core/constants"
 import styled from "styled-components"
@@ -39,13 +39,13 @@ const DocumentItem = ({
       selected={selected}
       onClick={onClick}
     >
-      <MediumText
+      <Text
         white={selected}
         size="0.95em"
         mb="0.25em"
       >
         { doc.name }
-      </MediumText>
+      </Text>
       <Text
         white={selected}
         size="0.825em"

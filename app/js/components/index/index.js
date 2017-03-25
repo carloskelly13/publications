@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react"
 import { connect } from "react-redux"
 import { LoginForm } from "./login-form"
-import { autobind } from "core-decorators"
 
 import * as UserActions from "actions/user"
 import * as ErrorsActions from "actions/errors"
@@ -9,6 +8,11 @@ import * as ErrorsActions from "actions/errors"
 class IndexView extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
+  }
+
+  constructor() {
+    super(...arguments)
+    this.authenticateUser = this.authenticateUser.bind(this)
   }
 
   componentWillMount() {
@@ -21,7 +25,6 @@ class IndexView extends Component {
     }
   }
 
-  @autobind
   authenticateUser({ emailAddress, password }) {
     const { dispatch } = this.props
     dispatch(ErrorsActions.removeError('user_auth_error'))

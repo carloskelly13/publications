@@ -7,14 +7,16 @@ import {
   SHOW_MODAL,
   HIDE_MODAL,
   SET_EDIT_MODE_ACTIVE,
-  SET_SIDE_PANEL_VISIBLE
+  SET_SIDE_PANEL_VISIBLE,
+  SET_ZOOM
 } from "../actions/app-ui"
 
 const defaultState = {
   activeModal: null,
   activeModalProps: null,
   editModeActive: true,
-  sidePanelVisible: true
+  sidePanelVisible: true,
+  zoom: 1
 }
 
 export default function appUiReducer(state = defaultState, action) {
@@ -34,6 +36,9 @@ export default function appUiReducer(state = defaultState, action) {
 
   case SET_SIDE_PANEL_VISIBLE:
     return { ...state, sidePanelVisible: action.payload }
+
+  case SET_ZOOM:
+    return { ...state, zoom: action.payload }
 
   default: return state
   }

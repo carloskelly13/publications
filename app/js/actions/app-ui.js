@@ -7,6 +7,7 @@ export const SHOW_MODAL = "SHOW_MODAL"
 export const HIDE_MODAL = "HIDE_MODAL"
 export const SET_EDIT_MODE_ACTIVE = "EDIT_MODE_ACTIVE"
 export const SET_SIDE_PANEL_VISIBLE = "SET_SIDE_PANEL_VISIBLE"
+export const SET_ZOOM = "SET_ZOOM"
 
 export const showModal = (component, props) => ({
   type: SHOW_MODAL,
@@ -25,4 +26,9 @@ export const setEditModeActive = active => ({
 export const setSidePanelVisible = visible => ({
   type: SET_SIDE_PANEL_VISIBLE,
   payload: visible
+})
+
+export const setZoom = zoom => ({
+  type: SET_ZOOM,
+  payload: zoom
 })

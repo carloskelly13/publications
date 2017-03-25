@@ -9,6 +9,8 @@ import { DeleteIconButton } from "./delete"
 import { DocumentsIconButton } from "./documents"
 import { CloseIconButton } from "./close"
 import { ShapeAddIconButton } from "./shape-add"
+import { ZoomIconButton } from "./zoom"
+import { WindowIconButton } from "./window"
 
 export const IconContainer = styled.div`
   display: flex;
@@ -25,5 +27,7 @@ export {
   DeleteIconButton,
   DocumentsIconButton,
   CloseIconButton,
-  ShapeAddIconButton
+  ShapeAddIconButton,
+  ZoomIconButton,
+  WindowIconButton
 }

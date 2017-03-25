@@ -4,7 +4,7 @@ import CanvasBackground from "./background"
 import { connect } from "react-redux"
 import get from "lodash.get"
 import {
-  selectedShapeSelector, currentDocumentSelector
+  selectedShapeSelector, currentDocumentSelector, zoomSelector
 } from "../../selectors"
 import { updateSelectedShape as updateShapeAction } from "../../actions/document"
 
@@ -87,14 +87,14 @@ Canvas.propTypes = {
 }
 
 Canvas.defaultProps = {
-  zoom: 1.0,
   dpi: 72,
   allowsEditing: false
 }
 
 const mapStateToProps = state => ({
   selectedShape: selectedShapeSelector(state),
-  currentDocument: currentDocumentSelector(state)
+  currentDocument: currentDocumentSelector(state),
+  zoom: zoomSelector(state)
 })
 
 const mapDispatchToProps = {

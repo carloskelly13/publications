@@ -3,20 +3,23 @@ import ReactDOM from "react-dom"
 import styled from "styled-components"
 import get from "lodash.get"
 import { connect } from "react-redux"
-import { rightPanelWidth } from "../../core/constants"
+import { contentPanelWidthFull, contentPanelWidthPartial } from "../../core/constants"
 import {
   currentDocumentSelector,
   selectedShapeSelector,
-  editModeActiveSelector
+  editModeActiveSelector,
+  sidePanelVisibleSelector
 } from "../../selectors"
 import Canvas from "../canvas"
 import Ruler from "../rulers"
 
 const Container = styled.div`
+  transition: width 350ms ease-in-out;
   background: #fff;
-  flex: 1 1 auto;
   overflow: scroll;
-  width: ${rightPanelWidth};
+  width: ${
+    ({ sidePanelVisible }) => sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull
+  };
   z-index: 1;
 `
 
@@ -56,11 +59,14 @@ class EditorView extends Component {
 
   render() {
     const {
-      props: { currentDocument, selectedShape, editModeActive },
+      props: {
+        currentDocument, selectedShape, editModeActive, sidePanelVisible
+      },
       state: { scrollOffset }
     } = this
     return (
       <Container
+        sidePanelVisible={sidePanelVisible}
         ref={ c => this.containerRef = c }
       >
         { currentDocument && (
@@ -84,7 +90,8 @@ class EditorView extends Component {
 const mapStateToProps = state => ({
   currentDocument: currentDocumentSelector(state),
   selectedShape: selectedShapeSelector(state),
-  editModeActive: editModeActiveSelector(state)
+  editModeActive: editModeActiveSelector(state),
+  sidePanelVisible: sidePanelVisibleSelector(state)
 })
 
 export default connect(mapStateToProps)(EditorView)

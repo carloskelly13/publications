@@ -1,5 +1,7 @@
 import React from "react"
 import { IconButton } from "./icon-button"
+import { Text } from "../text"
+import { AppColors } from "../../../core/constants"
 
 export const DiskIconButton = ({ onClick, margin }) => (
   <IconButton
@@ -14,7 +16,7 @@ export const DiskIconButton = ({ onClick, margin }) => (
     >
       <g>
         <path
-          stroke="#fff"
+          stroke={AppColors.DarkGray}
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeMiterlimit="10"
@@ -22,7 +24,7 @@ export const DiskIconButton = ({ onClick, margin }) => (
           d="M23.5.5h-20l-3 3v20h23zM4.5.5h15v5h-15zM4.5 20.5h15v3h-15z"
         />
         <circle
-          stroke="#fff"
+          stroke={AppColors.DarkGray}
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeMiterlimit="10"
@@ -32,17 +34,11 @@ export const DiskIconButton = ({ onClick, margin }) => (
           fill="none"
         />
         <path
-          stroke="#fff"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeMiterlimit="10"
-          fill="none"
-          d="M14.5 18.5h5M10.5 10.5v2"
-        />
-        <path
+          stroke={AppColors.DarkGray}
           d="M12 11c-.276 0-.5.225-.5.5 0 .276.224.5.5.5s.5-.224.5-.5c0-.275-.224-.5-.5-.5z"
         />
       </g>
     </svg>
+    <Text block center>Save</Text>
   </IconButton>
 )

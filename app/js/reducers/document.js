@@ -16,6 +16,7 @@ import {
   REPLACE_DOCUMENT
 } from 'actions/document'
 import { newDocument } from "../core/constants"
+import shortid from "shortid"
 
 const defaultState = {
   documents: [],
@@ -42,12 +43,17 @@ export default function documentReducer(state = defaultState, action) {
     })
 
   case ADD_SHAPE: {
-    const updatedDocument = Object.assign({}, state.currentDocument, {
+    const updatedDocument = {
+      ...state.currentDocument,
       shapes: [
         ...state.currentDocument.shapes,
-        action.newShape
+        {
+          ...action.newShape,
+          id: shortid.generate(),
+          z: state.currentDocument.shapes.length + 1
+        }
       ]
-    })
+    }
 
     return Object.assign({}, state, {
       currentDocument: updatedDocument,
