@@ -9,7 +9,11 @@ import {
   IconContainer, WindowIconButton
 } from "../ui/icon-buttons"
 import {
-  currentDocumentSelector, editModeActiveSelector, sidePanelVisibleSelector
+  currentDocumentSelector,
+  editModeActiveSelector,
+  sidePanelVisibleSelector,
+  clipboardDataSelector,
+  selectedShapeSelector
 } from "../../selectors"
 import { connect } from "react-redux"
 import { Text } from "../ui/text"
@@ -21,7 +25,11 @@ import {
 } from "../../actions/app-ui"
 import {
   saveDocument as saveDocumentAction,
-  updateCurrentDocument as setSelectedDocumentAction
+  updateCurrentDocument as setSelectedDocumentAction,
+  cutShape as cutShapeAction,
+  copyShape as copyShapeAction,
+  pasteShape as pasteShapeAction,
+  deleteShape as deleteShapeAction
 } from "../../actions/document"
 
 class Toolbar extends Component {
@@ -44,7 +52,8 @@ class Toolbar extends Component {
   render() {
     const {
       currentDocument, editModeActive, saveDocument, setSelectedDocument,
-      sidePanelVisible
+      copyShape, cutShape, deleteShape, pasteShape, clipboardData,
+      sidePanelVisible, selectedShape
     } = this.props
     return (
       <ToolbarBase>
@@ -52,19 +61,23 @@ class Toolbar extends Component {
           <NewShapeMenu />
           <CutIconButton
             margin
-            onClick={() => {}}
+            active={!!selectedShape}
+            onClick={() => cutShape(selectedShape)}
           />
           <CopyIconButton
             margin
-            onClick={() => {}}
+            active={!!selectedShape}
+            onClick={() => copyShape(selectedShape)}
           />
           <PasteIconButton
             margin
-            onClick={() => {}}
+            active={!!clipboardData}
+            onClick={() => pasteShape()}
           />
           <DeleteIconButton
             margin
-            onClick={() => {}}
+            active={!!selectedShape}
+            onClick={() => deleteShape(selectedShape)}
           />
         </IconContainer>
         <IconContainer>
@@ -95,7 +108,9 @@ Toolbar.contextTypes = {
 const mapStateToProps = state => ({
   currentDocument: currentDocumentSelector(state),
   editModeActive: editModeActiveSelector(state),
-  sidePanelVisible: sidePanelVisibleSelector(state)
+  sidePanelVisible: sidePanelVisibleSelector(state),
+  clipboardData: clipboardDataSelector(state),
+  selectedShape: selectedShapeSelector(state)
 })
 
 const mapDispatchToProps = {
@@ -104,7 +119,11 @@ const mapDispatchToProps = {
   setEditModeActive: setEditModeActiveAction,
   saveDocument: saveDocumentAction,
   setSelectedDocument: setSelectedDocumentAction,
-  setSidePanelVisible: setSidePanelVisibleAction
+  setSidePanelVisible: setSidePanelVisibleAction,
+  copyShape: copyShapeAction,
+  pasteShape: pasteShapeAction,
+  cutShape: cutShapeAction,
+  deleteShape: deleteShapeAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar)

@@ -14,7 +14,8 @@ import {
 import {
   currentDocumentSelector,
   allDocumentsSelector,
-  selectedShapeSelector
+  selectedShapeSelector,
+  clipboardDataSelector
 } from "./document"
 
 import {
@@ -30,5 +31,6 @@ export {
   selectedShapeSelector,
   editModeActiveSelector,
   sidePanelVisibleSelector,
-  zoomSelector
+  zoomSelector,
+  clipboardDataSelector
 }
