@@ -19,10 +19,10 @@ module.exports = env => {
             "webpack-dev-server/client?http://localhost:4040",
             "webpack/hot/only-dev-server",
           ] : []),
-          "./app/js/index.js"
+          "./app/client/index.js"
         ]
       ),
-      vendor: [ "./app/js/vendor.js" ]
+      vendor: [ "./app/client/vendor.js" ]
     },
 
     output: {
@@ -48,18 +48,11 @@ module.exports = env => {
 
     module: {
       loaders: [
-        { test: /\.jsx?$/,
+        { test: /\.js$/,
           include: [
-            path.resolve(__dirname, "app/js")
+            path.resolve(__dirname, "app/client")
           ],
           loader: "babel-loader"
-        },
-        {
-          test: /\.jsx?$/,
-          include: [
-            path.resolve(__dirname, "app/js")
-          ],
-          loader: "eslint-loader"
         },
         { test: /\.css$/, loader: "css-loader" },
         { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: "url-loader?limit=64" },
@@ -68,12 +61,9 @@ module.exports = env => {
     },
 
     resolve: {
-      extensions: [".js", ".jsx"],
+      extensions: [".js"],
       modules: [
-        path.join(__dirname, "node_modules"),
-        path.join(__dirname, "app/js"),
-        path.join(__dirname, "app/css"),
-        path.join(__dirname, "app/img")
+        path.join(__dirname, "node_modules")
       ]
     },
 
@@ -103,7 +93,7 @@ module.exports = env => {
       })),
 
       new HtmlWebpackPlugin({
-        template: "app/index.html",
+        template: "app/client/index.html",
         inject: "body"
       })
     ]),
