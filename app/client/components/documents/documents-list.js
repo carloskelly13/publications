@@ -14,7 +14,6 @@ import {
 import {
   allDocumentsSelector, currentDocumentSelector, sidePanelVisibleSelector
 } from "../../state/selectors"
-import Toolbar from "./toolbar"
 import {
   AppColors, newDocument, breakpointLg, sidePanelWidth
 } from "../../util/constants"
@@ -29,7 +28,7 @@ export const DocumentsListContainer = styled.div`
   overflow: scroll;
   border-left: 1px solid hsla(0, 0%, 0%, 0.25);
   z-index: 2;
-  height: calc(100% - 55px);
+  height: calc(100% - 85px);
   right: 0;
   transition: transform 350ms ease-in-out;
   transform: translateX(${({ sidePanelVisible }) =>
@@ -68,7 +67,9 @@ class DocumentsList extends Component {
       documents.filter(d => d.id === currentDocument.id)[0]
 
     if (!isEqual(currentDocumentOriginal, currentDocument)) {
-      showModal(SaveChanges, { switchToNewDoc: setSelectedDocument(doc) })
+      showModal(SaveChanges, {
+        switchToNewDoc: () => setSelectedDocument(doc)
+      })
     } else {
       setSelectedDocument(doc)
     }

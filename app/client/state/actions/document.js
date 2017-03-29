@@ -18,6 +18,7 @@ export const CUT_SHAPE = 'CUT_SHAPE'
 export const COPY_SHAPE = 'COPY_SHAPE'
 export const PASTE_SHAPE = 'PASTE_SHAPE'
 export const REPLACE_DOCUMENT = "REPLACE_DOCUMENT"
+export const ADJUST_SHAPE_LAYER = "ADJUST_SHAPE_LAYER"
 
 export function updateSelectedShape(selectedShape) {
   return dispatch => dispatch({
@@ -55,6 +56,11 @@ export function copyShape(shapeToCopy) {
 export function pasteShape() {
   return dispatch => dispatch({type: PASTE_SHAPE})
 }
+
+export const adjustShapeLayer = ({ shape, direction }) => ({
+  type: ADJUST_SHAPE_LAYER,
+  payload: { shape, direction }
+})
 
 export function updateDocumentProperty(sender) {
   return (dispatch, getState) => dispatch({

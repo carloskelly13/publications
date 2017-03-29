@@ -47,10 +47,11 @@ const Canvas = ({
   }
 
   const isCurrentDocument = get(currentDocument, "id", -1) === doc.id
-
-  const shapes = doc.shapes.map((shape, index) => renderShape({
-    shape, zoom, dpi, selectable: allowsEditing, key: index
-  }))
+  const shapes = doc.shapes
+    .sort((lhs, rhs) => lhs.z - rhs.z)
+    .map((shape, index) => renderShape({
+      shape, zoom, dpi, selectable: allowsEditing, key: index
+    }))
 
   return (
     <div

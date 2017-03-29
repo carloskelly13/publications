@@ -3,7 +3,7 @@ import { IconButton } from "./icon-button"
 import { Text } from "../text"
 import { AppColors } from "../../../util/constants"
 
-export const CutIconButton = ({ onClick, margin, disabled }) => (
+export const ForwardsIconButton = ({ onClick, margin, disabled }) => (
   <IconButton
     disabled={disabled}
     margin={margin}
@@ -17,12 +17,9 @@ export const CutIconButton = ({ onClick, margin, disabled }) => (
         strokeMiterlimit="10"
         fill="none"
       >
-        <circle cx="4.145" cy="18" r="3.5"/>
-        <path d="M13.145 12l10.242-6.088c-.561-.951-1.953-1.311-2.905-.75l-15.91 9.364"/>
-        <circle cx="4.145" cy="6" r="3.5"/>
-        <path d="M11.035 10.731l12.352 7.355c-.561.951-1.953 1.312-2.905.75l-15.837-9.336"/>
+        <path d="M6.5 17.5h-6v-17h17v6"/><path d="M6.5 6.5h17v17h-17z"/>
       </g>
     </svg>
-    <Text block center color={!disabled ? AppColors.DarkGray : "#aaa"}>Cut</Text>
+    <Text block center color={!disabled ? AppColors.DarkGray : "#aaa"}>Forward</Text>
   </IconButton>
 )

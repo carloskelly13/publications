@@ -13,8 +13,9 @@ import {
   CUT_SHAPE,
   COPY_SHAPE,
   PASTE_SHAPE,
-  REPLACE_DOCUMENT
-} from '../actions/document'
+  REPLACE_DOCUMENT,
+  ADJUST_SHAPE_LAYER
+} from "../actions/document"
 import { newDocument } from "../../util/constants"
 import shortid from "shortid"
 
@@ -107,8 +108,8 @@ export default function documentReducer(state = defaultState, action) {
   case PASTE_SHAPE: {
     const newIdx = state.currentDocument.shapes.length + 1
     const pasteShape = Object.assign({}, state.clipboardData, {
-      id: newIdx,
-      z: newIdx
+      id: shortid.generate(),
+      z: state.currentDocument.shapes.length + 1
     })
 
     const updatedDocument = Object.assign({}, state.currentDocument, {
@@ -122,6 +123,44 @@ export default function documentReducer(state = defaultState, action) {
       currentDocument: updatedDocument,
       selectedShape: pasteShape
     })
+  }
+
+  case ADJUST_SHAPE_LAYER: {
+    const { shape: shapeToAdjust, direction } = action.payload
+    const { shapes } = state.currentDocument
+
+    let z
+    let affectedShapeZ
+    let adjustedShape
+
+    if (direction === "forward") {
+      z = Math.min(shapeToAdjust.z + 1, shapes.length)
+      affectedShapeZ = shapeToAdjust.z
+    } else if (direction === "backward") {
+      z = Math.max(1, shapeToAdjust.z - 1)
+      affectedShapeZ = shapeToAdjust.z
+    } else {
+      return state
+    }
+
+    const adjustedShapes = shapes.map(shape => {
+      if (shapeToAdjust.id === shape.id) {
+        adjustedShape = { ...shape, z }
+        return adjustedShape
+      } else if (shape.z === z) {
+        return { ...shape, z: affectedShapeZ }
+      }
+      return shape
+    })
+
+    return {
+      ...state,
+      selectedShape: adjustedShape,
+      currentDocument: {
+        ...state.currentDocument,
+        shapes: adjustedShapes,
+      }
+    }
   }
 
   case REPLACE_DOCUMENT: {

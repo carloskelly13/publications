@@ -34,7 +34,7 @@ export default function asMenu({
         <MenuButtonContainer>
           <InjectAsMenu.IconButtonComponent
             margin
-            active={menuActive}
+            disabled={this.props.disabled}
             onClick={this.handleToggleButtonClick}
           />
           <ReactCSSTransitionGroup

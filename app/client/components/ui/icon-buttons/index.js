@@ -11,6 +11,8 @@ import { CloseIconButton } from "./close"
 import { ShapeAddIconButton } from "./shape-add"
 import { ZoomIconButton } from "./zoom"
 import { WindowIconButton } from "./window"
+import { ForwardsIconButton } from "./forwards"
+import { BackwardsIconButton } from "./backwards"
 
 export const IconContainer = styled.div`
   display: flex;
@@ -29,5 +31,7 @@ export {
   CloseIconButton,
   ShapeAddIconButton,
   ZoomIconButton,
-  WindowIconButton
+  WindowIconButton,
+  ForwardsIconButton,
+  BackwardsIconButton
 }

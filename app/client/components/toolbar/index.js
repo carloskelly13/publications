@@ -6,7 +6,7 @@ import ZoomMenu from "./zoom"
 import {
   GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
   PasteIconButton, DeleteIconButton, DocumentsIconButton, CloseIconButton,
-  IconContainer, WindowIconButton
+  IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton
 } from "../ui/icon-buttons"
 import {
   currentDocumentSelector,
@@ -21,7 +21,7 @@ import {
   showModal as showModalAction,
   hideModal as hideModalAction,
   setEditModeActive as setEditModeActiveAction,
-  setSidePanelVisible as setSidePanelVisibleAction
+  setSidePanelVisible as setSidePanelVisibleAction,
 } from "../../state/actions/app-ui"
 import {
   saveDocument as saveDocumentAction,
@@ -29,7 +29,8 @@ import {
   cutShape as cutShapeAction,
   copyShape as copyShapeAction,
   pasteShape as pasteShapeAction,
-  deleteShape as deleteShapeAction
+  deleteShape as deleteShapeAction,
+  adjustShapeLayer as adjustShapeLayerAction
 } from "../../state/actions/document"
 
 class Toolbar extends Component {
@@ -53,53 +54,72 @@ class Toolbar extends Component {
     const {
       currentDocument, editModeActive, saveDocument, setSelectedDocument,
       copyShape, cutShape, deleteShape, pasteShape, clipboardData,
-      sidePanelVisible, selectedShape
+      sidePanelVisible, selectedShape, adjustShapeLayer
     } = this.props
+
+    const forwardButtonEnabled = selectedShape && currentDocument &&
+      selectedShape.z < currentDocument.shapes.length
+    const backwardButtonEnabled = selectedShape && currentDocument &&
+      selectedShape.z > 1
+
     return (
       <ToolbarBase>
         <IconContainer>
-          <NewShapeMenu />
+          <NewShapeMenu disabled={!currentDocument} />
           <CutIconButton
             margin
-            active={!!selectedShape}
-            disabled={!!currentDocument}
+            disabled={!selectedShape || !currentDocument}
             onClick={() => cutShape(selectedShape)}
           />
           <CopyIconButton
             margin
-            active={!!selectedShape}
-            disabled={!!currentDocument}
+            disabled={!selectedShape || !currentDocument}
             onClick={() => copyShape(selectedShape)}
           />
           <PasteIconButton
             margin
-            active={!!clipboardData}
-            disabled={!!currentDocument}
+            disabled={!clipboardData || !currentDocument}
             onClick={() => pasteShape()}
           />
           <DeleteIconButton
             margin
-            active={!!selectedShape}
-            disabled={!!currentDocument}
+            disabled={!selectedShape || !currentDocument}
             onClick={() => deleteShape(selectedShape)}
           />
         </IconContainer>
         <IconContainer>
-          <ZoomMenu />
+          <ForwardsIconButton
+            margin
+            disabled={!forwardButtonEnabled}
+            onClick={() => adjustShapeLayer({
+              shape: selectedShape,
+              direction: "forward"
+            })}
+          />
+          <BackwardsIconButton
+            margin
+            disabled={!backwardButtonEnabled}
+            onClick={() => adjustShapeLayer({
+              shape: selectedShape,
+              direction: "backward"
+            })}
+          />
+        </IconContainer>
+        <IconContainer>
+          <ZoomMenu disabled={!currentDocument} />
           <GridIconButton
             margin
             onClick={this.handleGridButton}
-            disabled={!!currentDocument}
             active={editModeActive}
+            disabled={!currentDocument}
           />
           <DiskIconButton
             margin
-            disabled={!!currentDocument}
+            disabled={!currentDocument}
             onClick={() => saveDocument(currentDocument)}
           />
           <WindowIconButton
             onClick={this.handleSidePanelButton}
-            disabled={!!currentDocument}
             active={sidePanelVisible}
           />
         </IconContainer>
@@ -130,7 +150,8 @@ const mapDispatchToProps = {
   copyShape: copyShapeAction,
   pasteShape: pasteShapeAction,
   cutShape: cutShapeAction,
-  deleteShape: deleteShapeAction
+  deleteShape: deleteShapeAction,
+  adjustShapeLayer: adjustShapeLayerAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar)

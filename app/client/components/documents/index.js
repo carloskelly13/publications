@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import styled from "styled-components"
 import { autobind } from 'core-decorators'
 import { connect } from 'react-redux'
-import Toolbar from "./toolbar"
+import Toolbar from "../toolbar"
 import NewDocument from "./new-document"
 import DocumentItem from './document-item'
 import DocumentsList from "./documents-list"
 import EditorView from "../editor"
+import Footer from "../footer"
 import { currentUserSelector } from "../../state/selectors"
 import { getUser as getUserAction } from "../../state/actions/user"
 import { getDocuments as getDocumentsAction } from "../../state/actions/document"
@@ -19,7 +20,7 @@ const ViewContainer = styled.div`
 
 const ViewContent = styled.div`
   display: flex;
-  flex: 1 0 calc(100% - 55px);
+  flex: 1 0 calc(100% - 85px);
 `
 
 class DocumentsView extends Component {
@@ -59,6 +60,7 @@ class DocumentsView extends Component {
             <DocumentsList />
             <EditorView />
           </ViewContent>
+          <Footer />
         </ViewContainer>
       )
     }
