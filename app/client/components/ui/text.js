@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { AppColors } from "../../util/constants"
+import { AppColors, appFont } from "../../util/constants"
 
 export const Header = styled.h1`
   font-weight: 500;
@@ -19,6 +19,7 @@ export const MarginText = styled.span`
 
 export const Text = styled(MarginText)`
   font-size: ${({ size }) => size || '1em'};
+  font-family: ${appFont};
   text-align: ${({ center }) => center ? "center" : "left"};
   display: ${({ block }) => block ? "block" : "inline-block"};
   font-weight: 400;
