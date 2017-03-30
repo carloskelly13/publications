@@ -6,7 +6,8 @@ import ZoomMenu from "./zoom"
 import {
   GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
   PasteIconButton, DeleteIconButton, DocumentsIconButton, CloseIconButton,
-  IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton
+  IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton,
+  FillIconButton, StrokeIconButton
 } from "../ui/icon-buttons"
 import {
   currentDocumentSelector,
@@ -61,6 +62,8 @@ class Toolbar extends Component {
       selectedShape.z < currentDocument.shapes.length
     const backwardButtonEnabled = selectedShape && currentDocument &&
       selectedShape.z > 1
+    const shapeControlButtonDisabled = !selectedShape || !currentDocument
+    const isSelectedShapeText = selectedShape && selectedShape.type === "text"
 
     return (
       <ToolbarBase>
@@ -68,22 +71,22 @@ class Toolbar extends Component {
           <NewShapeMenu disabled={!currentDocument} />
           <CutIconButton
             margin
-            disabled={!selectedShape || !currentDocument}
+            disabled={shapeControlButtonDisabled}
             onClick={() => cutShape(selectedShape)}
           />
           <CopyIconButton
             margin
-            disabled={!selectedShape || !currentDocument}
+            disabled={shapeControlButtonDisabled}
             onClick={() => copyShape(selectedShape)}
           />
           <PasteIconButton
             margin
-            disabled={!clipboardData || !currentDocument}
+            disabled={shapeControlButtonDisabled}
             onClick={() => pasteShape()}
           />
           <DeleteIconButton
             margin
-            disabled={!selectedShape || !currentDocument}
+            disabled={shapeControlButtonDisabled}
             onClick={() => deleteShape(selectedShape)}
           />
         </IconContainer>
@@ -97,12 +100,22 @@ class Toolbar extends Component {
             })}
           />
           <BackwardsIconButton
-            margin
             disabled={!backwardButtonEnabled}
             onClick={() => adjustShapeLayer({
               shape: selectedShape,
               direction: "backward"
             })}
+          />
+        </IconContainer>
+        <IconContainer>
+          <FillIconButton
+            margin
+            disabled={shapeControlButtonDisabled}
+            fillColor={selectedShape && selectedShape.fill}
+          />
+          <StrokeIconButton
+            disabled={shapeControlButtonDisabled || isSelectedShapeText}
+            strokeColor={selectedShape && selectedShape.stroke}
           />
         </IconContainer>
         <IconContainer>

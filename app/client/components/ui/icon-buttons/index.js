@@ -13,6 +13,8 @@ import { ZoomIconButton } from "./zoom"
 import { WindowIconButton } from "./window"
 import { ForwardsIconButton } from "./forwards"
 import { BackwardsIconButton } from "./backwards"
+import { FillIconButton } from "./fill"
+import { StrokeIconButton } from "./stroke"
 
 export const IconContainer = styled.div`
   display: flex;
@@ -33,5 +35,7 @@ export {
   ZoomIconButton,
   WindowIconButton,
   ForwardsIconButton,
-  BackwardsIconButton
+  BackwardsIconButton,
+  FillIconButton,
+  StrokeIconButton
 }

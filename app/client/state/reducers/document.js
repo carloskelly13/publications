@@ -231,7 +231,7 @@ export default function documentReducer(state = defaultState, action) {
       updatedState.clipboardData = null
     }
 
-    return { ...state, ...updatedState }
+    return { ...state, ...updatedState, selectedShape: null }
   }
 
   case RESET_DOCUMENTS:

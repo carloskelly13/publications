@@ -42,19 +42,20 @@ export const TextButton = styled.button`
   cursor: pointer;
   color: #444;
   display: inline-block;
-  font-size: 15px;
+  font-size: ${({ size }) => size || "15px"};
   font-weight: 500;
   outline: none;
-  padding: 8px;
+  padding: 0;
+  margin: ${({ margin }) => margin || "0"};
   text-align: center;
   text-decoration: underline;
 
   &:hover {
-    color: #8330F4;
+    color: ${AppColors.Active};
   }
 
   &:active {
-    color: #8330F4;
+    color: ${AppColors.Active};
   }
 `
 
