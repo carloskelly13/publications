@@ -7,6 +7,7 @@ import NewDocument from "./new-document"
 import DocumentItem from './document-item'
 import DocumentsList from "./documents-list"
 import EditorView from "../editor"
+import MetricsBar from "../metrics-bar"
 import Footer from "../footer"
 import { currentUserSelector } from "../../state/selectors"
 import { getUser as getUserAction } from "../../state/actions/user"
@@ -20,7 +21,7 @@ const ViewContainer = styled.div`
 
 const ViewContent = styled.div`
   display: flex;
-  flex: 1 0 calc(100% - 85px);
+  flex: 1 0 calc(100% - 115px);
 `
 
 class DocumentsView extends Component {
@@ -56,6 +57,7 @@ class DocumentsView extends Component {
       return (
         <ViewContainer>
           <Toolbar />
+          <MetricsBar />
           <ViewContent>
             <DocumentsList />
             <EditorView />

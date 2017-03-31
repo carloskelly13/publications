@@ -15,7 +15,7 @@ const defaultState = {
   activeModal: null,
   activeModalProps: null,
   editModeActive: true,
-  sidePanelVisible: true,
+  sidePanelVisible: false,
   zoom: 1
 }
 

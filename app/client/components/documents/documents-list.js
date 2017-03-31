@@ -28,7 +28,7 @@ export const DocumentsListContainer = styled.div`
   overflow: scroll;
   border-left: 1px solid hsla(0, 0%, 0%, 0.25);
   z-index: 2;
-  height: calc(100% - 85px);
+  height: calc(100% - 115px);
   right: 0;
   transition: transform 350ms ease-in-out;
   transform: translateX(${({ sidePanelVisible }) =>

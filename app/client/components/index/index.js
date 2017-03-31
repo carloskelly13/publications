@@ -21,7 +21,7 @@ class IndexView extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!!nextProps.user.isAuthenticated) {
-      this.context.router.replace("/documents")
+      this.context.router.history.replace("/documents")
     }
   }
 
