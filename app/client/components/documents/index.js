@@ -47,7 +47,7 @@ class DocumentsView extends Component {
      * redirect to the login page.
      */
     else if (this.props.user.isRequestingUser && !isRequestingUser && !isAuthenticated) {
-      this.context.router.replace("/")
+      this.context.router.history.replace("/")
     }
   }
 

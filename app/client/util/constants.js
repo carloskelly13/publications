@@ -28,8 +28,10 @@ export const AppColors = {
   ActiveDark: "#4842af",
   ActiveLight: "#685ffd",
   LightGray: "#f5f5f5",
+  MediumGray: "#f0f0f0",
   Gray: "#e5e5e5",
   DarkGray: "#263238",
+  DisabledGray: "#aaa",
   Highlight: "#5856d6",
   LightActive: "#e9e8f5",
   IconColor: "#444"
