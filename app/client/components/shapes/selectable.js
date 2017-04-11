@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import { selectedShapeSelector } from "../../state/selectors"
 import ResizeMoveFrame from "./frame"
@@ -10,12 +10,6 @@ import {
 export default function selectable(WrappedComponent) {
   class InjectSelectable extends Component {
     static WrappedComponent = WrappedComponent
-
-    static propTypes = {
-      zoom: PropTypes.number.isRequired,
-      dpi: PropTypes.number.isRequired,
-      shape: PropTypes.object.isRequired
-    }
 
     constructor() {
       super(...arguments)
@@ -33,7 +27,7 @@ export default function selectable(WrappedComponent) {
     }
 
     render() {
-      const { selectedShape, zoom, dpi, shape } = this.props
+      const { zoom, dpi, shape } = this.props
       return (
         <g
           onClick={this.handleShapeSelected}

@@ -10,21 +10,28 @@ export const TextInput = styled.input`
   background: #fff;
   font-family: ${appFont};
   font-size: ${props => {
-    if (props.small) return "11px"
-    else if (props.large) return "16px"
+    if (props.small) {
+      return "11px"
+    } else if (props.large) {
+      return "16px"
+    }
     return "14px"
   }};
   text-align: ${ props => {
-    if (props.alignRight) return "right";
-    else if (props.alignCenter) return "center";
+    if (props.alignRight) {
+      return "right";
+    } else if (props.alignCenter) {
+      return "center";
+    }
     return "left"
   }};
   width: ${props => {
-    if (props.small) return "40px";
+    if (props.small) { return "40px"; }
     return "auto";
   }};
 
   &:disabled {
     background: ${AppColors.MediumGray};
+    color: ${AppColors.MediumGray};
   }
 `

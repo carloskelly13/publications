@@ -3,18 +3,33 @@ import React, { Component } from "react"
 const frameAnchors = {
   size: 10,
   points: [
-    { coordinate: 'nw', x: 0, y: 0 },
-    { coordinate: 'n', x: 0.5, y: 0 },
-    { coordinate: 'ne', x: 1, y: 0 },
-    { coordinate: 'w', x: 0, y: 0.5 },
-    { coordinate: 'e', x: 1, y: 0.5 },
-    { coordinate: 'sw', x: 0, y: 1 },
-    { coordinate: 's', x: 0.5, y: 1 },
-    { coordinate: 'se', x: 1, y: 1 }
+    { coordinate: "nw", x: 0, y: 0 },
+    { coordinate: "n", x: 0.5, y: 0 },
+    { coordinate: "ne", x: 1, y: 0 },
+    { coordinate: "w", x: 0, y: 0.5 },
+    { coordinate: "e", x: 1, y: 0.5 },
+    { coordinate: "sw", x: 0, y: 1 },
+    { coordinate: "s", x: 0.5, y: 1 },
+    { coordinate: "se", x: 1, y: 1 }
   ]
 }
 
 export default class ResizeMoveFrame extends Component {
+  static get defaultState() {
+    return {
+      eX: 0,
+      eY: 0,
+      oX: 0,
+      oY: 0,
+      oW: 0,
+      oH: 0,
+      isEditingText: false,
+      dragging: false,
+      resizing: false,
+      resizeAnchor: null
+    }
+  }
+
   constructor() {
     super(...arguments)
     this.state = { ...ResizeMoveFrame.defaultState }
@@ -26,18 +41,6 @@ export default class ResizeMoveFrame extends Component {
     this.handleAnchorSelected = this.handleAnchorSelected.bind(this)
     this.handleAnchorDeselected = this.handleAnchorDeselected.bind(this)
     this.handleTextChange = this.handleTextChange.bind(this)
-  }
-
-  static get defaultState() {
-    return {
-      eX: 0,  eY: 0,
-      oX: 0,  oY: 0,
-      oW: 0,  oH: 0,
-      isEditingText: false,
-      dragging: false,
-      resizing: false,
-      resizeAnchor: null
-    }
   }
 
   updateStateForDragging({ pageX, pageY }) {
@@ -82,7 +85,7 @@ export default class ResizeMoveFrame extends Component {
   handleAnchorSelected(event) {
     const coordinate = event
       .nativeEvent.target.attributes
-      .getNamedItem('data-coordinate').value
+      .getNamedItem("data-coordinate").value
     this.setState({ resizing: true, resizeAnchor: coordinate })
     this.updateStateForResizing(event);
     document.addEventListener("mousemove", this.handleFrameResized)
@@ -111,12 +114,13 @@ export default class ResizeMoveFrame extends Component {
     })
   }
 
+  // eslint-disable-next-line max-statements
   handleFrameResized(event) {
     if (!this.state.resizing) {
       return
     }
 
-    let updatedMetrics = {}
+    const updatedMetrics = {}
 
     if (this.state.resizeAnchor.includes("n")) {
       updatedMetrics.height = Math.max(this.state.oH +

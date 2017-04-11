@@ -14,7 +14,8 @@ export const ZoomIconButton = ({ onClick, margin, disabled, className }) => (
       <g strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10"
         stroke={disabled ? "#aaa" : AppColors.DarkGray}
         fill="none"
-        fillRule="nonzero">
+        fillRule="nonzero"
+      >
         <circle cx="8.5" cy="8.5" r="8"/>
         <path strokeLinecap="round" d="M14.167 14.166l9.333 9.334M5 8.5h7M8.5 5v7"/>
       </g>

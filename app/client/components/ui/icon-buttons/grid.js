@@ -3,6 +3,15 @@ import { IconButton } from "./icon-button"
 import { Text } from "../text"
 import { AppColors } from "../../../util/constants"
 
+const colorForState = (active, disabled) => {
+  if (disabled) {
+    return "#aaa"
+  } else if (active) {
+    return AppColors.Highlight
+  }
+  return AppColors.DarkGray
+}
+
 export const GridIconButton = ({ onClick, active, margin, disabled }) => (
   <IconButton
     disabled={disabled}
@@ -16,7 +25,7 @@ export const GridIconButton = ({ onClick, active, margin, disabled }) => (
       viewBox="0 0 24 24"
     >
       <g
-        stroke={disabled ? "#aaa" : active ? AppColors.Highlight : AppColors.DarkGray}
+        stroke={colorForState(active, disabled)}
         strokeWidth={1}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -28,7 +37,7 @@ export const GridIconButton = ({ onClick, active, margin, disabled }) => (
         />
       </g>
     </svg>
-    <Text block color={disabled ? "#aaa" : active ? AppColors.Highlight : AppColors.DarkGray}>
+    <Text block color={colorForState(active, disabled)}>
       Grid
     </Text>
   </IconButton>

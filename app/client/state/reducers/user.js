@@ -1,18 +1,17 @@
 import {
   RECIEVE_USER,
-  REQUEST_USER,
-  PATCH_USER
-} from '../actions/user'
+  REQUEST_USER
+} from "../actions/user"
 
 export default function userReducer(state = {
   userId: null,
-  userName: '',
+  userName: "",
   isAuthenticated: false,
   isTemporaryUser: false,
   isRequestingUser: false
 }, action) {
 
-  switch(action.type) {
+  switch (action.type) {
   case RECIEVE_USER:
     return {
       ...state,
@@ -26,7 +25,7 @@ export default function userReducer(state = {
   case REQUEST_USER:
     return {
       userId: null,
-      userName: '',
+      userName: "",
       isAuthenticated: false,
       isTemporaryUser: false,
       isRequestingUser: true

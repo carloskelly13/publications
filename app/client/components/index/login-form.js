@@ -1,7 +1,6 @@
-import React, { Component, PropTypes } from "react"
+import React, { Component } from "react"
 import styled from "styled-components"
 import { PubInput } from "../ui/pub-input"
-import { autobind } from "core-decorators"
 import { FramedButton, TextButton } from "../ui/pub-button"
 
 const ErrorMessage = styled.div`
@@ -9,9 +8,11 @@ const ErrorMessage = styled.div`
 `
 
 class LoginForm extends Component {
-  static propTypes = {
-    authenticateUser: PropTypes.func.isRequired,
-    errors: PropTypes.arrayOf(PropTypes.string)
+  constructor() {
+    super(...arguments)
+    this.createTestDriveAccount = this.createTestDriveAccount.bind(this)
+    this.submitLoginForm = this.submitLoginForm.bind(this)
+    this.formValueChanged = this.formValueChanged.bind(this)
   }
 
   state = {
@@ -19,26 +20,23 @@ class LoginForm extends Component {
     password: ""
   }
 
-  @autobind
   createTestDriveAccount() {
 
   }
 
-  @autobind
   submitLoginForm(event) {
     event.preventDefault()
     const { emailAddress, password } = this.state
     this.props.authenticateUser({ emailAddress, password })
   }
 
-  @autobind
   formValueChanged({ target }) {
-    this.setState({ [target.name] : target.value })
+    this.setState({ [target.name]: target.value })
   }
 
-  _renderErrorMessage() {
+  renderErrorMessage() {
     const { errors } = this.props
-    return errors.includes('user_auth_error')
+    return errors.includes("user_auth_error")
       ? (<ErrorMessage>
           The password or email address was incorrect. Please try again.
         </ErrorMessage>)
@@ -49,8 +47,9 @@ class LoginForm extends Component {
     const { emailAddress, password } = this.state
     return (
       <form
-        onSubmit={this.submitLoginForm}>
-        { this._renderErrorMessage() }
+        onSubmit={this.submitLoginForm}
+      >
+        { this.renderErrorMessage() }
         <div>
           <PubInput
             placeholder="Email Address"

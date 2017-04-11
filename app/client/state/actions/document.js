@@ -1,60 +1,58 @@
-import { Urls } from '../../util/constants'
-import { addError } from './errors'
-import { setCsrfHeaders } from './security'
-import NProgress from 'nprogress'
+import { Urls } from "../../util/constants"
+import { setCsrfHeaders } from "./security"
 
-export const REQUEST_DOCUMENTS = 'REQUEST_DOCUMENTS'
-export const RECEIVE_DOCUMENTS = 'RECEIVE_DOCUMENTS'
-export const RESET_DOCUMENTS = 'RESET_DOCUMENTS'
-export const POST_DOCUMENT = 'POST_DOCUMENT'
-export const DELETE_DOCUMENT = 'DELETE_DOCUMENT'
-export const REQUEST_DOCUMENT = 'REQUEST_DOCUMENT'
-export const RECEIVE_DOCUMENT = 'RECEIVE_DOCUMENT'
-export const UPDATE_DOCUMENT = 'UPDATE_DOCUMENT'
-export const UPDATE_SELECTED_SHAPE = 'UPDATE_SELECTED_SHAPE'
-export const ADD_SHAPE = 'ADD_SHAPE'
-export const DELETE_SHAPE = 'DELETE_SHAPE'
-export const CUT_SHAPE = 'CUT_SHAPE'
-export const COPY_SHAPE = 'COPY_SHAPE'
-export const PASTE_SHAPE = 'PASTE_SHAPE'
+export const REQUEST_DOCUMENTS = "REQUEST_DOCUMENTS"
+export const RECEIVE_DOCUMENTS = "RECEIVE_DOCUMENTS"
+export const RESET_DOCUMENTS = "RESET_DOCUMENTS"
+export const POST_DOCUMENT = "POST_DOCUMENT"
+export const DELETE_DOCUMENT = "DELETE_DOCUMENT"
+export const REQUEST_DOCUMENT = "REQUEST_DOCUMENT"
+export const RECEIVE_DOCUMENT = "RECEIVE_DOCUMENT"
+export const UPDATE_DOCUMENT = "UPDATE_DOCUMENT"
+export const UPDATE_SELECTED_SHAPE = "UPDATE_SELECTED_SHAPE"
+export const ADD_SHAPE = "ADD_SHAPE"
+export const DELETE_SHAPE = "DELETE_SHAPE"
+export const CUT_SHAPE = "CUT_SHAPE"
+export const COPY_SHAPE = "COPY_SHAPE"
+export const PASTE_SHAPE = "PASTE_SHAPE"
 export const REPLACE_DOCUMENT = "REPLACE_DOCUMENT"
 export const ADJUST_SHAPE_LAYER = "ADJUST_SHAPE_LAYER"
 
-export function updateSelectedShape(selectedShape) {
+export const updateSelectedShape = selectedShape => {
   return dispatch => dispatch({
     type: UPDATE_SELECTED_SHAPE,
     selectedShape
   })
 }
 
-export function updateCurrentDocument(doc) {
+export const updateCurrentDocument = doc => {
   return dispatch => dispatch({
     type: RECEIVE_DOCUMENT,
     doc
   })
 }
 
-export function addShape(newShape) {
+export const addShape = newShape => {
   return dispatch => dispatch({
     type: ADD_SHAPE,
     newShape
   })
 }
 
-export function deleteShape(shapeToDelete) {
-  return dispatch => dispatch({type: DELETE_SHAPE})
+export const deleteShape = () => {
+  return dispatch => dispatch({ type: DELETE_SHAPE })
 }
 
-export function cutShape(shapeToCut) {
-  return dispatch => dispatch({type: CUT_SHAPE})
+export const cutShape = () => {
+  return dispatch => dispatch({ type: CUT_SHAPE })
 }
 
-export function copyShape(shapeToCopy) {
-  return dispatch => dispatch({type: COPY_SHAPE})
+export const copyShape = () => {
+  return dispatch => dispatch({ type: COPY_SHAPE })
 }
 
-export function pasteShape() {
-  return dispatch => dispatch({type: PASTE_SHAPE})
+export const pasteShape = () => {
+  return dispatch => dispatch({ type: PASTE_SHAPE })
 }
 
 export const adjustShapeLayer = ({ shape, direction }) => ({
@@ -62,25 +60,26 @@ export const adjustShapeLayer = ({ shape, direction }) => ({
   payload: { shape, direction }
 })
 
-export function updateDocumentProperty(sender) {
+export const updateDocumentProperty = sender => {
   return (dispatch, getState) => dispatch({
     type: UPDATE_DOCUMENT,
     doc: { ...getState().doc.currentDocument, ...sender }
   })
 }
 
-export function getDocuments() {
+export const getDocuments = () => {
   return dispatch => {
     dispatch({ type: REQUEST_DOCUMENTS })
     fetch(`${Urls.ApiBase}/documents`, {
-      method: 'get',
-      credentials: 'include'
+      method: "get",
+      credentials: "include"
     })
     .then(response => {
       if (response.status === 200) {
         setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       }
+      throw new Error("Unable to parse document JSON")
     })
     .then(documents => {
       dispatch({
@@ -91,27 +90,26 @@ export function getDocuments() {
   }
 }
 
-export function newDocument(doc) {
+export const newDocument = doc => {
   return (dispatch, getState) => {
     const { csrfHeaders } = getState().security
 
     fetch(`${Urls.ApiBase}/documents`, {
-      method: 'post',
+      method: "post",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        "Accept": "application/json",
+        "Content-Type": "application/json",
         ...csrfHeaders
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(doc)
     })
     .then(response => {
       if (response.status === 200) {
         setCsrfHeaders(response.headers)(dispatch)
         return response.json()
-      } else {
-        addError('create_doc_error')(dispatch)
       }
+      throw new Error("Unable to create new document")
     })
     .then(documentJson => dispatch({
       type: POST_DOCUMENT,
@@ -120,13 +118,13 @@ export function newDocument(doc) {
   }
 }
 
-export function removeDocument(doc) {
+export const removeDocument = doc => {
   return (dispatch, getState) => {
     const { csrfHeaders } = getState().security
 
     fetch(`${Urls.ApiBase}/documents/${doc.id}`, {
-      method: 'delete',
-      credentials: 'include',
+      method: "delete",
+      credentials: "include",
       headers: csrfHeaders
     })
     .then(() => dispatch({
@@ -136,19 +134,20 @@ export function removeDocument(doc) {
   }
 }
 
-export function getDocument(id) {
+export const getDocument = id => {
   return dispatch => {
     dispatch({ type: REQUEST_DOCUMENT })
 
     fetch(`${Urls.ApiBase}/documents/${id}`, {
-      method: 'get',
-      credentials: 'include'
+      method: "get",
+      credentials: "include"
     })
     .then(response => {
       if (response.status === 200) {
         setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       }
+      throw new Error(`Unable to get document with id: ${id}`)
     })
     .then(documentJson => dispatch({
       type: RECEIVE_DOCUMENT,
@@ -157,7 +156,7 @@ export function getDocument(id) {
   }
 }
 
-export function saveDocument(doc) {
+export const saveDocument = doc => {
   return (dispatch, getState) => {
     const { id, width, height, shapes, name } = doc
     const { csrfHeaders } = getState().security
@@ -168,11 +167,11 @@ export function saveDocument(doc) {
     })
 
     fetch(`${Urls.ApiBase}/documents/${id}`, {
-      method: 'put',
-      credentials: 'include',
+      method: "put",
+      credentials: "include",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        "Accept": "application/json",
+        "Content-Type": "application/json",
         ...csrfHeaders
       },
       body: JSON.stringify({ width, height, shapes, name })
@@ -180,14 +179,14 @@ export function saveDocument(doc) {
   }
 }
 
-export function documentChanged(doc) {
+export const documentChanged = doc => {
   return dispatch => dispatch({
     type: UPDATE_DOCUMENT,
     doc
   })
 }
 
-export function clearDocuments() {
+export const clearDocuments = () => {
   return dispatch => dispatch({
     type: RESET_DOCUMENTS
   })

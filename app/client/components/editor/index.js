@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import ReactDOM from "react-dom"
+import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 import get from "lodash.get"
 import { connect } from "react-redux"
@@ -24,33 +24,28 @@ const Container = styled.div`
 `
 
 class EditorView extends Component {
-  state = {
-    scrollOffset: { scrollLeft: 0, scrollTop: 0 }
-  }
-
   constructor() {
     super()
     this.handleViewScrollEvent = this.handleViewScrollEvent.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (get(this.props.currentDocument, "id") !== get(nextProps.currentDocument, "id")) {
-      const containerEl = ReactDOM.findDOMNode(this.containerRef)
-      containerEl.scrollTop = 0
-      containerEl.scrollLeft = 0
-    }
+  state = {
+    scrollOffset: { scrollLeft: 0, scrollTop: 0 }
   }
 
   componentDidMount() {
-    ReactDOM
-      .findDOMNode(this.containerRef)
-      .addEventListener("scroll", this.handleViewScrollEvent)
+    findDOMNode(this.containerRef).addEventListener("scroll", this.handleViewScrollEvent)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (get(this.props.currentDocument, "id") !== get(nextProps.currentDocument, "id")) {
+      findDOMNode(this.containerRef).scrollTop = 0
+      findDOMNode(this.containerRef).scrollLeft = 0
+    }
   }
 
   componentWillUnmount() {
-    ReactDOM
-      .findDOMNode(this.containerRef)
-      .removeEventListener("scroll", this.handleViewScrollEvent)
+    findDOMNode(this.containerRef).removeEventListener("scroll", this.handleViewScrollEvent)
   }
 
   handleViewScrollEvent({ target: { scrollLeft, scrollTop } }) {
@@ -60,14 +55,14 @@ class EditorView extends Component {
   render() {
     const {
       props: {
-        currentDocument, selectedShape, editModeActive, sidePanelVisible
+        currentDocument, editModeActive, sidePanelVisible
       },
       state: { scrollOffset }
     } = this
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
-        ref={ c => this.containerRef = c }
+        ref={ c => (this.containerRef = c) }
       >
         { currentDocument && (
           <div>

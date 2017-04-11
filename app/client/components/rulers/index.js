@@ -1,10 +1,7 @@
-import React, {Component, PropTypes} from 'react'
-import range from 'lodash.range'
-import ReactDOM from 'react-dom'
+import React, { Component } from "react"
+import range from "lodash.range"
 import { GridLine } from "../../components/canvas/grid-line"
 import styled from "styled-components"
-import ReactOutsideEvent from "react-outside-event"
-import { sidePanelWidth } from "../../util/constants"
 import { connect } from "react-redux"
 import { zoomSelector } from "../../state/selectors"
 
@@ -32,8 +29,9 @@ class Ruler extends Component {
     dpi: 72
   }
 
-  renderRulerMarks(range, direction) {
-    return range.map((mark, index) => {
+  renderRulerMarks(rulerRange, direction) {
+    const majorPadding = major => major ? 0 : 15
+    return rulerRange.map((mark, index) => {
       const major = isMajor(index)
       return (
         <g key={`${direction}${index}`}>
@@ -41,8 +39,8 @@ class Ruler extends Component {
           <GridLine
             mX={direction === "V" ? mark + 24.5 : 15}
             mY={direction === "V" ? 15 : mark + 0.5}
-            dX={direction === "V" ? 25 : (major ? 0 : 15)}
-            dY={direction === "V" ? (major ? 0 : 15) : 25}
+            dX={direction === "V" ? 25 : majorPadding(major)}
+            dY={direction === "V" ? majorPadding(major) : 25}
             direction={direction}
           />
         </g>

@@ -3,7 +3,7 @@ import { IconButton } from "./icon-button"
 import { AppColors } from "../../../util/constants"
 import { Text } from "../text"
 
-export const DocumentsIconButton = ({ onClick, margin, active }) => (
+export const DocumentsIconButton = ({ onClick, margin }) => (
   <IconButton
     margin={margin}
     onClick={onClick}

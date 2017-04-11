@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { App } from './app'
+import { App } from "./app"
 import { AppContainer } from "react-hot-loader"
-import configureStore from "./state/stores/configureStore"
+import configureStore from "./state/stores/configure-store"
 
 const store = configureStore()
 const rootEl = document.getElementById("pub-app")

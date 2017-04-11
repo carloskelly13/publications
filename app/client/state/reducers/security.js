@@ -1,4 +1,4 @@
-import { SET_CSRF_HEADERS } from '../actions/security'
+import { SET_CSRF_HEADERS } from "../actions/security"
 
 const defaultState = {
   csrfHeaders: {}
@@ -6,10 +6,10 @@ const defaultState = {
 
 export default function securityReducer(state = defaultState, action) {
   switch (action.type) {
-    case SET_CSRF_HEADERS:
+  case SET_CSRF_HEADERS:
     return { ...state, csrfHeaders: action.csrfHeaders }
 
-    default:
+  default:
     return state
   }
 }

@@ -1,11 +1,10 @@
 import React, { Component, PropTypes } from "react"
 import { Toolbar as ToolbarBase } from "../ui/toolbar"
-import { AboutButton } from "../ui/about.button"
 import NewShapeMenu from "./new-shape"
 import ZoomMenu from "./zoom"
 import {
   GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
-  PasteIconButton, DeleteIconButton, DocumentsIconButton, CloseIconButton,
+  PasteIconButton, DeleteIconButton,
   IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton,
   FillIconButton, StrokeIconButton
 } from "../ui/icon-buttons"
@@ -17,12 +16,11 @@ import {
   selectedShapeSelector
 } from "../../state/selectors"
 import { connect } from "react-redux"
-import { Text } from "../ui/text"
 import {
   showModal as showModalAction,
   hideModal as hideModalAction,
   setEditModeActive as setEditModeActiveAction,
-  setSidePanelVisible as setSidePanelVisibleAction,
+  setSidePanelVisible as setSidePanelVisibleAction
 } from "../../state/actions/app-ui"
 import {
   saveDocument as saveDocumentAction,
@@ -53,7 +51,7 @@ class Toolbar extends Component {
 
   render() {
     const {
-      currentDocument, editModeActive, saveDocument, setSelectedDocument,
+      currentDocument, editModeActive, saveDocument,
       copyShape, cutShape, deleteShape, pasteShape, clipboardData,
       sidePanelVisible, selectedShape, adjustShapeLayer
     } = this.props
@@ -81,7 +79,7 @@ class Toolbar extends Component {
           />
           <PasteIconButton
             margin
-            disabled={shapeControlButtonDisabled}
+            disabled={shapeControlButtonDisabled && clipboardData}
             onClick={() => pasteShape()}
           />
           <DeleteIconButton

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react"
+import React, { Component } from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
 import {
@@ -10,7 +10,6 @@ import {
 } from "../../state/selectors"
 import { hideModal as hideModalAction } from "../../state/actions/app-ui"
 import { FramedButton } from "../ui/pub-button"
-import { autobind } from "core-decorators"
 import { ModalButtonConatiner } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
@@ -20,11 +19,6 @@ const SaveChangesContainer = styled(ModalContent)`
 `
 
 class SaveChanges extends Component {
-  static propTypes = {
-    switchToNewDoc: PropTypes.func.isRequired,
-    currentDocument: PropTypes.object.isRequired
-  }
-
   renderNewDocumentContent() {
     return (
       <div>

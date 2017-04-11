@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react"
+import React from "react"
 import styled from "styled-components"
 import selectable from "./selectable"
 
@@ -17,7 +17,7 @@ const TextArea = styled.textarea`
 const TextBox = props => {
   const {
     shape: {
-      x, y, width, height, color, text,
+      x, y, width, height, color, text, fontSize,
       fontFamily, fontStyle, fontWeight, textAlign
     },
     zoom, dpi
@@ -33,7 +33,7 @@ const TextBox = props => {
       <TextArea
         readOnly
         onChange={null}
-        value={shape.text}
+        value={text}
         className="shape-frame-textarea shape-frame-textarea-no-edit"
         style={{
           color,

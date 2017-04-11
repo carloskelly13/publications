@@ -3,7 +3,7 @@ import styled from "styled-components"
 
 export const ContentContainer = styled.div`
   display: flex;
-  ${({ verticalAlign }) => verticalAlign ? { alignItems: "center"} : {} };
+  ${({ verticalAlign }) => verticalAlign ? { alignItems: "center" } : {} };
 `
 
 ContentContainer.propTypes = {

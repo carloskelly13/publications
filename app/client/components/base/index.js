@@ -3,6 +3,10 @@ import { connect } from "react-redux"
 import Modal from "../modal"
 import styled from "styled-components"
 import { appFont, AppColors } from "../../util/constants"
+import {
+  activeModalSelector,
+  activeModalPropsSelector
+} from "../../state/selectors"
 
 const AppView = styled.div`
   font-family: ${appFont};
@@ -19,11 +23,6 @@ const AppView = styled.div`
   font-feature-settings: "kern" 1, "dlig" 1;
   -moz-font-feature-settings: "kern" 1, "dlig" 1;
 `
-
-import {
-  activeModalSelector,
-  activeModalPropsSelector
-} from "../../state/selectors"
 
 const BaseView = props => {
   const {

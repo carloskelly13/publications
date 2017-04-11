@@ -15,10 +15,9 @@ import {
   allDocumentsSelector, currentDocumentSelector, sidePanelVisibleSelector
 } from "../../state/selectors"
 import {
-  AppColors, newDocument, breakpointLg, sidePanelWidth
+  AppColors, newDocument, sidePanelWidth
 } from "../../util/constants"
 import { MediumText } from "../ui/text"
-import { TextButton } from "../ui/pub-button"
 import isEqual from "lodash.isequal"
 
 export const DocumentsListContainer = styled.div`
@@ -28,7 +27,7 @@ export const DocumentsListContainer = styled.div`
   overflow: scroll;
   border-left: 1px solid hsla(0, 0%, 0%, 0.25);
   z-index: 2;
-  height: calc(100% - 115px);
+  height: calc(100% - 85px);
   right: 0;
   transition: transform 350ms ease-in-out;
   transform: translateX(${({ sidePanelVisible }) =>
@@ -56,7 +55,7 @@ class DocumentsList extends Component {
   handleDocumentItemSelected(event, doc) {
     event.stopPropagation()
     const {
-      setSelectedDocument, currentDocument, showModal, documents, setSidePanelVisible
+      setSelectedDocument, currentDocument, showModal, documents
     } = this.props
     if (!currentDocument) {
       setSelectedDocument(doc)
@@ -89,7 +88,7 @@ class DocumentsList extends Component {
 
   render() {
     const {
-      documents, currentDocument, sidePanelVisible, removeDocument
+      sidePanelVisible
     } = this.props
     return (
       <DocumentsListContainer

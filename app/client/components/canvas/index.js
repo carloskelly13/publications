@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react"
+import React from "react"
 import styled from "styled-components"
 import CanvasBackground from "./background"
 import { connect } from "react-redux"
@@ -39,8 +39,7 @@ const zoomForDocumentSize = ({ width, height }) => {
 }
 
 const Canvas = ({
-  doc, dpi, zoom, selectedShape, updateShape, selected,
-  allowsEditing, thumbnail, currentDocument
+  doc, dpi, zoom, allowsEditing, thumbnail, currentDocument
 }) => {
   if (thumbnail) {
     zoom = zoomForDocumentSize(doc)
@@ -80,11 +79,6 @@ const Canvas = ({
       </CanvasSVG>
     </div>
   )
-}
-
-Canvas.propTypes = {
-  doc: PropTypes.object.isRequired,
-  thumbnail: PropTypes.bool
 }
 
 Canvas.defaultProps = {

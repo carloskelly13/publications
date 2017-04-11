@@ -1,11 +1,9 @@
 import React from "react"
-import { render } from "react-dom"
 import { Provider } from "react-redux"
 
 import BaseView from "./components/base"
 import IndexView from "./components/index"
 import DocumentsView from "./components/documents"
-import { injectGlobal } from "styled-components"
 
 import Router from "react-router-dom/BrowserRouter"
 import Switch from "react-router-dom/Switch"

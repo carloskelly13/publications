@@ -1,14 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from "react"
+import PropTypes from "prop-types";
 import styled from "styled-components"
-import { autobind } from 'core-decorators'
-import { connect } from 'react-redux'
+import { connect } from "react-redux"
 import Toolbar from "../toolbar"
-import NewDocument from "./new-document"
-import DocumentItem from './document-item'
 import DocumentsList from "./documents-list"
 import EditorView from "../editor"
 import MetricsBar from "../metrics-bar"
-import Footer from "../footer"
 import { currentUserSelector } from "../../state/selectors"
 import { getUser as getUserAction } from "../../state/actions/user"
 import { getDocuments as getDocumentsAction } from "../../state/actions/document"
@@ -21,7 +18,7 @@ const ViewContainer = styled.div`
 
 const ViewContent = styled.div`
   display: flex;
-  flex: 1 0 calc(100% - 115px);
+  flex: 1 0 calc(100% - 85px);
 `
 
 class DocumentsView extends Component {
@@ -33,7 +30,7 @@ class DocumentsView extends Component {
     this.props.getUser()
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     /**
      * Only attempt to get documents if the current user request is complete
      * and we have a valid authenticated user.
@@ -41,12 +38,11 @@ class DocumentsView extends Component {
     const { user: { isRequestingUser, isAuthenticated } } = nextProps
     if (this.props.user.isRequestingUser && !isRequestingUser && isAuthenticated) {
       this.props.getDocuments()
-    }
-    /**
-     * If we have requested the user and there is no valid authentication session
-     * redirect to the login page.
-     */
-    else if (this.props.user.isRequestingUser && !isRequestingUser && !isAuthenticated) {
+      /**
+       * If we have requested the user and there is no valid authentication session
+       * redirect to the login page.
+       */
+    } else if (this.props.user.isRequestingUser && !isRequestingUser && !isAuthenticated) {
       this.context.router.history.replace("/")
     }
   }
@@ -62,7 +58,6 @@ class DocumentsView extends Component {
             <DocumentsList />
             <EditorView />
           </ViewContent>
-          <Footer />
         </ViewContainer>
       )
     }

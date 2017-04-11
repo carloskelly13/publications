@@ -1,4 +1,4 @@
-import React, { PropTypes } from "react"
+import React from "react"
 import styled from "styled-components"
 import { PubInput } from "../ui/pub-input"
 
@@ -30,8 +30,3 @@ export const Search = ({ keyword, keywordChanged }) => (
     />
   </SearchContainer>
 )
-
-Search.propTypes = {
-  keywordChanged: PropTypes.func.isRequired,
-  keyword: PropTypes.string.isRequired
-}

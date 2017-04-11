@@ -1,9 +1,9 @@
-import React, { Component, PropTypes } from "react"
+import React, { Component } from "react"
+import PropTypes from "prop-types";
 import { connect } from "react-redux"
 import { LoginForm } from "./login-form"
 
 import * as UserActions from "../../state/actions/user"
-import * as ErrorsActions from "../../state/actions/errors"
 
 class IndexView extends Component {
   static contextTypes = {
@@ -20,14 +20,13 @@ class IndexView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!!nextProps.user.isAuthenticated) {
+    if (nextProps.user.isAuthenticated) {
       this.context.router.history.replace("/documents")
     }
   }
 
   authenticateUser({ emailAddress, password }) {
     const { dispatch } = this.props
-    dispatch(ErrorsActions.removeError('user_auth_error'))
     dispatch(UserActions.login({ emailAddress, password }))
   }
 

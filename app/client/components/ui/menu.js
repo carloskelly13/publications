@@ -1,6 +1,7 @@
 import styled, { injectGlobal } from "styled-components"
 import { AppColors } from "../../util/constants"
 
+// eslint-disable-next-line no-unused-expressions
 injectGlobal`
   .menu-transition-enter {
     opacity: 0;

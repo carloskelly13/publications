@@ -7,7 +7,7 @@ import {
   updateSelectedShape as updateSelectedShapeAction
 } from "../../state/actions/document"
 
-const renderGridlines = (width, height, dpi, zoom) => {
+const renderGridlines = ({ width, height, dpi, zoom }) => {
   const x = range(0, width * dpi * zoom, 0.25 * dpi * zoom)
   const y = range(0, height * dpi * zoom, 0.25 * dpi * zoom)
   return [
@@ -38,10 +38,10 @@ const renderGridlines = (width, height, dpi, zoom) => {
 
 class CanvasBackground extends Component {
   shouldComponentUpdate(nextProps) {
-    const widthChanged = this.props.doc.width != nextProps.doc.width
-    const heightChanged = this.props.doc.height != nextProps.doc.height
-    const zoomChanged = this.props.zoom != nextProps.zoom
-    const editModeChanged = this.props.editModeActive != nextProps.editModeActive
+    const widthChanged = this.props.doc.width !== nextProps.doc.width
+    const heightChanged = this.props.doc.height !== nextProps.doc.height
+    const zoomChanged = this.props.zoom !== nextProps.zoom
+    const editModeChanged = this.props.editModeActive !== nextProps.editModeActive
     return (widthChanged || heightChanged || zoomChanged || editModeChanged)
   }
 
@@ -69,7 +69,7 @@ class CanvasBackground extends Component {
           width={width * dpi * zoom}
           height={height * dpi * zoom}
         />
-        { editModeActive && renderGridlines(width, height, dpi, zoom) }
+        { editModeActive && renderGridlines({ width, height, dpi, zoom }) }
       </g>
     )
   }

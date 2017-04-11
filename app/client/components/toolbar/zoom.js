@@ -8,7 +8,7 @@ import { setZoom as setZoomAction } from "../../state/actions/app-ui"
 
 const zoomLevels = [ 0.5, 0.75, 1, 1.25, 1.5, 2, 4 ]
 
-const ZoomMenu = ({ currentZoom, setZoom, disabled }) => (
+const ZoomMenu = ({ setZoom, disabled }) => (
   <div>
     { zoomLevels.map((zoom, index) => (
       <MenuItem

@@ -16,7 +16,6 @@ import {
   REPLACE_DOCUMENT,
   ADJUST_SHAPE_LAYER
 } from "../actions/document"
-import { newDocument } from "../../util/constants"
 import shortid from "shortid"
 
 const defaultState = {
@@ -28,6 +27,7 @@ const defaultState = {
   postDocumentFailure: false
 }
 
+// eslint-disable-next-line complexity, max-statements
 export default function documentReducer(state = defaultState, action) {
 
   switch (action.type) {
@@ -106,10 +106,10 @@ export default function documentReducer(state = defaultState, action) {
   }
 
   case PASTE_SHAPE: {
-    const newIdx = state.currentDocument.shapes.length + 1
+    const z = state.currentDocument.shapes.length + 1
     const pasteShape = Object.assign({}, state.clipboardData, {
       id: shortid.generate(),
-      z: state.currentDocument.shapes.length + 1
+      z
     })
 
     const updatedDocument = Object.assign({}, state.currentDocument, {
@@ -158,7 +158,7 @@ export default function documentReducer(state = defaultState, action) {
       selectedShape: adjustedShape,
       currentDocument: {
         ...state.currentDocument,
-        shapes: adjustedShapes,
+        shapes: adjustedShapes
       }
     }
   }
@@ -166,12 +166,12 @@ export default function documentReducer(state = defaultState, action) {
   case REPLACE_DOCUMENT: {
     const replacedDoc = action.payload
     const idx = state.documents.findIndex(doc => doc.id === replacedDoc.id)
-    const documents = Object.assign([], state.documents, { [idx] : replacedDoc })
+    const documents = Object.assign([], state.documents, { [idx]: replacedDoc })
     return { ...state, documents, currentDocument: replacedDoc }
   }
 
   case UPDATE_SELECTED_SHAPE: {
-    let updatedState = {}
+    const updatedState = {}
     const sender = action.selectedShape
 
     /**
@@ -191,11 +191,11 @@ export default function documentReducer(state = defaultState, action) {
        * shape in the documents shape array with a new shapes
        */
       if (state.selectedShape !== null && (
-          typeof sender.id === 'undefined' ||
+          typeof sender.id === "undefined" ||
           sender.id === state.selectedShape.id)) {
 
         const idx = currentShapes.findIndex(shape => state.selectedShape.id === shape.id)
-        const shapes = Object.assign([], currentShapes, { [idx] : selectedShape })
+        const shapes = Object.assign([], currentShapes, { [idx]: selectedShape })
 
         updatedState.currentDocument = { ...state.currentDocument, shapes };
       }
@@ -224,7 +224,7 @@ export default function documentReducer(state = defaultState, action) {
 
   case RECEIVE_DOCUMENT:
   case UPDATE_DOCUMENT: {
-    let updatedState = { currentDocument: action.doc }
+    const updatedState = { currentDocument: action.doc }
 
     if (!action.doc) {
       updatedState.selectedShape = null

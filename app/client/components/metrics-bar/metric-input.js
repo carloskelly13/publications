@@ -1,28 +1,19 @@
-import React, { PropTypes, Component } from "react"
+import React, { Component } from "react"
 import { TextInput } from "../ui/inputs"
 import { Text } from "../ui/text"
 import { ContentContainer } from "../ui/containers"
 import { AppColors } from "../../util/constants"
 
 export default class MetricInput extends Component {
-  static propTypes = {
-    property: PropTypes.string.isRequired,
-    value: PropTypes.number,
-    label: PropTypes.string.isRequired,
-    enabled: PropTypes.bool.isRequired,
-    unit: PropTypes.string.isRequired,
-    onChange: PropTypes.func
-  }
-
-  state = {
-    presentedValue: ""
-  }
-
   constructor() {
     super(...arguments)
     this.updateValue = this.updateValue.bind(this)
     this.validateInput = this.validateInput.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
+
+  state = {
+    presentedValue: ""
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,8 +47,6 @@ export default class MetricInput extends Component {
   render() {
     const {
       label,
-      property,
-      value,
       enabled,
       unit
     } = this.props
@@ -66,7 +55,7 @@ export default class MetricInput extends Component {
         <Text
           color={enabled ? AppColors.DarkGray : AppColors.DisabledGray}
           size="0.8em"
-          mr="0.25em"
+          mr="0.33em"
         >
           { label }
         </Text>
@@ -83,7 +72,7 @@ export default class MetricInput extends Component {
           color={enabled ? AppColors.DarkGray : AppColors.DisabledGray}
           size="0.8em"
           ml="0.25em"
-          mr="0.85em"
+          mr="1em"
         >
           { unit }
         </Text>

@@ -1,5 +1,4 @@
 import React from "react"
-import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import { connect } from "react-redux"
 import { format as formatDate } from "fecha"
 import { Text } from "../ui/text"
@@ -31,7 +30,7 @@ const formattedDateString = date => {
 const DocumentItem = ({
   selectedDocument, doc, onClick
 }) => {
-  const selected = !!selectedDocument && selectedDocument.id == doc.id
+  const selected = !!selectedDocument && selectedDocument.id === doc.id
   const lastModifiedDate = new Date(doc.lastModified)
 
   return (
@@ -61,5 +60,3 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps)(DocumentItem)
-
-

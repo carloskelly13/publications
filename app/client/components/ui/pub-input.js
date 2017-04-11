@@ -3,7 +3,7 @@ import styled from "styled-components"
 
 export const PubInput = styled.input`
   border: 1px solid #b8b7b9;
-  border-radius: ${({ label }) => !!label ? "2px 0 0 2px" : "2px"};
+  border-radius: ${({ label }) => label ? "2px 0 0 2px" : "2px"};
   box-sizing: border-box;
   color: #444;
   display: ${({ block }) => block ? "block" : "inline-block"};

@@ -1,22 +1,26 @@
 import React, { Component } from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
-import { isNumber, inRange } from "lodash"
 import { newDocument as newDocumentAction } from "../../state/actions/document"
 import { hideModal as hideModalAction } from "../../state/actions/app-ui"
 import { FramedButton } from "../ui/pub-button"
-import { autobind } from "core-decorators"
 import { ModalButtonConatiner } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
 import { FormInput, FormGroup } from "../ui/pub-input"
-import { validateName, validateBounds, validateForm } from "../../util/validators"
+import { validateForm } from "../../util/validators"
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
 `
 
 class NewDocumentView extends Component {
+  constructor() {
+    super(...arguments)
+    this.handleCreateButton = this.handleCreateButton.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
   state = {
     name: "New Document",
     width: 8.5,
@@ -24,10 +28,8 @@ class NewDocumentView extends Component {
     formValid: true
   }
 
-  @autobind
   handleCreateButton() {
     const { width, height, name } = this.state
-
     const formValid = validateForm([
       { value: name, type: "name" },
       { value: height, type: "size" },
@@ -42,8 +44,7 @@ class NewDocumentView extends Component {
     }
   }
 
-  @autobind
-  handleInputChange({ target: { name, value }}) {
+  handleInputChange({ target: { name, value } }) {
     this.setState({ [name]: value })
   }
 

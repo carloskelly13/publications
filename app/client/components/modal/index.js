@@ -1,12 +1,12 @@
-import React, { PropTypes } from "react"
+import React from "react"
 import styled, { injectGlobal } from "styled-components"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import { hideModal as hideModalAction } from "../../state/actions/app-ui"
 import { connect } from "react-redux"
 import {
   activeModalPropsSelector
 } from "../../state/selectors"
 
+// eslint-disable-next-line no-unused-expressions
 injectGlobal`
   .modal-transition-enter {
     opacity: 0;
@@ -58,11 +58,6 @@ export const ModalContent = styled.div`
   padding: 1em 1em calc(1em + 50px);
   position: relative;
 `
-
-const handleHideModal = (event, hideModalAction) => {
-  event.preventDefault()
-  hideModalAction()
-}
 
 const Modal = ({
   component: ModalComponent,

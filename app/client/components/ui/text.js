@@ -1,4 +1,3 @@
-import React from "react"
 import styled from "styled-components"
 import { AppColors, appFont } from "../../util/constants"
 
@@ -18,18 +17,21 @@ export const MarginText = styled.span`
 `
 
 export const Text = styled(MarginText)`
-  font-size: ${({ size }) => size || '1em'};
+  font-size: ${({ size }) => size || "1em"};
   font-family: ${appFont};
   text-align: ${({ center }) => center ? "center" : "left"};
   display: ${({ block }) => block ? "block" : "inline-block"};
   font-weight: 400;
   color: ${props => {
-    if (props.color) return props.color
-    if (props.white) return "#fff"
+    if (props.color) {
+      return props.color
+    } else if (props.white) {
+      return "#fff"
+    }
     return AppColors.DarkGray
   }};
   text-transform: ${props => {
-    if (props.uppercase) return "uppercase"
+    if (props.uppercase) { return "uppercase" }
     return "none"
   }};
 `
