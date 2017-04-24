@@ -79,7 +79,7 @@ class Toolbar extends Component {
           />
           <PasteIconButton
             margin
-            disabled={shapeControlButtonDisabled && clipboardData}
+            disabled={shapeControlButtonDisabled || !clipboardData}
             onClick={() => pasteShape()}
           />
           <DeleteIconButton

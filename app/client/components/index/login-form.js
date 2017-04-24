@@ -1,11 +1,6 @@
 import React, { Component } from "react"
-import styled from "styled-components"
 import { PubInput } from "../ui/pub-input"
 import { FramedButton, TextButton } from "../ui/pub-button"
-
-const ErrorMessage = styled.div`
-  color: red;
-`
 
 class LoginForm extends Component {
   constructor() {
@@ -34,22 +29,12 @@ class LoginForm extends Component {
     this.setState({ [target.name]: target.value })
   }
 
-  renderErrorMessage() {
-    const { errors } = this.props
-    return errors.includes("user_auth_error")
-      ? (<ErrorMessage>
-          The password or email address was incorrect. Please try again.
-        </ErrorMessage>)
-      : null
-  }
-
   render() {
     const { emailAddress, password } = this.state
     return (
       <form
         onSubmit={this.submitLoginForm}
       >
-        { this.renderErrorMessage() }
         <div>
           <PubInput
             placeholder="Email Address"

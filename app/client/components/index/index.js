@@ -31,18 +31,19 @@ class IndexView extends Component {
   }
 
   render() {
-    const { errors } = this.props
     return (
       <div>
         <h2>Index View</h2>
         <LoginForm
           authenticateUser={this.authenticateUser}
-          errors={errors}
         />
       </div>
     )
   }
 }
 
-const mapState = ({ user, errors }) => ({ user, errors: errors.errors })
-export default connect(mapState)(IndexView)
+const mapStateToProps = state => ({
+  user: state.user
+})
+
+export default connect(mapStateToProps)(IndexView)

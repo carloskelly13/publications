@@ -5,6 +5,11 @@ import { ContentContainer } from "../ui/containers"
 import { AppColors } from "../../util/constants"
 
 export default class MetricInput extends Component {
+  static defaultProps = {
+    mini: false,
+    small: false
+  }
+
   constructor() {
     super(...arguments)
     this.updateValue = this.updateValue.bind(this)
@@ -48,7 +53,9 @@ export default class MetricInput extends Component {
     const {
       label,
       enabled,
-      unit
+      unit,
+      small,
+      mini
     } = this.props
     return (
       <ContentContainer verticalAlign>
@@ -60,7 +67,8 @@ export default class MetricInput extends Component {
           { label }
         </Text>
         <TextInput
-          small
+          small={small}
+          mini={mini}
           alignRight
           onChange={this.updateValue}
           onBlur={this.validateInput}

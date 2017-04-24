@@ -10,7 +10,7 @@ export const TextInput = styled.input`
   background: #fff;
   font-family: ${appFont};
   font-size: ${props => {
-    if (props.small) {
+    if (props.small || props.mini) {
       return "11px"
     } else if (props.large) {
       return "16px"
@@ -19,15 +19,19 @@ export const TextInput = styled.input`
   }};
   text-align: ${ props => {
     if (props.alignRight) {
-      return "right";
+      return "right"
     } else if (props.alignCenter) {
-      return "center";
+      return "center"
     }
     return "left"
   }};
   width: ${props => {
-    if (props.small) { return "40px"; }
-    return "auto";
+    if (props.mini) {
+      return "20px"
+    } else if (props.small) {
+      return "35px"
+    }
+    return "auto"
   }};
 
   &:disabled {

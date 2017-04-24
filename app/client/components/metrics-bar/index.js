@@ -31,6 +31,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
     <MetricsBarContainer>
       <ContentContainer verticalAlign>
         <MetricInput
+          small
           property="x"
           value={get(shape, "x")}
           label="X"
@@ -39,6 +40,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           enabled={!!shape}
         />
         <MetricInput
+          small
           property="y"
           value={get(shape, "y")}
           label="Y"
@@ -47,6 +49,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           enabled={!!shape}
         />
         <MetricInput
+          small
           property="width"
           value={get(shape, "width")}
           label="Width"
@@ -55,6 +58,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           enabled={!!shape}
         />
         <MetricInput
+          small
           property="height"
           value={get(shape, "height")}
           label="Height"
@@ -63,6 +67,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           enabled={!!shape}
         />
         <MetricInput
+          mini
           property="strokeWidth"
           value={get(shape, "strokeWidth")}
           label="Border"
@@ -71,6 +76,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           enabled={supportsBorder(shape)}
         />
         <MetricInput
+          mini
           property="r"
           value={get(shape, "r")}
           label="Radius"

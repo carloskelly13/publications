@@ -9,7 +9,7 @@ module.exports = env => {
   const removeEmpty = array => array.filter(el => !!el)
 
   return {
-    devtool: env.prod ? false : "inline-source-map",
+    devtool: env.prod ? false : "cheap-module-eval-source-map",
 
     entry: {
       app: removeEmpty(
@@ -17,7 +17,7 @@ module.exports = env => {
           ...(env.dev ? [
             "react-hot-loader/patch",
             "webpack-dev-server/client?http://localhost:4040",
-            "webpack/hot/only-dev-server",
+            "webpack/hot/only-dev-server"
           ] : []),
           "./app/client/index.js"
         ]
@@ -26,7 +26,7 @@ module.exports = env => {
     },
 
     output: {
-      path: __dirname + "/dist",
+      path: `${__dirname}/dist`,
       sourceMapFilename: "[name].map",
       filename: "[hash].[name].js",
       publicPath: "/"
@@ -38,7 +38,7 @@ module.exports = env => {
           target: "http://api.publicationsapp.com",
           changeOrigin: true,
           pathRewrite: {
-            "^/api" : ""
+            "^/api": ""
           }
         }
       },
@@ -75,7 +75,7 @@ module.exports = env => {
       ifProd(new webpack.LoaderOptionsPlugin({
         minimize: true,
         debug: false,
-        quiet: true,
+        quiet: true
       })),
 
       ifDev(new webpack.HotModuleReplacementPlugin()),
@@ -85,11 +85,11 @@ module.exports = env => {
       new webpack.NoEmitOnErrorsPlugin(),
 
       new webpack.DefinePlugin({
-        "process.env": { NODE_ENV: `${env.prod ? '"production"' : '"development"'}`, },
+        "process.env": { NODE_ENV: `${env.prod ? "\"production\"" : "\"development\""}` }
       }),
 
       ifProd(new webpack.optimize.UglifyJsPlugin({
-        compress: { screw_ie8: true, warnings: false }
+        compress: { warnings: false }
       })),
 
       new HtmlWebpackPlugin({
