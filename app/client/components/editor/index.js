@@ -62,7 +62,7 @@ class EditorView extends Component {
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
-        ref={ c => (this.containerRef = c) }
+        ref={c => (this.containerRef = c)}
       >
         { currentDocument && (
           <div>

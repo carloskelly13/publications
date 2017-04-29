@@ -29,14 +29,41 @@ import {
   copyShape as copyShapeAction,
   pasteShape as pasteShapeAction,
   deleteShape as deleteShapeAction,
-  adjustShapeLayer as adjustShapeLayerAction
+  adjustShapeLayer as adjustShapeLayerAction,
+  updateSelectedShape as updateShapeAction
 } from "../../state/actions/document"
+import { CompactPicker } from "react-color"
+import styled from "styled-components"
+import get from "lodash.get"
+
+const ColorPickerContainer = styled.div`
+  position: relative;
+`
+
+const ColorPickerInnerContainer = styled.div`
+  position: absolute;
+  top: 45px;
+`
 
 class Toolbar extends Component {
   constructor() {
     super(...arguments)
     this.handleGridButton = this.handleGridButton.bind(this)
     this.handleSidePanelButton = this.handleSidePanelButton.bind(this)
+  }
+
+  state = {
+    fillColorPickerVisible: false,
+    strokeColorPickerVisible: false
+  }
+
+  componentWillReceiveProps({ selectedShape }) {
+    if (get(this.props.selectedShape, "id", -1) !== get(selectedShape, "id", -2)) {
+      this.setState({
+        fillColorPickerVisible: false,
+        strokeColorPickerVisible: false
+      })
+    }
   }
 
   handleGridButton() {
@@ -49,12 +76,32 @@ class Toolbar extends Component {
     setSidePanelVisible(!sidePanelVisible)
   }
 
+  toggleFillColorPicker = () => {
+    this.setState(prevState => ({
+      fillColorPickerVisible: !prevState.fillColorPickerVisible,
+      strokeColorPickerVisible: false
+    }))
+  }
+
+  toggleStrokeColorPicker = () => {
+    this.setState(prevState => ({
+      strokeColorPickerVisible: !prevState.strokeColorPickerVisible,
+      fillColorPickerVisible: false
+    }))
+  }
+
   render() {
     const {
       currentDocument, editModeActive, saveDocument,
       copyShape, cutShape, deleteShape, pasteShape, clipboardData,
-      sidePanelVisible, selectedShape, adjustShapeLayer
+      sidePanelVisible, selectedShape, adjustShapeLayer,
+      updateShape
     } = this.props
+
+    const {
+      fillColorPickerVisible,
+      strokeColorPickerVisible
+    } = this.state
 
     const forwardButtonEnabled = selectedShape && currentDocument &&
       selectedShape.z < currentDocument.shapes.length
@@ -62,6 +109,12 @@ class Toolbar extends Component {
       selectedShape.z > 1
     const shapeControlButtonDisabled = !selectedShape || !currentDocument
     const isSelectedShapeText = selectedShape && selectedShape.type === "text"
+
+    const showFillColorPicker = fillColorPickerVisible && selectedShape &&
+      selectedShape.fill
+
+    const showStrokeColorPicker = strokeColorPickerVisible && selectedShape &&
+      selectedShape.type !== "text" && selectedShape.stroke
 
     return (
       <ToolbarBase>
@@ -106,11 +159,22 @@ class Toolbar extends Component {
           />
         </IconContainer>
         <IconContainer>
-          <FillIconButton
-            margin
-            disabled={shapeControlButtonDisabled}
-            fillColor={selectedShape && selectedShape.fill}
-          />
+          <ColorPickerContainer>
+            <FillIconButton
+              margin
+              disabled={shapeControlButtonDisabled}
+              fillColor={selectedShape && selectedShape.fill}
+              onClick={this.toggleFillColorPicker}
+            />
+            { showFillColorPicker && (
+              <ColorPickerInnerContainer>
+                <CompactPicker
+                  color={selectedShape.fill}
+                  onChangeComplete={({ hex }) => updateShape({ fill: hex })}
+                />
+              </ColorPickerInnerContainer>
+            ) }
+          </ColorPickerContainer>
           <StrokeIconButton
             disabled={shapeControlButtonDisabled || isSelectedShapeText}
             strokeColor={selectedShape && selectedShape.stroke}
@@ -162,7 +226,8 @@ const mapDispatchToProps = {
   pasteShape: pasteShapeAction,
   cutShape: cutShapeAction,
   deleteShape: deleteShapeAction,
-  adjustShapeLayer: adjustShapeLayerAction
+  adjustShapeLayer: adjustShapeLayerAction,
+  updateShape: updateShapeAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar)

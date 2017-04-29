@@ -195,7 +195,12 @@ export default function documentReducer(state = defaultState, action) {
           sender.id === state.selectedShape.id)) {
 
         const idx = currentShapes.findIndex(shape => state.selectedShape.id === shape.id)
-        const shapes = Object.assign([], currentShapes, { [idx]: selectedShape })
+
+        const shapes = [
+          ...currentShapes.slice(0, idx),
+          selectedShape,
+          ...currentShapes.slice(idx + 1)
+        ]
 
         updatedState.currentDocument = { ...state.currentDocument, shapes };
       }
