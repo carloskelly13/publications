@@ -34,7 +34,6 @@ const TextBox = props => {
         readOnly
         onChange={null}
         value={text}
-        className="shape-frame-textarea shape-frame-textarea-no-edit"
         style={{
           color,
           fontFamily,

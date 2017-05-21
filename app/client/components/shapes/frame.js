@@ -1,4 +1,17 @@
 import React, { Component } from "react"
+import styled from "styled-components"
+
+export const TextArea = styled.textarea`
+  height: 100%;
+  resize: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  user-select: none;
+  outline: none;
+  background: transparent;
+`
 
 const frameAnchors = {
   size: 10,
@@ -175,10 +188,9 @@ export default class ResizeMoveFrame extends Component {
           height={height}
           width={width}
         >
-          <textarea
+          <TextArea
             value={shape.text}
             onChange={this.handleTextChange}
-            className="shape-frame-textarea"
             style={{
               color: shape.color,
               fontFamily: shape.fontFamily,

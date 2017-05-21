@@ -2,9 +2,10 @@ import React, { Component } from "react"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 import MenuContainer from "./menu-container"
 import { MenuButtonContainer } from "./menu"
+import omit from "lodash.omit"
 
 export default function asMenu({
-  iconButton, menuContent, width = 175
+  iconButton, menuContent, width = 175, iconButtonProps = {}
 }) {
   return class InjectAsMenu extends Component {
     static WrappedComponent = menuContent
@@ -30,10 +31,13 @@ export default function asMenu({
 
     render() {
       const { menuActive } = this.state
+      const wrapperProps = omit(this.props, "disabled")
       return (
         <MenuButtonContainer>
           <InjectAsMenu.IconButtonComponent
             margin
+            {...iconButtonProps}
+            label={this.props.label}
             disabled={this.props.disabled}
             onClick={this.handleToggleButtonClick}
           />
@@ -47,7 +51,7 @@ export default function asMenu({
                 onClickOutside={this.closeMenu}
                 width={`${width}px`}
               >
-                <InjectAsMenu.WrappedComponent />
+                <InjectAsMenu.WrappedComponent {...wrapperProps} />
               </MenuContainer>
             )}
           </ReactCSSTransitionGroup>

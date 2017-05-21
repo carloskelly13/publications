@@ -9,7 +9,7 @@ import {
 import { updateSelectedShape as updateShapeAction } from "../../state/actions/document"
 
 import {
-  Rectangle, Ellipse
+  Rectangle, Ellipse, TextBox
 } from "../shapes"
 
 const CanvasSVG = styled.svg`
@@ -19,12 +19,18 @@ const CanvasSVG = styled.svg`
 `
 
 const renderShape = props => {
-  if (props.shape.type === "rect") {
-    return <Rectangle {...props} />
-  } else if (props.shape.type === "ellipse") {
-    return <Ellipse {...props} />
+  let ShapeComponent
+  switch (props.shape.type) {
+  case "ellipse":
+    ShapeComponent = Ellipse
+    break
+  case "text":
+    ShapeComponent = TextBox
+    break
+  default:
+    ShapeComponent = Rectangle
   }
-  return null
+  return <ShapeComponent {...props} />
 }
 
 const zoomForDocumentSize = ({ width, height }) => {

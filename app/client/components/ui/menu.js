@@ -26,7 +26,7 @@ export const Menu = styled.ul`
   background: #fff;
   list-style: none;
   color: ${AppColors.DarkGray};
-  padding: 0.5em 0;
+  padding: 2px 0;
   margin: 0 0 0 -2px;
   border-radius: 4px;
   position: absolute;

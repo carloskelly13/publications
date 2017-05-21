@@ -5,8 +5,7 @@ import ZoomMenu from "./zoom"
 import {
   GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
   PasteIconButton, DeleteIconButton,
-  IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton,
-  FillIconButton, StrokeIconButton
+  IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton
 } from "../ui/icon-buttons"
 import {
   currentDocumentSelector,
@@ -32,30 +31,10 @@ import {
   adjustShapeLayer as adjustShapeLayerAction,
   updateSelectedShape as updateShapeAction
 } from "../../state/actions/document"
-import { CompactPicker } from "react-color"
-import styled from "styled-components"
 import get from "lodash.get"
-
-const ColorPickerContainer = styled.div`
-  position: relative;
-`
-
-const ColorPickerInnerContainer = styled.div`
-  position: absolute;
-  top: 45px;
-`
+import ColorPickerMenu from "./color-picker"
 
 class Toolbar extends Component {
-  constructor() {
-    super(...arguments)
-    this.handleGridButton = this.handleGridButton.bind(this)
-    this.handleSidePanelButton = this.handleSidePanelButton.bind(this)
-  }
-
-  state = {
-    fillColorPickerVisible: false,
-    strokeColorPickerVisible: false
-  }
 
   componentWillReceiveProps({ selectedShape }) {
     if (get(this.props.selectedShape, "id", -1) !== get(selectedShape, "id", -2)) {
@@ -66,28 +45,14 @@ class Toolbar extends Component {
     }
   }
 
-  handleGridButton() {
+  handleGridButton = () => {
     const { editModeActive, setEditModeActive } = this.props
     setEditModeActive(!editModeActive)
   }
 
-  handleSidePanelButton() {
+  handleSidePanelButton = () => {
     const { sidePanelVisible, setSidePanelVisible } = this.props
     setSidePanelVisible(!sidePanelVisible)
-  }
-
-  toggleFillColorPicker = () => {
-    this.setState(prevState => ({
-      fillColorPickerVisible: !prevState.fillColorPickerVisible,
-      strokeColorPickerVisible: false
-    }))
-  }
-
-  toggleStrokeColorPicker = () => {
-    this.setState(prevState => ({
-      strokeColorPickerVisible: !prevState.strokeColorPickerVisible,
-      fillColorPickerVisible: false
-    }))
   }
 
   render() {
@@ -98,23 +63,15 @@ class Toolbar extends Component {
       updateShape
     } = this.props
 
-    const {
-      fillColorPickerVisible,
-      strokeColorPickerVisible
-    } = this.state
-
     const forwardButtonEnabled = selectedShape && currentDocument &&
       selectedShape.z < currentDocument.shapes.length
     const backwardButtonEnabled = selectedShape && currentDocument &&
       selectedShape.z > 1
     const shapeControlButtonDisabled = !selectedShape || !currentDocument
-    const isSelectedShapeText = selectedShape && selectedShape.type === "text"
 
-    const showFillColorPicker = fillColorPickerVisible && selectedShape &&
-      selectedShape.fill
-
-    const showStrokeColorPicker = strokeColorPickerVisible && selectedShape &&
-      selectedShape.type !== "text" && selectedShape.stroke
+    const fillColorPickerEnabled = selectedShape && selectedShape.fill
+    const strokeColorPickerEnabled = selectedShape && selectedShape.type !== "text" &&
+      selectedShape.stroke
 
     return (
       <ToolbarBase>
@@ -159,25 +116,19 @@ class Toolbar extends Component {
           />
         </IconContainer>
         <IconContainer>
-          <ColorPickerContainer>
-            <FillIconButton
-              margin
-              disabled={shapeControlButtonDisabled}
-              fillColor={selectedShape && selectedShape.fill}
-              onClick={this.toggleFillColorPicker}
-            />
-            { showFillColorPicker && (
-              <ColorPickerInnerContainer>
-                <CompactPicker
-                  color={selectedShape.fill}
-                  onChangeComplete={({ hex }) => updateShape({ fill: hex })}
-                />
-              </ColorPickerInnerContainer>
-            ) }
-          </ColorPickerContainer>
-          <StrokeIconButton
-            disabled={shapeControlButtonDisabled || isSelectedShapeText}
-            strokeColor={selectedShape && selectedShape.stroke}
+          <ColorPickerMenu
+            shape={selectedShape}
+            property="fill"
+            onColorChange={updateShape}
+            label="Fill"
+            disabled={!fillColorPickerEnabled}
+          />
+          <ColorPickerMenu
+            shape={selectedShape}
+            property="stroke"
+            onColorChange={updateShape}
+            label="Stroke"
+            disabled={!strokeColorPickerEnabled}
           />
         </IconContainer>
         <IconContainer>
