@@ -50,8 +50,7 @@ class CanvasBackground extends Component {
       doc: { width, height },
       dpi,
       zoom,
-      updateSelectedShape,
-      editModeActive
+      updateSelectedShape
     } = this.props
     return (
       <g
@@ -69,7 +68,7 @@ class CanvasBackground extends Component {
           width={width * dpi * zoom}
           height={height * dpi * zoom}
         />
-        { editModeActive && renderGridlines({ width, height, dpi, zoom }) }
+        { renderGridlines({ width, height, dpi, zoom }) }
       </g>
     )
   }

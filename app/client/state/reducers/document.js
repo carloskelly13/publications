@@ -40,6 +40,8 @@ export default function documentReducer(state = defaultState, action) {
   case RECEIVE_DOCUMENTS:
     return Object.assign({}, state, {
       documents: action.documents,
+      currentDocument: (action.documents || [])
+        .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)[0],
       isRequestingData: false
     })
 

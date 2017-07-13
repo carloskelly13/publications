@@ -3,11 +3,11 @@ import { AppColors } from "../../util/constants"
 
 const Toolbar = styled.div`
   align-items: center;
-  background: ${AppColors.LightGray};
+  background: ${AppColors.White};
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.25);
   box-pack: justify;
   display: flex;
-  height: 54px;
+  height: 48px;
   justify-content: space-between;
   top: 0;
   user-select: none;

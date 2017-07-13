@@ -1,4 +1,3 @@
-import fetch from "isomorphic-fetch"
 import { Urls } from "../../util/constants"
 import { setCsrfHeaders } from "./security"
 
@@ -28,17 +27,19 @@ export const login = (data = { emailAddress: "", password: "" }) => {
       if (response.status === 200) {
         setCsrfHeaders(response.headers)(dispatch)
         return response.json()
-
       } else {
-        throw new Error()
+        return null
       }
     })
     .then(json => {
+      if (!json) {
+        reject()
+        return
+      }
       const user = { ...json, isAuthenticated: true }
       dispatch(receiveUser(user))
       resolve()
     })
-    .catch(() => reject())
   })
 }
 
@@ -76,20 +77,23 @@ export const getUser = () => {
         setCsrfHeaders(response.headers)(dispatch)
         return response.json()
       } else {
-        const error = new Error(response.statusText)
-        error.response = response
-        throw error
+        return null
       }
     })
-    .then(userJson => dispatch(receiveUser({
-      ...userJson,
-      isAuthenticated: true
-    })))
-    .catch(() => dispatch(receiveUser({
-      name: "",
-      temporary: false,
-      isAuthenticated: false
-    })))
+    .then(userJson => {
+      if (userJson) {
+        dispatch(receiveUser({
+          ...userJson,
+          isAuthenticated: true
+        }))
+      } else {
+        dispatch(receiveUser({
+          name: "",
+          temporary: false,
+          isAuthenticated: false
+        }))
+      }
+    })
   }
 }
 
@@ -143,7 +147,7 @@ export const updateUser = (updateJson, completion = () => {}) => {
         return response.json()
 
       } else {
-        throw new Error()
+        return null
       }
     })
     .then(json => {
@@ -151,11 +155,7 @@ export const updateUser = (updateJson, completion = () => {}) => {
         ...json,
         isAuthenticated: true
       }))
-
       completion()
-    })
-    .catch(() => {
-      throw new Error()
     })
   }
 }

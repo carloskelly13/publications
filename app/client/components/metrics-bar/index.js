@@ -1,17 +1,17 @@
 import React from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
+import ColorPicker from "./../color-picker"
 import { AppColors } from "../../util/constants"
 import { ContentContainer } from "../ui/containers"
 import { selectedShapeSelector } from "../../state/selectors"
 import {
   updateSelectedShape as updateSelectedShapeAction
 } from "../../state/actions/document"
-import get from "lodash.get"
 import MetricInput from "./metric-input"
 
 const MetricsBarContainer = styled.footer`
-  height: 30px;
+  height: 25px;
   width: calc(100% - 2em);
   padding: 0 1em;
   background: ${AppColors.LightGray};
@@ -24,66 +24,79 @@ const MetricsBarContainer = styled.footer`
 
 const supportsBorder = shape => !!shape && [ "rect", "ellipse" ].includes(shape.type)
 const supportsRadius = shape => !!shape && shape.type === "rect"
+const isText = shape => !!shape && shape.type === "text"
 
 export const MetricsBar = ({ shape, updateSelectedShape }) => {
-
+  if (!shape) {
+    return <MetricsBarContainer />
+  }
   return (
     <MetricsBarContainer>
       <ContentContainer verticalAlign>
         <MetricInput
           small
           property="x"
-          value={get(shape, "x")}
+          value={shape.x}
           label="X"
           unit="in"
           onChange={updateSelectedShape}
-          enabled={!!shape}
         />
         <MetricInput
           small
           property="y"
-          value={get(shape, "y")}
+          value={shape.y}
           label="Y"
           unit="in"
           onChange={updateSelectedShape}
-          enabled={!!shape}
         />
         <MetricInput
           small
           property="width"
-          value={get(shape, "width")}
+          value={shape.width}
           label="Width"
           unit="in"
           onChange={updateSelectedShape}
-          enabled={!!shape}
         />
         <MetricInput
           small
           property="height"
-          value={get(shape, "height")}
+          value={shape.height}
           label="Height"
           unit="in"
           onChange={updateSelectedShape}
-          enabled={!!shape}
         />
-        <MetricInput
-          mini
-          property="strokeWidth"
-          value={get(shape, "strokeWidth")}
-          label="Border"
-          unit="pt"
+        <ColorPicker
+          property={isText(shape) ? "color" : "fill"}
           onChange={updateSelectedShape}
-          enabled={supportsBorder(shape)}
+          shape={shape}
         />
-        <MetricInput
-          mini
-          property="r"
-          value={get(shape, "r")}
-          label="Radius"
-          unit="pt"
-          onChange={updateSelectedShape}
-          enabled={supportsRadius(shape)}
-        />
+        { supportsBorder(shape) && [
+          <ColorPicker
+            key="stroke-color-picker"
+            property="stroke"
+            onChange={updateSelectedShape}
+            shape={shape}
+          />,
+          <MetricInput
+            mini
+            property="strokeWidth"
+            key="stroke-metric-input"
+            value={shape.strokeWidth}
+            label="Border"
+            unit="pt"
+            onChange={updateSelectedShape}
+          />
+        ] }
+        { supportsRadius(shape) && (
+          <MetricInput
+            mini
+            property="r"
+            value={shape.r}
+            label="Radius"
+            unit="pt"
+            onChange={updateSelectedShape}
+          />
+        ) }
       </ContentContainer>
     </MetricsBarContainer>
   )

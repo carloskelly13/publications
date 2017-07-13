@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 import asMenu from "../ui/menu-hoc"
-import { FillIconButton } from "../ui/icon-buttons/fill"
 import { SketchPicker } from "react-color"
 import { convertToRGBA } from "../../util/colors"
 
@@ -34,7 +33,6 @@ const ColorPicker = props => {
 }
 
 export default asMenu({
-  iconButton: FillIconButton,
   menuContent: ColorPicker,
   width: 220
 })

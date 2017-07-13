@@ -19,7 +19,14 @@ export const MarginText = styled.span`
 export const Text = styled(MarginText)`
   font-size: ${({ size }) => size || "1em"};
   font-family: ${appFont};
-  text-align: ${({ center }) => center ? "center" : "left"};
+  text-align: ${props => {
+    if (props.center) {
+      return "center"
+    } else if (props.right) {
+      return "right"
+    }
+    return "left"
+  }};
   display: ${({ block }) => block ? "block" : "inline-block"};
   font-weight: 400;
   color: ${props => {
@@ -46,4 +53,11 @@ export const MediumText = styled(Text)`
 
 export const LightText = styled(Text)`
   font-weight: 300;
+`
+
+export const InputLabelText = styled.label`
+  border-left: none;
+  padding: 1px 0.25em 1px;
+  color: ${AppColors.DarkGray};
+  font-size: ${({ size }) => size || "1em"};
 `

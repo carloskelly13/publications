@@ -15,9 +15,7 @@ module.exports = env => {
       app: removeEmpty(
         [
           ...(env.dev ? [
-            "react-hot-loader/patch",
             "webpack-dev-server/client?http://localhost:4040",
-            "webpack/hot/only-dev-server"
           ] : []),
           "./app/client/index.js"
         ]
@@ -43,7 +41,7 @@ module.exports = env => {
         }
       },
       historyApiFallback: true,
-      hot: true
+      hot: false
     },
 
     module: {
@@ -69,7 +67,7 @@ module.exports = env => {
 
     plugins: removeEmpty([
       new webpack.optimize.CommonsChunkPlugin({
-        name: [ "vendor", "manifest" ]
+        name: [ "vendor" ]
       }),
 
       ifProd(new webpack.LoaderOptionsPlugin({
@@ -77,10 +75,6 @@ module.exports = env => {
         debug: false,
         quiet: true
       })),
-
-      ifDev(new webpack.HotModuleReplacementPlugin()),
-
-      ifDev(new webpack.NamedModulesPlugin()),
 
       new webpack.NoEmitOnErrorsPlugin(),
 

@@ -9,7 +9,6 @@ export default function asMenu({
 }) {
   return class InjectAsMenu extends Component {
     static WrappedComponent = menuContent
-    static IconButtonComponent = iconButton
 
     state = {
       menuActive: false
@@ -32,9 +31,10 @@ export default function asMenu({
     render() {
       const { menuActive } = this.state
       const wrapperProps = omit(this.props, "disabled")
+      const IconButtonComponent = iconButton || this.props.icon
       return (
         <MenuButtonContainer>
-          <InjectAsMenu.IconButtonComponent
+          <IconButtonComponent
             margin
             {...iconButtonProps}
             label={this.props.label}

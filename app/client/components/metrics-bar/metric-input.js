@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { TextInput } from "../ui/inputs"
-import { Text } from "../ui/text"
+import { MediumText, InputLabelText } from "../ui/text"
 import { ContentContainer } from "../ui/containers"
 import { AppColors } from "../../util/constants"
 
@@ -15,10 +15,7 @@ export default class MetricInput extends Component {
     this.updateValue = this.updateValue.bind(this)
     this.validateInput = this.validateInput.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
-  }
-
-  state = {
-    presentedValue: ""
+    this.state = { presentedValue: this.props.value }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,38 +49,42 @@ export default class MetricInput extends Component {
   render() {
     const {
       label,
-      enabled,
       unit,
       small,
       mini
     } = this.props
     return (
-      <ContentContainer verticalAlign>
-        <Text
-          color={enabled ? AppColors.DarkGray : AppColors.DisabledGray}
-          size="0.8em"
+      <ContentContainer
+        verticalAlign
+        style={{ marginRight: "0.75em" }}
+      >
+        <MediumText
+          center
+          color={AppColors.DarkGray}
+          size="0.75em"
           mr="0.33em"
         >
           { label }
-        </Text>
-        <TextInput
-          small={small}
-          mini={mini}
-          alignRight
-          onChange={this.updateValue}
-          onBlur={this.validateInput}
-          disabled={!enabled}
-          onKeyPress={this.handleKeyPress}
-          value={this.state.presentedValue}
-        />
-        <Text
-          color={enabled ? AppColors.DarkGray : AppColors.DisabledGray}
-          size="0.8em"
-          ml="0.25em"
-          mr="1em"
-        >
-          { unit }
-        </Text>
+        </MediumText>
+        <ContentContainer verticalAlign>
+          <TextInput
+            withLabel
+            alignRight
+            small={small}
+            mini={mini}
+            id={label}
+            onChange={this.updateValue}
+            onBlur={this.validateInput}
+            onKeyPress={this.handleKeyPress}
+            value={this.state.presentedValue}
+          />
+          <InputLabelText
+            size="0.8em"
+            htmlFor={label}
+          >
+            { unit }
+          </InputLabelText>
+        </ContentContainer>
       </ContentContainer>
     )
   }

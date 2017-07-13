@@ -3,9 +3,10 @@ import { Toolbar as ToolbarBase } from "../ui/toolbar"
 import NewShapeMenu from "./new-shape"
 import ZoomMenu from "./zoom"
 import {
-  GridIconButton, DiskIconButton, CutIconButton, CopyIconButton,
+  DiskIconButton, CutIconButton, CopyIconButton,
   PasteIconButton, DeleteIconButton,
-  IconContainer, WindowIconButton, ForwardsIconButton, BackwardsIconButton
+  IconContainer, ForwardsIconButton, BackwardsIconButton,
+  DownloadIconButton, DocumentIconButton
 } from "../ui/icon-buttons"
 import {
   currentDocumentSelector,
@@ -32,7 +33,6 @@ import {
   updateSelectedShape as updateShapeAction
 } from "../../state/actions/document"
 import get from "lodash.get"
-import ColorPickerMenu from "./color-picker"
 
 class Toolbar extends Component {
 
@@ -45,10 +45,10 @@ class Toolbar extends Component {
     }
   }
 
-  handleGridButton = () => {
-    const { editModeActive, setEditModeActive } = this.props
-    setEditModeActive(!editModeActive)
-  }
+  // handleGridButton = () => {
+  //   const { editModeActive, setEditModeActive } = this.props
+  //   setEditModeActive(!editModeActive)
+  // }
 
   handleSidePanelButton = () => {
     const { sidePanelVisible, setSidePanelVisible } = this.props
@@ -57,10 +57,9 @@ class Toolbar extends Component {
 
   render() {
     const {
-      currentDocument, editModeActive, saveDocument,
+      currentDocument, saveDocument,
       copyShape, cutShape, deleteShape, pasteShape, clipboardData,
-      sidePanelVisible, selectedShape, adjustShapeLayer,
-      updateShape
+      selectedShape, adjustShapeLayer
     } = this.props
 
     const forwardButtonEnabled = selectedShape && currentDocument &&
@@ -68,10 +67,6 @@ class Toolbar extends Component {
     const backwardButtonEnabled = selectedShape && currentDocument &&
       selectedShape.z > 1
     const shapeControlButtonDisabled = !selectedShape || !currentDocument
-
-    const fillColorPickerEnabled = selectedShape && selectedShape.fill
-    const strokeColorPickerEnabled = selectedShape && selectedShape.type !== "text" &&
-      selectedShape.stroke
 
     return (
       <ToolbarBase>
@@ -116,37 +111,20 @@ class Toolbar extends Component {
           />
         </IconContainer>
         <IconContainer>
-          <ColorPickerMenu
-            shape={selectedShape}
-            property="fill"
-            onColorChange={updateShape}
-            label="Fill"
-            disabled={!fillColorPickerEnabled}
-          />
-          <ColorPickerMenu
-            shape={selectedShape}
-            property="stroke"
-            onColorChange={updateShape}
-            label="Stroke"
-            disabled={!strokeColorPickerEnabled}
-          />
-        </IconContainer>
-        <IconContainer>
           <ZoomMenu disabled={!currentDocument} />
-          <GridIconButton
-            margin
-            onClick={this.handleGridButton}
-            active={editModeActive}
-            disabled={!currentDocument}
-          />
           <DiskIconButton
             margin
             disabled={!currentDocument}
             onClick={() => saveDocument(currentDocument)}
           />
-          <WindowIconButton
-            onClick={this.handleSidePanelButton}
-            active={sidePanelVisible}
+          <DownloadIconButton
+            margin
+            disabled={!currentDocument}
+            onClick={() => {}}
+          />
+          <DocumentIconButton
+            disabled={!currentDocument}
+            onClick={() => {}}
           />
         </IconContainer>
       </ToolbarBase>

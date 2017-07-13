@@ -1,13 +1,8 @@
-import React, { Component, PropTypes } from "react"
+import React, { Component } from "react"
 import { Menu } from "./menu"
 import onClickOutside from "react-onclickoutside"
 
 class MenuContainer extends Component {
-  static propTypes = {
-    onClickOutside: PropTypes.func.isRequired,
-    width: PropTypes.string
-  }
-
   constructor() {
     super(...arguments)
     this.handleClickOutside = this.handleClickOutside.bind(this)

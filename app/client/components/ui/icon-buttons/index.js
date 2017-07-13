@@ -15,6 +15,8 @@ import { ForwardsIconButton } from "./forwards"
 import { BackwardsIconButton } from "./backwards"
 import { FillIconButton } from "./fill"
 import { StrokeIconButton } from "./stroke"
+import { DownloadIconButton } from "./download"
+import { DocumentIconButton } from "./document"
 
 export const IconContainer = styled.div`
   display: flex;
@@ -37,5 +39,7 @@ export {
   ForwardsIconButton,
   BackwardsIconButton,
   FillIconButton,
-  StrokeIconButton
+  StrokeIconButton,
+  DownloadIconButton,
+  DocumentIconButton
 }

@@ -3,10 +3,10 @@ import { AppColors, appFont } from "../../util/constants"
 
 export const TextInput = styled.input`
   border: 1px solid #aaa;
-  padding: 2px;
+  padding: 1px 2px;
   border-radius: 2px;
-  outline: none;
   color: ${AppColors.DarkGray};
+  outline-color: ${AppColors.Active};
   background: #fff;
   font-family: ${appFont};
   font-size: ${props => {
