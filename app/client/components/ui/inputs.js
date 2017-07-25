@@ -6,7 +6,6 @@ export const TextInput = styled.input`
   padding: 1px 2px;
   border-radius: 2px;
   color: ${AppColors.DarkGray};
-  outline-color: ${AppColors.Active};
   background: #fff;
   font-family: ${appFont};
   font-size: ${props => {
@@ -17,6 +16,7 @@ export const TextInput = styled.input`
     }
     return "14px"
   }};
+  outline: none;
   text-align: ${ props => {
     if (props.alignRight) {
       return "right"
@@ -37,5 +37,9 @@ export const TextInput = styled.input`
   &:disabled {
     background: ${AppColors.MediumGray};
     color: ${AppColors.MediumGray};
+  }
+  &:focus {
+    box-shadow: 0 0 0 1px ${AppColors.ActiveLight};
+    border-color: ${AppColors.ActiveLight};
   }
 `

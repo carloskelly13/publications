@@ -16,8 +16,12 @@ const ColorPickerButton = styled.button`
   box-shadow: inset 0 0 0 1px #fff;
   border-radius: 2px;
   background: ${({ color }) => color};
-  outline-color: ${({ color }) => color};
+  outline: none;
   margin: 0;
+  &:focus {
+    box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px ${({ color }) => color};
+    border-color: ${({ color }) => color};
+  }
 `
 
 const PickerContents = styled.div`
