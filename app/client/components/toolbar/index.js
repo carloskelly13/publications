@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from "react"
+import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { Toolbar as ToolbarBase } from "../ui/toolbar"
 import NewShapeMenu from "./new-shape"
 import ZoomMenu from "./zoom"
