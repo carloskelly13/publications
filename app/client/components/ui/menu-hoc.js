@@ -1,11 +1,10 @@
 import React, { Component } from "react"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import MenuContainer from "./menu-container"
-import { MenuButtonContainer } from "./menu"
+import { MenuContainer, Menu } from "./menu"
 import omit from "lodash.omit"
 
-export default function asMenu({
-  iconButton, menuContent, width = 175, iconButtonProps = {}
+export default function componentAsDowndownMenu({
+  iconButton, menuContent, iconButtonProps = {}
 }) {
   return class InjectAsMenu extends Component {
     static WrappedComponent = menuContent
@@ -14,26 +13,20 @@ export default function asMenu({
       menuActive: false
     }
 
-    constructor() {
-      super(...arguments)
-      this.handleToggleButtonClick = this.handleToggleButtonClick.bind(this)
-      this.closeMenu = this.closeMenu.bind(this)
-    }
+    handleToggleButtonClick = () => this.setState(prevState => ({
+      menuActive: !prevState.menuActive
+    }))
 
-    handleToggleButtonClick() {
-      this.setState(prevState => ({ menuActive: !prevState.menuActive }))
-    }
-
-    closeMenu() {
-      this.setState({ menuActive: false })
-    }
+    closeMenu = () => this.setState({ menuActive: false })
 
     render() {
       const { menuActive } = this.state
       const wrapperProps = omit(this.props, "disabled")
       const IconButtonComponent = iconButton || this.props.icon
       return (
-        <MenuButtonContainer>
+        <MenuContainer
+          onClickOutside={this.closeMenu}
+        >
           <IconButtonComponent
             margin
             {...iconButtonProps}
@@ -47,15 +40,14 @@ export default function asMenu({
             transitionLeaveTimeout={200}
           >
             { menuActive && (
-              <MenuContainer
-                onClickOutside={this.closeMenu}
-                width={`${width}px`}
+              <Menu
+                onClick={this.closeMenu}
               >
                 <InjectAsMenu.WrappedComponent {...wrapperProps} />
-              </MenuContainer>
+              </Menu>
             )}
           </ReactCSSTransitionGroup>
-        </MenuButtonContainer>
+        </MenuContainer>
       )
     }
   }

@@ -1,16 +1,9 @@
 import React, { Component } from "react"
 import { Menu } from "./menu"
-import onClickOutside from "react-onclickoutside"
+import enhanceWithClickOutside from "react-click-outside"
 
 class MenuContainer extends Component {
-  constructor() {
-    super(...arguments)
-    this.handleClickOutside = this.handleClickOutside.bind(this)
-  }
-
-  handleClickOutside() {
-    this.props.onClickOutside()
-  }
+  handleClickOutside = () => this.props.onClickOutside()
 
   render() {
     return (
@@ -21,4 +14,4 @@ class MenuContainer extends Component {
   }
 }
 
-export default onClickOutside(MenuContainer)
+export default enhanceWithClickOutside(MenuContainer)

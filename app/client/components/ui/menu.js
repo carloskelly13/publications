@@ -1,5 +1,7 @@
+import React, { Component } from "react"
 import styled, { injectGlobal } from "styled-components"
 import { AppColors } from "../../util/constants"
+import enhanceWithClickOutside from "react-click-outside"
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
@@ -27,43 +29,18 @@ export const Menu = styled.ul`
   list-style: none;
   color: ${AppColors.DarkGray};
   padding: 2px 0;
-  margin: 0 0 0 -2px;
-  border-radius: 4px;
+  margin: 0;
+  border-radius: 2px;
   position: absolute;
   border-top: none;
   box-shadow: 0 0 15px rgba(38, 50, 55, 0.25);
-  top: 58px;
+  top: 46px;
   cursor: default;
-  width: ${({ width = "auto" }) => width};
   outline: none;
   border: 1px solid hsla(0, 0%, 0%, 0.33);
-
-  &:after, &:before {
-    display: block;
-    content: ' ';
-    width: 0;
-    height: 0;
-    position: absolute;
-  }
-
-  &:after {
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid #fff;
-    top: -9px;
-    left: 6px;
-  }
-
-  &:before {
-    border-left: 11px solid transparent;
-    border-right: 11px solid transparent;
-    border-bottom: 11px solid hsla(0, 0%, 0%, 0.15);
-    top: -11px;
-    left: 5px;
-  }
 `
 
-export const MenuButtonContainer = styled.div`
+export const MenuContentContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -72,7 +49,7 @@ export const MenuButtonContainer = styled.div`
 `
 
 export const MenuItem = styled.li`
-  padding: 0.5em 1em;
+  padding: 0.5em 3em 0.5em 1em;
 
   &:hover {
     color: #fff;
@@ -84,3 +61,14 @@ export const MenuItem = styled.li`
     background: ${AppColors.ActiveDark};
   }
 `
+
+export const MenuContainer = enhanceWithClickOutside(class extends Component {
+  handleClickOutside = () => this.props.onClickOutside()
+  render() {
+    return (
+      <MenuContentContainer>
+        { this.props.children }
+      </MenuContentContainer>
+    )
+  }
+})

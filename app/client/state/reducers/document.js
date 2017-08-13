@@ -50,18 +50,10 @@ export default function documentReducer(state = defaultState, action) {
       ...state.currentDocument,
       shapes: [
         ...state.currentDocument.shapes,
-        {
-          ...action.newShape,
-          id: shortid.generate(),
-          z: state.currentDocument.shapes.length + 1
-        }
+        action.payload
       ]
     }
-
-    return Object.assign({}, state, {
-      currentDocument: updatedDocument,
-      selectedShape: action.newShape
-    })
+    return { ...state, currentDocument: updatedDocument }
   }
 
   case DELETE_SHAPE: {

@@ -4,28 +4,34 @@ import { ShapeAddIconButton } from "../ui/icon-buttons/shape-add"
 import { addShape as addShapeAction } from "../../state/actions/document"
 import { MenuItem } from "../ui/menu"
 import { Shapes } from "../../util/constants"
-import asMenu from "../ui/menu-hoc"
+import componentAsDowndownMenu from "../ui/menu-hoc"
 
-const NewShapeMenu = ({ addShape }) => (
-  <div>
-    <MenuItem onClick={() => addShape(Shapes.Rectangle)}>
-      Rectangle
-    </MenuItem>
-    <MenuItem onClick={() => addShape(Shapes.Ellipse)}>
-      Ellipse
-    </MenuItem>
-    <MenuItem onClick={() => addShape(Shapes.Text)}>
-      Text Box
-    </MenuItem>
-  </div>
-)
+const NewShapeMenu = ({ addShape }) => [
+  <MenuItem
+    key="rectangle"
+    onClick={() => addShape(Shapes.Rectangle)}
+  >
+    Rectangle
+  </MenuItem>,
+  <MenuItem
+    key="ellipse"
+    onClick={() => addShape(Shapes.Ellipse)}
+  >
+    Ellipse
+  </MenuItem>,
+  <MenuItem
+    key="text-box"
+    onClick={() => addShape(Shapes.Text)}
+  >
+    Text Box
+  </MenuItem>
+]
 
 const mapDispatchToProps = {
   addShape: addShapeAction
 }
 
-export default asMenu({
+export default componentAsDowndownMenu({
   iconButton: ShapeAddIconButton,
-  menuContent: connect(null, mapDispatchToProps)(NewShapeMenu),
-  width: 175
+  menuContent: connect(null, mapDispatchToProps)(NewShapeMenu)
 })

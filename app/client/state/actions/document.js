@@ -1,3 +1,4 @@
+import shortid from "shortid"
 import { Urls } from "../../util/constants"
 import { setCsrfHeaders } from "./security"
 
@@ -32,11 +33,19 @@ export const updateCurrentDocument = doc => {
   })
 }
 
-export const addShape = newShape => {
-  return dispatch => dispatch({
-    type: ADD_SHAPE,
-    newShape
-  })
+export const addShape = shapeData => {
+  return (dispatch, getState) => {
+    const newShape = {
+      ...shapeData,
+      id: shortid.generate(),
+      z: getState().doc.currentDocument.shapes.length + 1
+    }
+    dispatch({
+      type: ADD_SHAPE,
+      payload: newShape
+    })
+    dispatch(updateSelectedShape(newShape))
+  }
 }
 
 export const deleteShape = () => {
