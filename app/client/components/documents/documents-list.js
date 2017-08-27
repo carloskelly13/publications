@@ -1,33 +1,35 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import styled from "styled-components"
 import { connect } from "react-redux"
-import DocumentItem from "./document-item"
+import { DocumentItem } from "./document-item"
 import SaveChanges from "./save-changes"
+import isEqual from "lodash.isequal"
 import {
   updateCurrentDocument as updateCurrentDocumentAction,
-  removeDocument as removeDocumentAction
+  removeDocument as removeDocumentAction,
+  saveDocument as saveDocumentAction
 } from "../../state/actions/document"
 import {
   showModal as showModalAction,
   setSidePanelVisible as setSidePanelVisibleAction
 } from "../../state/actions/app-ui"
 import {
-  allDocumentsSelector, currentDocumentSelector, sidePanelVisibleSelector
+  allDocumentsSelector, currentDocumentSelector, sidePanelVisibleSelector, currentDocumentOriginalSelector
 } from "../../state/selectors"
 import {
-  AppColors, newDocument, sidePanelWidth
+  AppColors, sidePanelWidth
 } from "../../util/constants"
-import { MediumText } from "../ui/text"
-import isEqual from "lodash.isequal"
 
 export const DocumentsListContainer = styled.div`
   width: ${sidePanelWidth};
   position: fixed;
   background: ${AppColors.LightGray};
-  overflow: scroll;
   border-left: 1px solid hsla(0, 0%, 0%, 0.25);
   z-index: 2;
-  height: calc(100% - 85px);
+  height: calc(100% - 59px);
+  display: flex;
+  flex-direction: column;
   right: 0;
   transition: transform 350ms ease-in-out;
   transform: translateX(${({ sidePanelVisible }) =>
@@ -35,73 +37,49 @@ export const DocumentsListContainer = styled.div`
   });
 `
 
-const SidebarHeader = styled.div`
-  position: sticky;
-  top: 0;
-  background: ${AppColors.Gray};
-  padding: 0.75em 1em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.25);
-`
-
 class DocumentsList extends Component {
-  constructor() {
-    super(...arguments)
-    this.handleDocumentItemSelected = this.handleDocumentItemSelected.bind(this)
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
-  handleDocumentItemSelected(event, doc) {
+  handleDocumentItemSelected = (event, id) => {
     event.stopPropagation()
-    const {
-      setSelectedDocument, currentDocument, showModal, documents
-    } = this.props
-    if (!currentDocument) {
-      setSelectedDocument(doc)
-      return
-    }
-    const currentDocumentOriginal = currentDocument.new ?
-      newDocument :
-      documents.filter(d => d.id === currentDocument.id)[0]
+    const { currentDocument, currentDocumentOriginal } = this.props
+    const hasDocumentChanged = !isEqual(currentDocumentOriginal, currentDocument)
 
-    if (!isEqual(currentDocumentOriginal, currentDocument)) {
-      showModal(SaveChanges, {
-        switchToNewDoc: () => setSelectedDocument(doc)
+    if (currentDocument && hasDocumentChanged) {
+      this.props.showModal(SaveChanges, {
+        handleRouteChange: () => this.context.router.history.push(`/documents${id ? `/${id}` : ""}`)
       })
+    } else if (currentDocument && !hasDocumentChanged) {
+      this.context.router.history.push(`/documents${id ? `/${id}` : ""}`)
+    } else if (!currentDocument && id) {
+      this.context.router.history.push(`/documents/${id}`)
     } else {
-      setSelectedDocument(doc)
+      this.context.router.history.push("/documents")
     }
   }
 
   renderDocumentListItems() {
+    const { currentDocument } = this.props
     return this.props.documents
       .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)
-      .map((doc, index) => (
+      .map(doc => (
         <DocumentItem
           doc={doc}
-          key={`doc-item-${index}`}
-          onClick={e => this.handleDocumentItemSelected(e, doc)}
+          selectedDocument={currentDocument}
+          key={`doc-item-${doc.id}`}
+          onClick={e => this.handleDocumentItemSelected(e, doc.id)}
         />
       ))
   }
 
   render() {
-    const {
-      sidePanelVisible
-    } = this.props
+    const { sidePanelVisible } = this.props
     return (
       <DocumentsListContainer
         sidePanelVisible={sidePanelVisible}
       >
-        <SidebarHeader>
-          <MediumText
-            uppercase
-            size="0.8em"
-          >
-            Documents
-          </MediumText>
-        </SidebarHeader>
         { this.renderDocumentListItems() }
       </DocumentsListContainer>
     )
@@ -111,14 +89,16 @@ class DocumentsList extends Component {
 const mapStateToProps = state => ({
   documents: allDocumentsSelector(state),
   currentDocument: currentDocumentSelector(state),
-  sidePanelVisible: sidePanelVisibleSelector(state)
+  sidePanelVisible: sidePanelVisibleSelector(state),
+  currentDocumentOriginal: currentDocumentOriginalSelector(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedDocument: doc => dispatch(updateCurrentDocumentAction(doc)),
+  clearSelectedDocument: () => dispatch(updateCurrentDocumentAction(null)),
   showModal: (component, props) => dispatch(showModalAction(component, props)),
   setSidePanelVisible: visible => dispatch(setSidePanelVisibleAction(visible)),
-  removeDocument: doc => dispatch(removeDocumentAction(doc))
+  removeDocument: doc => dispatch(removeDocumentAction(doc)),
+  saveDocument: doc => dispatch(saveDocumentAction(doc))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DocumentsList)

@@ -10,6 +10,10 @@ import {
   editModeActiveSelector,
   sidePanelVisibleSelector
 } from "../../state/selectors"
+import {
+  updateCurrentDocument as updateCurrentDocumentAction,
+  getDocument as getDocumentAction
+} from "../../state/actions/document"
 import Canvas from "../canvas"
 import Ruler from "../rulers"
 
@@ -24,13 +28,19 @@ const Container = styled.div`
 `
 
 class EditorView extends Component {
-  constructor() {
-    super()
-    this.handleViewScrollEvent = this.handleViewScrollEvent.bind(this)
-  }
-
   state = {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 }
+  }
+
+  componentWillMount() {
+    const {
+      match: { params: { id } },
+      getDocument
+    } = this.props
+
+    if (id) {
+      getDocument(id)
+    }
   }
 
   componentDidMount() {
@@ -38,17 +48,25 @@ class EditorView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const {
+      match: { params: { id } },
+      getDocument
+    } = nextProps
     if (get(this.props.currentDocument, "id") !== get(nextProps.currentDocument, "id")) {
       findDOMNode(this.containerRef).scrollTop = 0
       findDOMNode(this.containerRef).scrollLeft = 0
     }
+    if (get(this.props.currentDocument, "id") !== id) {
+      getDocument(id)
+    }
   }
 
   componentWillUnmount() {
+    this.props.clearSelectedDocument()
     findDOMNode(this.containerRef).removeEventListener("scroll", this.handleViewScrollEvent)
   }
 
-  handleViewScrollEvent({ target: { scrollLeft, scrollTop } }) {
+  handleViewScrollEvent = ({ target: { scrollLeft, scrollTop } }) => {
     this.setState({ scrollOffset: { scrollLeft, scrollTop } })
   }
 
@@ -89,4 +107,9 @@ const mapStateToProps = state => ({
   sidePanelVisible: sidePanelVisibleSelector(state)
 })
 
-export default connect(mapStateToProps)(EditorView)
+const mapDispatchToProps = dispatch => ({
+  getDocument: id => dispatch(getDocumentAction(id)),
+  clearSelectedDocument: () => dispatch(updateCurrentDocumentAction(null))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditorView)

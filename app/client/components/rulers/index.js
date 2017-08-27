@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 import { zoomSelector } from "../../state/selectors"
 
 const RulerContainer = styled.div`
-  background: #f4f4f4;
+  background: #fff;
   position: fixed;
   left: 25vw;
   height: 25px;
@@ -84,7 +84,7 @@ class Ruler extends Component {
         </RulerContainer>
         <RulerContainer
           style={{
-            top: `${100 - this.props.scrollOffset.scrollTop}px`,
+            top: `${84 - this.props.scrollOffset.scrollTop}px`,
             height: `${(doc.height * zoom * dpi) + 1}px`,
             zIndex: 0,
             left: 0

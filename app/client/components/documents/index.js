@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types";
 import styled from "styled-components"
+import Route from "react-router-dom/Route"
 import { connect } from "react-redux"
 import Toolbar from "../toolbar"
 import DocumentsList from "./documents-list"
@@ -56,7 +57,7 @@ class DocumentsView extends Component {
           <MetricsBar />
           <ViewContent>
             <DocumentsList />
-            <EditorView />
+            <Route path="/documents/:id" component={EditorView} />
           </ViewContent>
         </ViewContainer>
       )

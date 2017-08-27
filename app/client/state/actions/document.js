@@ -1,6 +1,11 @@
 import shortid from "shortid"
+import { push } from "react-router-redux"
 import { Urls } from "../../util/constants"
 import { setCsrfHeaders } from "./security"
+import { showModal, hideModal } from "./app-ui"
+import SaveChanges from "../../components/documents/save-changes"
+import { currentDocumentSelector, currentDocumentOriginalSelector } from "../selectors"
+import isEqual from "lodash.isequal"
 
 export const REQUEST_DOCUMENTS = "REQUEST_DOCUMENTS"
 export const RECEIVE_DOCUMENTS = "RECEIVE_DOCUMENTS"
@@ -77,91 +82,24 @@ export const updateDocumentProperty = sender => {
 }
 
 export const getDocuments = () => {
-  return dispatch => {
+  return async dispatch => {
     dispatch({ type: REQUEST_DOCUMENTS })
-    fetch(`${Urls.ApiBase}/documents`, {
+
+    const response = await fetch(`${Urls.ApiBase}/documents`, {
       method: "get",
       credentials: "include"
     })
-    .then(response => {
-      if (response.status === 200) {
-        setCsrfHeaders(response.headers)(dispatch)
-        return response.json()
-      }
+
+    if (response.status !== 200) {
       throw new Error("Unable to parse document JSON")
-    })
-    .then(documents => {
-      dispatch({
-        type: RECEIVE_DOCUMENTS,
-        documents
-      })
-    })
-  }
-}
+    }
 
-export const newDocument = doc => {
-  return (dispatch, getState) => {
-    const { csrfHeaders } = getState().security
+    const documents = await response.json()
 
-    fetch(`${Urls.ApiBase}/documents`, {
-      method: "post",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        ...csrfHeaders
-      },
-      credentials: "include",
-      body: JSON.stringify(doc)
+    dispatch({
+      type: RECEIVE_DOCUMENTS,
+      documents: documents || []
     })
-    .then(response => {
-      if (response.status === 200) {
-        setCsrfHeaders(response.headers)(dispatch)
-        return response.json()
-      }
-      throw new Error("Unable to create new document")
-    })
-    .then(documentJson => dispatch({
-      type: POST_DOCUMENT,
-      doc: documentJson
-    }))
-  }
-}
-
-export const removeDocument = doc => {
-  return (dispatch, getState) => {
-    const { csrfHeaders } = getState().security
-
-    fetch(`${Urls.ApiBase}/documents/${doc.id}`, {
-      method: "delete",
-      credentials: "include",
-      headers: csrfHeaders
-    })
-    .then(() => dispatch({
-      type: DELETE_DOCUMENT,
-      doc
-    }))
-  }
-}
-
-export const getDocument = id => {
-  return dispatch => {
-    dispatch({ type: REQUEST_DOCUMENT })
-
-    fetch(`${Urls.ApiBase}/documents/${id}`, {
-      method: "get",
-      credentials: "include"
-    })
-    .then(response => {
-      if (response.status === 200) {
-        setCsrfHeaders(response.headers)(dispatch)
-        return response.json()
-      }
-      throw new Error(`Unable to get document with id: ${id}`)
-    })
-    .then(documentJson => dispatch({
-      type: RECEIVE_DOCUMENT,
-      doc: documentJson
-    }))
   }
 }
 
@@ -185,6 +123,80 @@ export const saveDocument = doc => {
       },
       body: JSON.stringify({ width, height, shapes, name })
     })
+  }
+}
+
+export const newDocument = doc => {
+  return async (dispatch, getState) => {
+    const { csrfHeaders } = getState().security
+    const response = await fetch(`${Urls.ApiBase}/documents`, {
+      method: "post",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        ...csrfHeaders
+      },
+      credentials: "include",
+      body: JSON.stringify(doc)
+    })
+
+    if (response.status !== 200) {
+      throw new Error("Unable to create new document")
+    }
+
+    dispatch(setCsrfHeaders(response.headers))
+
+    const json = await response.json()
+
+    dispatch({ type: POST_DOCUMENT, payload: json })
+
+    const currentDocument = currentDocumentSelector(getState())
+    const currentDocumentOriginal = currentDocumentOriginalSelector(getState())
+
+    if (!isEqual(currentDocument, currentDocumentOriginal)) {
+      return dispatch(showModal(SaveChanges, {
+        handleRouteChange: () => dispatch(push(`/documents/${json.id}`)),
+        saveDocument: sender => saveDocument(sender)(dispatch, getState)
+      }))
+    }
+
+    dispatch(hideModal())
+    return dispatch(push(`/documents/${json.id}`))
+  }
+}
+
+export const removeDocument = doc => {
+  return async (dispatch, getState) => {
+    const { csrfHeaders } = getState().security
+
+    await fetch(`${Urls.ApiBase}/documents/${doc.id}`, {
+      method: "delete",
+      credentials: "include",
+      headers: csrfHeaders
+    })
+
+    dispatch({ type: DELETE_DOCUMENT, doc })
+  }
+}
+
+export const getDocument = id => {
+  return async dispatch => {
+    dispatch({ type: REQUEST_DOCUMENT })
+
+    const response = await fetch(`${Urls.ApiBase}/documents/${id}`, {
+      method: "get",
+      credentials: "include"
+    })
+
+    if (response.status !== 200) {
+      throw new Error("Unable to fetch document")
+    }
+
+    dispatch(setCsrfHeaders(response.headers))
+
+    const json = await response.json()
+
+    dispatch({ type: RECEIVE_DOCUMENT, doc: json })
   }
 }
 

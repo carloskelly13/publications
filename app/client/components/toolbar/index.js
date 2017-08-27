@@ -1,14 +1,12 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { Toolbar as ToolbarBase } from "../ui/toolbar"
+import FileMenu from "./file"
 import NewShapeMenu from "./new-shape"
 import ZoomMenu from "./zoom"
-import {
-  DiskIconButton, CutIconButton, CopyIconButton,
-  PasteIconButton, DeleteIconButton,
-  IconContainer, ForwardsIconButton, BackwardsIconButton,
-  DownloadIconButton, DocumentIconButton
-} from "../ui/icon-buttons"
+import NewDocumentModal from "../documents/new-document"
+import ToolbarButton, { ButtonContainer } from "../ui/toolbar-button"
+import { ContentContainer } from "../ui/containers"
 import {
   currentDocumentSelector,
   editModeActiveSelector,
@@ -46,11 +44,6 @@ class Toolbar extends Component {
     }
   }
 
-  // handleGridButton = () => {
-  //   const { editModeActive, setEditModeActive } = this.props
-  //   setEditModeActive(!editModeActive)
-  // }
-
   handleSidePanelButton = () => {
     const { sidePanelVisible, setSidePanelVisible } = this.props
     setSidePanelVisible(!sidePanelVisible)
@@ -58,9 +51,9 @@ class Toolbar extends Component {
 
   render() {
     const {
-      currentDocument, saveDocument,
+      currentDocument, saveDocument, showModal,
       copyShape, cutShape, deleteShape, pasteShape, clipboardData,
-      selectedShape, adjustShapeLayer
+      selectedShape, adjustShapeLayer, sidePanelVisible, setSidePanelVisible
     } = this.props
 
     const forwardButtonEnabled = selectedShape && currentDocument &&
@@ -71,63 +64,73 @@ class Toolbar extends Component {
 
     return (
       <ToolbarBase>
-        <IconContainer>
+        <ContentContainer>
+          <FileMenu
+            currentDocument={currentDocument}
+            handleNewDocument={() => showModal(NewDocumentModal)}
+            handleSaveDocument={saveDocument}
+            handleOpenDocument={() => setSidePanelVisible(true)}
+          />
           <NewShapeMenu disabled={!currentDocument} />
-          <CutIconButton
-            margin
-            disabled={shapeControlButtonDisabled}
-            onClick={() => cutShape(selectedShape)}
-          />
-          <CopyIconButton
-            margin
-            disabled={shapeControlButtonDisabled}
-            onClick={() => copyShape(selectedShape)}
-          />
-          <PasteIconButton
-            margin
-            disabled={shapeControlButtonDisabled || !clipboardData}
-            onClick={() => pasteShape()}
-          />
-          <DeleteIconButton
-            margin
+          <ButtonContainer>
+            <ToolbarButton
+              disabled={shapeControlButtonDisabled}
+              onClick={() => cutShape(selectedShape)}
+            >
+              Cut
+            </ToolbarButton>
+            <ToolbarButton
+              disabled={shapeControlButtonDisabled}
+              onClick={() => copyShape(selectedShape)}
+            >
+              Copy
+            </ToolbarButton>
+            <ToolbarButton
+              marginRight
+              disabled={shapeControlButtonDisabled || !clipboardData}
+              onClick={() => pasteShape()}
+            >
+              Paste
+            </ToolbarButton>
+          </ButtonContainer>
+          <ToolbarButton
             disabled={shapeControlButtonDisabled}
             onClick={() => deleteShape(selectedShape)}
-          />
-        </IconContainer>
-        <IconContainer>
-          <ForwardsIconButton
-            margin
-            disabled={!forwardButtonEnabled}
-            onClick={() => adjustShapeLayer({
-              shape: selectedShape,
-              direction: "forward"
-            })}
-          />
-          <BackwardsIconButton
-            disabled={!backwardButtonEnabled}
-            onClick={() => adjustShapeLayer({
-              shape: selectedShape,
-              direction: "backward"
-            })}
-          />
-        </IconContainer>
-        <IconContainer>
+          >
+            Delete
+          </ToolbarButton>
+        </ContentContainer>
+        <ContentContainer>
+          <ButtonContainer>
+            <ToolbarButton
+              disabled={!forwardButtonEnabled}
+              onClick={() => adjustShapeLayer({
+                shape: selectedShape,
+                direction: "forward"
+              })}
+            >
+              Forwards
+            </ToolbarButton>
+            <ToolbarButton
+              disabled={!backwardButtonEnabled}
+              onClick={() => adjustShapeLayer({
+                shape: selectedShape,
+                direction: "backward"
+              })}
+            >
+             Backwards
+           </ToolbarButton>
+          </ButtonContainer>
+        </ContentContainer>
+        <ContentContainer>
           <ZoomMenu disabled={!currentDocument} />
-          <DiskIconButton
-            margin
-            disabled={!currentDocument}
-            onClick={() => saveDocument(currentDocument)}
-          />
-          <DownloadIconButton
-            margin
-            disabled={!currentDocument}
-            onClick={() => {}}
-          />
-          <DocumentIconButton
-            disabled={!currentDocument}
-            onClick={() => {}}
-          />
-        </IconContainer>
+          <ToolbarButton
+            active={sidePanelVisible}
+            onClick={this.handleSidePanelButton}
+          >
+            Documents
+          </ToolbarButton>
+        </ContentContainer>
       </ToolbarBase>
     )
   }

@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import ColorPicker from "./../color-picker"
 import { AppColors } from "../../util/constants"
 import { ContentContainer } from "../ui/containers"
-import { selectedShapeSelector } from "../../state/selectors"
+import { selectedShapeSelector, currentDocumentSelector } from "../../state/selectors"
 import {
   updateSelectedShape as updateSelectedShapeAction
 } from "../../state/actions/document"
@@ -14,7 +14,7 @@ const MetricsBarContainer = styled.footer`
   height: 25px;
   width: calc(100% - 2em);
   padding: 0 1em;
-  background: ${AppColors.LightGray};
+  background: ${AppColors.MediumGray};
   border-bottom: 1px solid hsla(0, 0%, 0%, 0.25);
   z-index: 3;
   display: flex;
@@ -28,7 +28,9 @@ const isText = shape => !!shape && shape.type === "text"
 
 export const MetricsBar = ({ shape, updateSelectedShape }) => {
   if (!shape) {
-    return <MetricsBarContainer />
+    return (
+      <MetricsBarContainer />
+    )
   }
   return (
     <MetricsBarContainer>
@@ -103,7 +105,8 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
 }
 
 const mapStateToProps = state => ({
-  shape: selectedShapeSelector(state)
+  shape: selectedShapeSelector(state),
+  doc: currentDocumentSelector(state)
 })
 
 const mapDispatchToProps = {

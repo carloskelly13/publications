@@ -24,13 +24,14 @@ export const contentPanelWidthFull = "100vw"
 export const contentPanelWidthPartial = `${100 - _sidePanelWidth}vw`
 
 export const AppColors = {
-  Active: "#5856d6",
-  ActiveDark: "#4842af",
+  Active: "#727172",
+  ActiveDark: "#626162",
   ActiveLight: "#685ffd",
   LightGray: "#f5f5f5",
   Border: "#aaa",
   MediumGray: "#f0f0f0",
   Gray: "#e5e5e5",
+  MidTextGray: "#7a7b7a",
   DarkGray: "#263238",
   DisabledGray: "#aaa",
   Highlight: "#5856d6",

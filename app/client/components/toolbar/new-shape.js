@@ -1,10 +1,9 @@
 import React from "react"
 import { connect } from "react-redux"
-import { ShapeAddIconButton } from "../ui/icon-buttons/shape-add"
 import { addShape as addShapeAction } from "../../state/actions/document"
 import { MenuItem } from "../ui/menu"
 import { Shapes } from "../../util/constants"
-import componentAsDowndownMenu from "../ui/menu-hoc"
+import componentAsDropdownMenu from "../ui/menu-hoc"
 
 const NewShapeMenu = ({ addShape }) => [
   <MenuItem
@@ -31,7 +30,8 @@ const mapDispatchToProps = {
   addShape: addShapeAction
 }
 
-export default componentAsDowndownMenu({
-  iconButton: ShapeAddIconButton,
+export default componentAsDropdownMenu({
+  title: "Insert",
+  buttonProps: { marginRight: true },
   menuContent: connect(null, mapDispatchToProps)(NewShapeMenu)
 })

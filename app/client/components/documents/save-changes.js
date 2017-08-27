@@ -2,14 +2,13 @@ import React, { Component } from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
 import {
-  updateSelectedShape as setSelectedShapeAction,
   saveDocument as saveDocumentAction
 } from "../../state/actions/document"
 import {
   currentDocumentSelector
 } from "../../state/selectors"
 import { hideModal as hideModalAction } from "../../state/actions/app-ui"
-import { FramedButton } from "../ui/pub-button"
+import ToolbarButton from "../ui/toolbar-button"
 import { ModalButtonConatiner } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
@@ -50,8 +49,7 @@ class SaveChanges extends Component {
     const {
       currentDocument,
       hideModal,
-      switchToNewDoc,
-      setSelectedShape,
+      handleRouteChange,
       saveDocument
     } = this.props
     return (
@@ -60,34 +58,31 @@ class SaveChanges extends Component {
           this.renderNewDocumentContent() : this.renderExistingDocumentContent()
         }
         <ModalButtonConatiner>
-          <FramedButton
+          <ToolbarButton
             primary
-            margin
+            marginRight
             onClick={() => {
               saveDocument(currentDocument)
-              switchToNewDoc()
               hideModal()
-              setSelectedShape(null)
+              setTimeout(() => handleRouteChange(), 400)
             }}
           >
             Save{ currentDocument.new ? "" : " Changes" }
-          </FramedButton>
-          <FramedButton
-            margin
+          </ToolbarButton>
+          <ToolbarButton
+            marginRight
             onClick={() => {
-              switchToNewDoc()
               hideModal()
-              setSelectedShape(null)
+              setTimeout(() => handleRouteChange(), 400)
             }}
           >
             Discard{ currentDocument.new ? "" : " Changes" }
-          </FramedButton>
-          <FramedButton
-            margin
+          </ToolbarButton>
+          <ToolbarButton
             onClick={hideModal}
           >
             Cancel
-          </FramedButton>
+          </ToolbarButton>
         </ModalButtonConatiner>
       </SaveChangesContainer>
     )
@@ -100,7 +95,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   hideModal: hideModalAction,
-  setSelectedShape: setSelectedShapeAction,
   saveDocument: saveDocumentAction
 }
 

@@ -1,8 +1,6 @@
 import React from "react"
-import { connect } from "react-redux"
 import { format as formatDate } from "fecha"
 import { Text } from "../ui/text"
-import { currentDocumentSelector } from "../../state/selectors"
 import { AppColors } from "../../util/constants"
 import styled from "styled-components"
 
@@ -16,7 +14,7 @@ const DocumentItemContent = styled.li`
   flex-direction: column;
   padding: 0.85em 1em;
   background: ${({ selected }) => selected ? AppColors.Active : "transparent"};
-  box-shadow: 0 1px 0 ${({ selected }) => selected ? AppColors.ActiveDark : "hsla(0, 0%, 0%, 0.25)"};
+  box-shadow: 0 1px 0 ${({ selected }) => selected ? AppColors.ActiveDark : AppColors.Border};
 `
 
 const formattedDateString = date => {
@@ -27,7 +25,7 @@ const formattedDateString = date => {
   return formatDate(date, "dddd, h:mm A")
 }
 
-const DocumentItem = ({
+export const DocumentItem = ({
   selectedDocument, doc, onClick
 }) => {
   const selected = !!selectedDocument && selectedDocument.id === doc.id
@@ -54,9 +52,3 @@ const DocumentItem = ({
     </DocumentItemContent>
   )
 }
-
-const mapStateToProps = state => ({
-  selectedDocument: currentDocumentSelector(state)
-})
-
-export default connect(mapStateToProps)(DocumentItem)

@@ -1,5 +1,4 @@
 import React from "react"
-import { ZoomIconButton } from "../ui/icon-buttons"
 import { MenuItem } from "../ui/menu"
 import componentAsDowndownMenu from "../ui/menu-hoc"
 import { connect } from "react-redux"
@@ -27,6 +26,7 @@ const mapDispatchToProps = {
 }
 
 export default componentAsDowndownMenu({
-  iconButton: ZoomIconButton,
+  title: "Zoom",
+  buttonProps: { marginRight: true },
   menuContent: connect(mapStateToProps, mapDispatchToProps)(ZoomMenu)
 })

@@ -11,5 +11,6 @@ export default combineReducers({
   appUi: appUiReducer,
   user: userReducer,
   doc: documentReducer,
-  security: securityReducer
+  security: securityReducer,
+  router: routerReducer
 })

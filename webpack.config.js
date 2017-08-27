@@ -5,7 +5,6 @@ const webpack = require("webpack")
 module.exports = env => {
   const addPlugin = (add, plugin) => add ? plugin : undefined
   const ifProd = plugin => addPlugin(env.prod, plugin)
-  const ifDev = plugin => addPlugin(env.dev, plugin)
   const removeEmpty = array => array.filter(el => !!el)
 
   return {
@@ -15,12 +14,12 @@ module.exports = env => {
       app: removeEmpty(
         [
           ...(env.dev ? [
-            "webpack-dev-server/client?http://localhost:4040",
+            "webpack-dev-server/client?http://localhost:4040"
           ] : []),
           "./app/client/index.js"
         ]
       ),
-      vendor: [ "./app/client/vendor.js" ]
+      vendor: [ "babel-polyfill", "./app/client/vendor.js" ]
     },
 
     output: {

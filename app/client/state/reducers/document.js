@@ -21,6 +21,7 @@ import shortid from "shortid"
 const defaultState = {
   documents: [],
   currentDocument: null,
+  currentDocumentOriginal: null,
   selectedShape: null,
   clipboardData: null,
   isRequestingData: false,
@@ -40,8 +41,8 @@ export default function documentReducer(state = defaultState, action) {
   case RECEIVE_DOCUMENTS:
     return Object.assign({}, state, {
       documents: action.documents,
-      currentDocument: (action.documents || [])
-        .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)[0],
+      // currentDocument: (action.documents || [])
+      //   .sort((lhs, rhs) => rhs.lastModified - lhs.lastModified)[0],
       isRequestingData: false
     })
 
@@ -212,8 +213,10 @@ export default function documentReducer(state = defaultState, action) {
   }
 
   case POST_DOCUMENT: {
-    const updatedState = { documents: [...state.documents, action.doc] }
-    return { ...state, ...updatedState }
+    return {
+      ...state,
+      documents: [ ...state.documents, action.payload ]
+    }
   }
 
   case DELETE_DOCUMENT: {
@@ -223,14 +226,13 @@ export default function documentReducer(state = defaultState, action) {
 
   case RECEIVE_DOCUMENT:
   case UPDATE_DOCUMENT: {
-    const updatedState = { currentDocument: action.doc }
-
-    if (!action.doc) {
-      updatedState.selectedShape = null
-      updatedState.clipboardData = null
+    return {
+      ...state,
+      currentDocument: action.doc,
+      currentDocumentOriginal: action.doc,
+      isRequestingData: false,
+      selectedShape: null
     }
-
-    return { ...state, ...updatedState, selectedShape: null }
   }
 
   case RESET_DOCUMENTS:

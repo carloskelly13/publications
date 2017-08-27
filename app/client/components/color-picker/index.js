@@ -4,7 +4,7 @@ import styled from "styled-components"
 import enhanceWithClickOutside from "react-click-outside"
 import { SketchPicker } from "react-color"
 import { convertToRGBA } from "../../util/colors"
-import { MediumText } from "../ui/text"
+import { Text } from "../ui/text"
 import { ContentContainer } from "../ui/containers"
 import { AppColors } from "../../util/constants"
 import { capitalizeString } from "./../../util/string"
@@ -12,15 +12,15 @@ import { capitalizeString } from "./../../util/string"
 const ColorPickerButton = styled.button`
   width: 32px;
   height: 17px;
-  border: 1px solid ${AppColors.Border};
+  border: 1px solid #c8c7c8;
+  border-bottom-color: #acaaac;
   box-shadow: inset 0 0 0 1px #fff;
   border-radius: 2px;
   background: ${({ color }) => color};
   outline: none;
   margin: 0;
   &:focus {
-    box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px ${({ color }) => color};
-    border-color: ${({ color }) => color};
+    box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #c8c7c8;
   }
 `
 
@@ -65,14 +65,14 @@ export class ColorPicker extends Component {
         verticalAlign
         style={{ marginRight: "0.75em" }}
       >
-        <MediumText
+        <Text
           center
           color={AppColors.DarkGray}
           size="0.75em"
           mr="0.33em"
         >
-          { capitalizeString(property) }
-        </MediumText>
+          { capitalizeString(property) }:
+        </Text>
         <ContentContainer
           verticalAlign
           style={{ position: "relative" }}

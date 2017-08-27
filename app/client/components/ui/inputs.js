@@ -2,9 +2,10 @@ import styled from "styled-components"
 import { AppColors, appFont } from "../../util/constants"
 
 export const TextInput = styled.input`
-  border: 1px solid #aaa;
-  padding: 1px 2px;
+  border: 1px solid #c8c7c8;
+  border-bottom-color: #acaaac;
   border-radius: 2px;
+  padding: 1px 4px;
   color: ${AppColors.DarkGray};
   background: #fff;
   font-family: ${appFont};
@@ -39,7 +40,6 @@ export const TextInput = styled.input`
     color: ${AppColors.MediumGray};
   }
   &:focus {
-    box-shadow: 0 0 0 1px ${AppColors.ActiveLight};
-    border-color: ${AppColors.ActiveLight};
+    box-shadow: inset 0 1px 2px #eee, 0 0 0 1px #c8c7c8;
   }
 `

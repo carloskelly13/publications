@@ -34,7 +34,7 @@ export const Menu = styled.ul`
   position: absolute;
   border-top: none;
   box-shadow: 0 0 15px rgba(38, 50, 55, 0.25);
-  top: 46px;
+  top: 28px;
   cursor: default;
   outline: none;
   border: 1px solid hsla(0, 0%, 0%, 0.33);
@@ -48,8 +48,24 @@ export const MenuContentContainer = styled.div`
   outline: none;
 `
 
-export const MenuItem = styled.li`
-  padding: 0.5em 3em 0.5em 1em;
+export const MenuDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  margin: 2px 0;
+  display: block;
+  background: hsla(0, 0%, 0%, 0.15);
+`
+
+export const MenuItem = styled.button`
+  padding: 0.4em 3em 0.4em 1em;
+  border: none;
+  background: transparent;
+  margin: none;
+  display: block;
+  font-size: 1em;
+  width: 100%;
+  text-align: left;
+  outline: none;
 
   &:hover {
     color: #fff;
@@ -59,6 +75,16 @@ export const MenuItem = styled.li`
   &:active {
     color: #fff;
     background: ${AppColors.ActiveDark};
+  }
+
+  &:focus {
+    color: #fff;
+    background: ${AppColors.ActiveDark};
+  }
+
+  &:disabled {
+    pointer-events: none;
+    color: ${AppColors.DisabledGray};
   }
 `
 

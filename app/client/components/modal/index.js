@@ -53,10 +53,11 @@ const ModalContainer = styled.div`
 export const ModalContent = styled.div`
   background: #fff;
   box-shadow: 0 1px 10px hsla(0, 0%, 0%, 0.25);
-  border-radius: 2px;
+  border-radius: 6px;
   margin: auto;
   padding: 1em 1em calc(1em + 50px);
   position: relative;
+  overflow: hidden;
 `
 
 const Modal = ({

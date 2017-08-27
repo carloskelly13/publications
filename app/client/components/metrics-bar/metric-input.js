@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { TextInput } from "../ui/inputs"
-import { MediumText, InputLabelText } from "../ui/text"
+import { Text, InputLabelText } from "../ui/text"
 import { ContentContainer } from "../ui/containers"
 import { AppColors } from "../../util/constants"
 
@@ -58,14 +58,14 @@ export default class MetricInput extends Component {
         verticalAlign
         style={{ marginRight: "0.75em" }}
       >
-        <MediumText
+        <Text
           center
           color={AppColors.DarkGray}
           size="0.75em"
           mr="0.33em"
         >
-          { label }
-        </MediumText>
+          { label }:
+        </Text>
         <ContentContainer verticalAlign>
           <TextInput
             withLabel

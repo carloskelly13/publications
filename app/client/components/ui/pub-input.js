@@ -2,7 +2,8 @@ import React from "react"
 import styled from "styled-components"
 
 export const PubInput = styled.input`
-  border: 1px solid #b8b7b9;
+  border: 1px solid #c8c7c8;
+  border-bottom-color: #acaaac;
   border-radius: ${({ label }) => label ? "2px 0 0 2px" : "2px"};
   box-sizing: border-box;
   color: #444;
@@ -10,9 +11,18 @@ export const PubInput = styled.input`
   font-size: 13px;
   line-height: 1em;
   margin: 0;
-  padding: 4px 6px;
+  padding: 3px 6px;
   vertical-align: middle;
   width: ${({ block }) => block ? "100%" : "auto"};
+  outline: none;
+
+  &:focus {
+    box-shadow: inset 0 1px 3px #eee, 0 0 0 2px #c8c7c8;
+
+    + span {
+      box-shadow: inset 0 1px 3px #eee, 0 0 0 2px #c8c7c8;
+    }
+  }
 `
 
 const FormInputContainer = styled.div`
@@ -29,9 +39,9 @@ const FormInputLabel = styled.label`
 
 const PubInputLabel = styled.span`
   background: #f0f0f0;
-  border-right: 1px #b8b7b9 solid;
-  border-top: 1px #b8b7b9 solid;
-  border-bottom: 1px #b8b7b9 solid;
+  border-right: 1px #c8c7c8 solid;
+  border-top: 1px #c8c7c8 solid;
+  border-bottom: 1px #acaaac solid;
   border-radius: 0 2px 2px 0;
   font-weight: 600;
   font-size: 11px;

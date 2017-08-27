@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { connect } from "react-redux"
 import { newDocument as newDocumentAction } from "../../state/actions/document"
 import { hideModal as hideModalAction } from "../../state/actions/app-ui"
-import { FramedButton } from "../ui/pub-button"
+import Button from "../ui/toolbar-button"
 import { ModalButtonConatiner } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
@@ -15,12 +15,6 @@ const NewDocumentContainer = styled(ModalContent)`
 `
 
 class NewDocumentView extends Component {
-  constructor() {
-    super(...arguments)
-    this.handleCreateButton = this.handleCreateButton.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
-  }
-
   state = {
     name: "New Document",
     width: 8.5,
@@ -28,7 +22,7 @@ class NewDocumentView extends Component {
     formValid: true
   }
 
-  handleCreateButton() {
+  handleCreateButton = () => {
     const { width, height, name } = this.state
     const formValid = validateForm([
       { value: name, type: "name" },
@@ -40,11 +34,10 @@ class NewDocumentView extends Component {
 
     if (formValid) {
       this.props.newDocument({ name, width, height, shapes: [] })
-      this.props.hideModal()
     }
   }
 
-  handleInputChange({ target: { name, value } }) {
+  handleInputChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value })
   }
 
@@ -82,19 +75,17 @@ class NewDocumentView extends Component {
           />
         </FormGroup>
         <ModalButtonConatiner>
-          <FramedButton
-            primary
-            margin
+          <Button
+            marginRight
             onClick={this.handleCreateButton}
           >
             Create Document
-          </FramedButton>
-          <FramedButton
-            margin
+          </Button>
+          <Button
             onClick={this.props.hideModal}
           >
             Close
-          </FramedButton>
+          </Button>
         </ModalButtonConatiner>
       </NewDocumentContainer>
     )
