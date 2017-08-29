@@ -1,6 +1,7 @@
 import React from "react"
+import compose from "lodash.flowright"
 import { MenuItem } from "../ui/menu"
-import componentAsDowndownMenu from "../ui/menu-hoc"
+import asDropdownMenu from "../ui/menu-hoc"
 import { connect } from "react-redux"
 import { zoomSelector } from "../../state/selectors"
 import { setZoom as setZoomAction } from "../../state/actions/app-ui"
@@ -25,8 +26,10 @@ const mapDispatchToProps = {
   setZoom: setZoomAction
 }
 
-export default componentAsDowndownMenu({
-  title: "Zoom",
-  buttonProps: { marginRight: true },
-  menuContent: connect(mapStateToProps, mapDispatchToProps)(ZoomMenu)
-})
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  asDropdownMenu({
+    title: "Zoom",
+    buttonProps: { marginRight: true }
+  })
+)(ZoomMenu)

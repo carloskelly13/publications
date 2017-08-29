@@ -5,6 +5,7 @@ import FileMenu from "./file"
 import NewShapeMenu from "./new-shape"
 import ZoomMenu from "./zoom"
 import NewDocumentModal from "../documents/new-document"
+import OpenDocumentModal from "../open-document"
 import ToolbarButton, { ButtonContainer } from "../ui/toolbar-button"
 import { ContentContainer } from "../ui/containers"
 import {
@@ -53,7 +54,7 @@ class Toolbar extends Component {
     const {
       currentDocument, saveDocument, showModal,
       copyShape, cutShape, deleteShape, pasteShape, clipboardData,
-      selectedShape, adjustShapeLayer, sidePanelVisible, setSidePanelVisible
+      selectedShape, adjustShapeLayer, sidePanelVisible
     } = this.props
 
     const forwardButtonEnabled = selectedShape && currentDocument &&
@@ -69,7 +70,7 @@ class Toolbar extends Component {
             currentDocument={currentDocument}
             handleNewDocument={() => showModal(NewDocumentModal)}
             handleSaveDocument={saveDocument}
-            handleOpenDocument={() => setSidePanelVisible(true)}
+            handleOpenDocument={() => showModal(OpenDocumentModal)}
           />
           <NewShapeMenu disabled={!currentDocument} />
           <ButtonContainer>

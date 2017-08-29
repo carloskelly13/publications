@@ -1,6 +1,6 @@
 import React from "react"
 import { MenuItem, MenuDivider } from "../ui/menu"
-import componentAsDropdownMenu from "../ui/menu-hoc"
+import asDropdownMenu from "../ui/menu-hoc"
 
 const FileMenu = ({
   currentDocument,
@@ -54,8 +54,7 @@ const FileMenu = ({
   </div>
 )
 
-export default componentAsDropdownMenu({
+export default asDropdownMenu({
   title: "File",
-  buttonProps: { marginRight: true },
-  menuContent: FileMenu
-})
+  buttonProps: { marginRight: true }
+})(FileMenu)

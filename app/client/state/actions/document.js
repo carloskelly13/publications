@@ -189,14 +189,14 @@ export const getDocument = id => {
     })
 
     if (response.status !== 200) {
-      throw new Error("Unable to fetch document")
+      return dispatch(push("/documents"))
     }
 
     dispatch(setCsrfHeaders(response.headers))
 
     const json = await response.json()
 
-    dispatch({ type: RECEIVE_DOCUMENT, doc: json })
+    return dispatch({ type: RECEIVE_DOCUMENT, doc: json })
   }
 }
 

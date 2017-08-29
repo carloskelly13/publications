@@ -4,12 +4,8 @@ import { MenuContainer, Menu } from "./menu"
 import omit from "lodash.omit"
 import ToolbarButton from "./toolbar-button"
 
-export default function componentAsDropdownMenu({
-  title = "", menuContent, buttonProps = {}
-}) {
-  return class InjectAsMenu extends Component {
-    static WrappedComponent = menuContent
-
+export default function asDropdownMenu({ title = "", buttonProps = {} }) {
+  return WrappedComponent => class extends Component {
     state = {
       menuActive: false
     }
@@ -43,7 +39,7 @@ export default function componentAsDropdownMenu({
               <Menu
                 onClick={this.closeMenu}
               >
-                <InjectAsMenu.WrappedComponent {...wrapperProps} />
+                <WrappedComponent {...wrapperProps} />
               </Menu>
             )}
           </ReactCSSTransitionGroup>
