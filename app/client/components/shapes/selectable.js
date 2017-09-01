@@ -7,7 +7,7 @@ import {
   updateSelectedShape as updateSelectedShapeAction
 } from "../../state/actions/document"
 
-export default function selectable(WrappedComponent) {
+export default function asSelectable(WrappedComponent) {
   class InjectSelectable extends Component {
     static WrappedComponent = WrappedComponent
 
@@ -27,10 +27,10 @@ export default function selectable(WrappedComponent) {
     }
 
     render() {
-      const { zoom, dpi, shape } = this.props
+      const { zoom, dpi, shape, selectable } = this.props
       return (
         <g
-          onClick={this.handleShapeSelected}
+          onClick={selectable && this.handleShapeSelected}
         >
           <WrappedComponent
             zoom={zoom}

@@ -66,6 +66,7 @@ export const MenuItem = styled.button`
   width: 100%;
   text-align: left;
   outline: none;
+  border-radius: 0;
 
   &:hover {
     color: #fff;

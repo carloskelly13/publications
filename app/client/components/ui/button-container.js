@@ -6,6 +6,7 @@ export const ModalButtonConatiner = styled.div`
   background: ${AppColors.MediumGray};
   bottom: 0;
   border-top: 1px solid #ccc;
+  border-radius: 0 0 6px 6px;
   width: calc(100% - 10px);
   left: 0;
   right: 0;

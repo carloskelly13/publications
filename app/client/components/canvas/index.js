@@ -2,9 +2,8 @@ import React from "react"
 import styled from "styled-components"
 import CanvasBackground from "./background"
 import { connect } from "react-redux"
-import get from "lodash.get"
 import {
-  selectedShapeSelector, currentDocumentSelector, zoomSelector
+  selectedShapeSelector, zoomSelector
 } from "../../state/selectors"
 import { updateSelectedShape as updateShapeAction } from "../../state/actions/document"
 
@@ -44,14 +43,13 @@ const zoomForDocumentSize = ({ width, height }) => {
   return 0.2
 }
 
-const Canvas = ({
-  doc, dpi, zoom, allowsEditing, thumbnail, currentDocument
+export const Canvas = ({
+  doc, dpi, zoom, allowsEditing, thumbnail, isSelected
 }) => {
   if (thumbnail) {
     zoom = zoomForDocumentSize(doc)
   }
 
-  const isCurrentDocument = get(currentDocument, "id", -1) === doc.id
   const shapes = doc.shapes
     .sort((lhs, rhs) => lhs.z - rhs.z)
     .map((shape, index) => renderShape({
@@ -66,7 +64,7 @@ const Canvas = ({
       }}
     >
       <CanvasSVG
-        currentDocument={isCurrentDocument}
+        isSelected={isSelected}
         allowsEditing={allowsEditing}
         width={doc.width * dpi * zoom}
         height={doc.height * dpi * zoom}
@@ -89,12 +87,12 @@ const Canvas = ({
 
 Canvas.defaultProps = {
   dpi: 72,
-  allowsEditing: false
+  allowsEditing: false,
+  isSelected: false
 }
 
 const mapStateToProps = state => ({
   selectedShape: selectedShapeSelector(state),
-  currentDocument: currentDocumentSelector(state),
   zoom: zoomSelector(state)
 })
 

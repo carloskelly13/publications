@@ -4,8 +4,6 @@ import { Toolbar as ToolbarBase } from "../ui/toolbar"
 import FileMenu from "./file"
 import NewShapeMenu from "./new-shape"
 import ZoomMenu from "./zoom"
-import NewDocumentModal from "../documents/new-document"
-import OpenDocumentModal from "../open-document"
 import ToolbarButton, { ButtonContainer } from "../ui/toolbar-button"
 import { ContentContainer } from "../ui/containers"
 import {
@@ -17,8 +15,6 @@ import {
 } from "../../state/selectors"
 import { connect } from "react-redux"
 import {
-  showModal as showModalAction,
-  hideModal as hideModalAction,
   setEditModeActive as setEditModeActiveAction,
   setSidePanelVisible as setSidePanelVisibleAction
 } from "../../state/actions/app-ui"
@@ -52,9 +48,8 @@ class Toolbar extends Component {
 
   render() {
     const {
-      currentDocument, saveDocument, showModal,
-      copyShape, cutShape, deleteShape, pasteShape, clipboardData,
-      selectedShape, adjustShapeLayer, sidePanelVisible
+      currentDocument, copyShape, cutShape, deleteShape,
+      pasteShape, clipboardData, selectedShape, adjustShapeLayer, sidePanelVisible
     } = this.props
 
     const forwardButtonEnabled = selectedShape && currentDocument &&
@@ -66,12 +61,7 @@ class Toolbar extends Component {
     return (
       <ToolbarBase>
         <ContentContainer>
-          <FileMenu
-            currentDocument={currentDocument}
-            handleNewDocument={() => showModal(NewDocumentModal)}
-            handleSaveDocument={saveDocument}
-            handleOpenDocument={() => showModal(OpenDocumentModal)}
-          />
+          <FileMenu />
           <NewShapeMenu disabled={!currentDocument} />
           <ButtonContainer>
             <ToolbarButton
@@ -150,8 +140,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  showModal: showModalAction,
-  hideModal: hideModalAction,
   setEditModeActive: setEditModeActiveAction,
   saveDocument: saveDocumentAction,
   setSelectedDocument: setSelectedDocumentAction,
