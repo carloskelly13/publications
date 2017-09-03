@@ -11,7 +11,11 @@ export const FileItem = ({ doc }) => (
   <FileItemContainer>
     <Canvas
       thumbnail
-      doc={doc}
+      documentMetrics={{
+        width: doc.width,
+        height: doc.height
+      }}
+      sortedShapes={doc.shapes}
     />
     { doc.name }
     { lastModifiedString(doc.lastModified) }

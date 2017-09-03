@@ -11,8 +11,7 @@ import {
 } from "../../state/actions/app-ui"
 
 const OpenDocumentContainer = styled(ModalContent)`
-  width: 80%;
-  max-width: 960px;
+  min-width: 630px;
 `
 
 const OpenDocument = ({ hideModal }) => (

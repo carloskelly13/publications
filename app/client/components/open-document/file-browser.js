@@ -15,6 +15,9 @@ const FileBrowserContainer = styled.div`
   overflow: scroll;
   background: ${AppColors.White};
   margin: 15px 0 0;
+  display: grid;
+  grid-template-columns: 150px 150px 150px 150px;
+  grid-gap: 10px;
 `
 
 export const FileBrowser = ({ documents }) => (

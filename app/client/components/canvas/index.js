@@ -1,11 +1,14 @@
 import React from "react"
 import styled from "styled-components"
-import CanvasBackground from "./background"
+import { CanvasBackground } from "./background"
 import { connect } from "react-redux"
 import {
-  selectedShapeSelector, zoomSelector
+  selectedShapeSelector, zoomSelector, sortedShapesSelector,
+  documentMetricsSelector, backgroundGridLineRangesSelector
 } from "../../state/selectors"
-import { updateSelectedShape as updateShapeAction } from "../../state/actions/document"
+import {
+  updateSelectedShape as updateSelectedShapeAction
+} from "../../state/actions/document"
 
 import {
   Rectangle, Ellipse, TextBox
@@ -13,7 +16,12 @@ import {
 
 const CanvasSVG = styled.svg`
   border: 1px solid #a5a5a5;
-  margin: 25px 1em 1em 24px;
+  margin: ${props => {
+    if (props.thumbnail) {
+      return "0"
+    }
+    return "25px 1em 1em 24px"
+  }};
   overflow: hidden;
 `
 
@@ -44,39 +52,42 @@ const zoomForDocumentSize = ({ width, height }) => {
 }
 
 export const Canvas = ({
-  doc, dpi, zoom, allowsEditing, thumbnail, isSelected
+  dpi, zoom, allowsEditing, thumbnail, isSelected, sortedShapes,
+  documentMetrics, updateSelectedShape, backgroundGridLineRanges
 }) => {
   if (thumbnail) {
-    zoom = zoomForDocumentSize(doc)
+    zoom = zoomForDocumentSize(documentMetrics)
   }
 
-  const shapes = doc.shapes
-    .sort((lhs, rhs) => lhs.z - rhs.z)
-    .map((shape, index) => renderShape({
-      shape, zoom, dpi, selectable: allowsEditing, key: index
-    }))
+  const shapes = sortedShapes.map((shape, index) => renderShape({
+    shape, zoom, dpi, selectable: allowsEditing, key: index
+  }))
 
   return (
     <div
       style={{
-        width: `${doc.width * dpi * zoom}px`,
-        height: `${doc.height * dpi * zoom}px`
+        width: `${documentMetrics.width * dpi * zoom}px`,
+        height: `${documentMetrics.height * dpi * zoom}px`
       }}
     >
       <CanvasSVG
+        thumbnail={thumbnail}
         isSelected={isSelected}
         allowsEditing={allowsEditing}
-        width={doc.width * dpi * zoom}
-        height={doc.height * dpi * zoom}
+        width={documentMetrics.width * dpi * zoom}
+        height={documentMetrics.height * dpi * zoom}
         xmlns="http://www.w3.org/2000/svg"
         version="1.1"
       >
         <g>
           <CanvasBackground
             selectable={allowsEditing}
-            doc={doc}
+            width={documentMetrics.width}
+            height={documentMetrics.height}
             dpi={dpi}
             zoom={zoom}
+            gridLineRanges={backgroundGridLineRanges}
+            handleBackgroundClicked={() => updateSelectedShape(null)}
           />
         </g>
         <g>{ shapes }</g>
@@ -93,11 +104,14 @@ Canvas.defaultProps = {
 
 const mapStateToProps = state => ({
   selectedShape: selectedShapeSelector(state),
-  zoom: zoomSelector(state)
+  zoom: zoomSelector(state),
+  documentMetrics: documentMetricsSelector(state),
+  sortedShapes: sortedShapesSelector(state),
+  backgroundGridLineRanges: backgroundGridLineRangesSelector(state)
 })
 
 const mapDispatchToProps = {
-  updateShape: updateShapeAction
+  updateSelectedShape: updateSelectedShapeAction
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas)
