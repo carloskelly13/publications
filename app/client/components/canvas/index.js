@@ -1,5 +1,4 @@
 import React from "react"
-import styled from "styled-components"
 import { CanvasBackground } from "./background"
 import { connect } from "react-redux"
 import {
@@ -9,21 +8,8 @@ import {
 import {
   updateSelectedShape as updateSelectedShapeAction
 } from "../../state/actions/document"
-
-import {
-  Rectangle, Ellipse, TextBox
-} from "../shapes"
-
-const CanvasSVG = styled.svg`
-  border: 1px solid #a5a5a5;
-  margin: ${props => {
-    if (props.thumbnail) {
-      return "0"
-    }
-    return "25px 1em 1em 24px"
-  }};
-  overflow: hidden;
-`
+import { Rectangle, Ellipse, TextBox } from "../shapes"
+import { CanvasSVG } from "./canvas-svg"
 
 const renderShape = props => {
   let ShapeComponent
@@ -52,7 +38,7 @@ const zoomForDocumentSize = ({ width, height }) => {
 }
 
 export const Canvas = ({
-  dpi, zoom, allowsEditing, thumbnail, isSelected, sortedShapes,
+  dpi, zoom, allowsEditing, thumbnail, selected, sortedShapes,
   documentMetrics, updateSelectedShape, backgroundGridLineRanges
 }) => {
   if (thumbnail) {
@@ -64,35 +50,28 @@ export const Canvas = ({
   }))
 
   return (
-    <div
-      style={{
-        width: `${documentMetrics.width * dpi * zoom}px`,
-        height: `${documentMetrics.height * dpi * zoom}px`
-      }}
+    <CanvasSVG
+      thumbnail={thumbnail}
+      selected={selected}
+      allowsEditing={allowsEditing}
+      width={documentMetrics.width * dpi * zoom}
+      height={documentMetrics.height * dpi * zoom}
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
     >
-      <CanvasSVG
-        thumbnail={thumbnail}
-        isSelected={isSelected}
-        allowsEditing={allowsEditing}
-        width={documentMetrics.width * dpi * zoom}
-        height={documentMetrics.height * dpi * zoom}
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.1"
-      >
-        <g>
-          <CanvasBackground
-            selectable={allowsEditing}
-            width={documentMetrics.width}
-            height={documentMetrics.height}
-            dpi={dpi}
-            zoom={zoom}
-            gridLineRanges={backgroundGridLineRanges}
-            handleBackgroundClicked={() => updateSelectedShape(null)}
-          />
-        </g>
-        <g>{ shapes }</g>
-      </CanvasSVG>
-    </div>
+      <g>
+        <CanvasBackground
+          selectable={allowsEditing}
+          width={documentMetrics.width}
+          height={documentMetrics.height}
+          dpi={dpi}
+          zoom={zoom}
+          gridLineRanges={backgroundGridLineRanges}
+          handleBackgroundClicked={() => updateSelectedShape(null)}
+        />
+      </g>
+      <g>{ shapes }</g>
+    </CanvasSVG>
   )
 }
 

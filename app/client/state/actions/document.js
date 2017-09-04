@@ -126,6 +126,21 @@ export const saveDocument = doc => {
   }
 }
 
+export const navigateToDocument = id => (dispatch, getState) => {
+  const currentDocument = currentDocumentSelector(getState())
+  const currentDocumentOriginal = currentDocumentOriginalSelector(getState())
+
+  if (!isEqual(currentDocument, currentDocumentOriginal)) {
+    return dispatch(showModal(SaveChanges, {
+      handleRouteChange: () => dispatch(push(`/documents/${id}`)),
+      saveDocument: sender => saveDocument(sender)(dispatch, getState)
+    }))
+  }
+
+  dispatch(hideModal())
+  return dispatch(push(`/documents/${id}`))
+}
+
 export const newDocument = doc => {
   return async (dispatch, getState) => {
     const { csrfHeaders } = getState().security
@@ -147,21 +162,8 @@ export const newDocument = doc => {
     dispatch(setCsrfHeaders(response.headers))
 
     const json = await response.json()
-
     dispatch({ type: POST_DOCUMENT, payload: json })
-
-    const currentDocument = currentDocumentSelector(getState())
-    const currentDocumentOriginal = currentDocumentOriginalSelector(getState())
-
-    if (!isEqual(currentDocument, currentDocumentOriginal)) {
-      return dispatch(showModal(SaveChanges, {
-        handleRouteChange: () => dispatch(push(`/documents/${json.id}`)),
-        saveDocument: sender => saveDocument(sender)(dispatch, getState)
-      }))
-    }
-
-    dispatch(hideModal())
-    return dispatch(push(`/documents/${json.id}`))
+    return dispatch(navigateToDocument(json.id))
   }
 }
 

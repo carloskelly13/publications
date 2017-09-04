@@ -31,7 +31,7 @@ const renderGridLines = ({ x, y, zoom, width, height, dpi }) => {
 export const CanvasBackground = ({
   width, height, dpi, zoom, handleBackgroundClicked, selectable, gridLineRanges
 }) => (
-  <g onClick={handleBackgroundClicked}>
+  <g onClick={selectable && handleBackgroundClicked}>
     <rect
       y="0"
       x="0"

@@ -4,12 +4,12 @@ import styled from "styled-components"
 import Route from "react-router-dom/Route"
 import { connect } from "react-redux"
 import Toolbar from "../toolbar"
-import DocumentsList from "./documents-list"
 import EditorView from "../editor"
 import MetricsBar from "../metrics-bar"
-import { currentUserSelector } from "../../state/selectors"
+import { currentUserSelector, sidePanelVisibleSelector } from "../../state/selectors"
 import { getUser as getUserAction } from "../../state/actions/user"
 import { getDocuments as getDocumentsAction } from "../../state/actions/document"
+import { LayersSidebar } from "../layers-sidebar/index"
 
 const ViewContainer = styled.div`
   display: flex;
@@ -49,25 +49,27 @@ class DocumentsView extends Component {
   }
 
   render() {
-    const { isAuthenticated } = this.props.user
-    if (isAuthenticated) {
-      return (
-        <ViewContainer>
-          <Toolbar />
-          <MetricsBar />
-          <ViewContent>
-            <DocumentsList />
-            <Route path="/documents/:id" component={EditorView} />
-          </ViewContent>
-        </ViewContainer>
-      )
-    }
-    return null
+    const {
+      user: { isAuthenticated },
+      sidePanelVisible
+    } = this.props
+    if (!isAuthenticated) { return null }
+    return (
+      <ViewContainer>
+        <Toolbar />
+        <MetricsBar />
+        <ViewContent>
+          <LayersSidebar visible={sidePanelVisible} />
+          <Route path="/documents/:id" component={EditorView} />
+        </ViewContent>
+      </ViewContainer>
+    )
   }
 }
 
 const mapState = state => ({
-  user: currentUserSelector(state)
+  user: currentUserSelector(state),
+  sidePanelVisible: sidePanelVisibleSelector(state)
 })
 
 const mapDispatchToProps = {

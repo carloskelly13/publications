@@ -8,7 +8,7 @@ import { AppColors } from "../../util/constants"
 import { FileItem } from "./file-item"
 
 const FileBrowserContainer = styled.div`
-  width: 100%;
+  width: calc(100% - 20px);
   height: 300px;
   border: 1px solid ${AppColors.Border};
   border-radius: 6px;
@@ -16,14 +16,17 @@ const FileBrowserContainer = styled.div`
   background: ${AppColors.White};
   margin: 15px 0 0;
   display: grid;
-  grid-template-columns: 150px 150px 150px 150px;
-  grid-gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  padding: 10px;
 `
 
-export const FileBrowser = ({ documents }) => (
+export const FileBrowser = ({ documents, handleFileClicked, selectedFileId }) => (
   <FileBrowserContainer>
     { documents.map(doc => (
         <FileItem
+          selected={selectedFileId === doc.id}
+          handleClick={() => handleFileClicked(doc.id)}
           key={doc.id}
           doc={doc}
         />

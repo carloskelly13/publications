@@ -119,7 +119,7 @@ class Toolbar extends Component {
             active={sidePanelVisible}
             onClick={this.handleSidePanelButton}
           >
-            Documents
+            Layers
           </ToolbarButton>
         </ContentContainer>
       </ToolbarBase>
