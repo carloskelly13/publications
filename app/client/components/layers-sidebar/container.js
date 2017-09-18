@@ -8,9 +8,7 @@ export const LayersSidebarContainer = styled.div`
   border-left: 1px solid hsla(0, 0%, 0%, 0.25);
   z-index: 2;
   height: calc(100% - 59px);
-  display: flex;
   flex-direction: column;
   right: 0;
-  transition: transform 350ms ease-in-out;
-  transform: translateX(${({ visible }) => visible ? "0" : "100%" });
+  display: ${({ visible }) => visible ? "flex" : "none" };
 `

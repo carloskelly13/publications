@@ -14,7 +14,8 @@ import {
   COPY_SHAPE,
   PASTE_SHAPE,
   REPLACE_DOCUMENT,
-  ADJUST_SHAPE_LAYER
+  ADJUST_SHAPE_LAYER,
+  MOVE_SHAPE_LAYER
 } from "../actions/document"
 import shortid from "shortid"
 
@@ -118,6 +119,15 @@ export default function documentReducer(state = defaultState, action) {
       currentDocument: updatedDocument,
       selectedShape: pasteShape
     })
+  }
+
+  case MOVE_SHAPE_LAYER: {
+    const { shapes, selectedShape } = action.payload
+    return {
+      ...state,
+      selectedShape,
+      currentDocument: { ...state.currentDocument, shapes }
+    }
   }
 
   case ADJUST_SHAPE_LAYER: {

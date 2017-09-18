@@ -9,7 +9,7 @@ import MetricsBar from "../metrics-bar"
 import { currentUserSelector, sidePanelVisibleSelector } from "../../state/selectors"
 import { getUser as getUserAction } from "../../state/actions/user"
 import { getDocuments as getDocumentsAction } from "../../state/actions/document"
-import { LayersSidebar } from "../layers-sidebar/index"
+import LayersSidebar from "../layers-sidebar/index"
 
 const ViewContainer = styled.div`
   display: flex;

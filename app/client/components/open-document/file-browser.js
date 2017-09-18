@@ -9,7 +9,7 @@ import { FileItem } from "./file-item"
 
 const FileBrowserContainer = styled.div`
   width: calc(100% - 20px);
-  height: 300px;
+  height: 370px;
   border: 1px solid ${AppColors.Border};
   border-radius: 6px;
   overflow: scroll;
@@ -23,14 +23,14 @@ const FileBrowserContainer = styled.div`
 
 export const FileBrowser = ({ documents, handleFileClicked, selectedFileId }) => (
   <FileBrowserContainer>
-    { documents.map(doc => (
-        <FileItem
-          selected={selectedFileId === doc.id}
-          handleClick={() => handleFileClicked(doc.id)}
-          key={doc.id}
-          doc={doc}
-        />
-    )) }
+    {documents.map(doc => (
+      <FileItem
+        selected={selectedFileId === doc.id}
+        handleClick={() => handleFileClicked(doc.id)}
+        key={doc.id}
+        doc={doc}
+      />
+    ))}
   </FileBrowserContainer>
 )
 

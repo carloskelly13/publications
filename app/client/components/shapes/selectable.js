@@ -30,7 +30,7 @@ export default function asSelectable(WrappedComponent) {
       const { zoom, dpi, shape, selectable } = this.props
       return (
         <g
-          onClick={selectable && this.handleShapeSelected}
+          onClick={selectable ? this.handleShapeSelected : null}
         >
           <WrappedComponent
             zoom={zoom}

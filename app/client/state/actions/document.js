@@ -4,7 +4,9 @@ import { Urls } from "../../util/constants"
 import { setCsrfHeaders } from "./security"
 import { showModal, hideModal } from "./app-ui"
 import SaveChanges from "../../components/documents/save-changes"
-import { currentDocumentSelector, currentDocumentOriginalSelector } from "../selectors"
+import {
+  currentDocumentSelector, currentDocumentOriginalSelector, sortedShapesSelector
+} from "../selectors"
 import isEqual from "lodash.isequal"
 
 export const REQUEST_DOCUMENTS = "REQUEST_DOCUMENTS"
@@ -23,6 +25,7 @@ export const COPY_SHAPE = "COPY_SHAPE"
 export const PASTE_SHAPE = "PASTE_SHAPE"
 export const REPLACE_DOCUMENT = "REPLACE_DOCUMENT"
 export const ADJUST_SHAPE_LAYER = "ADJUST_SHAPE_LAYER"
+export const MOVE_SHAPE_LAYER = "MOVE_SHAPE_LAYER"
 
 export const updateSelectedShape = selectedShape => {
   return dispatch => dispatch({
@@ -73,6 +76,35 @@ export const adjustShapeLayer = ({ shape, direction }) => ({
   type: ADJUST_SHAPE_LAYER,
   payload: { shape, direction }
 })
+
+export const moveShapeLayer = ({ source, destination }) => (dispatch, getState) => {
+  if (!source || !destination) {
+    return null
+  }
+
+  const currentShapes = sortedShapesSelector(getState())
+  const fromIndex = source.index
+  const toIndex = destination.index
+
+  const sortedShapes = Array.from(currentShapes)
+  const [ adjustedShape ] = sortedShapes.splice(fromIndex, 1)
+  sortedShapes.splice(toIndex, 0, adjustedShape)
+
+  const normalizedShapes = sortedShapes.map((shape, index) => ({
+    ...shape, z: index + 1
+  }))
+
+  const normalizedSelectedShape = normalizedShapes.find(
+    shape => shape.id === adjustedShape.id)
+
+  return dispatch({
+    type: MOVE_SHAPE_LAYER,
+    payload: {
+      shapes: normalizedShapes,
+      selectedShape: normalizedSelectedShape
+    }
+  })
+}
 
 export const updateDocumentProperty = sender => {
   return (dispatch, getState) => dispatch({

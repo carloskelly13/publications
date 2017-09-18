@@ -46,7 +46,7 @@ const ModalContainer = styled.div`
   @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
-    background-color: hsla(0, 0%, 0%, 0.25);
+    background-color: hsla(0, 0%, 0%, 0.15);
   }
 `
 

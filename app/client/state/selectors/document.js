@@ -29,7 +29,7 @@ export const sortedDocumentsSelector = createSelector(
 
 export const sortedShapesSelector = createSelector(
   currentDocumentSelector,
-  doc => doc.shapes.sort((lhs, rhs) => lhs.z - rhs.z)
+  doc => doc ? doc.shapes.sort((lhs, rhs) => lhs.z - rhs.z) : []
 )
 
 export const documentMetricsSelector = createSelector(
