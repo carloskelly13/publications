@@ -116,6 +116,7 @@ class Toolbar extends Component {
         <ContentContainer>
           <ZoomMenu disabled={!currentDocument} />
           <ToolbarButton
+            disabled={!currentDocument}
             active={sidePanelVisible}
             onClick={this.handleSidePanelButton}
           >

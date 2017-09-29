@@ -249,8 +249,7 @@ export default class ResizeMoveFrame extends Component {
           onMouseDown={this.handleFrameSelected}
           onDoubleClick={this.handleFrameDoubleClicked}
         />
-        { textEditingFrame }
-        { anchorElements }
+        {anchorElements}
       </g>
     )
   }

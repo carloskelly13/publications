@@ -42,12 +42,6 @@ const ModalContainer = styled.div`
   top: 0;
   width: 100%;
   z-index: 9005;
-
-  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    background-color: hsla(0, 0%, 0%, 0.15);
-  }
 `
 
 export const ModalContent = styled.div`
@@ -69,11 +63,11 @@ const Modal = ({
     transitionEnterTimeout={200}
     transitionLeaveTimeout={350}
   >
-    { !!ModalComponent && (
+    {!!ModalComponent && (
       <ModalContainer>
         <ModalComponent {...componentProps} />
       </ModalContainer>
-    ) }
+    )}
   </ReactCSSTransitionGroup>
 )
 
