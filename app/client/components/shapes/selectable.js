@@ -4,19 +4,15 @@ import { selectedShapeSelector } from "../../state/selectors"
 import ResizeMoveFrame from "./frame"
 import get from "lodash.get"
 import {
-  updateSelectedShape as updateSelectedShapeAction
+  updateSelectedShape as updateSelectedShapeAction,
+  setEditingTextBox as setEditingTextBoxAction
 } from "../../state/actions/document"
 
 export default function asSelectable(WrappedComponent) {
   class InjectSelectable extends Component {
     static WrappedComponent = WrappedComponent
 
-    constructor() {
-      super(...arguments)
-      this.handleShapeSelected = this.handleShapeSelected.bind(this)
-    }
-
-    handleShapeSelected() {
+    handleShapeSelected = () => {
       const { shape, updateSelectedShape } = this.props
       updateSelectedShape(shape)
     }
@@ -28,16 +24,23 @@ export default function asSelectable(WrappedComponent) {
 
     render() {
       const { zoom, dpi, shape, selectable } = this.props
+      const wrappedProps = { zoom, dpi, shape }
+
+      /**
+       * Since text boxes can have input we need extra props
+       * to handle their state and change events.
+       */
+      if (shape.type === "text") {
+        wrappedProps.onChange = this.props.onChange
+        wrappedProps.isEditing = this.props.isEditing
+      }
+
       return (
         <g
           onClick={selectable ? this.handleShapeSelected : null}
         >
-          <WrappedComponent
-            zoom={zoom}
-            dpi={dpi}
-            shape={shape}
-          />
-          { this.isShapeSelected && <ResizeMoveFrame {...this.props} /> }
+          <WrappedComponent {...wrappedProps} />
+          {this.isShapeSelected && <ResizeMoveFrame {...this.props} />}
         </g>
       )
     }
@@ -48,7 +51,8 @@ export default function asSelectable(WrappedComponent) {
   })
 
   const mapDispatchToProps = {
-    updateSelectedShape: updateSelectedShapeAction
+    updateSelectedShape: updateSelectedShapeAction,
+    setEditingTextBox: setEditingTextBoxAction
   }
 
   return connect(mapStateToProps, mapDispatchToProps)(InjectSelectable)

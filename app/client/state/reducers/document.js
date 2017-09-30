@@ -15,7 +15,8 @@ import {
   PASTE_SHAPE,
   REPLACE_DOCUMENT,
   ADJUST_SHAPE_LAYER,
-  MOVE_SHAPE_LAYER
+  MOVE_SHAPE_LAYER,
+  SET_EDITING_TEXTBOX
 } from "../actions/document"
 import shortid from "shortid"
 
@@ -26,7 +27,8 @@ const defaultState = {
   selectedShape: null,
   clipboardData: null,
   isRequestingData: false,
-  postDocumentFailure: false
+  postDocumentFailure: false,
+  editingTextBoxId: null
 }
 
 // eslint-disable-next-line complexity, max-statements
@@ -220,6 +222,10 @@ export default function documentReducer(state = defaultState, action) {
     }
 
     return { ...state, ...updatedState }
+  }
+
+  case SET_EDITING_TEXTBOX: {
+    return { ...state, editingTextBoxId: action.payload.id }
   }
 
   case POST_DOCUMENT: {

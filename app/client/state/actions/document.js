@@ -26,6 +26,7 @@ export const PASTE_SHAPE = "PASTE_SHAPE"
 export const REPLACE_DOCUMENT = "REPLACE_DOCUMENT"
 export const ADJUST_SHAPE_LAYER = "ADJUST_SHAPE_LAYER"
 export const MOVE_SHAPE_LAYER = "MOVE_SHAPE_LAYER"
+export const SET_EDITING_TEXTBOX = "SET_EDITING_TEXTBOX"
 
 export const updateSelectedShape = selectedShape => {
   return dispatch => dispatch({
@@ -40,6 +41,11 @@ export const updateCurrentDocument = doc => {
     doc
   })
 }
+
+export const setEditingTextBox = id => ({
+  type: SET_EDITING_TEXTBOX,
+  payload: { id }
+})
 
 export const addShape = shapeData => {
   return (dispatch, getState) => {

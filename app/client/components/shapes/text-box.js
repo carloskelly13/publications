@@ -9,6 +9,12 @@ const TextArea = styled.textarea`
   padding: 0;
   margin: 0;
   border: none;
+  box-shadow: ${({ readOnly }) => {
+    if (readOnly) {
+      return "none"
+    }
+    return "0 0 0 1px hsla(0, 0%, 0%, 0.5)"
+  }};
   user-select: none;
   outline: none;
   background: transparent;
@@ -20,7 +26,7 @@ const TextBox = props => {
       x, y, width, height, color, text, fontSize,
       fontFamily, fontStyle, fontWeight, textAlign
     },
-    zoom, dpi
+    zoom, dpi, isEditing, onChange
   } = props
   const valueForLayout = value => value * dpi * zoom
   return (
@@ -31,8 +37,8 @@ const TextBox = props => {
       height={valueForLayout(height)}
     >
       <TextArea
-        readOnly
-        onChange={null}
+        readOnly={!isEditing}
+        onChange={({ target }) => onChange({ text: target.value })}
         value={text}
         style={{
           color,

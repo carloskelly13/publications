@@ -11,6 +11,7 @@ export const currentDocumentOriginalSelector = state => state.doc.currentDocumen
 export const allDocumentsSelector = state => state.doc.documents
 export const selectedShapeSelector = state => state.doc.selectedShape
 export const clipboardDataSelector = state => state.doc.clipboardData
+export const editingTextBoxIdSelector = state => state.doc.editingTextBoxId
 
 export const isDocumentActiveSelector = createSelector(
   currentDocumentSelector,

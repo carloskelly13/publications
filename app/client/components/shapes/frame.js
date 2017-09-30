@@ -36,27 +36,23 @@ export default class ResizeMoveFrame extends Component {
       oY: 0,
       oW: 0,
       oH: 0,
-      isEditingText: false,
-      dragging: false,
-      resizing: false,
-      resizeAnchor: null
+      shouldRender: true
     }
   }
 
-  constructor() {
-    super(...arguments)
-    this.state = { ...ResizeMoveFrame.defaultState }
-    this.handleFrameSelected = this.handleFrameSelected.bind(this)
-    this.handleFrameDoubleClicked = this.handleFrameDoubleClicked.bind(this)
-    this.handleFrameDeselected = this.handleFrameDeselected.bind(this)
-    this.handleFrameDragged = this.handleFrameDragged.bind(this)
-    this.handleFrameResized = this.handleFrameResized.bind(this)
-    this.handleAnchorSelected = this.handleAnchorSelected.bind(this)
-    this.handleAnchorDeselected = this.handleAnchorDeselected.bind(this)
-    this.handleTextChange = this.handleTextChange.bind(this)
+  state = ResizeMoveFrame.defaultState
+
+  componentWillUnmount() {
+    this.props.setEditingTextBox(null)
+    document.removeEventListener("mousemove", this.handleFrameResized)
+    document.removeEventListener("mousemove", this.handleFrameDragged)
   }
 
-  updateStateForDragging({ pageX, pageY }) {
+  isDragging = false
+  isEditingText = false
+  resizeAnchor = ""
+
+  updateStateForDragging = ({ pageX, pageY }) => {
     this.setState({
       eX: pageX,
       eY: pageY,
@@ -65,7 +61,7 @@ export default class ResizeMoveFrame extends Component {
     })
   }
 
-  updateStateForResizing({ pageX, pageY }) {
+  updateStateForResizing = ({ pageX, pageY }) => {
     this.setState({
       eX: pageX,
       eY: pageY,
@@ -76,45 +72,45 @@ export default class ResizeMoveFrame extends Component {
     })
   }
 
-  handleFrameSelected(event) {
-    this.setState({ dragging: true })
+  handleMouseDown = event => {
     this.updateStateForDragging(event)
-    document.addEventListener("mousemove", this.handleFrameDragged)
-    document.addEventListener("mouseup", this.handleFrameDeselected)
-  }
-
-  handleFrameDoubleClicked() {
-    if (this.props.shape.type === "text") {
-      this.setState({ isEditingText: true })
+    if (!this.isEditingText) {
+      document.addEventListener("mousemove", this.handleFrameDragged)
     }
   }
 
-  handleFrameDeselected() {
-    this.setState({ ...ResizeMoveFrame.defaultState })
+  handleMouseUp = () => {
     document.removeEventListener("mousemove", this.handleFrameDragged)
-    document.removeEventListener("mouseup", this.handleFrameDeselected)
+    if (this.isDragging) {
+      this.isDragging = false
+      this.setState({ ...ResizeMoveFrame.defaultState })
+      return
+    }
+    if (this.props.shape.type !== "text") {
+      return
+    }
+    this.isEditingText = true
+    this.setState({ shouldRender: false })
+    this.props.setEditingTextBox(this.props.shape.id)
   }
 
-  handleAnchorSelected(event) {
+  handleAnchorMouseDown = event => {
     const coordinate = event
       .nativeEvent.target.attributes
       .getNamedItem("data-coordinate").value
-    this.setState({ resizing: true, resizeAnchor: coordinate })
-    this.updateStateForResizing(event);
+    this.resizeAnchor = coordinate
+    this.updateStateForResizing(event)
     document.addEventListener("mousemove", this.handleFrameResized)
-    document.addEventListener("mouseup", this.handleAnchorDeselected)
   }
 
-  handleAnchorDeselected() {
+  handleAnchorMouseUp = () => {
     this.setState({ ...ResizeMoveFrame.defaultState })
+    this.resizeAnchor = ""
     document.removeEventListener("mousemove", this.handleFrameResized)
-    document.removeEventListener("mouseup", this.handleAnchorDeselected)
   }
 
-  handleFrameDragged(event) {
-    if (!this.state.dragging) {
-      return
-    }
+  handleFrameDragged = (event) => {
+    this.isDragging = true
 
     const x = (this.state.oX + (event.pageX - this.state.eX) /
       this.props.dpi / this.props.zoom)
@@ -128,33 +124,29 @@ export default class ResizeMoveFrame extends Component {
   }
 
   // eslint-disable-next-line max-statements
-  handleFrameResized(event) {
-    if (!this.state.resizing) {
-      return
-    }
-
+  handleFrameResized = (event) => {
     const updatedMetrics = {}
 
-    if (this.state.resizeAnchor.includes("n")) {
+    if (this.resizeAnchor.includes("n")) {
       updatedMetrics.height = Math.max(this.state.oH +
         ((this.state.eY - event.pageY) / this.props.dpi / this.props.zoom), 0)
       if (this.props.shape.height > 0) {
         updatedMetrics.y = this.state.oY + (event.pageY - this.state.eY) /
           this.props.dpi / this.props.zoom
       }
-    } else if (this.state.resizeAnchor.includes("s")) {
+    } else if (this.resizeAnchor.includes("s")) {
       updatedMetrics.height = Math.max(this.state.oH +
         ((event.pageY - this.state.eY) / this.props.dpi / this.props.zoom), 0)
     }
 
-    if (this.state.resizeAnchor.includes("w")) {
+    if (this.resizeAnchor.includes("w")) {
       updatedMetrics.width = Math.max(this.state.oW +
         ((this.state.eX - event.pageX) / this.props.dpi / this.props.zoom), 0)
       if (this.props.shape.width > 0) {
         updatedMetrics.x = this.state.oX + (event.pageX - this.state.eX) /
           this.props.dpi / this.props.zoom
       }
-    } else if (this.state.resizeAnchor.includes("e")) {
+    } else if (this.resizeAnchor.includes("e")) {
       updatedMetrics.width = Math.max(this.state.oW +
         ((event.pageX - this.state.eX) / this.props.dpi / this.props.zoom), 0)
     }
@@ -169,7 +161,7 @@ export default class ResizeMoveFrame extends Component {
     this.props.updateSelectedShape(updatedMetrics)
   }
 
-  handleTextChange({ target }) {
+  handleTextChange = ({ target }) => {
     this.props.updateSelectedShape({ text: target.value })
   }
 
@@ -179,30 +171,6 @@ export default class ResizeMoveFrame extends Component {
     const y = (shape.y * dpi * zoom) - (shape.strokeWidth / 2.0)
     const width = (shape.width * dpi * zoom) + shape.strokeWidth
     const height = (shape.height * dpi * zoom) + shape.strokeWidth
-
-    const textEditingFrame = this.state.isEditingText ? (
-      <g>
-        <foreignObject
-          x={x}
-          y={y}
-          height={height}
-          width={width}
-        >
-          <TextArea
-            value={shape.text}
-            onChange={this.handleTextChange}
-            style={{
-              color: shape.color,
-              fontFamily: shape.fontFamily,
-              fontStyle: shape.fontStyle,
-              fontSize: `${shape.fontSize * zoom}px`,
-              fontWeight: shape.fontWeight,
-              textAlign: shape.textAlign
-            }}
-          />
-        </foreignObject>
-      </g>
-    ) : null
 
     const anchorElements = frameAnchors.points.map((anchor, index) => {
       const lineWidth = shape.strokeWidth > 0 ? shape.strokeWidth : 1
@@ -229,11 +197,20 @@ export default class ResizeMoveFrame extends Component {
             strokeOpacity="1"
             style={style}
             data-coordinate={anchor.coordinate}
-            onMouseDown={this.handleAnchorSelected}
+            onMouseDown={this.handleAnchorMouseDown}
+            onMouseUp={this.handleAnchorMouseUp}
           />
         </g>
       )
     })
+
+    /**
+     * When a textbox is editing we don‘t want the frame controls to
+     * be visible.
+     */
+    if (!this.state.shouldRender) {
+      return null
+    }
 
     return (
       <g>
@@ -246,8 +223,8 @@ export default class ResizeMoveFrame extends Component {
           fillOpacity="0"
           stroke="hsla(0, 0%, 0%, 0.5)"
           strokeWidth={1}
-          onMouseDown={this.handleFrameSelected}
-          onDoubleClick={this.handleFrameDoubleClicked}
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
         />
         {anchorElements}
       </g>

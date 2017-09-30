@@ -3,7 +3,8 @@ import { CanvasBackground } from "./background"
 import { connect } from "react-redux"
 import {
   selectedShapeSelector, zoomSelector, sortedShapesSelector,
-  documentMetricsSelector, backgroundGridLineRangesSelector
+  documentMetricsSelector, backgroundGridLineRangesSelector,
+  editingTextBoxIdSelector
 } from "../../state/selectors"
 import {
   updateSelectedShape as updateSelectedShapeAction
@@ -11,19 +12,22 @@ import {
 import { Rectangle, Ellipse, TextBox } from "../shapes"
 import { CanvasSVG } from "./canvas-svg"
 
-const renderShape = props => {
-  let ShapeComponent
-  switch (props.shape.type) {
-  case "ellipse":
-    ShapeComponent = Ellipse
-    break
-  case "text":
-    ShapeComponent = TextBox
-    break
-  default:
-    ShapeComponent = Rectangle
+const renderShape = ({ shapeProps, editingTextBoxId, updateSelectedShape }) => {
+  const { type } = shapeProps.shape
+  if (type === "ellipse") {
+    return <Ellipse {...shapeProps} />
+  } else if (type === "rect") {
+    return <Rectangle {...shapeProps} />
+  } else if (type === "text") {
+    return (
+      <TextBox
+        onChange={updateSelectedShape}
+        isEditing={editingTextBoxId === shapeProps.shape.id}
+        {...shapeProps}
+      />
+    )
   }
-  return <ShapeComponent {...props} />
+  return null
 }
 
 const zoomForDocumentSize = ({ width, height }) => {
@@ -39,14 +43,19 @@ const zoomForDocumentSize = ({ width, height }) => {
 
 export const Canvas = ({
   dpi, zoom, allowsEditing, thumbnail, selected, sortedShapes,
-  documentMetrics, updateSelectedShape, backgroundGridLineRanges
+  documentMetrics, updateSelectedShape, backgroundGridLineRanges,
+  editingTextBoxId
 }) => {
   if (thumbnail) {
     zoom = zoomForDocumentSize(documentMetrics)
   }
 
   const shapes = sortedShapes.map((shape, index) => renderShape({
-    shape, zoom, dpi, selectable: allowsEditing, key: index
+    shapeProps: {
+      shape, zoom, dpi, selectable: allowsEditing, key: index
+    },
+    editingTextBoxId,
+    updateSelectedShape
   }))
 
   return (
@@ -86,7 +95,8 @@ const mapStateToProps = state => ({
   zoom: zoomSelector(state),
   documentMetrics: documentMetricsSelector(state),
   sortedShapes: sortedShapesSelector(state),
-  backgroundGridLineRanges: backgroundGridLineRangesSelector(state)
+  backgroundGridLineRanges: backgroundGridLineRangesSelector(state),
+  editingTextBoxId: editingTextBoxIdSelector(state)
 })
 
 const mapDispatchToProps = {
