@@ -29,16 +29,6 @@ class DocumentsView extends Component {
     router: PropTypes.object.isRequired
   }
 
-  componentDidMount() {
-    // this.props.fetchDocuments()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // if (nextProps.errorFetching) {
-    //   this.context.router.history.replace("/")
-    // }
-  }
-
   render() {
     const {
       sidePanelVisible = false

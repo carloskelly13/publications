@@ -2,8 +2,6 @@ import React, { Component } from "react"
 import range from "lodash.range"
 import { GridLine } from "../../components/canvas/grid-line"
 import styled from "styled-components"
-import { connect } from "react-redux"
-import { zoomSelector } from "../../state/selectors"
 
 const RulerContainer = styled.div`
   background: #fff;
@@ -24,7 +22,7 @@ const RulerContainer = styled.div`
 
 const isMajor = index => index % 4 === 0 && index > 0
 
-class Ruler extends Component {
+export default class Ruler extends Component {
   static defaultProps = {
     dpi: 72
   }
@@ -103,5 +101,3 @@ class Ruler extends Component {
     )
   }
 }
-
-export default Ruler

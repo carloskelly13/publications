@@ -7,10 +7,10 @@ import { MenuItem, MenuDivider } from "../ui/menu"
 import asDropdownMenu from "../ui/menu-hoc"
 import { logOut } from "../../modules/session"
 import { showModal } from "../../modules/ui"
+import { currentDocumentSelector } from "../../modules/document"
 
 const FileMenu = ({
-  currentDocument = null,
-  isDocumentActive = false,
+  currentDocument,
   saveDocument = () => {},
   showModal: showModalAction,
   logOut: logOutAction
@@ -28,26 +28,26 @@ const FileMenu = ({
     </MenuItem>
     <MenuDivider />
     <MenuItem
-      disabled={!isDocumentActive}
+      disabled={!currentDocument}
       onClick={() => saveDocument(currentDocument)}
     >
       Save
     </MenuItem>
     <MenuItem
-      disabled={!isDocumentActive}
+      disabled={!currentDocument}
       onClick={() => {}}
     >
       Export as PDF…
     </MenuItem>
     <MenuItem
-      disabled={!isDocumentActive}
+      disabled={!currentDocument}
       onClick={() => {}}
     >
       Delete
     </MenuItem>
     <MenuDivider />
     <MenuItem
-      disabled={!isDocumentActive}
+      disabled={!currentDocument}
       onClick={() => {}}
     >
       Page Setup…
@@ -66,21 +66,10 @@ const FileMenu = ({
   </div>
 )
 
-// const mapStateToProps = state => ({
-//   isDocumentActive: isDocumentActiveSelector(state),
-//   currentDocument: currentDocumentSelector(state)
-// })
-
-// const mapDispatchToProps = {
-//   showModal: showModalAction,
-//   saveDocument: saveDocumentAction,
-//   logout: logoutAction
-// }
-
 export default compose(
   connect(
     state => ({
-
+      currentDocument: currentDocumentSelector(state)
     }), {
       logOut,
       showModal
