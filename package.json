@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint --ext .js,.jsx app/client",
-    "build:prod": "node ./node_modules/webpack/bin/webpack.js --env.prod --optimize-minimize --progress",
-    "build:dev": "node ./node_modules/webpack/bin/webpack.js --env.dev --progress",
+    "build:prod": "npx webpack --env.prod --optimize-minimize --progress",
+    "build:dev": "npx webpack-dev-server --env.dev --port 4040",
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env.dev --port 4040",
     "test": "",
     "precommit": "npm run lint",
