@@ -117,7 +117,7 @@ export default class ResizeMoveFrame extends Component {
     const y = (this.state.oY + (event.pageY - this.state.eY) /
       this.props.dpi / this.props.zoom)
 
-    this.props.updateSelectedShape({
+    this.props.onChange({
       x: parseFloat(x.toFixed(2)),
       y: parseFloat(y.toFixed(2))
     })
@@ -158,11 +158,11 @@ export default class ResizeMoveFrame extends Component {
       updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2))
     }
 
-    this.props.updateSelectedShape(updatedMetrics)
+    this.props.onChange(updatedMetrics)
   }
 
   handleTextChange = ({ target }) => {
-    this.props.updateSelectedShape({ text: target.value })
+    this.props.onChange({ text: target.value })
   }
 
   render() {

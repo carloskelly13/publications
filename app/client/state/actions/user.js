@@ -1,4 +1,4 @@
-import { Urls } from "../../util/constants"
+import { Urls, baseRequestHeaders } from "../../util/constants"
 import { setCsrfHeaders } from "./security"
 
 export const RECIEVE_USER = "RECIEVE_USER"
@@ -60,41 +60,37 @@ export const logout = () => {
   })
 }
 
-export const getUser = () => {
-  return dispatch => {
-    dispatch({ type: REQUEST_USER })
+export const getUser = () => async dispatch => {
+  dispatch({ type: REQUEST_USER })
 
-    fetch(`${Urls.ApiBase}/users/current`, {
-      method: "get",
-      credentials: "include",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => {
-      if (response.status === 200) {
-        setCsrfHeaders(response.headers)(dispatch)
-        return response.json()
-      } else {
-        return null
-      }
-    })
-    .then(userJson => {
-      if (userJson) {
-        dispatch(receiveUser({
-          ...userJson,
-          isAuthenticated: true
-        }))
-      } else {
-        dispatch(receiveUser({
-          name: "",
-          temporary: false,
-          isAuthenticated: false
-        }))
-      }
-    })
+  const response = await fetch(`${Urls.ApiBase}/users/current`, {
+    method: "get",
+    ...baseRequestHeaders
+  })
+
+  if (response.status !== 200) {
+    return dispatch(receiveUser({
+      name: "",
+      temporary: false,
+      isAuthenticated: false
+    }))
   }
+
+  setCsrfHeaders(response.headers)(dispatch)
+  const user = await response.json()
+
+  if (!user) {
+    return dispatch(receiveUser({
+      name: "",
+      temporary: false,
+      isAuthenticated: false
+    }))
+  }
+
+  return dispatch(receiveUser({
+    ...user,
+    isAuthenticated: true
+  }))
 }
 
 export const createNewUser = userJson => {

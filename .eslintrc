@@ -11,6 +11,7 @@
   "arrow-parens": 0
   "react/no-multi-comp": 0
   "no-invalid-this": 0
+  "no-shadow": 0
 
 "env":
   "browser": true,

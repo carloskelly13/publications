@@ -38,8 +38,8 @@ export const LayersSidebar = ({
 
 export default connect(
   state => ({
-    shapes: sortedShapesSelector(state),
-    selectedShape: selectedShapeSelector(state)
+    shapes: [], // sortedShapesSelector(state),
+    selectedShape: null// selectedShapeSelector(state)
   }),
   {
     moveShapeLayer: moveShapeLayerAction,

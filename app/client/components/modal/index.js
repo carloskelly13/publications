@@ -1,10 +1,6 @@
 import React from "react"
 import styled, { injectGlobal } from "styled-components"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
-import { connect } from "react-redux"
-import {
-  activeModalPropsSelector
-} from "../../state/selectors"
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
@@ -71,8 +67,4 @@ const Modal = ({
   </ReactCSSTransitionGroup>
 )
 
-const mapStateToProps = state => ({
-  activeModalProps: activeModalPropsSelector(state)
-})
-
-export default connect(mapStateToProps)(Modal)
+export default Modal

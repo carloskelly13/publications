@@ -1,49 +1,53 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types";
 import { connect } from "react-redux"
-import { LoginForm } from "./login-form"
-
-import * as UserActions from "../../state/actions/user"
+import {
+  fetchCurrentUser, currentUserSelector, logOut, fetchUser
+} from "../../modules/session"
 
 class IndexView extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
   }
 
-  constructor() {
-    super(...arguments)
-    this.authenticateUser = this.authenticateUser.bind(this)
-  }
-
   componentWillMount() {
-    this.props.dispatch(UserActions.getUser())
+    this.props.fetchCurrentUser()
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user.isAuthenticated) {
+    if (nextProps.user) {
       this.context.router.history.replace("/documents")
     }
-  }
-
-  authenticateUser({ emailAddress, password }) {
-    const { dispatch } = this.props
-    dispatch(UserActions.login({ emailAddress, password }))
   }
 
   render() {
     return (
       <div>
         <h2>Index View</h2>
-        <LoginForm
-          authenticateUser={this.authenticateUser}
-        />
+        <button
+          onClick={() => this.props.fetchUser({
+            emailAddress: "carlos@email.com",
+            password: "carlos13"
+          })}
+        >
+          Log In
+        </button>
+        <button
+          onClick={() => this.props.logOut()}
+        >
+          Log Out
+        </button>
+        {JSON.stringify(this.props.user)}
       </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user
-})
-
-export default connect(mapStateToProps)(IndexView)
+export default connect(
+  state => ({
+    user: currentUserSelector(state)
+  }), {
+    fetchUser,
+    fetchCurrentUser,
+    logOut
+  })(IndexView)

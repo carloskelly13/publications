@@ -40,6 +40,14 @@ export const AppColors = {
   White: "#fefefe"
 }
 
+export const baseRequestHeaders = {
+  credentials: "include",
+  headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+  }
+}
+
 export const newDocument = {
   name: "Untitled Document",
   width: 8.5,

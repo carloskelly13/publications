@@ -16,23 +16,24 @@ module.exports = env => {
           ...(env.dev ? [
             "webpack-dev-server/client?http://localhost:4040"
           ] : []),
+          "babel-polyfill",
           "./app/client/index.js"
         ]
-      ),
-      vendor: [ "babel-polyfill", "./app/client/vendor.js" ]
+      )
     },
 
     output: {
       path: `${__dirname}/dist`,
       sourceMapFilename: "[name].map",
       filename: "[hash].[name].js",
-      publicPath: "/"
+      publicPath: "/",
+      pathinfo: true
     },
 
     devServer: {
       proxy: {
         "/api": {
-          target: "http://api.publicationsapp.com",
+          target: "http://localhost:8080",
           changeOrigin: true,
           pathRewrite: {
             "^/api": ""
@@ -65,10 +66,6 @@ module.exports = env => {
     },
 
     plugins: removeEmpty([
-      new webpack.optimize.CommonsChunkPlugin({
-        name: [ "vendor" ]
-      }),
-
       ifProd(new webpack.LoaderOptionsPlugin({
         minimize: true,
         debug: false,
@@ -88,7 +85,7 @@ module.exports = env => {
       new HtmlWebpackPlugin({
         template: "app/client/index.html",
         inject: "body"
-      })
+      }),
     ]),
 
     node: {

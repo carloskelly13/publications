@@ -3,17 +3,12 @@ import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 import get from "lodash.get"
 import { connect } from "react-redux"
+import {
+  currentDocumentSelector, fetchDocument, backgroundGridLineRangesSelector,
+  sortedShapesSelector, updateSelectedShape, documentMetricsSelector, selectedShapeSelector,
+  editingTextBoxIdSelector, setEditingTextBox
+} from "../../modules/document"
 import { contentPanelWidthFull, contentPanelWidthPartial } from "../../util/constants"
-import {
-  currentDocumentSelector,
-  selectedShapeSelector,
-  editModeActiveSelector,
-  sidePanelVisibleSelector
-} from "../../state/selectors"
-import {
-  updateCurrentDocument as updateCurrentDocumentAction,
-  getDocument as getDocumentAction
-} from "../../state/actions/document"
 import Canvas from "../canvas"
 import Ruler from "../rulers"
 
@@ -33,36 +28,32 @@ class EditorView extends Component {
   }
 
   componentWillMount() {
-    const {
-      match: { params: { id } },
-      getDocument
-    } = this.props
-
+    const { match: { params: { id } } } = this.props
     if (id) {
-      getDocument(id)
+      this.props.fetchDocument(id)
     }
   }
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-find-dom-node
     findDOMNode(this.containerRef).addEventListener("scroll", this.handleViewScrollEvent)
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      match: { params: { id } },
-      getDocument
-    } = nextProps
-    if (get(this.props.currentDocument, "id") !== get(nextProps.currentDocument, "id")) {
+    const { match: { params: { id } } } = this.props
+    if (
+      get(this.state.currentDocument, "id") !== get(nextProps.currentDocument, "id") &&
+      nextProps.currentDocument
+    ) {
       findDOMNode(this.containerRef).scrollTop = 0
       findDOMNode(this.containerRef).scrollLeft = 0
-    }
-    if (get(this.props.currentDocument, "id") !== id) {
-      getDocument(id)
+    } else if (get(this.state.currentDocument, "id") !== id) {
+      this.props.fetchDocument(id)
     }
   }
 
   componentWillUnmount() {
-    this.props.clearSelectedDocument()
+    // eslint-disable-next-line react/no-find-dom-node
     findDOMNode(this.containerRef).removeEventListener("scroll", this.handleViewScrollEvent)
   }
 
@@ -73,7 +64,14 @@ class EditorView extends Component {
   render() {
     const {
       props: {
-        currentDocument, editModeActive, sidePanelVisible
+        currentDocument,
+        sortedShapes,
+        selectedShape,
+        documentMetrics,
+        editingTextBoxId,
+        editModeActive = true,
+        sidePanelVisible = false,
+        backgroundGridLineRanges
       },
       state: { scrollOffset }
     } = this
@@ -82,34 +80,44 @@ class EditorView extends Component {
         sidePanelVisible={sidePanelVisible}
         ref={c => (this.containerRef = c)}
       >
-        { currentDocument && (
+        {currentDocument && (
           <div>
             <Ruler
               showDetail={editModeActive}
               scrollOffset={scrollOffset}
               doc={currentDocument}
+              zoom={1}
             />
             <Canvas
               allowsEditing
               doc={currentDocument}
+              dpi={72}
+              zoom={1}
+              selectedShape={selectedShape}
+              sortedShapes={sortedShapes}
+              documentMetrics={documentMetrics}
+              updateSelectedShape={this.props.updateSelectedShape}
+              backgroundGridLineRanges={backgroundGridLineRanges}
+              setEditingTextBox={this.props.setEditingTextBox}
+              editingTextBoxId={editingTextBoxId}
             />
           </div>
-        ) }
+        )}
       </Container>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  currentDocument: currentDocumentSelector(state),
-  selectedShape: selectedShapeSelector(state),
-  editModeActive: editModeActiveSelector(state),
-  sidePanelVisible: sidePanelVisibleSelector(state)
-})
-
-const mapDispatchToProps = dispatch => ({
-  getDocument: id => dispatch(getDocumentAction(id)),
-  clearSelectedDocument: () => dispatch(updateCurrentDocumentAction(null))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditorView)
+export default connect(
+  state => ({
+    currentDocument: currentDocumentSelector(state),
+    documentMetrics: documentMetricsSelector(state),
+    sortedShapes: sortedShapesSelector(state),
+    selectedShape: selectedShapeSelector(state),
+    backgroundGridLineRanges: backgroundGridLineRangesSelector(state),
+    editingTextBoxId: editingTextBoxIdSelector(state)
+  }), {
+    fetchDocument,
+    updateSelectedShape,
+    setEditingTextBox
+  })(EditorView)

@@ -1,20 +1,14 @@
 import React, { Component } from "react"
-import { connect } from "react-redux"
-import { selectedShapeSelector } from "../../state/selectors"
 import ResizeMoveFrame from "./frame"
 import get from "lodash.get"
-import {
-  updateSelectedShape as updateSelectedShapeAction,
-  setEditingTextBox as setEditingTextBoxAction
-} from "../../state/actions/document"
 
 export default function asSelectable(WrappedComponent) {
   class InjectSelectable extends Component {
     static WrappedComponent = WrappedComponent
 
     handleShapeSelected = () => {
-      const { shape, updateSelectedShape } = this.props
-      updateSelectedShape(shape)
+      const { shape, onChange } = this.props
+      onChange(shape)
     }
 
     get isShapeSelected() {
@@ -23,7 +17,7 @@ export default function asSelectable(WrappedComponent) {
     }
 
     render() {
-      const { zoom, dpi, shape, selectable } = this.props
+      const { zoom, dpi, shape, selectable, onChange } = this.props
       const wrappedProps = { zoom, dpi, shape }
 
       /**
@@ -31,7 +25,7 @@ export default function asSelectable(WrappedComponent) {
        * to handle their state and change events.
        */
       if (shape.type === "text") {
-        wrappedProps.onChange = this.props.onChange
+        wrappedProps.onChange = onChange
         wrappedProps.isEditing = this.props.isEditing
       }
 
@@ -45,15 +39,5 @@ export default function asSelectable(WrappedComponent) {
       )
     }
   }
-
-  const mapStateToProps = state => ({
-    selectedShape: selectedShapeSelector(state)
-  })
-
-  const mapDispatchToProps = {
-    updateSelectedShape: updateSelectedShapeAction,
-    setEditingTextBox: setEditingTextBoxAction
-  }
-
-  return connect(mapStateToProps, mapDispatchToProps)(InjectSelectable)
+  return InjectSelectable
 }

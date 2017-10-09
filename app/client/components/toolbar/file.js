@@ -2,30 +2,27 @@ import React from "react"
 import compose from "lodash.flowright"
 import OpenDocumentModal from "../open-document"
 import NewDocumentModal from "../new-document"
-import { showModal as showModalAction } from "../../state/actions/app-ui"
-import { saveDocument as saveDocumentAction } from "../../state/actions/document"
-import {
-  isDocumentActiveSelector,
-  currentDocumentSelector
-} from "../../state/selectors"
 import { connect } from "react-redux"
 import { MenuItem, MenuDivider } from "../ui/menu"
 import asDropdownMenu from "../ui/menu-hoc"
+import { logOut } from "../../modules/session"
+import { showModal } from "../../modules/ui"
 
 const FileMenu = ({
-  currentDocument,
-  isDocumentActive,
-  saveDocument,
-  showModal
+  currentDocument = null,
+  isDocumentActive = false,
+  saveDocument = () => {},
+  showModal: showModalAction,
+  logOut: logOutAction
 }) => (
   <div>
     <MenuItem
-      onClick={() => showModal(NewDocumentModal)}
+      onClick={() => showModalAction(NewDocumentModal)}
     >
       New…
     </MenuItem>
     <MenuItem
-      onClick={() => showModal(OpenDocumentModal)}
+      onClick={() => showModalAction(OpenDocumentModal)}
     >
       Open…
     </MenuItem>
@@ -57,6 +54,11 @@ const FileMenu = ({
     </MenuItem>
     <MenuDivider />
     <MenuItem
+      onClick={logOutAction}
+    >
+      Log Out
+    </MenuItem>
+    <MenuItem
       onClick={() => {}}
     >
       About Publications…
@@ -64,18 +66,25 @@ const FileMenu = ({
   </div>
 )
 
-const mapStateToProps = state => ({
-  isDocumentActive: isDocumentActiveSelector(state),
-  currentDocument: currentDocumentSelector(state)
-})
+// const mapStateToProps = state => ({
+//   isDocumentActive: isDocumentActiveSelector(state),
+//   currentDocument: currentDocumentSelector(state)
+// })
 
-const mapDispatchToProps = {
-  showModal: showModalAction,
-  saveDocument: saveDocumentAction
-}
+// const mapDispatchToProps = {
+//   showModal: showModalAction,
+//   saveDocument: saveDocumentAction,
+//   logout: logoutAction
+// }
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    state => ({
+
+    }), {
+      logOut,
+      showModal
+    }),
   asDropdownMenu({
     title: "File",
     buttonProps: { marginRight: true }

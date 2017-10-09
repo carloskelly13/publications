@@ -104,8 +104,4 @@ class Ruler extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  zoom: zoomSelector(state)
-})
-
-export default connect(mapStateToProps)(Ruler)
+export default Ruler

@@ -1,18 +1,9 @@
 import React from "react"
 import { CanvasBackground } from "./background"
-import { connect } from "react-redux"
-import {
-  selectedShapeSelector, zoomSelector, sortedShapesSelector,
-  documentMetricsSelector, backgroundGridLineRangesSelector,
-  editingTextBoxIdSelector
-} from "../../state/selectors"
-import {
-  updateSelectedShape as updateSelectedShapeAction
-} from "../../state/actions/document"
 import { Rectangle, Ellipse, TextBox } from "../shapes"
 import { CanvasSVG } from "./canvas-svg"
 
-const renderShape = ({ shapeProps, editingTextBoxId, updateSelectedShape }) => {
+const renderShape = ({ shapeProps, editingTextBoxId }) => {
   const { type } = shapeProps.shape
   if (type === "ellipse") {
     return <Ellipse {...shapeProps} />
@@ -21,7 +12,6 @@ const renderShape = ({ shapeProps, editingTextBoxId, updateSelectedShape }) => {
   } else if (type === "text") {
     return (
       <TextBox
-        onChange={updateSelectedShape}
         isEditing={editingTextBoxId === shapeProps.shape.id}
         {...shapeProps}
       />
@@ -44,7 +34,7 @@ const zoomForDocumentSize = ({ width, height }) => {
 export const Canvas = ({
   dpi, zoom, allowsEditing, thumbnail, selected, sortedShapes,
   documentMetrics, updateSelectedShape, backgroundGridLineRanges,
-  editingTextBoxId
+  editingTextBoxId, selectedShape, setEditingTextBox
 }) => {
   if (thumbnail) {
     zoom = zoomForDocumentSize(documentMetrics)
@@ -52,10 +42,11 @@ export const Canvas = ({
 
   const shapes = sortedShapes.map((shape, index) => renderShape({
     shapeProps: {
-      shape, zoom, dpi, selectable: allowsEditing, key: index
+      shape, zoom, dpi, selectable: allowsEditing,
+      key: index, onChange: updateSelectedShape,
+      selectedShape, setEditingTextBox
     },
-    editingTextBoxId,
-    updateSelectedShape
+    editingTextBoxId
   }))
 
   return (
@@ -79,7 +70,7 @@ export const Canvas = ({
           handleBackgroundClicked={() => updateSelectedShape(null)}
         />
       </g>
-      <g>{ shapes }</g>
+      <g>{shapes}</g>
     </CanvasSVG>
   )
 }
@@ -90,17 +81,4 @@ Canvas.defaultProps = {
   isSelected: false
 }
 
-const mapStateToProps = state => ({
-  selectedShape: selectedShapeSelector(state),
-  zoom: zoomSelector(state),
-  documentMetrics: documentMetricsSelector(state),
-  sortedShapes: sortedShapesSelector(state),
-  backgroundGridLineRanges: backgroundGridLineRangesSelector(state),
-  editingTextBoxId: editingTextBoxIdSelector(state)
-})
-
-const mapDispatchToProps = {
-  updateSelectedShape: updateSelectedShapeAction
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Canvas)
+export default Canvas

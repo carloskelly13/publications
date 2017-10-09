@@ -6,12 +6,8 @@ import Button from "../ui/toolbar-button"
 import FileBrowser from "./file-browser"
 import { ModalButtonConatiner } from "../ui/button-container"
 import { Header } from "../ui/text"
-import {
-  hideModal as hideModalAction
-} from "../../state/actions/app-ui"
-import {
-  navigateToDocument as navigateToDocumentAction
-} from "../../state/actions/document"
+import { hideModal } from "../../modules/ui"
+import { loadDocumentView } from "../../modules/document"
 
 const OpenDocumentContainer = styled(ModalContent)`
   min-width: 630px;
@@ -24,11 +20,11 @@ export class OpenDocument extends Component {
 
   handleFileClicked = id => this.setState(() => ({ selectedId: id }))
 
-  handleOpenButtonClicked = () => this.props.navigateToDocument(this.state.selectedId)
+  handleOpenButtonClicked = () => this.props.loadDocumentView({ id: this.state.selectedId })
 
   render() {
     const {
-      props: { hideModal },
+      props: { hideModal: hideModalAction },
       state: { selectedId }
     } = this
     return (
@@ -49,7 +45,7 @@ export class OpenDocument extends Component {
             Open Document
           </Button>
           <Button
-            onClick={hideModal}
+            onClick={hideModalAction}
           >
             Close
           </Button>
@@ -60,9 +56,7 @@ export class OpenDocument extends Component {
 }
 
 export default connect(
-  null,
-  {
-    hideModal: hideModalAction,
-    navigateToDocument: navigateToDocumentAction
-  }
-)(OpenDocument)
+  null, {
+    hideModal,
+    loadDocumentView
+  })(OpenDocument)

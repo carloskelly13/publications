@@ -6,7 +6,7 @@ import { appFont, AppColors } from "../../util/constants"
 import {
   activeModalSelector,
   activeModalPropsSelector
-} from "../../state/selectors"
+} from "../../modules/ui"
 
 const AppView = styled.div`
   font-family: ${appFont};
@@ -42,9 +42,8 @@ const BaseView = props => {
   )
 }
 
-const mapStateToProps = state => ({
-  activeModal: activeModalSelector(state),
-  activeModalProps: activeModalPropsSelector(state)
-})
-
-export default connect(mapStateToProps)(BaseView)
+export default connect(
+  state => ({
+    activeModal: activeModalSelector(state),
+    activeModalProps: activeModalPropsSelector(state)
+  }))(BaseView)
