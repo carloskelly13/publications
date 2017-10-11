@@ -7,18 +7,27 @@ import {
 import { AppColors } from "../../util/constants"
 import { FileItem } from "./file-item"
 
-const FileBrowserContainer = styled.div`
+export const BaseContainer = styled.div`
   width: calc(100% - 20px);
   height: 370px;
   border: 1px solid ${AppColors.Border};
   border-radius: 6px;
-  overflow: scroll;
   background: ${AppColors.White};
   margin: 15px 0 0;
+  padding: 10px;
+`
+
+export const FileBrowserLoadingContainer = styled(BaseContainer)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const FileBrowserContainer = styled(BaseContainer)`
+  overflow: scroll;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
-  padding: 10px;
 `
 
 export const FileBrowser = ({ documents, handleFileClicked, selectedFileId }) => (

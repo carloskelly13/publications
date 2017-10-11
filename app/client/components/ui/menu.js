@@ -38,6 +38,7 @@ export const Menu = styled.ul`
   cursor: default;
   outline: none;
   border: 1px solid hsla(0, 0%, 0%, 0.33);
+  z-index: 6;
 `
 
 export const MenuContentContainer = styled.div`

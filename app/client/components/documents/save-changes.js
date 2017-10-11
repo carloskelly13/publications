@@ -9,7 +9,7 @@ import {
 } from "../../state/selectors"
 import { hideModal as hideModalAction } from "../../state/actions/app-ui"
 import ToolbarButton from "../ui/toolbar-button"
-import { ModalButtonConatiner } from "../ui/button-container"
+import { ModalButtonContainer } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
 
@@ -57,7 +57,7 @@ class SaveChanges extends Component {
         { currentDocument.new ?
           this.renderNewDocumentContent() : this.renderExistingDocumentContent()
         }
-        <ModalButtonConatiner>
+        <ModalButtonContainer>
           <ToolbarButton
             primary
             marginRight
@@ -83,7 +83,7 @@ class SaveChanges extends Component {
           >
             Cancel
           </ToolbarButton>
-        </ModalButtonConatiner>
+        </ModalButtonContainer>
       </SaveChangesContainer>
     )
   }

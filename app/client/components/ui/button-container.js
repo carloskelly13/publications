@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { AppColors } from "../../util/constants"
 
-export const ModalButtonConatiner = styled.div`
+export const ModalButtonContainer = styled.div`
   position: absolute;
   background: ${AppColors.MediumGray};
   bottom: 0;

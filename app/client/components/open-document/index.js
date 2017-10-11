@@ -3,11 +3,15 @@ import styled from "styled-components"
 import { connect } from "react-redux"
 import { ModalContent } from "../modal"
 import Button from "../ui/toolbar-button"
-import FileBrowser from "./file-browser"
-import { ModalButtonConatiner } from "../ui/button-container"
+import FileBrowser, { FileBrowserLoadingContainer } from "./file-browser"
+import AsyncViewContent from "../async-content"
+import { ModalButtonContainer } from "../ui/button-container"
 import { Header } from "../ui/text"
 import { hideModal } from "../../modules/ui"
-import { loadDocumentView } from "../../modules/document"
+import {
+  loadDocumentView, fetchDocuments, sortedDocumentsSelector
+} from "../../modules/document"
+import { Spinner } from "../ui/spinner"
 
 const OpenDocumentContainer = styled(ModalContent)`
   min-width: 630px;
@@ -18,13 +22,17 @@ export class OpenDocument extends Component {
     selectedId: ""
   }
 
+  componentDidMount() {
+    this.props.fetchDocuments()
+  }
+
   handleFileClicked = id => this.setState(() => ({ selectedId: id }))
 
   handleOpenButtonClicked = () => this.props.loadDocumentView({ id: this.state.selectedId })
 
   render() {
     const {
-      props: { hideModal: hideModalAction },
+      props: { hideModal: hideModalAction, documents },
       state: { selectedId }
     } = this
     return (
@@ -32,11 +40,21 @@ export class OpenDocument extends Component {
         <Header>
           Open Document
         </Header>
-        <FileBrowser
-          selectedFileId={selectedId}
-          handleFileClicked={this.handleFileClicked}
+        <AsyncViewContent
+          waitFor={documents}
+          renderLoading={(
+            <FileBrowserLoadingContainer>
+              <Spinner />
+            </FileBrowserLoadingContainer>
+          )}
+          renderContent={(
+            <FileBrowser
+              selectedFileId={selectedId}
+              handleFileClicked={this.handleFileClicked}
+            />
+          )}
         />
-        <ModalButtonConatiner>
+        <ModalButtonContainer>
           <Button
             marginRight
             disabled={selectedId === ""}
@@ -49,14 +67,17 @@ export class OpenDocument extends Component {
           >
             Close
           </Button>
-        </ModalButtonConatiner>
+        </ModalButtonContainer>
       </OpenDocumentContainer>
     )
   }
 }
 
 export default connect(
-  null, {
+  state => ({
+    documents: sortedDocumentsSelector(state)
+  }), {
     hideModal,
-    loadDocumentView
+    loadDocumentView,
+    fetchDocuments
   })(OpenDocument)

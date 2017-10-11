@@ -1,73 +1,51 @@
-import React, { Component } from "react"
-import { PubInput } from "../ui/pub-input"
-import { FramedButton, TextButton } from "../ui/pub-button"
+// @flow
+import React from "react"
+import { Formik } from "formik"
 
-class LoginForm extends Component {
-  constructor() {
-    super(...arguments)
-    this.createTestDriveAccount = this.createTestDriveAccount.bind(this)
-    this.submitLoginForm = this.submitLoginForm.bind(this)
-    this.formValueChanged = this.formValueChanged.bind(this)
+const validateForm = values => {
+  const errors = {}
+  if (!values.emailAddress) {
+    errors.emailAddress = true
   }
-
-  state = {
-    emailAddress: "",
-    password: ""
+  if (!values.password) {
+    errors.password = true
   }
-
-  createTestDriveAccount() {
-
-  }
-
-  submitLoginForm(event) {
-    event.preventDefault()
-    const { emailAddress, password } = this.state
-    this.props.authenticateUser({ emailAddress, password })
-  }
-
-  formValueChanged({ target }) {
-    this.setState({ [target.name]: target.value })
-  }
-
-  render() {
-    const { emailAddress, password } = this.state
-    return (
-      <form
-        onSubmit={this.submitLoginForm}
-      >
-        <div>
-          <PubInput
-            placeholder="Email Address"
-            name="emailAddress"
-            type="text"
-            value={emailAddress}
-            onChange={this.formValueChanged}
-          />
-          <PubInput
-            placeholder="Password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={this.formValueChanged}
-          />
-        </div>
-        <div className="buttons">
-          <FramedButton
-            big
-            type="submit"
-          >
-            Log In
-          </FramedButton>
-          <TextButton
-            type="button"
-            onClick={this.createTestDriveAccount}
-          >
-            or test drive Publications without an account
-          </TextButton>
-        </div>
-      </form>
-    )
-  }
+  return errors
 }
 
-export { LoginForm }
+type Props = {
+  handleOnSubmit: Function
+}
+export default (props: Props) => (
+  <Formik
+    initialValues={{
+      emailAddress: "",
+      password: ""
+    }}
+    validate={validateForm}
+    onSubmit={values => props.handleOnSubmit(values)}
+    render={({ values, handleChange, handleSubmit, isSubmitting, errors }) => (
+      <form onSubmit={handleSubmit}>
+        {JSON.stringify(errors)}
+        <input
+          type="email"
+          name="emailAddress"
+          onChange={handleChange}
+          value={values.emailAddress}
+        />
+        <input
+          type="password"
+          name="password"
+          onChange={handleChange}
+          value={values.password}
+        />
+        <button
+          type="submit"
+          disabled={isSubmitting}
+        >
+          Log In
+        </button>
+      </form>
+    )}
+  />
+)

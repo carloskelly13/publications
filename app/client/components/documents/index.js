@@ -5,13 +5,20 @@ import Route from "react-router-dom/Route"
 import { connect } from "react-redux"
 import Toolbar from "../toolbar"
 import EditorView from "../editor"
+import LoadingView from "./loading"
+import AsyncViewContent from "../async-content"
 import MetricsBar from "../metrics-bar"
 import LayersSidebar from "../layers-sidebar/index"
+
 import {
   fetchDocuments,
   sortedDocumentsSelector,
   errorFetchingDocumentsSelector
 } from "../../modules/document"
+import {
+  currentUserSelector,
+  fetchCurrentUser
+} from "../../modules/session"
 
 const ViewContainer = styled.div`
   display: flex;
@@ -29,6 +36,10 @@ class DocumentsView extends Component {
     router: PropTypes.object.isRequired
   }
 
+  componentDidMount() {
+    setTimeout(() => this.props.fetchCurrentUser(), 1000)
+  }
+
   render() {
     const {
       sidePanelVisible = false
@@ -38,8 +49,16 @@ class DocumentsView extends Component {
         <Toolbar />
         <MetricsBar />
         <ViewContent>
-          <LayersSidebar visible={sidePanelVisible} />
-          <Route path="/documents/:id" component={EditorView} />
+          <AsyncViewContent
+            waitFor={this.props.user}
+            renderLoading={<LoadingView />}
+            renderContent={(
+              <div>
+                <LayersSidebar visible={sidePanelVisible} />
+                <Route path="/documents/:id" component={EditorView} />
+              </div>
+            )}
+          />
         </ViewContent>
       </ViewContainer>
     )
@@ -48,8 +67,10 @@ class DocumentsView extends Component {
 
 export default connect(
   state => ({
+    user: currentUserSelector(state),
     documents: sortedDocumentsSelector(state),
     errorFetching: errorFetchingDocumentsSelector(state)
   }), {
+    fetchCurrentUser,
     fetchDocuments
   })(DocumentsView)

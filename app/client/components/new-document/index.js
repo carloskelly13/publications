@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { newDocument as newDocumentAction } from "../../state/actions/document"
 import { hideModal as hideModalAction } from "../../state/actions/app-ui"
 import Button from "../ui/toolbar-button"
-import { ModalButtonConatiner } from "../ui/button-container"
+import { ModalButtonContainer } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
 import { FormInput, FormGroup } from "../ui/pub-input"
@@ -74,7 +74,7 @@ class NewDocumentView extends Component {
             displayName="Width"
           />
         </FormGroup>
-        <ModalButtonConatiner>
+        <ModalButtonContainer>
           <Button
             marginRight
             onClick={this.handleCreateButton}
@@ -86,7 +86,7 @@ class NewDocumentView extends Component {
           >
             Close
           </Button>
-        </ModalButtonConatiner>
+        </ModalButtonContainer>
       </NewDocumentContainer>
     )
   }

@@ -8,12 +8,14 @@ import ZoomMenu from "./zoom"
 import ToolbarButton, { ButtonContainer } from "../ui/toolbar-button"
 import { ContentContainer } from "../ui/containers"
 import {
-  currentDocumentSelector, selectedShapeSelector
+currentDocumentSelector, selectedShapeSelector
 } from "../../modules/document"
+import { currentUserSelector } from "../../modules/session"
 import { sidePanelVisibleSelector, toggleSidePanel } from "../../modules/ui"
 
 const Toolbar = props => {
   const {
+    user,
     currentDocument,
     copyShape = () => {},
     cutShape = () => {},
@@ -34,7 +36,7 @@ const Toolbar = props => {
   return (
     <ToolbarBase>
       <ContentContainer>
-        <FileMenu />
+        <FileMenu disabled={!user} />
         <NewShapeMenu disabled={!currentDocument} />
         <ButtonContainer>
           <ToolbarButton
@@ -106,6 +108,7 @@ Toolbar.contextTypes = {
 
 export default connect(
   state => ({
+    user: currentUserSelector(state),
     currentDocument: currentDocumentSelector(state),
     selectedShape: selectedShapeSelector(state),
     sidePanelVisible: sidePanelVisibleSelector(state)

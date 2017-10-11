@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types";
+import LoginForm from "./login-form"
 import { connect } from "react-redux"
 import {
   fetchCurrentUser, currentUserSelector, logOut, fetchUser
@@ -20,10 +21,15 @@ class IndexView extends Component {
     }
   }
 
+  handleOnSubmit = values => console.log(values) // eslint-disable-line no-console
+
   render() {
     return (
       <div>
         <h2>Index View</h2>
+        <LoginForm
+          handleOnSubmit={this.handleOnSubmit}
+        />
         <button
           onClick={() => this.props.fetchUser({
             emailAddress: "carlos@email.com",
