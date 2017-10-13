@@ -1,7 +1,7 @@
 import React from "react"
 import compose from "lodash.flowright"
 import { connect } from "react-redux"
-import { addShape as addShapeAction } from "../../state/actions/document"
+import { addShape } from "../../modules/document"
 import { MenuItem } from "../ui/menu"
 import { Shapes } from "../../util/constants"
 import asDropdownMenu from "../ui/menu-hoc"
@@ -27,12 +27,10 @@ const NewShapeMenu = ({ addShape }) => [
   </MenuItem>
 ]
 
-const mapDispatchToProps = {
-  addShape: addShapeAction
-}
-
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(null, {
+    addShape
+  }),
   asDropdownMenu({
     title: "Insert",
     buttonProps: { marginRight: true }

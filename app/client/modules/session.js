@@ -5,7 +5,8 @@ import API from "../util/api"
 const initialState = {
   activeUser: null,
   csrfHeaders: {},
-  failedAuth: false
+  loginRequestFailed: false,
+  currentUserRequestFailed: false
 }
 
 /**
@@ -36,6 +37,7 @@ const login = function *({ payload }) {
 const getUser = function *() {
   const response = yield call(API.get, "users/current")
   if (response.status !== 200) {
+    yield put({ type: "FETCH_CURRENT_USER_FAILED" })
     return
   }
   yield* receiveUser(response)
@@ -59,13 +61,19 @@ export default function *() {
 export const sessionReducer = handleActions({
   FETCH_USER_SUCCESS: (state, action) => ({
     ...state,
-    failedAuth: false,
+    loginRequestFailed: false,
+    currentUserRequestFailed: false,
     user: action.payload.user
   }),
 
-  FETCH_USER_FAILURE: (state) => ({
+  FETCH_USER_FAILURE: state => ({
     ...state,
-    failedAuth: true
+    loginRequestFailed: true
+  }),
+
+  FETCH_CURRENT_USER_FAILED: state => ({
+    ...state,
+    currentUserRequestFailed: true
   }),
 
   SET_CSRF_HEADERS: (state, action) => ({
@@ -88,3 +96,4 @@ export const sessionReducer = handleActions({
  */
 export const currentUserSelector = state => state.session.user
 export const csrfHeadersSelector = state => state.session.csrfHeaders
+export const currentUserRequestFailedSelector = state => state.session.currentUserRequestFailed

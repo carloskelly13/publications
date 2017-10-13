@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { connect } from "react-redux"
 import {
   sortedDocumentsSelector
-} from "../../state/selectors"
+} from "../../modules/document"
 import { AppColors } from "../../util/constants"
 import { FileItem } from "./file-item"
 

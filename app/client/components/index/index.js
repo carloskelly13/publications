@@ -21,7 +21,7 @@ class IndexView extends Component {
     }
   }
 
-  handleOnSubmit = values => console.log(values) // eslint-disable-line no-console
+  handleOnSubmit = values => this.props.fetchUser(values)
 
   render() {
     return (
@@ -30,14 +30,6 @@ class IndexView extends Component {
         <LoginForm
           handleOnSubmit={this.handleOnSubmit}
         />
-        <button
-          onClick={() => this.props.fetchUser({
-            emailAddress: "carlos@email.com",
-            password: "carlos13"
-          })}
-        >
-          Log In
-        </button>
         <button
           onClick={() => this.props.logOut()}
         >

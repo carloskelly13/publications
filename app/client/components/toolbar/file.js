@@ -7,11 +7,11 @@ import { MenuItem, MenuDivider } from "../ui/menu"
 import asDropdownMenu from "../ui/menu-hoc"
 import { logOut } from "../../modules/session"
 import { showModal } from "../../modules/ui"
-import { currentDocumentSelector } from "../../modules/document"
+import { currentDocumentSelector, saveDocument } from "../../modules/document"
 
 const FileMenu = ({
   currentDocument,
-  saveDocument = () => {},
+  saveDocument,
   showModal: showModalAction,
   logOut: logOutAction
 }) => (
@@ -72,7 +72,8 @@ export default compose(
       currentDocument: currentDocumentSelector(state)
     }), {
       logOut,
-      showModal
+      showModal,
+      saveDocument
     }),
   asDropdownMenu({
     title: "File",

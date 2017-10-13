@@ -8,7 +8,8 @@ import ZoomMenu from "./zoom"
 import ToolbarButton, { ButtonContainer } from "../ui/toolbar-button"
 import { ContentContainer } from "../ui/containers"
 import {
-currentDocumentSelector, selectedShapeSelector
+currentDocumentSelector, selectedShapeSelector, cutShape, copyShape,
+pasteShape, deleteShape, clipboardDataSelector
 } from "../../modules/document"
 import { currentUserSelector } from "../../modules/session"
 import { sidePanelVisibleSelector, toggleSidePanel } from "../../modules/ui"
@@ -17,22 +18,16 @@ const Toolbar = props => {
   const {
     user,
     currentDocument,
-    copyShape = () => {},
-    cutShape = () => {},
-    deleteShape = () => {},
-    pasteShape = () => {},
-    clipboardData = null,
+    copyShape,
+    cutShape,
+    deleteShape,
+    pasteShape,
+    clipboardData,
     selectedShape,
-    adjustShapeLayer = () => {},
     sidePanelVisible,
     toggleSidePanel
   } = props
-  const forwardButtonEnabled = selectedShape && currentDocument &&
-    selectedShape.z < currentDocument.shapes.length
-  const backwardButtonEnabled = selectedShape && currentDocument &&
-    selectedShape.z > 1
   const shapeControlButtonDisabled = !selectedShape || !currentDocument
-
   return (
     <ToolbarBase>
       <ContentContainer>
@@ -53,7 +48,7 @@ const Toolbar = props => {
           </ToolbarButton>
           <ToolbarButton
             marginRight
-            disabled={shapeControlButtonDisabled || !clipboardData}
+            disabled={!currentDocument || !clipboardData}
             onClick={() => pasteShape()}
           >
             Paste
@@ -65,28 +60,6 @@ const Toolbar = props => {
         >
           Delete
         </ToolbarButton>
-      </ContentContainer>
-      <ContentContainer>
-        <ButtonContainer>
-          <ToolbarButton
-            disabled={!forwardButtonEnabled}
-            onClick={() => adjustShapeLayer({
-              shape: selectedShape,
-              direction: "forward"
-            })}
-          >
-            Forwards
-          </ToolbarButton>
-          <ToolbarButton
-            disabled={!backwardButtonEnabled}
-            onClick={() => adjustShapeLayer({
-              shape: selectedShape,
-              direction: "backward"
-            })}
-          >
-            Backwards
-          </ToolbarButton>
-        </ButtonContainer>
       </ContentContainer>
       <ContentContainer>
         <ZoomMenu disabled={!currentDocument} />
@@ -111,7 +84,12 @@ export default connect(
     user: currentUserSelector(state),
     currentDocument: currentDocumentSelector(state),
     selectedShape: selectedShapeSelector(state),
-    sidePanelVisible: sidePanelVisibleSelector(state)
+    sidePanelVisible: sidePanelVisibleSelector(state),
+    clipboardData: clipboardDataSelector(state)
   }), {
-    toggleSidePanel
+    toggleSidePanel,
+    cutShape,
+    copyShape,
+    pasteShape,
+    deleteShape
   })(Toolbar)

@@ -30,7 +30,7 @@ export const Menu = styled.ul`
   color: ${AppColors.DarkGray};
   padding: 2px 0;
   margin: 0;
-  border-radius: 2px;
+  border-radius: 4px;
   position: absolute;
   border-top: none;
   box-shadow: 0 0 15px rgba(38, 50, 55, 0.25);
@@ -63,7 +63,7 @@ export const MenuItem = styled.button`
   background: transparent;
   margin: none;
   display: block;
-  font-size: 1em;
+  font-size: 0.9em;
   width: 100%;
   text-align: left;
   outline: none;

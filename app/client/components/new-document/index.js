@@ -1,8 +1,9 @@
+// @flow
 import React, { Component } from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
-import { newDocument as newDocumentAction } from "../../state/actions/document"
-import { hideModal as hideModalAction } from "../../state/actions/app-ui"
+import { newDocument } from "../../modules/document"
+import { hideModal } from "../../modules/ui"
 import Button from "../ui/toolbar-button"
 import { ModalButtonContainer } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
@@ -13,8 +14,11 @@ import { validateForm } from "../../util/validators"
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
 `
-
-class NewDocumentView extends Component {
+type Props = {
+  newDocument: Function,
+  hideModal: Function
+}
+class NewDocumentView extends Component<Props> {
   state = {
     name: "New Document",
     width: 8.5,
@@ -92,9 +96,8 @@ class NewDocumentView extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  newDocument: newDocumentAction,
-  hideModal: hideModalAction
-}
-
-export default connect(() => ({}), mapDispatchToProps)(NewDocumentView)
+export default connect(
+  null, {
+    newDocument,
+    hideModal
+  })(NewDocumentView)

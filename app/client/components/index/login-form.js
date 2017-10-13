@@ -24,9 +24,8 @@ export default (props: Props) => (
     }}
     validate={validateForm}
     onSubmit={values => props.handleOnSubmit(values)}
-    render={({ values, handleChange, handleSubmit, isSubmitting, errors }) => (
+    render={({ values, handleChange, handleSubmit, isSubmitting }) => (
       <form onSubmit={handleSubmit}>
-        {JSON.stringify(errors)}
         <input
           type="email"
           name="emailAddress"

@@ -20,6 +20,7 @@ const Container = styled.div`
     ({ sidePanelVisible }) => sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull
   };
   z-index: 1;
+  height: 100%;
 `
 
 class EditorView extends Component {
@@ -40,14 +41,10 @@ class EditorView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { match: { params: { id } } } = this.props
-    if (
-      get(this.state.currentDocument, "id") !== get(nextProps.currentDocument, "id") &&
-      nextProps.currentDocument
-    ) {
+    const { match: { params: { id } } } = nextProps
+    if (get(this.props.currentDocument, "id") !== id) {
       findDOMNode(this.containerRef).scrollTop = 0
       findDOMNode(this.containerRef).scrollLeft = 0
-    } else if (get(this.state.currentDocument, "id") !== id) {
       this.props.fetchDocument(id)
     }
   }

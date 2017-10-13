@@ -1,6 +1,12 @@
-import { Component } from "react"
+// @flow
+import React, { Component } from "react"
 
-export default class LoadingView extends Component {
+type Props = {
+  waitFor?: Object | bool,
+  renderLoading: React.Node,
+  renderContent: React.Node
+}
+export default class LoadingView extends Component<Props> {
   state = { isLoading: true }
 
   componentWillReceiveProps(nextProps) {

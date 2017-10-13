@@ -1,13 +1,10 @@
+// @flow
 import React, { Component } from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
 import {
-  saveDocument as saveDocumentAction
-} from "../../state/actions/document"
-import {
   currentDocumentSelector
-} from "../../state/selectors"
-import { hideModal as hideModalAction } from "../../state/actions/app-ui"
+} from "../../modules/document"
 import ToolbarButton from "../ui/toolbar-button"
 import { ModalButtonContainer } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
@@ -17,7 +14,13 @@ const SaveChangesContainer = styled(ModalContent)`
   width: 400px;
 `
 
-class SaveChanges extends Component {
+type SaveChangesProps = {
+  handleRouteChange: Function,
+  saveDocument: Function,
+  hideModal: Function,
+  currentDocument?: Object
+}
+class SaveChanges extends Component<SaveChangesProps> {
   renderNewDocumentContent() {
     return (
       <div>
@@ -48,9 +51,7 @@ class SaveChanges extends Component {
   render() {
     const {
       currentDocument,
-      hideModal,
-      handleRouteChange,
-      saveDocument
+      dispatch
     } = this.props
     return (
       <SaveChangesContainer>
@@ -61,25 +62,18 @@ class SaveChanges extends Component {
           <ToolbarButton
             primary
             marginRight
-            onClick={() => {
-              saveDocument(currentDocument)
-              hideModal()
-              setTimeout(() => handleRouteChange(), 400)
-            }}
+            onClick={() => dispatch({ type: "CONFIRM_SAVE_ACTION" })}
           >
             Save{ currentDocument.new ? "" : " Changes" }
           </ToolbarButton>
           <ToolbarButton
             marginRight
-            onClick={() => {
-              hideModal()
-              setTimeout(() => handleRouteChange(), 400)
-            }}
+            onClick={() => dispatch({ type: "CONFIRM_DISCARD_ACTION" })}
           >
             Discard{ currentDocument.new ? "" : " Changes" }
           </ToolbarButton>
           <ToolbarButton
-            onClick={hideModal}
+            onClick={() => dispatch({ type: "HIDE_MODAL" })}
           >
             Cancel
           </ToolbarButton>
@@ -89,13 +83,7 @@ class SaveChanges extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currentDocument: currentDocumentSelector(state)
-})
-
-const mapDispatchToProps = {
-  hideModal: hideModalAction,
-  saveDocument: saveDocumentAction
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SaveChanges)
+export default connect(
+  state => ({
+    currentDocument: currentDocumentSelector(state)
+  }))(SaveChanges)

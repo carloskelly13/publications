@@ -3,17 +3,17 @@ import { connect } from "react-redux"
 import { LayersSidebarContainer } from "./container"
 import { LayerItem } from "./layer-item"
 import {
-  sortedShapesSelector, selectedShapeSelector, updateSelectedShape
+  sortedShapesSelector, selectedShapeSelector, updateSelectedShape, adjustShapeLayer
 } from "../../modules/document"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 import "react-motion"
 import get from "lodash.get"
 
 export const LayersSidebar = ({
-  visible, shapes, moveShapeLayer, updateSelectedShape, selectedShape
+  visible, shapes, adjustShapeLayer, updateSelectedShape, selectedShape
 }) => (
   <LayersSidebarContainer visible={visible}>
-    <DragDropContext onDragEnd={moveShapeLayer}>
+    <DragDropContext onDragEnd={adjustShapeLayer}>
       <Droppable droppableId="droppable">
         {provided => (
           <div ref={provided.innerRef}>
@@ -37,6 +37,6 @@ export default connect(
     shapes: sortedShapesSelector(state),
     selectedShape: selectedShapeSelector(state)
   }), {
-    moveShapeLayer: () => {},
+    adjustShapeLayer,
     updateSelectedShape
   })(LayersSidebar)

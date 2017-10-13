@@ -5,6 +5,7 @@ import documentSaga, { documentReducer } from "./document"
 import { uiReducer } from "./ui"
 import { routerReducer } from "react-router-redux"
 
+// eslint-disable-next-line no-unused-vars
 const logger = function *() {
   yield takeEvery("*", function *(action) {
     const state = yield select()
@@ -15,7 +16,7 @@ const logger = function *() {
 
 export default function *() {
   yield all([
-    logger(),
+    // logger(),
     sessionSaga(),
     documentSaga()
   ])

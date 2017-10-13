@@ -1,19 +1,32 @@
 import { Urls, baseRequestHeaders } from "./constants"
 
-export const get = (path, opts = {}) => fetch(`${Urls.ApiBase}/${path}`, {
+export const get = path => fetch(`${Urls.ApiBase}/${path}`, {
   method: "GET",
-  ...baseRequestHeaders,
-  ...opts
+  ...baseRequestHeaders
 })
 
-export const post = (path, body = {}, opts = {}) => fetch(`${Urls.ApiBase}/${path}`, {
+export const post = (path, body = {}, headers = {}) => fetch(`${Urls.ApiBase}/${path}`, {
   method: "POST",
-  ...baseRequestHeaders,
+  credentials: baseRequestHeaders.credentials,
   body: JSON.stringify(body),
-  ...opts
+  headers: {
+    ...baseRequestHeaders.headers,
+    ...headers
+  }
+})
+
+export const put = (path, body = {}, headers = {}) => fetch(`${Urls.ApiBase}/${path}`, {
+  method: "PUT",
+  credentials: baseRequestHeaders.credentials,
+  body: JSON.stringify(body),
+  headers: {
+    ...baseRequestHeaders.headers,
+    ...headers
+  }
 })
 
 export default {
   get,
-  post
+  post,
+  put
 }

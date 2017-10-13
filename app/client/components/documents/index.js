@@ -9,15 +9,18 @@ import LoadingView from "./loading"
 import AsyncViewContent from "../async-content"
 import MetricsBar from "../metrics-bar"
 import LayersSidebar from "../layers-sidebar/index"
-
 import {
   fetchDocuments,
   sortedDocumentsSelector,
   errorFetchingDocumentsSelector
 } from "../../modules/document"
 import {
+  sidePanelVisibleSelector
+} from "../../modules/ui"
+import {
   currentUserSelector,
-  fetchCurrentUser
+  fetchCurrentUser,
+  currentUserRequestFailedSelector
 } from "../../modules/session"
 
 const ViewContainer = styled.div`
@@ -37,12 +40,18 @@ class DocumentsView extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.props.fetchCurrentUser(), 1000)
+    this.props.fetchCurrentUser()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentUserRequestFailed) {
+      this.context.router.history.replace("/")
+    }
   }
 
   render() {
     const {
-      sidePanelVisible = false
+      sidePanelVisible
     } = this.props
     return (
       <ViewContainer>
@@ -69,7 +78,9 @@ export default connect(
   state => ({
     user: currentUserSelector(state),
     documents: sortedDocumentsSelector(state),
-    errorFetching: errorFetchingDocumentsSelector(state)
+    errorFetching: errorFetchingDocumentsSelector(state),
+    sidePanelVisible: sidePanelVisibleSelector(state),
+    currentUserRequestFailed: currentUserRequestFailedSelector(state)
   }), {
     fetchCurrentUser,
     fetchDocuments
