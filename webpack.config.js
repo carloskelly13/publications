@@ -1,6 +1,8 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
+const DashboardPlugin = require("webpack-dashboard/plugin")
+const CompressionPlugin = require("compression-webpack-plugin")
 
 module.exports = env => {
   const addPlugin = (add, plugin) => add ? plugin : undefined
@@ -33,7 +35,7 @@ module.exports = env => {
     devServer: {
       proxy: {
         "/api": {
-          target: "http://localhost:8080",
+          target: "https://www.publicationsapp.com/api",
           changeOrigin: true,
           pathRewrite: {
             "^/api": ""
@@ -86,6 +88,10 @@ module.exports = env => {
         template: "app/client/index.html",
         inject: "body"
       }),
+
+      new DashboardPlugin(),
+
+      ifProd(new CompressionPlugin())
     ]),
 
     node: {

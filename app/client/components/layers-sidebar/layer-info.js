@@ -45,37 +45,41 @@ const TextIcon = styled(BaseIcon)`
 
 const MetricsContainer = styled.div`
   font-size: 0.8em;
-  color: ${AppColors.MidTextGray};
+  color: ${({ selected }) => selected ? "#fff" : AppColors.MidTextGray};
   align-items: flex-end;
   justify-content: space-between;
 `
 
 const Metric = styled.span`
   font-weight: 500;
-  color: ${AppColors.DarkGray};
+  color: ${({ selected }) => selected ? "#fff" : AppColors.DarkGray};
 `
 
-export const renderIcon = shape => {
+const ShapeType = styled.div`
+  color: ${({ selected }) => selected ? "#fff" : AppColors.DarkGray};
+`
+
+export const renderIcon = (shape, selected) => {
   switch (shape.type) {
   case "rect":
     return (
       <IconContainer>
         <RectangleIcon fill={shape.fill} stroke={shape.stroke} />
-        <div>Rectangle</div>
+        <ShapeType selected={selected}>Rectangle</ShapeType>
       </IconContainer>
     )
   case "ellipse":
     return (
       <IconContainer>
         <EllipseIcon fill={shape.fill} stroke={shape.stroke} />
-        <div>Ellipse</div>
+        <ShapeType selected={selected}>Ellipse</ShapeType>
       </IconContainer>
     )
   case "text":
     return (
       <IconContainer>
         <TextIcon>Aa</TextIcon>
-        <div>Text</div>
+        <ShapeType selected={selected}>Text</ShapeType>
       </IconContainer>
     )
   default:
@@ -83,12 +87,20 @@ export const renderIcon = shape => {
   }
 }
 
-export default ({ shape }) => (
+type LayerInfoProps = {
+  shape: Object,
+  selected: bool
+}
+export default ({ shape, selected }: LayerInfoProps) => (
   <Container>
-    {renderIcon(shape)}
-    <MetricsContainer>
-      <Metric>{shape.width}</Metric>&#8221;&nbsp;&times;&nbsp;
-      <Metric>{shape.height}</Metric>&#8221;
+    {renderIcon(shape, selected)}
+    <MetricsContainer selected={selected}>
+      <Metric selected={selected}>
+        {shape.width}
+      </Metric>&#8221;&nbsp;&times;&nbsp;
+      <Metric selected={selected}>
+        {shape.height}
+      </Metric>&#8221;
     </MetricsContainer>
   </Container>
 )

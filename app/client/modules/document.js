@@ -2,6 +2,9 @@ import range from "lodash.range"
 import shortid from "shortid"
 import { put, takeEvery, call, select, race, take } from "redux-saga/effects"
 import { handleActions, createAction } from "redux-actions"
+import { EditorState } from "draft-js"
+import { stateFromHTML } from "draft-js-import-html"
+import { stateToHTML } from "draft-js-export-html"
 import { push } from "react-router-redux"
 import { createSelector } from "reselect"
 import API from "../util/api"
@@ -36,6 +39,38 @@ export const pasteShape = createAction("PASTE_SHAPE")
 export const cutShape = createAction("CUT_SHAPE")
 export const adjustShapeLayer = createAction("ADJUST_SHAPE_LAYER")
 export const updateSelectedShape = createAction("UPDATE_SELECTED_SHAPE")
+
+/**
+ * Serialization and Unserialization
+ * Publications needs to add EditorState objects to text boxes for
+ * rich text formatting. We want to omit the config objects when we
+ * post the JSON to the API.
+ */
+
+const addEditorStatesToDocument = document => ({
+  ...document,
+  shapes: document.shapes.map(shape => {
+    if (shape.type === "text") {
+      const contentState = stateFromHTML(shape.text)
+      shape.editorState = EditorState.createWithContent(contentState)
+    }
+    return shape
+  })
+})
+
+const packageDocumentToJson = document => ({
+  width: document.width,
+  height: document.height,
+  name: document.name,
+  shapes: document.shapes.map(shape => {
+    if (shape.type === "text") {
+      const { editorState, ...jsonShape } = shape
+      jsonShape.text = stateToHTML(editorState.getCurrentContent())
+      return jsonShape
+    }
+    return shape
+  })
+})
 
 /**
  * Sagas
@@ -102,8 +137,9 @@ const postDocument = function *({ payload }) {
 
 const putDocument = function *({ payload }) {
   const { id, ...body } = payload
+  const document = packageDocumentToJson(body)
   const csrfHeaders = yield select(csrfHeadersSelector)
-  const response = yield call(API.put, `documents/${id}`, body, csrfHeaders)
+  const response = yield call(API.put, `documents/${id}`, document, csrfHeaders)
   if (response.status !== 200) {
     yield put({ type: "SAVE_DOCUMENT_FAILURE" })
     return
@@ -125,13 +161,14 @@ export default function *() {
 export const documentReducer = handleActions({
   FETCH_DOCUMENT_SUCCESS: (state, action) => ({
     ...state,
-    currentDocument: action.payload.document,
+    currentDocument: addEditorStatesToDocument(action.payload.document),
     selectedShape: null
   }),
 
   FETCH_DOCUMENTS_SUCCESS: (state, action) => ({
     ...state,
-    documents: action.payload.documents,
+    documents: action.payload.documents.map(
+      document => addEditorStatesToDocument(document)),
     errorFetching: false
   }),
 
@@ -227,7 +264,7 @@ export const documentReducer = handleActions({
   ADJUST_SHAPE_LAYER: (state, action) => {
     const { source, destination } = action.payload
     if (!source || !destination) {
-      return null
+      return state
     }
 
     const currentShapes = sortedShapesSelector({ doc: state })

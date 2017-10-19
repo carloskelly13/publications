@@ -7,15 +7,13 @@ import { AppColors } from "../../util/constants"
 const getItemStyle = draggableStyle => ({
   userSelect: "none",
   cursor: "move",
-  padding: "0 4px",
+  padding: "0",
   ...draggableStyle
 })
 
-const backgroundColorForState = ({ isDragging, selected }) => {
-  if (isDragging) {
-    return "green"
-  } else if (selected) {
-    return "red"
+const backgroundColorForState = ({ selected }) => {
+  if (selected) {
+    return AppColors.ActiveDark
   }
   return "transparent"
 }
@@ -23,7 +21,7 @@ const backgroundColorForState = ({ isDragging, selected }) => {
 const LayerItemContent = styled.div`
   background: ${props => backgroundColorForState(props)};
   padding: 10px 6px;
-  border-bottom: 1px dashed ${AppColors.Border};
+  border-bottom: 1px solid ${AppColors.Border};
 `
 
 export const LayerItem = ({ shape, handleOnClick, selected }) => (
@@ -42,7 +40,7 @@ export const LayerItem = ({ shape, handleOnClick, selected }) => (
             selected={selected}
             isDragging={snapshot.isDragging}
           >
-            <LayerInfo shape={shape} />
+            <LayerInfo shape={shape} selected={selected} />
           </LayerItemContent>
         </div>
         { provided.placeholder }

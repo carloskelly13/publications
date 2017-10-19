@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
+import { RichUtils } from "draft-js"
 import ColorPicker from "./../color-picker"
 import { AppColors } from "../../util/constants"
 import { ContentContainer } from "../ui/containers"
@@ -101,6 +102,24 @@ export const MetricsBar = ({
             onChange={updateSelectedShape}
           />
         ) }
+        {isText && (
+          <div>
+            <button
+              onClick={() => updateSelectedShape({
+                editorState: RichUtils.toggleInlineStyle(shape.editorState, "BOLD")
+              })}
+            >
+              B
+            </button>
+            <button
+              onClick={() => updateSelectedShape({
+                editorState: RichUtils.toggleInlineStyle(shape.editorState, "ITALIC")
+              })}
+            >
+              I
+            </button>
+          </div>
+        )}
       </ContentContainer>
     </MetricsBarContainer>
   )

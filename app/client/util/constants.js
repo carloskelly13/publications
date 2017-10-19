@@ -1,3 +1,5 @@
+import { EditorState, ContentState } from "draft-js"
+
 export const Urls = {
   ApiBase: `http://${window.location.host}/api`
 }
@@ -90,7 +92,10 @@ export const Shapes = {
     x: 0.25,
     y: 0.25,
     r: 0,
-    text: "Double click to insert text",
+    text: "",
+    editorState: EditorState.createWithContent(
+      ContentState.createFromText("Double click to insert text")
+    ),
     fontFamily: "Source Sans Pro",
     fontSize: 14,
     fontStyle: "normal",
