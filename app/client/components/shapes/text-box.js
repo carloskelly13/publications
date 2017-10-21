@@ -1,12 +1,11 @@
 import React from "react"
 import { Editor } from "draft-js"
-import selectable from "./selectable"
 
 class TextBox extends React.PureComponent {
   render() {
     const {
-      shape: { x, y, width, height, editorState },
-      zoom, dpi, onChange, isEditing
+      shape: { x, y, width, height, editorState, id },
+      zoom, dpi, updateSelectedShape, editingTextBoxId
     } = this.props
     const valueForLayout = value => value * dpi * zoom
     return (
@@ -18,12 +17,12 @@ class TextBox extends React.PureComponent {
       >
         <Editor
           editorState={editorState}
-          onChange={state => onChange({ editorState: state })}
-          readOnly={!isEditing}
+          onChange={state => updateSelectedShape({ editorState: state })}
+          readOnly={!editingTextBoxId !== id}
         />
       </foreignObject>
     )
   }
 }
 
-export default selectable(TextBox)
+export default TextBox

@@ -1,5 +1,4 @@
 import React from "react"
-import selectable from "./selectable"
 
 class Ellipse extends React.PureComponent {
   render() {
@@ -26,4 +25,4 @@ class Ellipse extends React.PureComponent {
   }
 }
 
-export default selectable(Ellipse)
+export default Ellipse

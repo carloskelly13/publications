@@ -1,24 +1,7 @@
 import React from "react"
 import { CanvasBackground } from "./background"
-import { Rectangle, Ellipse, TextBox } from "../shapes"
 import { CanvasSVG } from "./canvas-svg"
-
-const renderShape = ({ shapeProps, editingTextBoxId }) => {
-  const { type } = shapeProps.shape
-  if (type === "ellipse") {
-    return <Ellipse {...shapeProps} />
-  } else if (type === "rect") {
-    return <Rectangle {...shapeProps} />
-  } else if (type === "text") {
-    return (
-      <TextBox
-        isEditing={editingTextBoxId === shapeProps.shape.id}
-        {...shapeProps}
-      />
-    )
-  }
-  return null
-}
+import { renderShapes } from "./render-shapes"
 
 const zoomForDocumentSize = ({ width, height }) => {
   if (width >= 32 || height >= 32) {
@@ -31,23 +14,16 @@ const zoomForDocumentSize = ({ width, height }) => {
   return 0.2
 }
 
-export const Canvas = ({
-  dpi, zoom, allowsEditing, thumbnail, selected, sortedShapes,
-  documentMetrics, updateSelectedShape, backgroundGridLineRanges,
-  editingTextBoxId, selectedShape, setEditingTextBox
-}) => {
+export const Canvas = props => {
+  const {
+    dpi, allowsEditing, thumbnail, selected,
+    documentMetrics, updateSelectedShape, backgroundGridLineRanges
+  } = props
+  let { zoom } = props
+
   if (thumbnail) {
     zoom = zoomForDocumentSize(documentMetrics)
   }
-
-  const shapes = sortedShapes.map((shape, index) => renderShape({
-    shapeProps: {
-      shape, zoom, dpi, selectable: allowsEditing,
-      key: index, onChange: updateSelectedShape,
-      selectedShape, setEditingTextBox
-    },
-    editingTextBoxId
-  }))
 
   return (
     <CanvasSVG
@@ -56,8 +32,6 @@ export const Canvas = ({
       allowsEditing={allowsEditing}
       width={documentMetrics.width * dpi * zoom}
       height={documentMetrics.height * dpi * zoom}
-      xmlns="http://www.w3.org/2000/svg"
-      version="1.1"
     >
       <g>
         <CanvasBackground
@@ -70,7 +44,7 @@ export const Canvas = ({
           handleBackgroundClicked={() => updateSelectedShape(null)}
         />
       </g>
-      <g>{shapes}</g>
+      <g>{renderShapes({ ...props, zoom })}</g>
     </CanvasSVG>
   )
 }

@@ -1,5 +1,4 @@
 import React from "react"
-import selectable from "./selectable"
 
 class Rectangle extends React.PureComponent {
   render() {
@@ -29,4 +28,4 @@ class Rectangle extends React.PureComponent {
   }
 }
 
-export default selectable(Rectangle)
+export default Rectangle
