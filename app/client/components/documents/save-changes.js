@@ -5,7 +5,7 @@ import { connect } from "react-redux"
 import {
   currentDocumentSelector
 } from "../../modules/document"
-import ToolbarButton from "../ui/toolbar-button"
+import FramedButton from "../ui/framed-button"
 import { ModalButtonContainer } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
@@ -59,24 +59,24 @@ class SaveChanges extends Component<SaveChangesProps> {
           this.renderNewDocumentContent() : this.renderExistingDocumentContent()
         }
         <ModalButtonContainer>
-          <ToolbarButton
+          <FramedButton
             primary
             marginRight
             onClick={() => dispatch({ type: "CONFIRM_SAVE_ACTION" })}
           >
             Save{ currentDocument.new ? "" : " Changes" }
-          </ToolbarButton>
-          <ToolbarButton
+          </FramedButton>
+          <FramedButton
             marginRight
             onClick={() => dispatch({ type: "CONFIRM_DISCARD_ACTION" })}
           >
             Discard{ currentDocument.new ? "" : " Changes" }
-          </ToolbarButton>
-          <ToolbarButton
+          </FramedButton>
+          <FramedButton
             onClick={() => dispatch({ type: "HIDE_MODAL" })}
           >
             Cancel
-          </ToolbarButton>
+          </FramedButton>
         </ModalButtonContainer>
       </SaveChangesContainer>
     )

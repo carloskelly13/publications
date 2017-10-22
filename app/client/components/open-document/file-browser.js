@@ -8,13 +8,11 @@ import { AppColors } from "../../util/constants"
 import { FileItem } from "./file-item"
 
 export const BaseContainer = styled.div`
-  width: calc(100% - 20px);
+  width: calc(100% - 1em);
   height: 370px;
-  border: 1px solid ${AppColors.Border};
-  border-radius: 6px;
+  border-radius: 0;
   background: ${AppColors.White};
-  margin: 15px 0 0;
-  padding: 10px;
+  padding: 1.5em 0.5em;
 `
 
 export const FileBrowserLoadingContainer = styled(BaseContainer)`

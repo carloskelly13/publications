@@ -1,7 +1,10 @@
+// @flow
 import React, { Component } from "react"
 import styled, { injectGlobal } from "styled-components"
 import { AppColors } from "../../util/constants"
 import enhanceWithClickOutside from "react-click-outside"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
+import ArrowDown from "../ui/arrow-down"
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
@@ -30,14 +33,14 @@ export const Menu = styled.ul`
   color: ${AppColors.DarkGray};
   padding: 2px 0;
   margin: 0;
-  border-radius: 4px;
+  border-radius: 0 2px 2px 2px;
   position: absolute;
   border-top: none;
-  box-shadow: 0 0 15px rgba(38, 50, 55, 0.25);
-  top: 28px;
+  box-shadow: 0 0 25px hsla(0, 0%, 0%, 0.15);
+  top: 27px;
   cursor: default;
   outline: none;
-  border: 1px solid hsla(0, 0%, 0%, 0.33);
+  border: 1px solid ${AppColors.Gray50};
   z-index: 6;
 `
 
@@ -71,17 +74,17 @@ export const MenuItem = styled.button`
 
   &:hover {
     color: #fff;
-    background: ${AppColors.Active};
+    background: ${AppColors.Gray50};
   }
 
   &:active {
     color: #fff;
-    background: ${AppColors.ActiveDark};
+    background: ${AppColors.Gray50};
   }
 
   &:focus {
     color: #fff;
-    background: ${AppColors.ActiveDark};
+    background: ${AppColors.Gray50};
   }
 
   &:disabled {
@@ -100,3 +103,67 @@ export const MenuContainer = enhanceWithClickOutside(class extends Component {
     )
   }
 })
+
+type MenuProps = {
+  renderMenu: React.Node,
+  renderButton: React.Node
+}
+export default class extends React.Component<MenuProps> {
+  state = {
+    menuActive: false
+  }
+
+  handleToggleButtonClick = () => this.setState(prevState => ({
+    menuActive: !prevState.menuActive
+  }))
+
+  closeMenu = () => this.setState({ menuActive: false })
+
+  render() {
+    const { menuActive } = this.state
+    const { renderMenu, renderButton, disabled } = this.props
+    const buttonStyle = menuActive ? {
+      background: AppColors.Gray50,
+      color: "#fff",
+      borderRadius: "2px 2px 0 0"
+    } : {}
+    const disabledStyle = disabled ? {
+      opacity: 0.33,
+      cursor: "not-allowed"
+    } : {}
+    return (
+      <MenuContainer
+        onClickOutside={this.closeMenu}
+      >
+        {React.cloneElement(
+          renderButton, {
+            onClick: this.handleToggleButtonClick,
+            style: { ...buttonStyle, ...disabledStyle },
+            disabled
+          }, (
+            <span>
+              {renderButton.props.children}
+              <ArrowDown
+                style={{ marginLeft: "3px" }}
+                fill={menuActive ? "#fff" : AppColors.DarkGray}
+              />
+            </span>
+          )
+        )}
+        <ReactCSSTransitionGroup
+          transitionName="menu-transition"
+          transitionEnterTimeout={100}
+          transitionLeaveTimeout={200}
+        >
+          {menuActive && (
+            <Menu
+              onClick={this.closeMenu}
+            >
+              {renderMenu}
+            </Menu>
+          )}
+        </ReactCSSTransitionGroup>
+      </MenuContainer>
+    )
+  }
+}

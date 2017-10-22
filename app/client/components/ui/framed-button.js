@@ -3,9 +3,8 @@ import styled from "styled-components"
 import { AppColors } from "../../util/constants"
 
 const ButtonWrapper = styled.button`
-  background: ${({ active }) => active ? AppColors.Active : "#fff"};
-  border: 1px solid ${({ active }) => active ? "#6e6e6e" : "#c8c7c8"};
-  border-bottom-color: ${({ active }) => active ? "#5e5e5e" : "#acaaac"};
+  background: ${({ active }) => active ? AppColors.Gray50 : "#fff"};
+  border: 1px solid ${({ active }) => active ? AppColors.Gray50 : AppColors.Gray40};
   border-radius: 4px;
   color: ${({ active }) => active ? AppColors.White : AppColors.DarkGray};
   font-size: 0.85em;
@@ -58,26 +57,26 @@ export const ButtonContainer = ({ children }) => {
 
   return (
     <ButtonContainerWrapper>
-      { React.cloneElement(firstButton, {
+      {React.cloneElement(firstButton, {
         style: {
           borderRadius: "4px 0 0 4px",
           margin: 0
         }
-      }) }
-      { middleButtons.map(button => React.cloneElement(button, {
+      })}
+      {middleButtons.map(button => React.cloneElement(button, {
         key: button.props.children,
         style: {
           borderRadius: 0,
           borderLeft: "none",
           margin: 0
         }
-      })) }
-      { React.cloneElement(lastButton, {
+      }))}
+      {React.cloneElement(lastButton, {
         style: {
           borderRadius: "0 4px 4px 0",
           borderLeft: "none"
         }
-      }) }
+      })}
     </ButtonContainerWrapper>
   )
 }

@@ -2,11 +2,10 @@ import React, { Component } from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
 import { ModalContent } from "../modal"
-import Button from "../ui/toolbar-button"
+import Button from "../ui/framed-button"
 import FileBrowser, { FileBrowserLoadingContainer } from "./file-browser"
 import AsyncViewContent from "../async-content"
 import { ModalButtonContainer } from "../ui/button-container"
-import { Header } from "../ui/text"
 import { hideModal } from "../../modules/ui"
 import {
   loadDocumentView, fetchDocuments, sortedDocumentsSelector
@@ -15,6 +14,7 @@ import { Spinner } from "../ui/spinner"
 
 const OpenDocumentContainer = styled(ModalContent)`
   min-width: 630px;
+  padding: 0 0 40px;
 `
 
 export class OpenDocument extends Component {
@@ -37,9 +37,6 @@ export class OpenDocument extends Component {
     } = this
     return (
       <OpenDocumentContainer>
-        <Header>
-          Open Document
-        </Header>
         <AsyncViewContent
           waitFor={documents}
           renderLoading={(

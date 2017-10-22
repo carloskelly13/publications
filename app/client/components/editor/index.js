@@ -84,7 +84,7 @@ class EditorView extends Component {
               showDetail={editModeActive}
               scrollOffset={scrollOffset}
               doc={currentDocument}
-              zoom={1}
+              zoom={zoom}
             />
             <Canvas
               allowsEditing

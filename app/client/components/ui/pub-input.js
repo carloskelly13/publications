@@ -1,10 +1,10 @@
 import React from "react"
 import styled from "styled-components"
+import { AppColors } from "../../util/constants"
 
 export const PubInput = styled.input`
-  border: 1px solid #c8c7c8;
-  border-bottom-color: #acaaac;
-  border-radius: ${({ label }) => label ? "2px 0 0 2px" : "2px"};
+  border: 1px solid ${AppColors.Gray40};
+  border-radius: ${({ label }) => label ? "4px 0 0 4px" : "4px"};
   box-sizing: border-box;
   color: #444;
   display: ${({ block }) => block ? "block" : "inline-block"};
@@ -39,10 +39,10 @@ const FormInputLabel = styled.label`
 
 const PubInputLabel = styled.span`
   background: #f0f0f0;
-  border-right: 1px #c8c7c8 solid;
-  border-top: 1px #c8c7c8 solid;
-  border-bottom: 1px #acaaac solid;
-  border-radius: 0 2px 2px 0;
+  border-right: 1px ${AppColors.Gray40} solid;
+  border-top: 1px ${AppColors.Gray40} solid;
+  border-bottom: 1px ${AppColors.Gray40} solid;
+  border-radius: 0 4px 4px 0;
   font-weight: 600;
   font-size: 11px;
   color: #555;
@@ -56,9 +56,9 @@ export const FormGroup = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px 0 0;
-  div { margin: 0 5px; }
-  div:first-child { margin: 0 5px 0 0; }
-  div:last-child { margin: 0 0 0 5px; }
+  div { margin: 0; }
+  div:first-child { margin: 0; }
+  div:last-child { margin: 0 0 0 10px; }
   div:only-child { margin: 0; }
 `
 

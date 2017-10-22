@@ -9,7 +9,7 @@ export const Header = styled.h1`
 
 export const Message = styled.p`
   font-size: 1em;
-  margin: 0 0 15px;
+  margin: 0 0 2em;
 `
 
 export const MarginText = styled.span`

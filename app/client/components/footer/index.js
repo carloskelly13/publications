@@ -5,7 +5,7 @@ import { AppColors } from "../../util/constants"
 import { Logo } from "../ui/logo"
 import { ContentContainer } from "../ui/containers"
 import { StrongText } from "../ui/text"
-import { TextButton } from "../ui/pub-button"
+import { TextButton } from "../ui/text-button"
 
 const FooterContainer = styled.footer`
   height: 30px;

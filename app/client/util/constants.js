@@ -39,7 +39,11 @@ export const AppColors = {
   Highlight: "#5856d6",
   LightActive: "#e9e8f5",
   IconColor: "#444",
-  White: "#fefefe"
+  White: "#fefefe",
+  Gray30: "#9fa7a7",
+  Gray40: "#8c9090",
+  Gray50: "#6f7878",
+  White4: "#f3f3f3"
 }
 
 export const baseRequestHeaders = {
