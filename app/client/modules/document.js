@@ -17,7 +17,8 @@ const initialState = {
   currentDocument: null,
   selectedShape: null,
   errorFetching: false,
-  clipboardData: null
+  clipboardData: null,
+  zoom: 1
 }
 
 /**
@@ -31,6 +32,7 @@ export const loadDocumentView = createAction("NAVIGATE_TO_DOCUMENT")
 export const setEditingTextBox = createAction("SET_EDITING_TEXT_BOX")
 export const confirmSaveAction = createAction("CONFIRM_SAVE_ACTION")
 export const confirmDiscardAction = createAction("CONFIRM_DISCARD_ACTION")
+export const setZoom = createAction("SET_ZOOM")
 
 export const addShape = createAction("ADD_SHAPE")
 export const deleteShape = createAction("DELETE_SHAPE")
@@ -337,6 +339,11 @@ export const documentReducer = handleActions({
   SET_EDITING_TEXT_BOX: (state, action) => ({
     ...state,
     editingTextBoxId: action.payload
+  }),
+
+  SET_ZOOM: (state, action) => ({
+    ...state,
+    zoom: action.payload
   })
 
 }, initialState)
@@ -350,6 +357,7 @@ export const selectedShapeSelector = state => state.doc.selectedShape
 export const allDocumentsSelector = state => state.doc.documents
 export const editingTextBoxIdSelector = state => state.doc.editingTextBoxId
 export const clipboardDataSelector = state => state.doc.clipboardData
+export const zoomSelector = state => state.doc.zoom
 
 export const sortedDocumentsSelector = createSelector(
   allDocumentsSelector,
@@ -370,7 +378,7 @@ export const sortedShapesSelector = createSelector(
 
 export const backgroundGridLineRangesSelector = createSelector(
   documentMetricsSelector,
-  () => 1,
+  zoomSelector,
   ({ width, height }, zoom) => ({
     x: range(0, width * 72 * zoom, 0.25 * 72 * zoom),
     y: range(0, height * 72 * zoom, 0.25 * 72 * zoom)

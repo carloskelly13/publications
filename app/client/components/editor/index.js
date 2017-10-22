@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 import {
   currentDocumentSelector, fetchDocument, backgroundGridLineRangesSelector,
   sortedShapesSelector, updateSelectedShape, documentMetricsSelector, selectedShapeSelector,
-  editingTextBoxIdSelector, setEditingTextBox
+  editingTextBoxIdSelector, setEditingTextBox, zoomSelector
 } from "../../modules/document"
 import { contentPanelWidthFull, contentPanelWidthPartial } from "../../util/constants"
 import Canvas from "../canvas"
@@ -68,7 +68,8 @@ class EditorView extends Component {
         editingTextBoxId,
         editModeActive = true,
         sidePanelVisible = false,
-        backgroundGridLineRanges
+        backgroundGridLineRanges,
+        zoom
       },
       state: { scrollOffset }
     } = this
@@ -89,7 +90,7 @@ class EditorView extends Component {
               allowsEditing
               doc={currentDocument}
               dpi={72}
-              zoom={1}
+              zoom={zoom}
               selectedShape={selectedShape}
               sortedShapes={sortedShapes}
               documentMetrics={documentMetrics}
@@ -112,7 +113,8 @@ export default connect(
     sortedShapes: sortedShapesSelector(state),
     selectedShape: selectedShapeSelector(state),
     backgroundGridLineRanges: backgroundGridLineRangesSelector(state),
-    editingTextBoxId: editingTextBoxIdSelector(state)
+    editingTextBoxId: editingTextBoxIdSelector(state),
+    zoom: zoomSelector(state)
   }), {
     fetchDocument,
     updateSelectedShape,
