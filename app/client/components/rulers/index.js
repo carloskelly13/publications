@@ -1,16 +1,17 @@
 import React, { Component } from "react"
 import range from "lodash.range"
+import { AppColors } from "../../util/constants"
 import { GridLine } from "../../components/canvas/grid-line"
 import styled from "styled-components"
 
 const RulerContainer = styled.div`
-  background: #fff;
+  background: ${AppColors.White4};
   position: fixed;
   left: 25vw;
   height: 25px;
   z-index: 1;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-bottom: 1px solid ${AppColors.Gray40};
+  border-right: 1px solid ${AppColors.Gray40};
 
   path {
     fill: none;
@@ -82,7 +83,7 @@ export default class Ruler extends Component {
         </RulerContainer>
         <RulerContainer
           style={{
-            top: `${84 - this.props.scrollOffset.scrollTop}px`,
+            top: `${80 - this.props.scrollOffset.scrollTop}px`,
             height: `${(doc.height * zoom * dpi) + 1}px`,
             zIndex: 0,
             left: 0

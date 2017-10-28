@@ -2,29 +2,49 @@ import React from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
 import { RichUtils } from "draft-js"
+import { styles as fontStyles } from "../shapes/text-box"
 import ColorPicker from "./../color-picker"
+// import range from "lodash.range"
 import { AppColors } from "../../util/constants"
 import { ContentContainer } from "../ui/containers"
 import {
   selectedShapeSelector, currentDocumentSelector, updateSelectedShape
 } from "../../modules/document"
 import MetricInput from "./metric-input"
+import { ItaicIcon, BoldIcon, UnderlineIcon } from "../ui/icons"
+import IconButton from "../ui/icon-button"
 
-const MetricsBarContainer = styled.footer`
-  height: 25px;
+const MetricsBarContainer = styled.div`
+  height: 23px;
   width: calc(100% - 2em);
-  padding: 0 1em;
-  background: ${AppColors.MediumGray};
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.25);
+  padding: 4px 1em 0;
+  background: ${AppColors.White};
+  border-bottom: 1px solid ${AppColors.Gray40};
   z-index: 3;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 `
 
 const supportsBorder = shape => !!shape && [ "rect", "ellipse" ].includes(shape.type)
 const supportsRadius = shape => !!shape && shape.type === "rect"
 const isText = shape => !!shape && shape.type === "text"
+
+const INLINE_STYLES = [
+  { label: "Bold", style: "BOLD", icon: BoldIcon },
+  { label: "Italic", style: "ITALIC", icon: ItaicIcon },
+  { label: "Underline", style: "UNDERLINE", icon: UnderlineIcon }
+]
+
+const getSelectedText = editorState => {
+  const selectionState = editorState.getSelection()
+  const anchorKey = selectionState.getAnchorKey()
+  const currentContent = editorState.getCurrentContent()
+  const currentContentBlock = currentContent.getBlockForKey(anchorKey)
+  const start = selectionState.getStartOffset()
+  const end = selectionState.getEndOffset()
+  return currentContentBlock.getText().slice(start, end)
+}
 
 export const MetricsBar = ({
   shape,
@@ -35,6 +55,14 @@ export const MetricsBar = ({
       <MetricsBarContainer />
     )
   }
+
+  let currentStyle = null
+  let isTextSelected = false
+  if (isText(shape)) {
+    currentStyle = shape.editorState.getCurrentInlineStyle()
+    isTextSelected = getSelectedText(shape.editorState) !== ""
+  }
+
   return (
     <MetricsBarContainer>
       <ContentContainer verticalAlign>
@@ -70,17 +98,30 @@ export const MetricsBar = ({
           unit="in"
           onChange={updateSelectedShape}
         />
-        <ColorPicker
-          property={isText(shape) ? "color" : "fill"}
-          onChange={updateSelectedShape}
-          shape={shape}
-        />
-        { supportsBorder(shape) && [
+        {isText(shape) ? (
+          <ColorPicker
+            property="color"
+            onChange={({ color }) => updateSelectedShape({
+              editorState: fontStyles.color.add(shape.editorState, color)
+            })}
+            hex={shape.color}
+            alpha={1}
+          />
+        ) : (
+          <ColorPicker
+            property="fill"
+            onChange={updateSelectedShape}
+            hex={shape.fill}
+            alpha={shape.fillOpacity}
+          />
+        )}
+        {supportsBorder(shape) && [
           <ColorPicker
             key="stroke-color-picker"
             property="stroke"
             onChange={updateSelectedShape}
-            shape={shape}
+            hex={shape.stroke}
+            alpha={shape.strokeOpacity}
           />,
           <MetricInput
             mini
@@ -102,24 +143,23 @@ export const MetricsBar = ({
             onChange={updateSelectedShape}
           />
         ) }
-        {isText && (
-          <div>
-            <button
-              onClick={() => updateSelectedShape({
-                editorState: RichUtils.toggleInlineStyle(shape.editorState, "BOLD")
-              })}
-            >
-              B
-            </button>
-            <button
-              onClick={() => updateSelectedShape({
-                editorState: RichUtils.toggleInlineStyle(shape.editorState, "ITALIC")
-              })}
-            >
-              I
-            </button>
-          </div>
-        )}
+        {isText(shape) && INLINE_STYLES.map(type => (
+          <IconButton
+            key={type.label}
+            size={15}
+            disabled={!isTextSelected}
+            style={{ margin: "0 0.25em" }}
+            onClick={() => updateSelectedShape({
+              editorState: RichUtils.toggleInlineStyle(shape.editorState, type.style)
+            })}
+          >
+            {React.createElement(type.icon, {
+              color: currentStyle.has(type.style) && isTextSelected ?
+                AppColors.Highlight : AppColors.DarkGray,
+              size: 13
+            })}
+          </IconButton>
+        ))}
       </ContentContainer>
     </MetricsBarContainer>
   )

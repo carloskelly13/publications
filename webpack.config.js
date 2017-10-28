@@ -76,9 +76,11 @@ module.exports = env => {
 
       new webpack.NoEmitOnErrorsPlugin(),
 
-      new webpack.DefinePlugin({
-        "process.env": { NODE_ENV: `${env.prod ? "\"production\"" : "\"development\""}` }
-      }),
+      ifProd(new webpack.DefinePlugin({
+        "process.env": {
+          "NODE_ENV": JSON.stringify("production")
+        }
+      })),
 
       ifProd(new webpack.optimize.UglifyJsPlugin({
         compress: { warnings: false }

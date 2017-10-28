@@ -28,19 +28,24 @@ const renderGridLines = ({ x, y, zoom, width, height, dpi }) => {
   ]
 }
 
-export const CanvasBackground = ({
-  width, height, dpi, zoom, handleBackgroundClicked, selectable, gridLineRanges
-}) => (
-  <g onClick={selectable ? handleBackgroundClicked : null}>
-    <rect
-      y="0"
-      x="0"
-      fill="#fff"
-      stroke="0"
-      strokeWidth="0"
-      width={width * dpi * zoom}
-      height={height * dpi * zoom}
-    />
-    { selectable && renderGridLines({ width, height, dpi, zoom, ...gridLineRanges }) }
-  </g>
-)
+export class CanvasBackground extends React.PureComponent {
+  render() {
+    const {
+      width, height, dpi, zoom, handleBackgroundClicked, selectable, gridLineRanges
+    } = this.props
+    return (
+      <g onClick={selectable ? handleBackgroundClicked : null}>
+        <rect
+          y="0"
+          x="0"
+          fill="#fff"
+          stroke="0"
+          strokeWidth="0"
+          width={width * dpi * zoom}
+          height={height * dpi * zoom}
+        />
+        { selectable && renderGridLines({ width, height, dpi, zoom, ...gridLineRanges }) }
+      </g>
+    )
+  }
+}

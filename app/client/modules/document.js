@@ -5,6 +5,8 @@ import { handleActions, createAction } from "redux-actions"
 import { EditorState } from "draft-js"
 import { stateFromHTML } from "draft-js-import-html"
 import { stateToHTML } from "draft-js-export-html"
+import importTextStyle from "../util/import-text-style"
+import { exporter as textStyleExporter } from "../components/shapes/text-box"
 import { push } from "react-router-redux"
 import { createSelector } from "reselect"
 import API from "../util/api"
@@ -53,7 +55,9 @@ const addEditorStatesToDocument = document => ({
   ...document,
   shapes: document.shapes.map(shape => {
     if (shape.type === "text") {
-      const contentState = stateFromHTML(shape.text)
+      const contentState = stateFromHTML(shape.text, {
+        customInlineFn: importTextStyle
+      })
       shape.editorState = EditorState.createWithContent(contentState)
     }
     return shape
@@ -67,7 +71,8 @@ const packageDocumentToJson = document => ({
   shapes: document.shapes.map(shape => {
     if (shape.type === "text") {
       const { editorState, ...jsonShape } = shape
-      jsonShape.text = stateToHTML(editorState.getCurrentContent())
+      const inlineStyles = textStyleExporter(editorState)
+      jsonShape.text = stateToHTML(editorState.getCurrentContent(), { inlineStyles })
       return jsonShape
     }
     return shape
@@ -324,6 +329,8 @@ export const documentReducer = handleActions({
           ...currentShapes.slice(idx + 1)
         ]
         updatedState.currentDocument = { ...state.currentDocument, shapes };
+      } else if (sender.type === "text") {
+        selectedShape.editorState = EditorState.moveSelectionToEnd(selectedShape.editorState)
       }
       updatedState.selectedShape = selectedShape
 

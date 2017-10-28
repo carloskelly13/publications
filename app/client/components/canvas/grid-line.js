@@ -10,9 +10,14 @@ export const GridPath = styled.path`
   shape-rendering: crispEdges;
 `
 
-export const GridLine = ({ mX, mY, direction, dX, dY, major }) => (
-  <GridPath
-    major={major}
-    d={`M${mX},${mY} ${direction}${dX},${dY} Z`}
-  />
-)
+export class GridLine extends React.PureComponent {
+  render() {
+    const { mX, mY, direction, dX, dY, major } = this.props
+    return (
+      <GridPath
+        major={major}
+        d={`M${mX},${mY} ${direction}${dX},${dY} Z`}
+      />
+    )
+  }
+}

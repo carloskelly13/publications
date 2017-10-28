@@ -8,13 +8,13 @@ import {
   sortedShapesSelector, updateSelectedShape, documentMetricsSelector, selectedShapeSelector,
   editingTextBoxIdSelector, setEditingTextBox, zoomSelector
 } from "../../modules/document"
-import { contentPanelWidthFull, contentPanelWidthPartial } from "../../util/constants"
+import { AppColors, contentPanelWidthFull, contentPanelWidthPartial } from "../../util/constants"
 import Canvas from "../canvas"
 import Ruler from "../rulers"
 
 const Container = styled.div`
   transition: width 350ms ease-in-out;
-  background: #fff;
+  background: ${AppColors.Gray20};
   overflow: scroll;
   width: ${
     ({ sidePanelVisible }) => sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull

@@ -7,8 +7,18 @@
   ],
   "plugins": [
     "transform-async-to-generator",
-    "transform-decorators-legacy",
     "transform-class-properties",
     "transform-object-rest-spread"
-  ]
+  ],
+  "env": {
+    "production": {
+      "plugins" : [
+        "babel-plugin-styled-components",
+        "transform-object-rest-spread",
+        "transform-react-remove-prop-types",
+        "transform-async-to-generator",
+        "transform-class-properties"
+      ]
+    }
+  }
 }

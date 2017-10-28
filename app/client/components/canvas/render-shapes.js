@@ -1,6 +1,7 @@
 import React, { createElement } from "react"
 import { Rectangle, Ellipse, TextBox } from "../shapes"
 import SelectableShape from "../shapes/selectable-shape"
+import get from "lodash.get"
 
 const shapeNodes = { text: TextBox, ellipse: Ellipse, rect: Rectangle }
 
@@ -22,7 +23,7 @@ export const renderShapes = props => {
         key={`cs-${shape.id}`}
         dpi={dpi}
         zoom={zoom}
-        selectedShape={selectedShape}
+        selectedShapeId={get(selectedShape, "id", null)}
         shape={shape}
         onChange={updateSelectedShape}
         selectable={allowsEditing}

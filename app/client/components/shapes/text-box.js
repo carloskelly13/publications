@@ -1,5 +1,10 @@
 import React from "react"
 import { Editor } from "draft-js"
+import createStyles from "draft-js-custom-styles"
+
+export const {
+  styles, customStyleFn, exporter
+} = createStyles(["font-size", "color", "font-family"], "PUB_");
 
 class TextBox extends React.PureComponent {
   render() {
@@ -32,6 +37,7 @@ class TextBox extends React.PureComponent {
           style={{ transform }}
         >
           <Editor
+            customStyleFn={customStyleFn}
             editorState={shape.editorState}
             onChange={state => updateSelectedShape({ editorState: state })}
             readOnly={readOnly}

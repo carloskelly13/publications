@@ -1,12 +1,12 @@
-import PropTypes from "prop-types"
+// @flow
+import type { ComponentType } from "react"
 import styled from "styled-components"
 
-export const ContentContainer = styled.div`
+type Props = {
+  verticalAlign: bool
+}
+export const ContentContainer: ComponentType<Props> = styled.div`
   display: flex;
   flex-direction: ${({ column }) => column ? "column" : "row" };
   ${({ verticalAlign }) => verticalAlign ? { alignItems: "center" } : {} };
 `
-
-ContentContainer.propTypes = {
-  verticalAlign: PropTypes.bool
-}

@@ -15,3 +15,5 @@ export const TextButton = styled.button`
   border-radius: 0;
   text-align: center;
 `
+
+export default TextButton
