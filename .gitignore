@@ -18,3 +18,17 @@ npm-debug.log
 node_modules
 dist
 /.idea/workspace.xml
+
+/app/server/out
+/app/server/build
+/app/server/bin
+/app/server/.idea
+/app/server/*.iml
+*.class
+*.dex
+.idea/workspace.xml
+.idea/tasks.xml
+.gradle
+.classpath
+.project
+local.properties
