@@ -2,16 +2,17 @@ import React from "react"
 import styled from "styled-components"
 import { connect } from "react-redux"
 import { RichUtils } from "draft-js"
-import { styles as fontStyles } from "../shapes/text-box"
+import { styles as textStyles } from "../shapes/text-box"
 import ColorPicker from "./../color-picker"
-// import range from "lodash.range"
+import {
+  colorFromStyles, sizeFromStyles, getSelectedText, INLINE_STYLES
+} from "../../util/text"
 import { AppColors } from "../../util/constants"
 import { ContentContainer } from "../ui/containers"
 import {
   selectedShapeSelector, currentDocumentSelector, updateSelectedShape
 } from "../../modules/document"
 import MetricInput from "./metric-input"
-import { ItaicIcon, BoldIcon, UnderlineIcon } from "../ui/icons"
 import IconButton from "../ui/icon-button"
 
 const MetricsBarContainer = styled.div`
@@ -24,27 +25,15 @@ const MetricsBarContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+
+  @media print {
+    display: none;
+  }
 `
 
 const supportsBorder = shape => !!shape && [ "rect", "ellipse" ].includes(shape.type)
 const supportsRadius = shape => !!shape && shape.type === "rect"
 const isText = shape => !!shape && shape.type === "text"
-
-const INLINE_STYLES = [
-  { label: "Bold", style: "BOLD", icon: BoldIcon },
-  { label: "Italic", style: "ITALIC", icon: ItaicIcon },
-  { label: "Underline", style: "UNDERLINE", icon: UnderlineIcon }
-]
-
-const getSelectedText = editorState => {
-  const selectionState = editorState.getSelection()
-  const anchorKey = selectionState.getAnchorKey()
-  const currentContent = editorState.getCurrentContent()
-  const currentContentBlock = currentContent.getBlockForKey(anchorKey)
-  const start = selectionState.getStartOffset()
-  const end = selectionState.getEndOffset()
-  return currentContentBlock.getText().slice(start, end)
-}
 
 export const MetricsBar = ({
   shape,
@@ -102,9 +91,9 @@ export const MetricsBar = ({
           <ColorPicker
             property="color"
             onChange={({ color }) => updateSelectedShape({
-              editorState: fontStyles.color.add(shape.editorState, color)
+              editorState: textStyles.color.add(shape.editorState, color)
             })}
-            hex={shape.color}
+            hex={colorFromStyles(currentStyle)}
             alpha={1}
           />
         ) : (
@@ -113,6 +102,23 @@ export const MetricsBar = ({
             onChange={updateSelectedShape}
             hex={shape.fill}
             alpha={shape.fillOpacity}
+          />
+        )}
+        {isText(shape) && (
+          <MetricInput
+            mini
+            property="fontSize"
+            value={sizeFromStyles(currentStyle)}
+            label="Size"
+            unit="px"
+            onChange={({ fontSize }) => {
+              const numericValue = parseInt(fontSize)
+              if (!isNaN(numericValue) && numericValue >= 6 && numericValue <= 144) {
+                updateSelectedShape({
+                  editorState: textStyles.fontSize.add(shape.editorState, `${numericValue}px`)
+                })
+              }
+            }}
           />
         )}
         {supportsBorder(shape) && [

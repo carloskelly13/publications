@@ -41,22 +41,15 @@ const FileMenu = ({
         </MenuItem>
         <MenuItem
           disabled={!currentDocument}
-          onClick={() => {}}
+          onClick={() => window.print()}
         >
-          Export as PDF…
+          Print and Export PDF…
         </MenuItem>
         <MenuItem
           disabled={!currentDocument}
           onClick={() => {}}
         >
           Delete
-        </MenuItem>
-        <MenuDivider />
-        <MenuItem
-          disabled={!currentDocument}
-          onClick={() => {}}
-        >
-          Page Setup…
         </MenuItem>
         <MenuDivider />
         <MenuItem

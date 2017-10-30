@@ -13,6 +13,10 @@ const Toolbar = styled.div`
   padding: 0 0.5em 0 1em;
   width: calc(100% - 1.5em);
   z-index: 5;
+
+  @media print {
+    display: none;
+  }
 `
 
 export { Toolbar }

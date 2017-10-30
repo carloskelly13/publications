@@ -8,6 +8,10 @@ export const GridPath = styled.path`
   };
   stroke-width: 1;
   shape-rendering: crispEdges;
+
+  @media print {
+    display: none;
+  }
 `
 
 export class GridLine extends React.PureComponent {

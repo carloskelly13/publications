@@ -10,4 +10,11 @@ export const CanvasSVG = styled.svg`
   ${props => !props.thumbnail && css`
     margin: 25px 1em 1em 24px;
   `};
+
+  @media print {
+    margin: 0mm;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 `

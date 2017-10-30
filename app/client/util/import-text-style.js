@@ -6,5 +6,10 @@ export default (element, { Style }) => {
     // eslint-disable-next-line new-cap
     return Style(`PUB_COLOR_${color}`)
   }
+  if (element.style.fontSize) {
+    const { fontSize } = element.style
+    // eslint-disable-next-line new-cap
+    return Style(`PUB_FONT_SIZE_${fontSize}`)
+  }
   return null
 }

@@ -19,6 +19,10 @@ const RulerContainer = styled.div`
     stroke-width: 1;
     shape-rendering: crispEdges;
   }
+
+  @media print {
+    display: none;
+  }
 `
 
 const isMajor = index => index % 4 === 0 && index > 0
