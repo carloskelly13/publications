@@ -1,0 +1,71 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.8.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE')
+    }
+}
+
+apply plugin: 'eclipse-wtp'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
+
+war {
+	baseName = 'publications-rest'
+	version = '2.0.0'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	providedRuntime
+}
+
+springBoot {
+	mainClass = "com.carlospaelinck.PublicationsRestApplication"
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-devtools')
+	compile('org.springframework.boot:spring-boot-starter-jdbc')
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.session:spring-session')
+	compile('org.springframework.boot:spring-boot-starter-validation')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile("org.projectlombok:lombok:1.16.18")
+    compile('com.itextpdf:kernel:7.0.4')
+	compile('com.itextpdf:io:7.0.4')
+	compile('com.itextpdf:layout:7.0.4')
+	compile('org.codehaus.groovy:groovy')
+	compile('javax.inject:javax.inject:1')
+	compile("org.springframework.boot:spring-boot-devtools")
+	runtime('com.h2database:h2')
+	runtime('org.postgresql:postgresql')
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+eclipse {
+	classpath {
+		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.2.1'
+}
+
+sourceSets.main.java.srcDirs = ["src/main/java"]
