@@ -1,26 +1,12 @@
 import React from "react"
 import { connect } from "react-redux"
 import Modal from "../modal"
-import styled, { injectGlobal } from "styled-components"
+import styled from "styled-components"
 import { appFont, AppColors } from "../../util/constants"
 import {
   activeModalSelector,
   activeModalPropsSelector
 } from "../../modules/ui"
-
-// eslint-disable-next-line no-unused-expressions
-injectGlobal`
-  @media print {
-    html, body {
-      margin: 0;
-    }
-    @page {
-      size: auto;
-      margin: 0mm;
-      marks: none;
-    }
-  }
-`
 
 const AppView = styled.div`
   font-family: ${appFont};

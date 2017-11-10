@@ -73,6 +73,8 @@ class EditorView extends Component {
       },
       state: { scrollOffset }
     } = this
+    const orientation = documentMetrics.width > documentMetrics.height ?
+      "landscape" : "portrait"
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
@@ -98,6 +100,20 @@ class EditorView extends Component {
               backgroundGridLineRanges={backgroundGridLineRanges}
               setEditingTextBox={this.props.setEditingTextBox}
               editingTextBoxId={editingTextBoxId}
+            />
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+                  @media print {
+                    html, body { margin: 0; }
+                    @page {
+                      size: ${orientation};
+                      margin: 0mm;
+                      marks: none;
+                    }
+                  }
+                `
+              }}
             />
           </div>
         )}

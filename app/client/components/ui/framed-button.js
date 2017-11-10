@@ -33,7 +33,7 @@ const ButtonContainerWrapper = styled.div`
   justify-content: space-around;
 `
 
-export default ({ children, disabled, onClick, marginRight, marginLeft, style = {}, active = false }) => (
+export default ({ children, disabled, onClick, marginRight, marginLeft, style = {}, active = false, type = "button" }) => (
   <ButtonWrapper
     marginRight={marginRight}
     marginLeft={marginLeft}
@@ -41,6 +41,7 @@ export default ({ children, disabled, onClick, marginRight, marginLeft, style = 
     disabled={disabled}
     style={style}
     active={active}
+    type={type}
   >
     { children }
   </ButtonWrapper>

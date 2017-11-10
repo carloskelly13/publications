@@ -9,7 +9,7 @@ import { ModalButtonContainer } from "../ui/button-container"
 import { Header, Message } from "../ui/text"
 import { ModalContent } from "../modal"
 import { FormInput, FormGroup } from "../ui/pub-input"
-import { validateForm } from "../../util/validators"
+import { Formik } from "formik"
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -26,23 +26,10 @@ class NewDocumentView extends Component<Props> {
     formValid: true
   }
 
-  handleCreateButton = () => {
-    const { width, height, name } = this.state
-    const formValid = validateForm([
-      { value: name, type: "name" },
-      { value: height, type: "size" },
-      { value: width, type: "size" }
-    ])
+  validateForm = () => {
+    const errors = {}
 
-    this.setState({ formValid })
-
-    if (formValid) {
-      this.props.newDocument({ name, width, height, shapes: [] })
-    }
-  }
-
-  handleInputChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value })
+    return errors
   }
 
   render() {
@@ -54,43 +41,57 @@ class NewDocumentView extends Component<Props> {
         <Message>
           Specify the name, width and height of your new document.
         </Message>
-        <FormGroup>
-          <FormInput
-            name="name"
-            onChange={this.handleInputChange}
-            value={this.state.name}
-            displayName="Name"
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormInput
-            name="height"
-            label="inches"
-            onChange={this.handleInputChange}
-            value={this.state.height}
-            displayName="Height"
-          />
-          <FormInput
-            name="width"
-            label="inches"
-            onChange={this.handleInputChange}
-            value={this.state.width}
-            displayName="Width"
-          />
-        </FormGroup>
-        <ModalButtonContainer>
-          <Button
-            marginRight
-            onClick={this.handleCreateButton}
-          >
-            Create Document
-          </Button>
-          <Button
-            onClick={this.props.hideModal}
-          >
-            Close
-          </Button>
-        </ModalButtonContainer>
+        <Formik
+          initialValues={{
+            name: "New Document",
+            width: 8.5,
+            height: 11
+          }}
+          validate={this.validateForm}
+          onSubmit={values => this.props.newDocument({ ...values, shapes: [] })}
+          render={({ values, handleChange, handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <FormGroup>
+                <FormInput
+                  name="name"
+                  onChange={handleChange}
+                  value={values.name}
+                  displayName="Name"
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormInput
+                  name="height"
+                  label="inches"
+                  onChange={handleChange}
+                  value={values.height}
+                  displayName="Height"
+                />
+                <FormInput
+                  name="width"
+                  label="inches"
+                  onChange={handleChange}
+                  value={values.width}
+                  displayName="Width"
+                />
+              </FormGroup>
+              <ModalButtonContainer>
+                <Button
+                  marginRight
+                  type="submit"
+                >
+                  Create Document
+                </Button>
+                <Button
+                  type="button"
+                  onClick={this.props.hideModal}
+                >
+                  Close
+                </Button>
+              </ModalButtonContainer>
+            </form>
+          )}
+        />
       </NewDocumentContainer>
     )
   }

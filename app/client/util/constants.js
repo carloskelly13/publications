@@ -43,6 +43,7 @@ export const AppColors = {
   Gray30: "#9fa3a3",
   Gray40: "#8c9090",
   Gray50: "#6f7878",
+  Gray60: "#535a5a",
   Gray80: "#343334",
   White4: "#f3f3f3",
   Highlight: "#3c6df0",
