@@ -387,6 +387,6 @@ export const backgroundGridLineRangesSelector = createSelector(
   documentMetricsSelector,
   zoomSelector,
   ({ width, height }, zoom) => ({
-    x: range(0, width * 72 * zoom, 0.25 * 72 * zoom),
-    y: range(0, height * 72 * zoom, 0.25 * 72 * zoom)
+    x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
+    y: range(0, height * 96 * zoom, 0.25 * 96 * zoom)
   }))

@@ -13,8 +13,6 @@ export const CanvasSVG = styled.svg`
 
   @media print {
     margin: 0mm;
-    width: 100%;
-    height: 100%;
     border: none;
   }
 `

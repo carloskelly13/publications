@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 import get from "lodash.get"
 import { connect } from "react-redux"
@@ -8,7 +7,9 @@ import {
   sortedShapesSelector, updateSelectedShape, documentMetricsSelector, selectedShapeSelector,
   editingTextBoxIdSelector, setEditingTextBox, zoomSelector
 } from "../../modules/document"
-import { AppColors, contentPanelWidthFull, contentPanelWidthPartial } from "../../util/constants"
+import {
+  AppColors, contentPanelWidthFull, contentPanelWidthPartial, Keys
+} from "../../util/constants"
 import Canvas from "../canvas"
 import Ruler from "../rulers"
 
@@ -35,27 +36,53 @@ class EditorView extends Component {
     }
   }
 
-  componentDidMount() {
-    // eslint-disable-next-line react/no-find-dom-node
-    findDOMNode(this.containerRef).addEventListener("scroll", this.handleViewScrollEvent)
-  }
-
   componentWillReceiveProps(nextProps) {
     const { match: { params: { id } } } = nextProps
     if (get(this.props.currentDocument, "id") !== id) {
-      findDOMNode(this.containerRef).scrollTop = 0
-      findDOMNode(this.containerRef).scrollLeft = 0
+      this.containerRef.scrollTop = 0
+      this.containerRef.scrollLeft = 0
       this.props.fetchDocument(id)
     }
   }
 
-  componentWillUnmount() {
-    // eslint-disable-next-line react/no-find-dom-node
-    findDOMNode(this.containerRef).removeEventListener("scroll", this.handleViewScrollEvent)
-  }
-
   handleViewScrollEvent = ({ target: { scrollLeft, scrollTop } }) => {
     this.setState({ scrollOffset: { scrollLeft, scrollTop } })
+  }
+
+  handleKeyPress = event => {
+    if (!this.props.selectedShape || this.props.editingTextBoxId) {
+      return
+    }
+
+    const arrowKeys = [Keys.Up, Keys.Down, Keys.Left, Keys.Right]
+    if (arrowKeys.indexOf(event.keyCode) > -1) {
+      event.preventDefault()
+    }
+
+    const changes = {}
+    switch (event.keyCode) {
+    case Keys.Up:
+      changes.y = this.props.selectedShape.y - 0.05
+      break
+    case Keys.Down:
+      changes.y = this.props.selectedShape.y + 0.05
+      break
+    case Keys.Left:
+      changes.x = this.props.selectedShape.x - 0.05
+      break
+    case Keys.Right:
+      changes.x = this.props.selectedShape.x + 0.05
+      break
+    }
+
+    if (Object.keys(changes).length > 0) {
+
+      Object.keys(changes).forEach(key => {
+        changes[key] = parseFloat(changes[key].toFixed(2))
+      })
+
+      this.props.updateSelectedShape(changes)
+    }
   }
 
   render() {
@@ -78,7 +105,10 @@ class EditorView extends Component {
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
-        ref={c => (this.containerRef = c)}
+        innerRef={c => (this.containerRef = c)}
+        onKeyDown={this.handleKeyPress}
+        onScroll={this.handleViewScrollEvent}
+        tabIndex={0}
       >
         {currentDocument && (
           <div>
@@ -91,7 +121,7 @@ class EditorView extends Component {
             <Canvas
               allowsEditing
               doc={currentDocument}
-              dpi={72}
+              dpi={96}
               zoom={zoom}
               selectedShape={selectedShape}
               sortedShapes={sortedShapes}
@@ -104,13 +134,13 @@ class EditorView extends Component {
             <style
               dangerouslySetInnerHTML={{
                 __html: `
+                  @page {
+                    size: ${orientation};
+                    margin: 0mm;
+                    marks: none;
+                  }
                   @media print {
                     html, body { margin: 0; }
-                    @page {
-                      size: ${orientation};
-                      margin: 0mm;
-                      marks: none;
-                    }
                   }
                 `
               }}

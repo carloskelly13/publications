@@ -50,7 +50,7 @@ export const Canvas = props => {
 }
 
 Canvas.defaultProps = {
-  dpi: 72,
+  dpi: 96,
   allowsEditing: false,
   isSelected: false
 }

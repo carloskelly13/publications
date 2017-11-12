@@ -16,7 +16,7 @@ import { AppColors } from "../../util/constants"
 
 const Header = styled.span`
   color: ${AppColors.Highlight};
-  font-weight: 800;
+  font-weight: 600;
   font-size: 0.95em;
   margin: 0 0.65em 0 0;
 `

@@ -5,14 +5,15 @@ import { connect } from "react-redux"
 import Menu, { MenuItem, MenuDivider } from "../ui/menu"
 import { logOut } from "../../modules/session"
 import { showModal } from "../../modules/ui"
-import { currentDocumentSelector, saveDocument } from "../../modules/document"
+import { currentDocumentSelector, saveDocument, setZoom } from "../../modules/document"
 import { TextButton } from "../ui/text-button"
 
 const FileMenu = ({
   currentDocument,
   saveDocument,
   showModal: showModalAction,
-  logOut: logOutAction
+  logOut: logOutAction,
+  setZoom
 }) => (
   <Menu
     renderButton={(
@@ -41,7 +42,10 @@ const FileMenu = ({
         </MenuItem>
         <MenuItem
           disabled={!currentDocument}
-          onClick={() => window.print()}
+          onClick={() => {
+            setZoom(1.0)
+            setTimeout(() => window.print(), 100)
+          }}
         >
           Print and Export PDF…
         </MenuItem>
@@ -73,5 +77,6 @@ export default connect(
   }), {
     logOut,
     showModal,
-    saveDocument
+    saveDocument,
+    setZoom
   })(FileMenu)

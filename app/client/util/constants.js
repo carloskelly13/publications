@@ -18,6 +18,13 @@ export const colors = [
   "#aeea00", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548"
 ]
 
+export const Keys = {
+  Left: 37,
+  Up: 38,
+  Right: 39,
+  Down: 40
+}
+
 export const breakpointLg = "min-width: 768px"
 
 const _sidePanelWidth = 25

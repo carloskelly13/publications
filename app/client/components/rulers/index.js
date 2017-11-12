@@ -29,7 +29,7 @@ const isMajor = index => index % 4 === 0 && index > 0
 
 export default class Ruler extends Component {
   static defaultProps = {
-    dpi: 72
+    dpi: 96
   }
 
   renderRulerMarks(rulerRange, direction) {
