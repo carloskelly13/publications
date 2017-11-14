@@ -75,12 +75,9 @@ class EditorView extends Component {
       break
     }
 
-    if (Object.keys(changes).length > 0) {
-
-      Object.keys(changes).forEach(key => {
-        changes[key] = parseFloat(changes[key].toFixed(2))
-      })
-
+    const changeKeys = Object.keys(changes)
+    if (changeKeys.length > 0) {
+      changeKeys.forEach(key => (changes[key] = parseFloat(changes[key].toFixed(2))))
       this.props.updateSelectedShape(changes)
     }
   }
