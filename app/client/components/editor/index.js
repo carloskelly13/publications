@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import styled from "styled-components"
-import get from "lodash.get"
+import get from "lodash/get"
 import { connect } from "react-redux"
 import {
   currentDocumentSelector, fetchDocument, backgroundGridLineRangesSelector,

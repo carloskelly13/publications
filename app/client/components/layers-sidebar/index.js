@@ -7,7 +7,7 @@ import {
 } from "../../modules/document"
 import { DragDropContext, Droppable } from "react-beautiful-dnd"
 import "react-motion"
-import get from "lodash.get"
+import get from "lodash/get"
 
 export const LayersSidebar = ({
   visible, shapes, adjustShapeLayer, updateSelectedShape, selectedShape

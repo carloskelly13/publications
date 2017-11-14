@@ -1,4 +1,4 @@
-import range from "lodash.range"
+import range from "lodash/range"
 import shortid from "shortid"
 import { put, takeEvery, call, select, race, take } from "redux-saga/effects"
 import { handleActions, createAction } from "redux-actions"

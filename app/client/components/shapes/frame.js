@@ -1,6 +1,12 @@
 import React, { Component } from "react"
 import styled from "styled-components"
 
+const FrameRect = styled.rect`
+  @media print {
+    display: none;
+  }
+`
+
 export const TextArea = styled.textarea`
   height: 100%;
   resize: none;
@@ -183,7 +189,7 @@ export default class ResizeMoveFrame extends Component {
         zoom * anchor.y)
       return (
         <g key={`shape-anchor-${index}`}>
-          <rect
+          <FrameRect
             x={xAnchor}
             y={yAnchor}
             rx={2}
@@ -214,7 +220,7 @@ export default class ResizeMoveFrame extends Component {
 
     return (
       <g>
-        <rect
+        <FrameRect
           x={x - 0.5}
           y={y - 0.5}
           height={height}

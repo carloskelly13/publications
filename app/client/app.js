@@ -23,7 +23,3 @@ export const App = () => (
     </BaseView>
   </Provider>
 )
-
-
-// eslint-disable-next-line no-console
-console.debug(`Publications running on React ${React.version}.`)

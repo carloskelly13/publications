@@ -1,7 +1,7 @@
 import React, { createElement } from "react"
 import { Rectangle, Ellipse, TextBox } from "../shapes"
 import SelectableShape from "../shapes/selectable-shape"
-import get from "lodash.get"
+import get from "lodash/get"
 
 const shapeNodes = { text: TextBox, ellipse: Ellipse, rect: Rectangle }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import range from "lodash.range"
+import range from "lodash/range"
 import { AppColors } from "../../util/constants"
 import { GridLine } from "../../components/canvas/grid-line"
 import styled from "styled-components"
