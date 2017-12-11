@@ -1,104 +1,101 @@
-const path = require("path")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const webpack = require("webpack")
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
-
-const extractLESS = new ExtractTextPlugin("app.css")
-const extractCSS = new ExtractTextPlugin("vendor.css")
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
+const DashboardPlugin = require("webpack-dashboard/plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = env => {
-  const addPlugin = (add, plugin) => add ? plugin : undefined
-  const ifProd = plugin => addPlugin(env.prod, plugin)
-  const ifDev = plugin => addPlugin(env.dev, plugin)
-  const removeEmpty = array => array.filter(el => !!el)
+  const addPlugin = (add, plugin) => (add ? plugin : undefined);
+  const ifProd = plugin => addPlugin(env.prod, plugin);
+  const removeEmpty = array => array.filter(el => !!el);
 
   return {
-    devtool: env.prod ? undefined : "inline-source-map",
+    devtool: env.prod ? false : "cheap-module-eval-source-map",
 
     entry: {
       app: removeEmpty([
-        "./app/js/app.js",
-        ifDev("webpack-hot-middleware/client?reload=true")
-      ]),
-      vendor: [ "./app/js/vendor.js" ]
+        ...(env.dev ? ["webpack-dev-server/client?http://localhost:4040"] : []),
+        "babel-polyfill",
+        "./app/client/index.js"
+      ])
     },
 
     output: {
-      path: __dirname + "/dist",
+      path: `${__dirname}/dist`,
       sourceMapFilename: "[name].map",
       filename: "[hash].[name].js",
+      publicPath: "/",
+      pathinfo: true
     },
 
     devServer: {
       proxy: {
         "/api": {
-          target: "http://api.publicationsapp.com",
+          target: "http://localhost:8080",
           changeOrigin: true,
           pathRewrite: {
-            "^/api" : ""
+            "^/api": ""
           }
         }
-      }
+      },
+      historyApiFallback: true,
+      hot: false
     },
 
     module: {
       loaders: [
-        { test: /\.jsx?$/,
-          include: [
-            path.resolve(__dirname, "app/js")
-          ],
+        {
+          test: /\.js$/,
+          include: [path.resolve(__dirname, "app/client")],
           loader: "babel-loader"
         },
+        { test: /\.css$/, loader: "css-loader" },
         {
-          test: /\.jsx?$/,
-          include: [
-            path.resolve(__dirname, "app/js")
-          ],
-          loader: "eslint-loader"
+          test: /\.(eot|woff|ttf|svg|png|otf)$/,
+          loader: "url-loader?limit=64"
         },
-        { test: /\.less$/, loader: extractLESS.extract([ "css-loader", "less-loader" ]) },
-        { test: /\.css$/, loader: extractCSS.extract([ "css-loader" ]) },
-        { test: /\.(eot|woff|ttf|svg|png|otf)$/, loader: "url-loader?limit=64" },
         { test: /\.json$/, loader: "json-loader" }
       ]
     },
 
     resolve: {
-      extensions: [".js", ".jsx"],
-      modules: [
-        path.join(__dirname, "node_modules"),
-        path.join(__dirname, "app/js"),
-        path.join(__dirname, "app/css")
-      ]
+      extensions: [".js"],
+      modules: [path.join(__dirname, "node_modules")]
     },
 
     plugins: removeEmpty([
-      extractLESS, extractCSS,
+      ifProd(
+        new webpack.LoaderOptionsPlugin({
+          minimize: true,
+          debug: false,
+          quiet: true
+        })
+      ),
 
-      new webpack.optimize.CommonsChunkPlugin({
-        name: [ "vendor", "manifest" ]
-      }),
+      new webpack.NoEmitOnErrorsPlugin(),
 
-      ifProd(new webpack.LoaderOptionsPlugin({
-        minimize: true,
-        debug: false,
-        quiet: true,
-      })),
+      ifProd(
+        new webpack.DefinePlugin({
+          "process.env": {
+            NODE_ENV: JSON.stringify("production")
+          }
+        })
+      ),
 
-      ifDev(new webpack.HotModuleReplacementPlugin()),
-
-      new webpack.DefinePlugin({
-        "process.env": { NODE_ENV: `${env.prod ? '"production"' : '"development"'}`, },
-      }),
-
-      ifProd(new webpack.optimize.UglifyJsPlugin({
-        compress: { screw_ie8: true, warnings: false },
-      })),
+      ifProd(
+        new webpack.optimize.UglifyJsPlugin({
+          compress: { warnings: false }
+        })
+      ),
 
       new HtmlWebpackPlugin({
-        template: "app/index.html",
+        template: "app/client/index.html",
         inject: "body"
-      })
+      }),
+
+      new DashboardPlugin(),
+
+      ifProd(new CompressionPlugin())
     ]),
 
     node: {
@@ -108,6 +105,5 @@ module.exports = env => {
       clearImmediate: false,
       setImmediate: false
     }
-
-  }
-}
+  };
+};

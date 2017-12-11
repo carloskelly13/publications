@@ -1,14 +1,24 @@
 {
   "presets": [
-    [ "es2015", { "loose": true, "modules" : false } ],
+    [ "env", { "loose": true, "modules" : false } ],
     "react",
-    "stage-0"
+    "stage-0",
+    "flow"
   ],
   "plugins": [
-    "syntax-async-functions",
     "transform-async-to-generator",
-    "transform-decorators-legacy",
     "transform-class-properties",
     "transform-object-rest-spread"
-  ]
+  ],
+  "env": {
+    "production": {
+      "plugins" : [
+        "babel-plugin-styled-components",
+        "transform-object-rest-spread",
+        "transform-react-remove-prop-types",
+        "transform-async-to-generator",
+        "transform-class-properties"
+      ]
+    }
+  }
 }

@@ -1,12 +1,25 @@
 {
-  "parser": "babel-eslint",
+  "extends": ["formidable/configurations/es6-react", "prettier"],
   "rules": {
-    "strict": 0,
-    "no-underscore-dangle": 0,
-    "no-extra-boolean-cast": 0,
+    "max-len": 0,
+    "no-magic-numbers": 0,
+    "react/prop-types": 0,
+    "react/jsx-handler-names": 0,
+    "arrow-parens": 0,
+    "comma-dangle": [2, "always-multiline"],
+    "react/no-multi-comp": 0,
+    "no-invalid-this": 0,
+    "no-shadow": 0,
     "no-use-before-define": 0
   },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
   "env": {
-    "node": true
-  }
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "plugins": ["prettier"]
 }
