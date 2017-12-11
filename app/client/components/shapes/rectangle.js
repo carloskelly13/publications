@@ -1,15 +1,24 @@
-import React from "react"
+import React from "react";
 
 class Rectangle extends React.PureComponent {
   render() {
     const {
       shape: {
-        x, y, r, width, height, fill, stroke,
-        strokeOpacity, fillOpacity, strokeWidth
+        x,
+        y,
+        r,
+        width,
+        height,
+        fill,
+        stroke,
+        strokeOpacity,
+        fillOpacity,
+        strokeWidth,
       },
-      zoom, dpi
-    } = this.props
-    const valueForLayout = value => value * dpi * zoom
+      zoom,
+      dpi,
+    } = this.props;
+    const valueForLayout = value => value * dpi * zoom;
     return (
       <rect
         x={valueForLayout(x)}
@@ -24,8 +33,8 @@ class Rectangle extends React.PureComponent {
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth * zoom}
       />
-    )
+    );
   }
 }
 
-export default Rectangle
+export default Rectangle;

@@ -1,10 +1,10 @@
 // @flow
-import React from "react"
+import React from "react";
 
 type IconProps = {
   size?: number,
-  color?: string
-}
+  color?: string,
+};
 export default ({ size, color }: IconProps) => (
   <svg
     width={size || 16}
@@ -17,4 +17,4 @@ export default ({ size, color }: IconProps) => (
       points="8 16 6.5 14.5 12 9 0 9 0 7 12 7 6.5 1.5 8 0 16 8"
     />
   </svg>
-)
+);

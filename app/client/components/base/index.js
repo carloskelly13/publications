@@ -1,12 +1,12 @@
-import React from "react"
-import { connect } from "react-redux"
-import Modal from "../modal"
-import styled from "styled-components"
-import { appFont, AppColors } from "../../util/constants"
+import React from "react";
+import { connect } from "react-redux";
+import Modal from "../modal";
+import styled from "styled-components";
+import { appFont, AppColors } from "../../util/constants";
 import {
   activeModalSelector,
-  activeModalPropsSelector
-} from "../../modules/ui"
+  activeModalPropsSelector,
+} from "../../modules/ui";
 
 const AppView = styled.div`
   font-family: ${appFont};
@@ -18,32 +18,27 @@ const AppView = styled.div`
   height: 100%;
   position: absolute;
   overflow: hidden;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern" 1, "dlig" 1;
   -moz-font-feature-settings: "kern" 1, "dlig" 1;
-`
+`;
 
 const BaseView = props => {
-  const {
-    children,
-    activeModal,
-    activeModalProps
-  } = props
+  const { children, activeModal, activeModalProps } = props;
 
   return (
     <AppView>
-      <Modal
-        component={activeModal}
-        componentProps={activeModalProps}
-      />
-      { children }
+      <Modal component={activeModal} componentProps={activeModalProps} />
+      {children}
     </AppView>
-  )
-}
+  );
+};
 
-export default connect(
-  state => ({
-    activeModal: activeModalSelector(state),
-    activeModalProps: activeModalPropsSelector(state)
-  }))(BaseView)
+export default connect(state => ({
+  activeModal: activeModalSelector(state),
+  activeModalProps: activeModalPropsSelector(state),
+}))(BaseView);

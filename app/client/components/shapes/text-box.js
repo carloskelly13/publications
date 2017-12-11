@@ -1,25 +1,30 @@
-import React from "react"
-import { Editor } from "draft-js"
-import createStyles from "draft-js-custom-styles"
+import React from "react";
+import { Editor } from "draft-js";
+import createStyles from "draft-js-custom-styles";
 
-export const {
-  styles, customStyleFn, exporter
-} = createStyles(["font-size", "color", "font-family"], "PUB_");
+export const { styles, customStyleFn, exporter } = createStyles(
+  ["font-size", "color", "font-family"],
+  "PUB_"
+);
 
 class TextBox extends React.PureComponent {
   render() {
     const {
-      shape, zoom, dpi, updateSelectedShape, editingTextBoxId
-    } = this.props
+      shape,
+      zoom,
+      dpi,
+      updateSelectedShape,
+      editingTextBoxId,
+    } = this.props;
 
-    const readOnly = editingTextBoxId !== shape.id
+    const readOnly = editingTextBoxId !== shape.id;
     const metrics = {
       x: dpi * shape.x,
       y: dpi * shape.y,
       width: dpi * 1 * shape.width,
-      height: dpi * 1 * shape.height
-    }
-    const transform = `scale(${zoom})`
+      height: dpi * 1 * shape.height,
+    };
+    const transform = `scale(${zoom})`;
 
     return (
       <g>
@@ -32,10 +37,7 @@ class TextBox extends React.PureComponent {
             style={{ transform }}
           />
         )}
-        <foreignObject
-          {...metrics}
-          style={{ transform }}
-        >
+        <foreignObject {...metrics} style={{ transform }}>
           <Editor
             customStyleFn={customStyleFn}
             editorState={shape.editorState}
@@ -44,8 +46,8 @@ class TextBox extends React.PureComponent {
           />
         </foreignObject>
       </g>
-    )
+    );
   }
 }
 
-export default TextBox
+export default TextBox;

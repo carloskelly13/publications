@@ -1,19 +1,24 @@
-import React from "react"
-import styled from "styled-components"
-import { connect } from "react-redux"
-import { RichUtils } from "draft-js"
-import { styles as textStyles } from "../shapes/text-box"
-import ColorPicker from "./../color-picker"
+import React from "react";
+import styled from "styled-components";
+import { connect } from "react-redux";
+import { RichUtils } from "draft-js";
+import { styles as textStyles } from "../shapes/text-box";
+import ColorPicker from "./../color-picker";
 import {
-  colorFromStyles, sizeFromStyles, getSelectedText, INLINE_STYLES
-} from "../../util/text"
-import { AppColors } from "../../util/constants"
-import { ContentContainer } from "../ui/containers"
+  colorFromStyles,
+  sizeFromStyles,
+  getSelectedText,
+  INLINE_STYLES,
+} from "../../util/text";
+import { AppColors } from "../../util/constants";
+import { ContentContainer } from "../ui/containers";
 import {
-  selectedShapeSelector, currentDocumentSelector, updateSelectedShape
-} from "../../modules/document"
-import MetricInput from "./metric-input"
-import IconButton from "../ui/icon-button"
+  selectedShapeSelector,
+  currentDocumentSelector,
+  updateSelectedShape,
+} from "../../modules/document";
+import MetricInput from "./metric-input";
+import IconButton from "../ui/icon-button";
 
 const MetricsBarContainer = styled.div`
   height: 23px;
@@ -29,27 +34,23 @@ const MetricsBarContainer = styled.div`
   @media print {
     display: none;
   }
-`
+`;
 
-const supportsBorder = shape => !!shape && [ "rect", "ellipse" ].includes(shape.type)
-const supportsRadius = shape => !!shape && shape.type === "rect"
-const isText = shape => !!shape && shape.type === "text"
+const supportsBorder = shape =>
+  !!shape && ["rect", "ellipse"].includes(shape.type);
+const supportsRadius = shape => !!shape && shape.type === "rect";
+const isText = shape => !!shape && shape.type === "text";
 
-export const MetricsBar = ({
-  shape,
-  updateSelectedShape
-}) => {
+export const MetricsBar = ({ shape, updateSelectedShape }) => {
   if (!shape) {
-    return (
-      <MetricsBarContainer />
-    )
+    return <MetricsBarContainer />;
   }
 
-  let currentStyle = null
-  let isTextSelected = false
+  let currentStyle = null;
+  let isTextSelected = false;
   if (isText(shape)) {
-    currentStyle = shape.editorState.getCurrentInlineStyle()
-    isTextSelected = getSelectedText(shape.editorState) !== ""
+    currentStyle = shape.editorState.getCurrentInlineStyle();
+    isTextSelected = getSelectedText(shape.editorState) !== "";
   }
 
   return (
@@ -90,9 +91,11 @@ export const MetricsBar = ({
         {isText(shape) ? (
           <ColorPicker
             property="color"
-            onChange={({ color }) => updateSelectedShape({
-              editorState: textStyles.color.add(shape.editorState, color)
-            })}
+            onChange={({ color }) =>
+              updateSelectedShape({
+                editorState: textStyles.color.add(shape.editorState, color),
+              })
+            }
             hex={colorFromStyles(currentStyle)}
             alpha={1}
           />
@@ -112,11 +115,18 @@ export const MetricsBar = ({
             label="Size"
             unit="px"
             onChange={({ fontSize }) => {
-              const numericValue = parseInt(fontSize)
-              if (!isNaN(numericValue) && numericValue >= 6 && numericValue <= 144) {
+              const numericValue = parseInt(fontSize);
+              if (
+                !isNaN(numericValue) &&
+                numericValue >= 6 &&
+                numericValue <= 144
+              ) {
                 updateSelectedShape({
-                  editorState: textStyles.fontSize.add(shape.editorState, `${numericValue}px`)
-                })
+                  editorState: textStyles.fontSize.add(
+                    shape.editorState,
+                    `${numericValue}px`
+                  ),
+                });
               }
             }}
           />
@@ -137,9 +147,9 @@ export const MetricsBar = ({
             label="Border"
             unit="pt"
             onChange={updateSelectedShape}
-          />
-        ] }
-        { supportsRadius(shape) && (
+          />,
+        ]}
+        {supportsRadius(shape) && (
           <MetricInput
             mini
             property="r"
@@ -148,33 +158,43 @@ export const MetricsBar = ({
             unit="pt"
             onChange={updateSelectedShape}
           />
-        ) }
-        {isText(shape) && INLINE_STYLES.map(type => (
-          <IconButton
-            key={type.label}
-            size={15}
-            disabled={!isTextSelected}
-            style={{ margin: "0 0.25em" }}
-            onClick={() => updateSelectedShape({
-              editorState: RichUtils.toggleInlineStyle(shape.editorState, type.style)
-            })}
-          >
-            {React.createElement(type.icon, {
-              color: currentStyle.has(type.style) && isTextSelected ?
-                AppColors.Highlight : AppColors.DarkGray,
-              size: 13
-            })}
-          </IconButton>
-        ))}
+        )}
+        {isText(shape) &&
+          INLINE_STYLES.map(type => (
+            <IconButton
+              key={type.label}
+              size={15}
+              disabled={!isTextSelected}
+              style={{ margin: "0 0.25em" }}
+              onClick={() =>
+                updateSelectedShape({
+                  editorState: RichUtils.toggleInlineStyle(
+                    shape.editorState,
+                    type.style
+                  ),
+                })
+              }
+            >
+              {React.createElement(type.icon, {
+                color:
+                  currentStyle.has(type.style) && isTextSelected
+                    ? AppColors.Highlight
+                    : AppColors.DarkGray,
+                size: 13,
+              })}
+            </IconButton>
+          ))}
       </ContentContainer>
     </MetricsBarContainer>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({
     shape: selectedShapeSelector(state),
-    doc: currentDocumentSelector(state)
-  }), {
-    updateSelectedShape
-  })(MetricsBar)
+    doc: currentDocumentSelector(state),
+  }),
+  {
+    updateSelectedShape,
+  }
+)(MetricsBar);

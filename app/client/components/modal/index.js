@@ -1,6 +1,6 @@
-import React from "react"
-import styled, { injectGlobal } from "styled-components"
-import ReactCSSTransitionGroup from "react-addons-css-transition-group"
+import React from "react";
+import styled, { injectGlobal } from "styled-components";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
@@ -21,7 +21,7 @@ injectGlobal`
     opacity: 0;
     transition: opacity 300ms ease-in-out;
   }
-`
+`;
 
 const ModalContainer = styled.div`
   align-items: center;
@@ -38,7 +38,7 @@ const ModalContainer = styled.div`
   top: 0;
   width: 100%;
   z-index: 9005;
-`
+`;
 
 export const ModalContent = styled.div`
   background: #fff;
@@ -48,11 +48,11 @@ export const ModalContent = styled.div`
   padding: 1em 1em calc(1em + 50px);
   position: relative;
   overflow: hidden;
-`
+`;
 
 const Modal = ({
   component: ModalComponent,
-  activeModalProps: componentProps
+  activeModalProps: componentProps,
 }) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
@@ -65,6 +65,6 @@ const Modal = ({
       </ModalContainer>
     )}
   </ReactCSSTransitionGroup>
-)
+);
 
-export default Modal
+export default Modal;

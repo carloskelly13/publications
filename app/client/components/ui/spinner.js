@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { AppColors } from "../../util/constants"
+import styled from "styled-components";
+import { AppColors } from "../../util/constants";
 
 export const Spinner = styled.div`
   @keyframes spin {
@@ -22,4 +22,4 @@ export const Spinner = styled.div`
   border-left-color: ${AppColors.MediumGray};
   border-right-color: ${AppColors.MediumGray};
   margin: 0.5em auto;
-`
+`;

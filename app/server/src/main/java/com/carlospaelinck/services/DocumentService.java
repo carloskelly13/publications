@@ -17,7 +17,7 @@ import java.util.List;
 public class DocumentService {
 
   @Inject
-  DocumentRepository documentRepository;
+  private DocumentRepository documentRepository;
 
   @PostAuthorize("isOwner(returnObject)")
   public Document get(String id) {

@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { sidePanelWidth, AppColors } from "../../util/constants"
+import styled from "styled-components";
+import { sidePanelWidth, AppColors } from "../../util/constants";
 
 export const LayersSidebarContainer = styled.div`
   width: ${sidePanelWidth};
@@ -10,9 +10,9 @@ export const LayersSidebarContainer = styled.div`
   height: calc(100% - 54px);
   flex-direction: column;
   right: 0;
-  display: ${({ visible }) => visible ? "flex" : "none" };
+  display: ${({ visible }) => (visible ? "flex" : "none")};
 
   @media print {
     display: none;
   }
-`
+`;

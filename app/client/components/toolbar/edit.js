@@ -1,11 +1,15 @@
-import React from "react"
-import Menu, { MenuItem, MenuDivider } from "../ui/menu"
-import { TextButton } from "../ui/text-button"
-import { connect } from "react-redux"
+import React from "react";
+import Menu, { MenuItem, MenuDivider } from "../ui/menu";
+import { TextButton } from "../ui/text-button";
+import { connect } from "react-redux";
 import {
-  cutShape, copyShape, pasteShape, deleteShape,
-  clipboardDataSelector, selectedShapeSelector
-} from "../../modules/document"
+  cutShape,
+  copyShape,
+  pasteShape,
+  deleteShape,
+  clipboardDataSelector,
+  selectedShapeSelector,
+} from "../../modules/document";
 
 const EditMenu = props => {
   const {
@@ -15,8 +19,8 @@ const EditMenu = props => {
     pasteShape,
     deleteShape,
     clipboardData,
-    selectedShape
-  } = props
+    selectedShape,
+  } = props;
   return (
     <Menu
       disabled={disabled}
@@ -50,16 +54,21 @@ const EditMenu = props => {
           onClick={() => deleteShape(selectedShape)}
         >
           Delete
-        </MenuItem>
+        </MenuItem>,
       ]}
     />
-  )
-}
+  );
+};
 
 export default connect(
   state => ({
     selectedShape: selectedShapeSelector(state),
-    clipboardData: clipboardDataSelector(state)
-  }), {
-    cutShape, copyShape, pasteShape, deleteShape
-  })(EditMenu)
+    clipboardData: clipboardDataSelector(state),
+  }),
+  {
+    cutShape,
+    copyShape,
+    pasteShape,
+    deleteShape,
+  }
+)(EditMenu);

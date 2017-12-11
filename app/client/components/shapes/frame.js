@@ -1,11 +1,11 @@
-import React, { Component } from "react"
-import styled from "styled-components"
+import React, { Component } from "react";
+import styled from "styled-components";
 
 const FrameRect = styled.rect`
   @media print {
     display: none;
   }
-`
+`;
 
 export const TextArea = styled.textarea`
   height: 100%;
@@ -17,7 +17,7 @@ export const TextArea = styled.textarea`
   user-select: none;
   outline: none;
   background: transparent;
-`
+`;
 
 const frameAnchors = {
   size: 10,
@@ -29,9 +29,9 @@ const frameAnchors = {
     { coordinate: "e", x: 1, y: 0.5 },
     { coordinate: "sw", x: 0, y: 1 },
     { coordinate: "s", x: 0.5, y: 1 },
-    { coordinate: "se", x: 1, y: 1 }
-  ]
-}
+    { coordinate: "se", x: 1, y: 1 },
+  ],
+};
 
 export default class ResizeMoveFrame extends Component {
   static get defaultState() {
@@ -42,30 +42,30 @@ export default class ResizeMoveFrame extends Component {
       oY: 0,
       oW: 0,
       oH: 0,
-      shouldRender: true
-    }
+      shouldRender: true,
+    };
   }
 
-  state = ResizeMoveFrame.defaultState
+  state = ResizeMoveFrame.defaultState;
 
   componentWillUnmount() {
-    this.props.setEditingTextBox(null)
-    document.removeEventListener("mousemove", this.handleFrameResized)
-    document.removeEventListener("mousemove", this.handleFrameDragged)
+    this.props.setEditingTextBox(null);
+    document.removeEventListener("mousemove", this.handleFrameResized);
+    document.removeEventListener("mousemove", this.handleFrameDragged);
   }
 
-  isDragging = false
-  isEditingText = false
-  resizeAnchor = ""
+  isDragging = false;
+  isEditingText = false;
+  resizeAnchor = "";
 
   updateStateForDragging = ({ pageX, pageY }) => {
     this.setState({
       eX: pageX,
       eY: pageY,
       oX: this.props.shape.x,
-      oY: this.props.shape.y
-    })
-  }
+      oY: this.props.shape.y,
+    });
+  };
 
   updateStateForResizing = ({ pageX, pageY }) => {
     this.setState({
@@ -74,119 +74,137 @@ export default class ResizeMoveFrame extends Component {
       oX: this.props.shape.x,
       oY: this.props.shape.y,
       oW: this.props.shape.width,
-      oH: this.props.shape.height
-    })
-  }
+      oH: this.props.shape.height,
+    });
+  };
 
   handleMouseDown = event => {
-    this.updateStateForDragging(event)
+    this.updateStateForDragging(event);
     if (!this.isEditingText) {
-      document.addEventListener("mousemove", this.handleFrameDragged)
+      document.addEventListener("mousemove", this.handleFrameDragged);
     }
-  }
+  };
 
   handleMouseUp = () => {
-    document.removeEventListener("mousemove", this.handleFrameDragged)
+    document.removeEventListener("mousemove", this.handleFrameDragged);
     if (this.isDragging) {
-      this.isDragging = false
-      this.setState({ ...ResizeMoveFrame.defaultState })
-      return
+      this.isDragging = false;
+      this.setState({ ...ResizeMoveFrame.defaultState });
+      return;
     }
     if (this.props.shape.type !== "text") {
-      return
+      return;
     }
-    this.isEditingText = true
-    this.setState({ shouldRender: false })
-    this.props.setEditingTextBox(this.props.shape.id)
-  }
+    this.isEditingText = true;
+    this.setState({ shouldRender: false });
+    this.props.setEditingTextBox(this.props.shape.id);
+  };
 
   handleAnchorMouseDown = event => {
-    const coordinate = event
-      .nativeEvent.target.attributes
-      .getNamedItem("data-coordinate").value
-    this.resizeAnchor = coordinate
-    this.updateStateForResizing(event)
-    document.addEventListener("mousemove", this.handleFrameResized)
-  }
+    const coordinate = event.nativeEvent.target.attributes.getNamedItem(
+      "data-coordinate"
+    ).value;
+    this.resizeAnchor = coordinate;
+    this.updateStateForResizing(event);
+    document.addEventListener("mousemove", this.handleFrameResized);
+  };
 
   handleAnchorMouseUp = () => {
-    this.setState({ ...ResizeMoveFrame.defaultState })
-    this.resizeAnchor = ""
-    document.removeEventListener("mousemove", this.handleFrameResized)
-  }
+    this.setState({ ...ResizeMoveFrame.defaultState });
+    this.resizeAnchor = "";
+    document.removeEventListener("mousemove", this.handleFrameResized);
+  };
 
-  handleFrameDragged = (event) => {
-    this.isDragging = true
+  handleFrameDragged = event => {
+    this.isDragging = true;
 
-    const x = (this.state.oX + (event.pageX - this.state.eX) /
-      this.props.dpi / this.props.zoom)
-    const y = (this.state.oY + (event.pageY - this.state.eY) /
-      this.props.dpi / this.props.zoom)
+    const x =
+      this.state.oX +
+      (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
+    const y =
+      this.state.oY +
+      (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
 
     this.props.onChange({
       x: parseFloat(x.toFixed(2)),
-      y: parseFloat(y.toFixed(2))
-    })
-  }
+      y: parseFloat(y.toFixed(2)),
+    });
+  };
 
   // eslint-disable-next-line max-statements
-  handleFrameResized = (event) => {
-    const updatedMetrics = {}
+  handleFrameResized = event => {
+    const updatedMetrics = {};
 
     if (this.resizeAnchor.includes("n")) {
-      updatedMetrics.height = Math.max(this.state.oH +
-        ((this.state.eY - event.pageY) / this.props.dpi / this.props.zoom), 0)
+      updatedMetrics.height = Math.max(
+        this.state.oH +
+          (this.state.eY - event.pageY) / this.props.dpi / this.props.zoom,
+        0
+      );
       if (this.props.shape.height > 0) {
-        updatedMetrics.y = this.state.oY + (event.pageY - this.state.eY) /
-          this.props.dpi / this.props.zoom
+        updatedMetrics.y =
+          this.state.oY +
+          (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
       }
     } else if (this.resizeAnchor.includes("s")) {
-      updatedMetrics.height = Math.max(this.state.oH +
-        ((event.pageY - this.state.eY) / this.props.dpi / this.props.zoom), 0)
+      updatedMetrics.height = Math.max(
+        this.state.oH +
+          (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom,
+        0
+      );
     }
 
     if (this.resizeAnchor.includes("w")) {
-      updatedMetrics.width = Math.max(this.state.oW +
-        ((this.state.eX - event.pageX) / this.props.dpi / this.props.zoom), 0)
+      updatedMetrics.width = Math.max(
+        this.state.oW +
+          (this.state.eX - event.pageX) / this.props.dpi / this.props.zoom,
+        0
+      );
       if (this.props.shape.width > 0) {
-        updatedMetrics.x = this.state.oX + (event.pageX - this.state.eX) /
-          this.props.dpi / this.props.zoom
+        updatedMetrics.x =
+          this.state.oX +
+          (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
       }
     } else if (this.resizeAnchor.includes("e")) {
-      updatedMetrics.width = Math.max(this.state.oW +
-        ((event.pageX - this.state.eX) / this.props.dpi / this.props.zoom), 0)
+      updatedMetrics.width = Math.max(
+        this.state.oW +
+          (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom,
+        0
+      );
     }
 
-    const updatedProperties = Object.getOwnPropertyNames(updatedMetrics)
+    const updatedProperties = Object.getOwnPropertyNames(updatedMetrics);
 
     for (let idx = updatedProperties.length - 1; idx >= 0; idx--) {
-      const value = updatedMetrics[updatedProperties[idx]]
-      updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2))
+      const value = updatedMetrics[updatedProperties[idx]];
+      updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2));
     }
 
-    this.props.onChange(updatedMetrics)
-  }
+    this.props.onChange(updatedMetrics);
+  };
 
   handleTextChange = ({ target }) => {
-    this.props.onChange({ text: target.value })
-  }
+    this.props.onChange({ text: target.value });
+  };
 
   render() {
-    const { dpi, shape, zoom } = this.props
-    const x = (shape.x * dpi * zoom) - (shape.strokeWidth / 2.0)
-    const y = (shape.y * dpi * zoom) - (shape.strokeWidth / 2.0)
-    const width = (shape.width * dpi * zoom) + shape.strokeWidth
-    const height = (shape.height * dpi * zoom) + shape.strokeWidth
+    const { dpi, shape, zoom } = this.props;
+    const x = shape.x * dpi * zoom - shape.strokeWidth / 2.0;
+    const y = shape.y * dpi * zoom - shape.strokeWidth / 2.0;
+    const width = shape.width * dpi * zoom + shape.strokeWidth;
+    const height = shape.height * dpi * zoom + shape.strokeWidth;
 
     const anchorElements = frameAnchors.points.map((anchor, index) => {
-      const lineWidth = shape.strokeWidth > 0 ? shape.strokeWidth : 1
-      const style = { cursor: `${anchor.coordinate}-resize` }
-      const xAnchor = ((shape.x * dpi - (shape.strokeWidth / 2.0)) * zoom) -
-        (frameAnchors.size / 2.0) + (((shape.width * dpi) + lineWidth) *
-        zoom * anchor.x)
-      const yAnchor = ((shape.y * dpi - (shape.strokeWidth / 2.0)) * zoom) -
-        (frameAnchors.size / 2.0) + (((shape.height * dpi) + lineWidth) *
-        zoom * anchor.y)
+      const lineWidth = shape.strokeWidth > 0 ? shape.strokeWidth : 1;
+      const style = { cursor: `${anchor.coordinate}-resize` };
+      const xAnchor =
+        (shape.x * dpi - shape.strokeWidth / 2.0) * zoom -
+        frameAnchors.size / 2.0 +
+        (shape.width * dpi + lineWidth) * zoom * anchor.x;
+      const yAnchor =
+        (shape.y * dpi - shape.strokeWidth / 2.0) * zoom -
+        frameAnchors.size / 2.0 +
+        (shape.height * dpi + lineWidth) * zoom * anchor.y;
       return (
         <g key={`shape-anchor-${index}`}>
           <FrameRect
@@ -207,15 +225,15 @@ export default class ResizeMoveFrame extends Component {
             onMouseUp={this.handleAnchorMouseUp}
           />
         </g>
-      )
-    })
+      );
+    });
 
     /**
      * When a textbox is editing we don‘t want the frame controls to
      * be visible.
      */
     if (!this.state.shouldRender) {
-      return null
+      return null;
     }
 
     return (
@@ -234,6 +252,6 @@ export default class ResizeMoveFrame extends Component {
         />
         {anchorElements}
       </g>
-    )
+    );
   }
 }

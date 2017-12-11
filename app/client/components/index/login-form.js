@@ -1,26 +1,26 @@
 // @flow
-import React from "react"
-import { Formik } from "formik"
+import React from "react";
+import { Formik } from "formik";
 
 const validateForm = values => {
-  const errors = {}
+  const errors = {};
   if (!values.emailAddress) {
-    errors.emailAddress = true
+    errors.emailAddress = true;
   }
   if (!values.password) {
-    errors.password = true
+    errors.password = true;
   }
-  return errors
-}
+  return errors;
+};
 
 type Props = {
-  handleOnSubmit: Function
-}
+  handleOnSubmit: Function,
+};
 export default (props: Props) => (
   <Formik
     initialValues={{
       emailAddress: "",
-      password: ""
+      password: "",
     }}
     validate={validateForm}
     onSubmit={values => props.handleOnSubmit(values)}
@@ -38,13 +38,10 @@ export default (props: Props) => (
           onChange={handleChange}
           value={values.password}
         />
-        <button
-          type="submit"
-          disabled={isSubmitting}
-        >
+        <button type="submit" disabled={isSubmitting}>
           Log In
         </button>
       </form>
     )}
   />
-)
+);

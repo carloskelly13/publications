@@ -1,86 +1,97 @@
-import React, { Component } from "react"
-import styled from "styled-components"
-import get from "lodash/get"
-import { connect } from "react-redux"
+import React, { Component } from "react";
+import styled from "styled-components";
+import get from "lodash/get";
+import { connect } from "react-redux";
 import {
-  currentDocumentSelector, fetchDocument, backgroundGridLineRangesSelector,
-  sortedShapesSelector, updateSelectedShape, documentMetricsSelector, selectedShapeSelector,
-  editingTextBoxIdSelector, setEditingTextBox, zoomSelector
-} from "../../modules/document"
+  currentDocumentSelector,
+  fetchDocument,
+  backgroundGridLineRangesSelector,
+  sortedShapesSelector,
+  updateSelectedShape,
+  documentMetricsSelector,
+  selectedShapeSelector,
+  editingTextBoxIdSelector,
+  setEditingTextBox,
+  zoomSelector,
+} from "../../modules/document";
 import {
-  AppColors, contentPanelWidthFull, contentPanelWidthPartial, Keys
-} from "../../util/constants"
-import Canvas from "../canvas"
-import Ruler from "../rulers"
+  AppColors,
+  contentPanelWidthFull,
+  contentPanelWidthPartial,
+  Keys,
+} from "../../util/constants";
+import Canvas from "../canvas";
+import Ruler from "../rulers";
 
 const Container = styled.div`
   transition: width 350ms ease-in-out;
   background: ${AppColors.Gray20};
   overflow: scroll;
-  width: ${
-    ({ sidePanelVisible }) => sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull
-  };
+  width: ${({ sidePanelVisible }) =>
+    sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull};
   z-index: 1;
   height: 100%;
-`
+`;
 
 class EditorView extends Component {
   state = {
-    scrollOffset: { scrollLeft: 0, scrollTop: 0 }
-  }
+    scrollOffset: { scrollLeft: 0, scrollTop: 0 },
+  };
 
   componentWillMount() {
-    const { match: { params: { id } } } = this.props
+    const { match: { params: { id } } } = this.props;
     if (id) {
-      this.props.fetchDocument(id)
+      this.props.fetchDocument(id);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { match: { params: { id } } } = nextProps
+    const { match: { params: { id } } } = nextProps;
     if (get(this.props.currentDocument, "id") !== id) {
-      this.containerRef.scrollTop = 0
-      this.containerRef.scrollLeft = 0
-      this.props.fetchDocument(id)
+      this.containerRef.scrollTop = 0;
+      this.containerRef.scrollLeft = 0;
+      this.props.fetchDocument(id);
     }
   }
 
   handleViewScrollEvent = ({ target: { scrollLeft, scrollTop } }) => {
-    this.setState({ scrollOffset: { scrollLeft, scrollTop } })
-  }
+    this.setState({ scrollOffset: { scrollLeft, scrollTop } });
+  };
 
   handleKeyPress = event => {
     if (!this.props.selectedShape || this.props.editingTextBoxId) {
-      return
+      return;
     }
 
-    const arrowKeys = [Keys.Up, Keys.Down, Keys.Left, Keys.Right]
+    const arrowKeys = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
     if (arrowKeys.indexOf(event.keyCode) > -1) {
-      event.preventDefault()
+      event.preventDefault();
     }
 
-    const changes = {}
+    const changes = {};
     switch (event.keyCode) {
-    case Keys.Up:
-      changes.y = this.props.selectedShape.y - 0.05
-      break
-    case Keys.Down:
-      changes.y = this.props.selectedShape.y + 0.05
-      break
-    case Keys.Left:
-      changes.x = this.props.selectedShape.x - 0.05
-      break
-    case Keys.Right:
-      changes.x = this.props.selectedShape.x + 0.05
-      break
+      case Keys.Up:
+        changes.y = this.props.selectedShape.y - 0.05;
+        break;
+      case Keys.Down:
+        changes.y = this.props.selectedShape.y + 0.05;
+        break;
+      case Keys.Left:
+        changes.x = this.props.selectedShape.x - 0.05;
+        break;
+      case Keys.Right:
+        changes.x = this.props.selectedShape.x + 0.05;
+        break;
     }
 
-    const changeKeys = Object.keys(changes)
+    const changeKeys = Object.keys(changes);
     if (changeKeys.length > 0) {
-      changeKeys.forEach(key => (changes[key] = parseFloat(changes[key].toFixed(2))))
-      this.props.updateSelectedShape(changes)
+      changeKeys.forEach(
+        key => (changes[key] = parseFloat(changes[key].toFixed(2)))
+      );
+      this.props.updateSelectedShape(changes);
     }
-  }
+  };
 
   render() {
     const {
@@ -93,12 +104,12 @@ class EditorView extends Component {
         editModeActive = true,
         sidePanelVisible = false,
         backgroundGridLineRanges,
-        zoom
+        zoom,
       },
-      state: { scrollOffset }
-    } = this
-    const orientation = documentMetrics.width > documentMetrics.height ?
-      "landscape" : "portrait"
+      state: { scrollOffset },
+    } = this;
+    const orientation =
+      documentMetrics.width > documentMetrics.height ? "landscape" : "portrait";
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
@@ -139,13 +150,13 @@ class EditorView extends Component {
                   @media print {
                     html, body { margin: 0; }
                   }
-                `
+                `,
               }}
             />
           </div>
         )}
       </Container>
-    )
+    );
   }
 }
 
@@ -157,9 +168,11 @@ export default connect(
     selectedShape: selectedShapeSelector(state),
     backgroundGridLineRanges: backgroundGridLineRangesSelector(state),
     editingTextBoxId: editingTextBoxIdSelector(state),
-    zoom: zoomSelector(state)
-  }), {
+    zoom: zoomSelector(state),
+  }),
+  {
     fetchDocument,
     updateSelectedShape,
-    setEditingTextBox
-  })(EditorView)
+    setEditingTextBox,
+  }
+)(EditorView);

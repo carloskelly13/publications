@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { AppColors, appFont } from "../../util/constants"
+import styled from "styled-components";
+import { AppColors, appFont } from "../../util/constants";
 
 export const TextInput = styled.input`
   border: 1px solid ${AppColors.Gray40};
@@ -10,28 +10,28 @@ export const TextInput = styled.input`
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {
-      return "11px"
+      return "11px";
     } else if (props.large) {
-      return "16px"
+      return "16px";
     }
-    return "14px"
+    return "14px";
   }};
   outline: none;
-  text-align: ${ props => {
+  text-align: ${props => {
     if (props.alignRight) {
-      return "right"
+      return "right";
     } else if (props.alignCenter) {
-      return "center"
+      return "center";
     }
-    return "left"
+    return "left";
   }};
   width: ${props => {
     if (props.mini) {
-      return "20px"
+      return "20px";
     } else if (props.small) {
-      return "35px"
+      return "35px";
     }
-    return "auto"
+    return "auto";
   }};
 
   &:disabled {
@@ -42,4 +42,4 @@ export const TextInput = styled.input`
     border-color ${AppColors.Highlight};
     box-shadow: inset 0 1px 2px #eee, 0 0 0 1px ${AppColors.Highlight};
   }
-`
+`;

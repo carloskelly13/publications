@@ -1,22 +1,28 @@
-import React, { createElement } from "react"
-import { Rectangle, Ellipse, TextBox } from "../shapes"
-import SelectableShape from "../shapes/selectable-shape"
-import get from "lodash/get"
+import React, { createElement } from "react";
+import { Rectangle, Ellipse, TextBox } from "../shapes";
+import SelectableShape from "../shapes/selectable-shape";
+import get from "lodash/get";
 
-const shapeNodes = { text: TextBox, ellipse: Ellipse, rect: Rectangle }
+const shapeNodes = { text: TextBox, ellipse: Ellipse, rect: Rectangle };
 
 export const renderShapes = props => {
   const {
-    sortedShapes, dpi, zoom, editingTextBoxId, setEditingTextBox,
-    updateSelectedShape, allowsEditing, selectedShape
-  } = props
+    sortedShapes,
+    dpi,
+    zoom,
+    editingTextBoxId,
+    setEditingTextBox,
+    updateSelectedShape,
+    allowsEditing,
+    selectedShape,
+  } = props;
 
   return sortedShapes.map(shape => {
-    let shapeProps = { shape, zoom, dpi }
+    let shapeProps = { shape, zoom, dpi };
     if (shape.type === "text") {
-      shapeProps = { ...shapeProps, editingTextBoxId, updateSelectedShape }
+      shapeProps = { ...shapeProps, editingTextBoxId, updateSelectedShape };
     }
-    const shapeNode = createElement(shapeNodes[shape.type], shapeProps)
+    const shapeNode = createElement(shapeNodes[shape.type], shapeProps);
 
     return (
       <SelectableShape
@@ -30,6 +36,6 @@ export const renderShapes = props => {
         setEditingTextBox={setEditingTextBox}
         renderShape={shapeNode}
       />
-    )
-  })
-}
+    );
+  });
+};

@@ -1,6 +1,6 @@
 // @flow
-import React from "react"
-import ResizeMoveFrame from "./frame"
+import React from "react";
+import ResizeMoveFrame from "./frame";
 
 type Props = {
   renderShape: React.Node,
@@ -10,18 +10,16 @@ type Props = {
   setEditingTextBox: Function,
   onChange: Function,
   zoom: number,
-  dpi: number
-}
+  dpi: number,
+};
 export default (props: Props) => {
-  const { selectable, shape, onChange, renderShape, selectedShapeId } = props
-  const isSelected = selectable && selectedShapeId === shape.id
+  const { selectable, shape, onChange, renderShape, selectedShapeId } = props;
+  const isSelected = selectable && selectedShapeId === shape.id;
 
   return (
-    <g
-      onClick={selectable ? () => onChange(shape) : null}
-    >
+    <g onClick={selectable ? () => onChange(shape) : null}>
       {renderShape}
       {isSelected && <ResizeMoveFrame {...props} />}
     </g>
-  )
-}
+  );
+};

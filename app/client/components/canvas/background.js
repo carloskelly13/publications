@@ -1,12 +1,12 @@
-import React from "react"
-import { GridLine } from "./grid-line"
+import React from "react";
+import { GridLine } from "./grid-line";
 
 const renderGridLines = ({ x, y, zoom, width, height, dpi }) => {
   return [
     x.map((mark, index) => (
       <GridLine
         key={`v-grid-${mark}`}
-        major={(index % 4 === 0) && (index > 0)}
+        major={index % 4 === 0 && index > 0}
         mX={mark - 0.5}
         mY="0"
         dX={mark - 0.5}
@@ -17,22 +17,28 @@ const renderGridLines = ({ x, y, zoom, width, height, dpi }) => {
     y.map((mark, index) => (
       <GridLine
         key={`h-grid-${mark}`}
-        major={(index % 4 === 0) && (index > 0)}
+        major={index % 4 === 0 && index > 0}
         mX="0"
         mY={mark - 0.5}
         dX={width * dpi * zoom}
         dY={mark - 0.5}
         direction="H"
       />
-    ))
-  ]
-}
+    )),
+  ];
+};
 
 export class CanvasBackground extends React.PureComponent {
   render() {
     const {
-      width, height, dpi, zoom, handleBackgroundClicked, selectable, gridLineRanges
-    } = this.props
+      width,
+      height,
+      dpi,
+      zoom,
+      handleBackgroundClicked,
+      selectable,
+      gridLineRanges,
+    } = this.props;
     return (
       <g onClick={selectable ? handleBackgroundClicked : null}>
         <rect
@@ -44,8 +50,9 @@ export class CanvasBackground extends React.PureComponent {
           width={width * dpi * zoom}
           height={height * dpi * zoom}
         />
-        { selectable && renderGridLines({ width, height, dpi, zoom, ...gridLineRanges }) }
+        {selectable &&
+          renderGridLines({ width, height, dpi, zoom, ...gridLineRanges })}
       </g>
-    )
+    );
   }
 }

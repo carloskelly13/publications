@@ -1,8 +1,8 @@
 // @flow
-import React, { Component } from "react"
-import styled from "styled-components"
-import { AppColors } from "../../util/constants"
-import enhanceWithClickOutside from "react-click-outside"
+import React, { Component } from "react";
+import styled from "styled-components";
+import { AppColors } from "../../util/constants";
+import enhanceWithClickOutside from "react-click-outside";
 
 export const Menu = styled.ul`
   background: #fff;
@@ -20,7 +20,7 @@ export const Menu = styled.ul`
   outline: none;
   border: 1px solid ${AppColors.Gray50};
   z-index: 6;
-`
+`;
 
 export const MenuContentContainer = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ export const MenuContentContainer = styled.div`
   align-items: flex-start;
   flex-direction: column;
   outline: none;
-`
+`;
 
 export const MenuDivider = styled.div`
   width: 100%;
@@ -36,7 +36,7 @@ export const MenuDivider = styled.div`
   margin: 2px 0;
   display: block;
   background: hsla(0, 0%, 0%, 0.15);
-`
+`;
 
 export const MenuItem = styled.button`
   padding: 0.4em 3em 0.4em 1em;
@@ -69,70 +69,61 @@ export const MenuItem = styled.button`
     pointer-events: none;
     color: ${AppColors.DisabledGray};
   }
-`
+`;
 
-export const MenuContainer = enhanceWithClickOutside(class extends Component {
-  handleClickOutside = () => this.props.onClickOutside()
-  render() {
-    return (
-      <MenuContentContainer>
-        { this.props.children }
-      </MenuContentContainer>
-    )
+export const MenuContainer = enhanceWithClickOutside(
+  class extends Component {
+    handleClickOutside = () => this.props.onClickOutside();
+    render() {
+      return <MenuContentContainer>{this.props.children}</MenuContentContainer>;
+    }
   }
-})
+);
 
 type MenuProps = {
   renderMenu: React.Node,
-  renderButton: React.Node
-}
+  renderButton: React.Node,
+};
 export default class extends React.Component<MenuProps> {
   state = {
-    menuActive: false
-  }
+    menuActive: false,
+  };
 
-  handleToggleButtonClick = () => this.setState(prevState => ({
-    menuActive: !prevState.menuActive
-  }))
+  handleToggleButtonClick = () =>
+    this.setState(prevState => ({
+      menuActive: !prevState.menuActive,
+    }));
 
-  closeMenu = () => this.setState({ menuActive: false })
+  closeMenu = () => this.setState({ menuActive: false });
 
   render() {
-    const { menuActive } = this.state
-    const { renderMenu, renderButton, disabled } = this.props
-    const disabledStyle = disabled ? {
-      opacity: 0.33,
-      cursor: "not-allowed"
-    } : {}
+    const { menuActive } = this.state;
+    const { renderMenu, renderButton, disabled } = this.props;
+    const disabledStyle = disabled
+      ? {
+          opacity: 0.33,
+          cursor: "not-allowed",
+        }
+      : {};
     return (
-      <MenuContainer
-        onClickOutside={this.closeMenu}
-      >
+      <MenuContainer onClickOutside={this.closeMenu}>
         {React.cloneElement(
-          renderButton, {
+          renderButton,
+          {
             onClick: this.handleToggleButtonClick,
             style: {
               margin: 0,
               borderRadius: 0,
               background: menuActive ? AppColors.Highlight : "transparent",
               color: menuActive ? AppColors.White : AppColors.DarkGray,
-              ...disabledStyle
+              ...disabledStyle,
             },
-            disabled
-          }, (
-            <span>
-              {renderButton.props.children}
-            </span>
-          )
+            disabled,
+          },
+          <span>{renderButton.props.children}</span>
         )}
-        {menuActive && (
-          <Menu
-            onClick={this.closeMenu}
-          >
-            {renderMenu}
-          </Menu>
-        )}
+        {menuActive && <Menu onClick={this.closeMenu}>{renderMenu}</Menu>}
       </MenuContainer>
-    )
+    );
   }
 }

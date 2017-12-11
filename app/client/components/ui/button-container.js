@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { AppColors } from "../../util/constants"
+import styled from "styled-components";
+import { AppColors } from "../../util/constants";
 
 export const ModalButtonContainer = styled.div`
   position: absolute;
@@ -16,4 +16,4 @@ export const ModalButtonContainer = styled.div`
   flex-wrap: wrap;
   padding: 0 1em 0 0;
   justify-content: flex-end;
-`
+`;

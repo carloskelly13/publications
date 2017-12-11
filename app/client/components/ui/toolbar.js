@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { AppColors } from "../../util/constants"
+import styled from "styled-components";
+import { AppColors } from "../../util/constants";
 
 const Toolbar = styled.div`
   align-items: flex-end;
@@ -17,6 +17,6 @@ const Toolbar = styled.div`
   @media print {
     display: none;
   }
-`
+`;
 
-export { Toolbar }
+export { Toolbar };

@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { AppColors } from "../../util/constants"
+import styled from "styled-components";
+import { AppColors } from "../../util/constants";
 
 export const TextButton = styled.button`
   background: transparent;
@@ -14,6 +14,6 @@ export const TextButton = styled.button`
   padding: 0.25em 0.75em;
   border-radius: 0;
   text-align: center;
-`
+`;
 
-export default TextButton
+export default TextButton;

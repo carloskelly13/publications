@@ -1,11 +1,11 @@
-import React from "react"
-import styled from "styled-components"
-import { PubInput } from "../ui/pub-input"
+import React from "react";
+import styled from "styled-components";
+import { PubInput } from "../ui/pub-input";
 
 const SearchContainer = styled.div`
   margin: 0 0 10px 0;
   text-align: center;
-`
+`;
 
 const SearchInput = styled(PubInput)`
   font-size: 14px;
@@ -19,7 +19,7 @@ const SearchInput = styled(PubInput)`
     border-right: none;
     width: 100%;
   }
-`
+`;
 
 export const Search = ({ keyword, keywordChanged }) => (
   <SearchContainer>
@@ -29,4 +29,4 @@ export const Search = ({ keyword, keywordChanged }) => (
       placeholder="Search for Documents"
     />
   </SearchContainer>
-)
+);
