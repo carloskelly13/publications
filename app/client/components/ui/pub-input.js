@@ -76,6 +76,16 @@ const PubInputGroup = styled.div`
   justify-content: space-between;
 `;
 
+type Props = {
+  onChange: Function,
+  name: string,
+  value?: string,
+  displayName?: string,
+  label?: string,
+  marginBottom?: string,
+  marginRight?: string,
+  type: string,
+};
 export const FormInput = ({
   onChange,
   name,
@@ -84,8 +94,9 @@ export const FormInput = ({
   marginBottom,
   marginRight,
   label,
-}) => (
-  <FormInputContainer marginBottom={marginBottom} marginRight={marginRight}>
+  type,
+}: Props) => (
+  <FormInputContainer style={{ marginBottom, marginRight }}>
     <PubInputGroup>
       <PubInput
         block
@@ -94,6 +105,7 @@ export const FormInput = ({
         onChange={onChange}
         name={name}
         value={value}
+        type={type}
       />
       {!!label && <PubInputLabel>{label}</PubInputLabel>}
     </PubInputGroup>

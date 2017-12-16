@@ -18,7 +18,8 @@ npm-debug.log
 node_modules
 dist
 /.idea/workspace.xml
-
+/app/server/.settings
+/app/server/.sts4-cache
 /app/server/out
 /app/server/build
 /app/server/bin

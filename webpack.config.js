@@ -1,8 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
-const DashboardPlugin = require("webpack-dashboard/plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = env => {
   const addPlugin = (add, plugin) => (add ? plugin : undefined);
@@ -16,8 +14,8 @@ module.exports = env => {
       app: removeEmpty([
         ...(env.dev ? ["webpack-dev-server/client?http://localhost:4040"] : []),
         "babel-polyfill",
-        "./app/client/index.js"
-      ])
+        "./app/client/index.js",
+      ]),
     },
 
     output: {
@@ -25,7 +23,7 @@ module.exports = env => {
       sourceMapFilename: "[name].map",
       filename: "[hash].[name].js",
       publicPath: "/",
-      pathinfo: true
+      pathinfo: true,
     },
 
     devServer: {
@@ -34,12 +32,12 @@ module.exports = env => {
           target: "http://localhost:8080",
           changeOrigin: true,
           pathRewrite: {
-            "^/api": ""
-          }
-        }
+            "^/api": "",
+          },
+        },
       },
       historyApiFallback: true,
-      hot: false
+      hot: false,
     },
 
     module: {
@@ -47,20 +45,20 @@ module.exports = env => {
         {
           test: /\.js$/,
           include: [path.resolve(__dirname, "app/client")],
-          loader: "babel-loader"
+          loader: "babel-loader",
         },
         { test: /\.css$/, loader: "css-loader" },
         {
           test: /\.(eot|woff|ttf|svg|png|otf)$/,
-          loader: "url-loader?limit=64"
+          loader: "url-loader?limit=64",
         },
-        { test: /\.json$/, loader: "json-loader" }
-      ]
+        { test: /\.json$/, loader: "json-loader" },
+      ],
     },
 
     resolve: {
       extensions: [".js"],
-      modules: [path.join(__dirname, "node_modules")]
+      modules: [path.join(__dirname, "node_modules")],
     },
 
     plugins: removeEmpty([
@@ -68,7 +66,7 @@ module.exports = env => {
         new webpack.LoaderOptionsPlugin({
           minimize: true,
           debug: false,
-          quiet: true
+          quiet: true,
         })
       ),
 
@@ -77,25 +75,21 @@ module.exports = env => {
       ifProd(
         new webpack.DefinePlugin({
           "process.env": {
-            NODE_ENV: JSON.stringify("production")
-          }
+            NODE_ENV: JSON.stringify("production"),
+          },
         })
       ),
 
       ifProd(
         new webpack.optimize.UglifyJsPlugin({
-          compress: { warnings: false }
+          compress: { warnings: false },
         })
       ),
 
       new HtmlWebpackPlugin({
         template: "app/client/index.html",
-        inject: "body"
+        inject: "body",
       }),
-
-      new DashboardPlugin(),
-
-      ifProd(new CompressionPlugin())
     ]),
 
     node: {
@@ -103,7 +97,7 @@ module.exports = env => {
       crypto: "empty",
       module: false,
       clearImmediate: false,
-      setImmediate: false
-    }
+      setImmediate: false,
+    },
   };
 };

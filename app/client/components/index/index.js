@@ -24,15 +24,10 @@ class IndexView extends Component {
     }
   }
 
-  handleOnSubmit = values => this.props.fetchUser(values);
-
   render() {
     return (
       <div>
-        <h2>Index View</h2>
-        <LoginForm handleOnSubmit={this.handleOnSubmit} />
-        <button onClick={() => this.props.logOut()}>Log Out</button>
-        {JSON.stringify(this.props.user)}
+        <LoginForm handleOnSubmit={this.props.fetchUser} />
       </div>
     );
   }

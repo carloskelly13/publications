@@ -116,7 +116,7 @@ const navigateToDocument = function*({ payload }) {
 };
 
 const getDocuments = function*() {
-  const response = yield call(API.get, "documents");
+  const response = yield call(API.GET, "documents");
   if (response.status !== 200) {
     yield put({ type: "FETCH_DOCUMENTS_FAILURE" });
     return;
@@ -126,7 +126,7 @@ const getDocuments = function*() {
 };
 
 const getDocument = function*({ payload: id }) {
-  const response = yield call(API.get, `documents/${id}`);
+  const response = yield call(API.GET, `documents/${id}`);
   if (response.status !== 200) {
     return;
   }
@@ -135,7 +135,7 @@ const getDocument = function*({ payload: id }) {
 
 const postDocument = function*({ payload }) {
   const csrfHeaders = yield select(csrfHeadersSelector);
-  const response = yield call(API.post, "documents", payload, csrfHeaders);
+  const response = yield call(API.POST, "documents", payload, csrfHeaders);
   if (response.status !== 200) {
     yield put({ type: "NEW_DOCUMENT_FAILURE" });
     return;
@@ -149,7 +149,7 @@ const putDocument = function*({ payload }) {
   const document = packageDocumentToJson(body);
   const csrfHeaders = yield select(csrfHeadersSelector);
   const response = yield call(
-    API.put,
+    API.PUT,
     `documents/${id}`,
     document,
     csrfHeaders

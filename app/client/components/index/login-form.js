@@ -1,6 +1,37 @@
-// @flow
 import React from "react";
 import { Formik } from "formik";
+import { FormInput } from "../ui/pub-input";
+import Button from "../ui/framed-button";
+import styled from "styled-components";
+import { AppColors } from "../../util/constants";
+
+const Form = styled.form`
+  width: 300px;
+  margin: 3em auto 1em;
+`;
+
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 0.25em;
+`;
+
+const Message = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 1.5em;
+`;
+
+const Flag = styled.span`
+  border: 2px solid ${AppColors.DarkGray};
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 1px 4px;
+  margin: 0 4px;
+`;
 
 const validateForm = values => {
   const errors = {};
@@ -23,25 +54,36 @@ export default (props: Props) => (
       password: "",
     }}
     validate={validateForm}
-    onSubmit={values => props.handleOnSubmit(values)}
+    onSubmit={(values, { setSubmitting }) => {
+      props.handleOnSubmit(values);
+      setSubmitting(false);
+    }}
     render={({ values, handleChange, handleSubmit, isSubmitting }) => (
-      <form onSubmit={handleSubmit}>
-        <input
+      <Form onSubmit={handleSubmit}>
+        <Title>
+          Publications <Flag>Beta</Flag>
+        </Title>
+        <Message>A web app for print design and layout.</Message>
+        <FormInput
+          displayName="Email Address"
           type="email"
           name="emailAddress"
           onChange={handleChange}
+          marginBottom="1em"
           value={values.emailAddress}
         />
-        <input
+        <FormInput
+          displayName="Password"
           type="password"
           name="password"
           onChange={handleChange}
+          marginBottom="1em"
           value={values.password}
         />
-        <button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           Log In
-        </button>
-      </form>
+        </Button>
+      </Form>
     )}
   />
 );

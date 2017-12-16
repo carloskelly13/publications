@@ -42,7 +42,7 @@ class DocumentsView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.currentUserRequestFailed) {
+    if (nextProps.currentUserRequestFailed || !nextProps.user) {
       this.context.router.history.replace("/");
     }
   }

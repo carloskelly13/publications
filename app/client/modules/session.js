@@ -31,7 +31,7 @@ const receiveUser = function*(response) {
 };
 
 const login = function*({ payload }) {
-  const response = yield call(API.post, "users/login", payload);
+  const response = yield call(API.POST, "users/login", payload);
   if (response.status !== 200) {
     yield put({ type: "FETCH_USER_FAILED" });
     return;
@@ -40,7 +40,7 @@ const login = function*({ payload }) {
 };
 
 const getUser = function*() {
-  const response = yield call(API.get, "users/current");
+  const response = yield call(API.GET, "users/current");
   if (response.status !== 200) {
     yield put({ type: "FETCH_CURRENT_USER_FAILED" });
     return;
@@ -49,7 +49,7 @@ const getUser = function*() {
 };
 
 const deleteSession = function*() {
-  yield call(API.post, "users/logout");
+  yield call(API.DELETE, "users/logout");
   yield put({ type: "CLEAR_CSRF_HEADERS" });
   yield put({ type: "FETCH_USER_SUCCESS", payload: { user: null } });
 };
