@@ -7,7 +7,7 @@ type Props = {
   shape: Object,
   selectedShapeId?: string,
   selectable: boolean,
-  setEditingTextBox: Function,
+  setActiveDraftJSEditor: Function,
   onChange: Function,
   zoom: number,
   dpi: number,

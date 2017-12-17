@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
 import { RichUtils } from "draft-js";
 import { styles as textStyles } from "../shapes/text-box";
 import ColorPicker from "./../color-picker";
@@ -12,11 +11,6 @@ import {
 } from "../../util/text";
 import { AppColors } from "../../util/constants";
 import { ContentContainer } from "../ui/containers";
-import {
-  selectedShapeSelector,
-  currentDocumentSelector,
-  updateSelectedShape,
-} from "../../modules/document";
 import MetricInput from "./metric-input";
 import IconButton from "../ui/icon-button";
 
@@ -41,7 +35,7 @@ const supportsBorder = shape =>
 const supportsRadius = shape => !!shape && shape.type === "rect";
 const isText = shape => !!shape && shape.type === "text";
 
-export const MetricsBar = ({ shape, updateSelectedShape }) => {
+export default ({ shape, updateSelectedObject }) => {
   if (!shape) {
     return <MetricsBarContainer />;
   }
@@ -62,7 +56,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           value={shape.x}
           label="X"
           unit="in"
-          onChange={updateSelectedShape}
+          onChange={updateSelectedObject}
         />
         <MetricInput
           small
@@ -70,7 +64,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           value={shape.y}
           label="Y"
           unit="in"
-          onChange={updateSelectedShape}
+          onChange={updateSelectedObject}
         />
         <MetricInput
           small
@@ -78,7 +72,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           value={shape.width}
           label="Width"
           unit="in"
-          onChange={updateSelectedShape}
+          onChange={updateSelectedObject}
         />
         <MetricInput
           small
@@ -86,13 +80,13 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           value={shape.height}
           label="Height"
           unit="in"
-          onChange={updateSelectedShape}
+          onChange={updateSelectedObject}
         />
         {isText(shape) ? (
           <ColorPicker
             property="color"
             onChange={({ color }) =>
-              updateSelectedShape({
+              updateSelectedObject({
                 editorState: textStyles.color.add(shape.editorState, color),
               })
             }
@@ -102,7 +96,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
         ) : (
           <ColorPicker
             property="fill"
-            onChange={updateSelectedShape}
+            onChange={updateSelectedObject}
             hex={shape.fill}
             alpha={shape.fillOpacity}
           />
@@ -121,7 +115,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
                 numericValue >= 6 &&
                 numericValue <= 144
               ) {
-                updateSelectedShape({
+                updateSelectedObject({
                   editorState: textStyles.fontSize.add(
                     shape.editorState,
                     `${numericValue}px`
@@ -135,7 +129,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
           <ColorPicker
             key="stroke-color-picker"
             property="stroke"
-            onChange={updateSelectedShape}
+            onChange={updateSelectedObject}
             hex={shape.stroke}
             alpha={shape.strokeOpacity}
           />,
@@ -146,7 +140,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
             value={shape.strokeWidth}
             label="Border"
             unit="pt"
-            onChange={updateSelectedShape}
+            onChange={updateSelectedObject}
           />,
         ]}
         {supportsRadius(shape) && (
@@ -156,7 +150,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
             value={shape.r}
             label="Radius"
             unit="pt"
-            onChange={updateSelectedShape}
+            onChange={updateSelectedObject}
           />
         )}
         {isText(shape) &&
@@ -167,7 +161,7 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
               disabled={!isTextSelected}
               style={{ margin: "0 0.25em" }}
               onClick={() =>
-                updateSelectedShape({
+                updateSelectedObject({
                   editorState: RichUtils.toggleInlineStyle(
                     shape.editorState,
                     type.style
@@ -188,13 +182,3 @@ export const MetricsBar = ({ shape, updateSelectedShape }) => {
     </MetricsBarContainer>
   );
 };
-
-export default connect(
-  state => ({
-    shape: selectedShapeSelector(state),
-    doc: currentDocumentSelector(state),
-  }),
-  {
-    updateSelectedShape,
-  }
-)(MetricsBar);

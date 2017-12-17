@@ -1,34 +1,21 @@
 import React from "react";
-import OpenDocumentModal from "../open-document";
-import NewDocumentModal from "../new-document";
-import { connect } from "react-redux";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
-import { logOut } from "../../modules/session";
-import { showModal } from "../../modules/ui";
-import {
-  currentDocumentSelector,
-  saveDocument,
-  setZoom,
-} from "../../modules/document";
 import { TextButton } from "../ui/text-button";
 
-const FileMenu = ({
+export default ({
   currentDocument,
-  saveDocument,
-  showModal: showModalAction,
-  logOut: logOutAction,
+  saveDocument = () => {},
+  logOut = () => {},
+  showNewDocumentModal,
+  showOpenDocumentModal,
   setZoom,
 }) => (
   <Menu
     renderButton={<TextButton>File</TextButton>}
     renderMenu={
       <div>
-        <MenuItem onClick={() => showModalAction(NewDocumentModal)}>
-          New…
-        </MenuItem>
-        <MenuItem onClick={() => showModalAction(OpenDocumentModal)}>
-          Open…
-        </MenuItem>
+        <MenuItem onClick={showNewDocumentModal}>New…</MenuItem>
+        <MenuItem onClick={showOpenDocumentModal}>Open…</MenuItem>
         <MenuDivider />
         <MenuItem
           disabled={!currentDocument}
@@ -49,21 +36,9 @@ const FileMenu = ({
           Delete
         </MenuItem>
         <MenuDivider />
-        <MenuItem onClick={logOutAction}>Log Out</MenuItem>
+        <MenuItem onClick={logOut}>Log Out</MenuItem>
         <MenuItem onClick={() => {}}>About Publications…</MenuItem>
       </div>
     }
   />
 );
-
-export default connect(
-  state => ({
-    currentDocument: currentDocumentSelector(state),
-  }),
-  {
-    logOut,
-    showModal,
-    saveDocument,
-    setZoom,
-  }
-)(FileMenu);

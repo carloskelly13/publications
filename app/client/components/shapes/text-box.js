@@ -14,10 +14,10 @@ class TextBox extends React.PureComponent {
       zoom,
       dpi,
       updateSelectedShape,
-      editingTextBoxId,
+      activeDraftJSEditor,
     } = this.props;
 
-    const readOnly = editingTextBoxId !== shape.id;
+    const readOnly = activeDraftJSEditor !== shape.id;
     const metrics = {
       x: dpi * shape.x,
       y: dpi * shape.y,

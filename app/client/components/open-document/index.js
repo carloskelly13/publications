@@ -1,17 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
 import { ModalContent } from "../modal";
 import Button from "../ui/framed-button";
 import FileBrowser, { FileBrowserLoadingContainer } from "./file-browser";
 import AsyncViewContent from "../async-content";
 import { ModalButtonContainer } from "../ui/button-container";
-import { hideModal } from "../../modules/ui";
-import {
-  loadDocumentView,
-  fetchDocuments,
-  sortedDocumentsSelector,
-} from "../../modules/document";
 import { Spinner } from "../ui/spinner";
 
 const OpenDocumentContainer = styled(ModalContent)`
@@ -19,25 +12,33 @@ const OpenDocumentContainer = styled(ModalContent)`
   padding: 0 0 40px;
 `;
 
-export class OpenDocument extends Component {
+type Props = {
+  documents?: Array,
+  onDismiss: Function,
+  replaceRoute: Function,
+  getDocuments: Function,
+};
+type State = {
+  selectedId: string,
+};
+export default class OpenDocument extends React.Component<Props, State> {
   state = {
     selectedId: "",
   };
 
   componentDidMount() {
-    this.props.fetchDocuments();
+    this.props.getDocuments();
   }
 
   handleFileClicked = id => this.setState(() => ({ selectedId: id }));
 
-  handleOpenButtonClicked = () =>
-    this.props.loadDocumentView({ id: this.state.selectedId });
+  handleOpenButtonClicked = () => {
+    this.props.onDismiss();
+    this.props.replaceRoute(`/documents/${this.state.selectedId}`);
+  };
 
   render() {
-    const {
-      props: { hideModal: hideModalAction, documents },
-      state: { selectedId },
-    } = this;
+    const { props: { onDismiss, documents }, state: { selectedId } } = this;
     return (
       <OpenDocumentContainer>
         <AsyncViewContent
@@ -49,6 +50,7 @@ export class OpenDocument extends Component {
           }
           renderContent={
             <FileBrowser
+              documents={documents}
               selectedFileId={selectedId}
               handleFileClicked={this.handleFileClicked}
             />
@@ -62,20 +64,9 @@ export class OpenDocument extends Component {
           >
             Open Document
           </Button>
-          <Button onClick={hideModalAction}>Close</Button>
+          <Button onClick={onDismiss}>Close</Button>
         </ModalButtonContainer>
       </OpenDocumentContainer>
     );
   }
 }
-
-export default connect(
-  state => ({
-    documents: sortedDocumentsSelector(state),
-  }),
-  {
-    hideModal,
-    loadDocumentView,
-    fetchDocuments,
-  }
-)(OpenDocument);

@@ -1,23 +1,16 @@
 {
-  "presets": [
-    [ "env", { "loose": true, "modules" : false } ],
-    "react",
-    "stage-0",
-    "flow"
-  ],
+  "presets": ["@babel/preset-env", "@babel/preset-react", "@babel/preset-flow"],
   "plugins": [
-    "transform-async-to-generator",
-    "transform-class-properties",
-    "transform-object-rest-spread"
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread"
   ],
   "env": {
     "production": {
-      "plugins" : [
-        "babel-plugin-styled-components",
-        "transform-object-rest-spread",
-        "transform-react-remove-prop-types",
-        "transform-async-to-generator",
-        "transform-class-properties"
+      "plugins": [
+        "@babel/plugin-transform-runtime",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-object-rest-spread"
       ]
     }
   }

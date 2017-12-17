@@ -10,17 +10,17 @@ export const renderShapes = props => {
     sortedShapes,
     dpi,
     zoom,
-    editingTextBoxId,
-    setEditingTextBox,
     updateSelectedShape,
     allowsEditing,
     selectedShape,
+    activeDraftJSEditor,
+    setActiveDraftJSEditor,
   } = props;
 
   return sortedShapes.map(shape => {
     let shapeProps = { shape, zoom, dpi };
     if (shape.type === "text") {
-      shapeProps = { ...shapeProps, editingTextBoxId, updateSelectedShape };
+      shapeProps = { ...shapeProps, updateSelectedShape, activeDraftJSEditor };
     }
     const shapeNode = createElement(shapeNodes[shape.type], shapeProps);
 
@@ -32,8 +32,8 @@ export const renderShapes = props => {
         selectedShapeId={get(selectedShape, "id", null)}
         shape={shape}
         onChange={updateSelectedShape}
+        setActiveDraftJSEditor={setActiveDraftJSEditor}
         selectable={allowsEditing}
-        setEditingTextBox={setEditingTextBox}
         renderShape={shapeNode}
       />
     );

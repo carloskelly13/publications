@@ -1,24 +1,22 @@
 // @flow
 import React, { Component } from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import { newDocument } from "../../modules/document";
-import { hideModal } from "../../modules/ui";
 import Button from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Header, Message } from "../ui/text";
 import { ModalContent } from "../modal";
 import { FormInput, FormGroup } from "../ui/pub-input";
 import { Formik } from "formik";
+import to from "await-to-js";
+import Api from "../../util/api";
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
 `;
 type Props = {
-  newDocument: Function,
-  hideModal: Function,
+  onDismiss: Function,
 };
-class NewDocumentView extends Component<Props> {
+export default class NewDocumentDialog extends Component<Props> {
   state = {
     name: "New Document",
     width: 8.5,
@@ -28,11 +26,20 @@ class NewDocumentView extends Component<Props> {
 
   validateForm = () => {
     const errors = {};
-
     return errors;
   };
 
+  createNewDocument = async documentAttrs => {
+    const payload = { ...documentAttrs, shapes: [] };
+    const [err] = await to(Api.POST("documents", payload));
+    if (err) {
+      return;
+    }
+    this.props.onDismiss();
+  };
+
   render() {
+    const { onDismiss } = this.props;
     return (
       <NewDocumentContainer>
         <Header>Create New Document</Header>
@@ -46,7 +53,7 @@ class NewDocumentView extends Component<Props> {
             height: 11,
           }}
           validate={this.validateForm}
-          onSubmit={values => this.props.newDocument({ ...values, shapes: [] })}
+          onSubmit={values => this.createNewDocument(values)}
           render={({ values, handleChange, handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <FormGroup>
@@ -77,7 +84,7 @@ class NewDocumentView extends Component<Props> {
                 <Button marginRight type="submit">
                   Create Document
                 </Button>
-                <Button type="button" onClick={this.props.hideModal}>
+                <Button type="button" onClick={onDismiss}>
                   Close
                 </Button>
               </ModalButtonContainer>
@@ -88,8 +95,3 @@ class NewDocumentView extends Component<Props> {
     );
   }
 }
-
-export default connect(null, {
-  newDocument,
-  hideModal,
-})(NewDocumentView);

@@ -49,7 +49,7 @@ export default class ResizeMoveFrame extends Component {
   state = ResizeMoveFrame.defaultState;
 
   componentWillUnmount() {
-    this.props.setEditingTextBox(null);
+    this.props.setActiveDraftJSEditor(null);
     document.removeEventListener("mousemove", this.handleFrameResized);
     document.removeEventListener("mousemove", this.handleFrameDragged);
   }
@@ -97,7 +97,8 @@ export default class ResizeMoveFrame extends Component {
     }
     this.isEditingText = true;
     this.setState({ shouldRender: false });
-    this.props.setEditingTextBox(this.props.shape.id);
+    this.props.setActiveDraftJSEditor(this.props.shape.id);
+    this.props.onChange({ isEditing: true });
   };
 
   handleAnchorMouseDown = event => {

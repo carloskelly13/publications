@@ -1,45 +1,46 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import LoginForm from "./login-form";
-import { connect } from "react-redux";
-import {
-  fetchCurrentUser,
-  currentUserSelector,
-  logOut,
-  fetchUser,
-} from "../../modules/session";
+import to from "await-to-js";
+import Api from "../../util/api";
 
-class IndexView extends Component {
+export default class IndexView extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired,
   };
 
+  state = {
+    user: null,
+    errorFetchingUser: null,
+  };
+
   componentWillMount() {
-    this.props.fetchCurrentUser();
+    this.getCurrentUser();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user) {
+  getCurrentUser = async () => {
+    const [err, user] = await to(Api.GET("users/current"));
+    if (!err) {
+      this.setState({ user });
       this.context.router.history.replace("/documents");
     }
-  }
+  };
+
+  login = async payload => {
+    const [err, user] = await to(Api.POST("users/login", payload));
+    if (err) {
+      this.setState({ errorFetchingUser: true, user: null });
+      return;
+    }
+    this.setState({ errorFetchingUser: false, user });
+  };
 
   render() {
     return (
       <div>
-        <LoginForm handleOnSubmit={this.props.fetchUser} />
+        {JSON.stringify(this.state.user)}
+        <LoginForm handleOnSubmit={this.login} />
       </div>
     );
   }
 }
-
-export default connect(
-  state => ({
-    user: currentUserSelector(state),
-  }),
-  {
-    fetchUser,
-    fetchCurrentUser,
-    logOut,
-  }
-)(IndexView);

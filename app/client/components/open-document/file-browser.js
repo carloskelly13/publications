@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import { sortedDocumentsSelector } from "../../modules/document";
 import { AppColors } from "../../util/constants";
 import { FileItem } from "./file-item";
 
@@ -26,11 +24,12 @@ export const FileBrowserContainer = styled(BaseContainer)`
   grid-gap: 20px;
 `;
 
-export const FileBrowser = ({
-  documents,
-  handleFileClicked,
-  selectedFileId,
-}) => (
+type Props = {
+  documents?: Array,
+  handleFileClicked: Function,
+  selectedFileId?: string,
+};
+export default ({ documents, handleFileClicked, selectedFileId }: Props) => (
   <FileBrowserContainer>
     {documents.map(doc => (
       <FileItem
@@ -42,10 +41,3 @@ export const FileBrowser = ({
     ))}
   </FileBrowserContainer>
 );
-
-export default connect(
-  state => ({
-    documents: sortedDocumentsSelector(state),
-  }),
-  null
-)(FileBrowser);

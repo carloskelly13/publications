@@ -1,11 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
-import { addShape } from "../../modules/document";
 import Menu, { MenuItem } from "../ui/menu";
 import { Shapes } from "../../util/constants";
 import { TextButton } from "../ui/text-button";
 
-const NewShapeMenu = ({ addShape, disabled }) => (
+export default ({ addShape = () => {}, disabled }) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Insert</TextButton>}
@@ -22,7 +20,3 @@ const NewShapeMenu = ({ addShape, disabled }) => (
     ]}
   />
 );
-
-export default connect(null, {
-  addShape,
-})(NewShapeMenu);

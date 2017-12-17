@@ -1,19 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import get from "lodash/get";
-import { connect } from "react-redux";
-import {
-  currentDocumentSelector,
-  fetchDocument,
-  backgroundGridLineRangesSelector,
-  sortedShapesSelector,
-  updateSelectedShape,
-  documentMetricsSelector,
-  selectedShapeSelector,
-  editingTextBoxIdSelector,
-  setEditingTextBox,
-  zoomSelector,
-} from "../../modules/document";
+import range from "lodash/range";
 import {
   AppColors,
   contentPanelWidthFull,
@@ -33,7 +21,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-class EditorView extends Component {
+export default class EditorView extends React.Component {
   state = {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 },
   };
@@ -41,7 +29,7 @@ class EditorView extends Component {
   componentWillMount() {
     const { match: { params: { id } } } = this.props;
     if (id) {
-      this.props.fetchDocument(id);
+      this.props.getDocument(id);
     }
   }
 
@@ -50,7 +38,7 @@ class EditorView extends Component {
     if (get(this.props.currentDocument, "id") !== id) {
       this.containerRef.scrollTop = 0;
       this.containerRef.scrollLeft = 0;
-      this.props.fetchDocument(id);
+      this.props.getDocument(id);
     }
   }
 
@@ -59,7 +47,7 @@ class EditorView extends Component {
   };
 
   handleKeyPress = event => {
-    if (!this.props.selectedShape || this.props.editingTextBoxId) {
+    if (!this.props.selectedShape || this.props.selectedShape.isEditing) {
       return;
     }
 
@@ -93,23 +81,26 @@ class EditorView extends Component {
     }
   };
 
+  gridLineRanges = () => {
+    const { currentDocument: { width, height }, zoom = 1 } = this.props;
+    return {
+      x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
+      y: range(0, height * 96 * zoom, 0.25 * 96 * zoom),
+    };
+  };
+
   render() {
     const {
       props: {
         currentDocument,
-        sortedShapes,
-        selectedShape,
-        documentMetrics,
-        editingTextBoxId,
+        selectedObject,
+        updateSelectedObject,
         editModeActive = true,
         sidePanelVisible = false,
-        backgroundGridLineRanges,
-        zoom,
+        zoom = 1,
       },
       state: { scrollOffset },
     } = this;
-    const orientation =
-      documentMetrics.width > documentMetrics.height ? "landscape" : "portrait";
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
@@ -131,19 +122,24 @@ class EditorView extends Component {
               doc={currentDocument}
               dpi={96}
               zoom={zoom}
-              selectedShape={selectedShape}
-              sortedShapes={sortedShapes}
-              documentMetrics={documentMetrics}
-              updateSelectedShape={this.props.updateSelectedShape}
-              backgroundGridLineRanges={backgroundGridLineRanges}
-              setEditingTextBox={this.props.setEditingTextBox}
-              editingTextBoxId={editingTextBoxId}
+              selectedShape={selectedObject}
+              sortedShapes={currentDocument.shapes}
+              documentMetrics={{
+                width: currentDocument.width,
+                height: currentDocument.height,
+              }}
+              updateSelectedShape={updateSelectedObject}
+              backgroundGridLineRanges={this.gridLineRanges()}
             />
             <style
               dangerouslySetInnerHTML={{
                 __html: `
                   @page {
-                    size: ${orientation};
+                    size: ${
+                      currentDocument.width > currentDocument.height
+                        ? "landscape"
+                        : "portrait"
+                    };
                     margin: 0mm;
                     marks: none;
                   }
@@ -159,20 +155,3 @@ class EditorView extends Component {
     );
   }
 }
-
-export default connect(
-  state => ({
-    currentDocument: currentDocumentSelector(state),
-    documentMetrics: documentMetricsSelector(state),
-    sortedShapes: sortedShapesSelector(state),
-    selectedShape: selectedShapeSelector(state),
-    backgroundGridLineRanges: backgroundGridLineRangesSelector(state),
-    editingTextBoxId: editingTextBoxIdSelector(state),
-    zoom: zoomSelector(state),
-  }),
-  {
-    fetchDocument,
-    updateSelectedShape,
-    setEditingTextBox,
-  }
-)(EditorView);

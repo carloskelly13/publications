@@ -1,8 +1,6 @@
 // @flow
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import { currentDocumentSelector } from "../../modules/document";
 import FramedButton from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Header, Message } from "../ui/text";
@@ -18,7 +16,7 @@ type SaveChangesProps = {
   hideModal: Function,
   currentDocument?: Object,
 };
-class SaveChanges extends Component<SaveChangesProps> {
+export default class extends React.Component<SaveChangesProps> {
   renderNewDocumentContent() {
     return (
       <div>
@@ -69,7 +67,3 @@ class SaveChanges extends Component<SaveChangesProps> {
     );
   }
 }
-
-export default connect(state => ({
-  currentDocument: currentDocumentSelector(state),
-}))(SaveChanges);

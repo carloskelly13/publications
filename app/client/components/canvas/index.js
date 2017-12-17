@@ -15,50 +15,63 @@ const zoomForDocumentSize = ({ width, height }) => {
   return 0.2;
 };
 
-export const Canvas = props => {
-  const {
-    dpi,
-    allowsEditing,
-    thumbnail,
-    selected,
-    documentMetrics,
-    updateSelectedShape,
-    backgroundGridLineRanges,
-  } = props;
-  let { zoom } = props;
+export default class extends React.Component {
+  static defaultProps = {
+    dpi: 96,
+    allowsEditing: false,
+    isSelected: false,
+  };
 
-  if (thumbnail) {
-    zoom = zoomForDocumentSize(documentMetrics);
+  state = {
+    activeDraftJSEditor: null,
+  };
+
+  setActiveDraftJSEditor = id => this.setState({ activeDraftJSEditor: id });
+
+  render() {
+    const {
+      dpi,
+      allowsEditing,
+      thumbnail,
+      selected,
+      documentMetrics,
+      updateSelectedShape,
+      backgroundGridLineRanges,
+    } = this.props;
+    let { zoom } = this.props;
+
+    if (thumbnail) {
+      zoom = zoomForDocumentSize(documentMetrics);
+    }
+
+    return (
+      <CanvasSVG
+        thumbnail={thumbnail}
+        selected={selected}
+        allowsEditing={allowsEditing}
+        width={documentMetrics.width * dpi * zoom}
+        height={documentMetrics.height * dpi * zoom}
+      >
+        <g>
+          <CanvasBackground
+            selectable={allowsEditing}
+            width={documentMetrics.width}
+            height={documentMetrics.height}
+            dpi={dpi}
+            zoom={zoom}
+            gridLineRanges={backgroundGridLineRanges}
+            handleBackgroundClicked={() => updateSelectedShape(null)}
+          />
+        </g>
+        <g>
+          {renderShapes({
+            ...this.props,
+            zoom,
+            setActiveDraftJSEditor: this.setActiveDraftJSEditor,
+            activeDraftJSEditor: this.state.activeDraftJSEditor,
+          })}
+        </g>
+      </CanvasSVG>
+    );
   }
-
-  return (
-    <CanvasSVG
-      thumbnail={thumbnail}
-      selected={selected}
-      allowsEditing={allowsEditing}
-      width={documentMetrics.width * dpi * zoom}
-      height={documentMetrics.height * dpi * zoom}
-    >
-      <g>
-        <CanvasBackground
-          selectable={allowsEditing}
-          width={documentMetrics.width}
-          height={documentMetrics.height}
-          dpi={dpi}
-          zoom={zoom}
-          gridLineRanges={backgroundGridLineRanges}
-          handleBackgroundClicked={() => updateSelectedShape(null)}
-        />
-      </g>
-      <g>{renderShapes({ ...props, zoom })}</g>
-    </CanvasSVG>
-  );
-};
-
-Canvas.defaultProps = {
-  dpi: 96,
-  allowsEditing: false,
-  isSelected: false,
-};
-
-export default Canvas;
+}

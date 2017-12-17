@@ -1,6 +1,5 @@
 import { all, takeEvery, select } from "redux-saga/effects";
 import { combineReducers } from "redux";
-import sessionSaga, { sessionReducer } from "./session";
 import documentSaga, { documentReducer } from "./document";
 import { uiReducer } from "./ui";
 import { routerReducer } from "react-router-redux";
@@ -17,14 +16,12 @@ const logger = function*() {
 export default function*() {
   yield all([
     // logger(),
-    sessionSaga(),
     documentSaga(),
   ]);
 }
 
 export const rootReducer = combineReducers({
   routing: routerReducer,
-  session: sessionReducer,
   doc: documentReducer,
   ui: uiReducer,
 });

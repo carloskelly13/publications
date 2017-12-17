@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Toolbar as ToolbarBase } from "../ui/toolbar";
@@ -9,12 +8,6 @@ import EditMenu from "./edit";
 import ZoomMenu from "./zoom";
 import TextButton from "../ui/text-button";
 import { ContentContainer } from "../ui/containers";
-import {
-  currentDocumentSelector,
-  selectedShapeSelector,
-} from "../../modules/document";
-import { currentUserSelector } from "../../modules/session";
-import { sidePanelVisibleSelector, toggleSidePanel } from "../../modules/ui";
 import { AppColors } from "../../util/constants";
 
 const Header = styled.span`
@@ -25,13 +18,26 @@ const Header = styled.span`
 `;
 
 const Toolbar = props => {
-  const { user, currentDocument, sidePanelVisible, toggleSidePanel } = props;
+  const {
+    user,
+    selectedObject,
+    currentDocument,
+    sidePanelVisible = false,
+    toggleSidePanel = () => {},
+    showNewDocumentModal,
+    showOpenDocumentModal,
+  } = props;
   return (
     <ToolbarBase>
       <ContentContainer verticalAlign>
         <Header>Publications</Header>
-        <FileMenu disabled={!user} />
-        <EditMenu disabled={!currentDocument} />
+        <FileMenu
+          disabled={!user}
+          currentDocument={currentDocument}
+          showNewDocumentModal={showNewDocumentModal}
+          showOpenDocumentModal={showOpenDocumentModal}
+        />
+        <EditMenu selectedObject={selectedObject} disabled={!currentDocument} />
         <NewShapeMenu disabled={!currentDocument} />
         <ZoomMenu disabled={!currentDocument} />
       </ContentContainer>
@@ -48,14 +54,4 @@ Toolbar.contextTypes = {
   router: PropTypes.object.isRequired,
 };
 
-export default connect(
-  state => ({
-    user: currentUserSelector(state),
-    currentDocument: currentDocumentSelector(state),
-    selectedShape: selectedShapeSelector(state),
-    sidePanelVisible: sidePanelVisibleSelector(state),
-  }),
-  {
-    toggleSidePanel,
-  }
-)(Toolbar);
+export default Toolbar;

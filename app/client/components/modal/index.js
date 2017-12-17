@@ -1,3 +1,4 @@
+import type { Node } from "react";
 import React from "react";
 import styled, { injectGlobal } from "styled-components";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
@@ -50,20 +51,17 @@ export const ModalContent = styled.div`
   overflow: hidden;
 `;
 
-const Modal = ({
-  component: ModalComponent,
-  activeModalProps: componentProps,
-}) => (
+type Props = {
+  renderContent: Node,
+  visible: boolean,
+};
+const Modal = ({ renderContent, visible }: Props) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
     transitionEnterTimeout={200}
     transitionLeaveTimeout={350}
   >
-    {!!ModalComponent && (
-      <ModalContainer>
-        <ModalComponent {...componentProps} />
-      </ModalContainer>
-    )}
+    {visible && <ModalContainer>{renderContent}</ModalContainer>}
   </ReactCSSTransitionGroup>
 );
 

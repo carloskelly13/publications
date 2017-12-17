@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { lastModifiedString } from "../../util/string.js";
-import { Canvas } from "../canvas";
+import Canvas from "../canvas";
 
 const FileItemContainer = styled.div`
   text-align: center;
