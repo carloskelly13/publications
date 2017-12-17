@@ -22,8 +22,10 @@ const Toolbar = props => {
     user,
     selectedObject,
     currentDocument,
-    sidePanelVisible = false,
-    toggleSidePanel = () => {},
+    layersPanelVisible,
+    toggleLayersPanel,
+    addObject,
+    deleteObject,
     showNewDocumentModal,
     showOpenDocumentModal,
   } = props;
@@ -37,13 +39,17 @@ const Toolbar = props => {
           showNewDocumentModal={showNewDocumentModal}
           showOpenDocumentModal={showOpenDocumentModal}
         />
-        <EditMenu selectedObject={selectedObject} disabled={!currentDocument} />
-        <NewShapeMenu disabled={!currentDocument} />
+        <EditMenu
+          selectedObject={selectedObject}
+          deleteObject={deleteObject}
+          disabled={!currentDocument}
+        />
+        <NewShapeMenu disabled={!currentDocument} addObject={addObject} />
         <ZoomMenu disabled={!currentDocument} />
       </ContentContainer>
       <ContentContainer>
-        <TextButton disabled={!currentDocument} onClick={toggleSidePanel}>
-          {sidePanelVisible ? "Hide" : "Show"}&nbsp;Layers
+        <TextButton disabled={!currentDocument} onClick={toggleLayersPanel}>
+          {layersPanelVisible ? "Hide" : "Show"}&nbsp;Layers
         </TextButton>
       </ContentContainer>
     </ToolbarBase>

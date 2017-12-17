@@ -8,12 +8,12 @@ import get from "lodash/get";
 export default ({
   visible,
   currentDocument,
-  adjustShapeLayer,
+  adjustObjectLayer,
   updateSelectedObject,
   selectedObject,
 }) => (
   <LayersSidebarContainer visible={visible}>
-    <DragDropContext onDragEnd={adjustShapeLayer}>
+    <DragDropContext onDragEnd={adjustObjectLayer}>
       <Droppable droppableId="droppable">
         {provided => (
           <div ref={provided.innerRef}>

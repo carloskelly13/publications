@@ -17,7 +17,11 @@ import {
   documentsWithEditorState,
   addEditorStateToDocument,
 } from "../../util/documents";
-import { newStateForChanges } from "./editor-actions";
+import {
+  updatedDocumentStateForObjectChanges,
+  updatedDocumentStateForLayerChanges,
+} from "./editor-actions";
+import shortid from "shortid";
 
 const ViewContainer = styled.div`
   display: flex;
@@ -42,21 +46,31 @@ export default class DocumentsView extends Component {
     selectedObject: null,
     newDocumentModalVisible: false,
     openDocumentModalVisible: false,
+    layersPanelVisible: false,
   };
 
   componentDidMount() {
     this.getCurrentUser();
   }
 
-  toggleModal = identifier => {
-    const key = `${identifier}ModalVisible`;
+  /**
+   * Display Actions
+   */
+
+  toggleVisibility = identifier => {
+    const key = `${identifier}Visible`;
     this.setState(prevState => ({
       [key]: !prevState[key],
     }));
   };
 
-  toggleNewDocument = this.toggleModal.bind(this, "newDocument");
-  toggleOpenDocument = this.toggleModal.bind(this, "openDocument");
+  toggleNewDocument = this.toggleVisibility.bind(this, "newDocumentModal");
+  toggleOpenDocument = this.toggleVisibility.bind(this, "openDocumentModal");
+  toggleLayersPanel = this.toggleVisibility.bind(this, "layersPanel");
+
+  /**
+   * Data Actions
+   */
 
   getCurrentUser = async () => {
     const [err, user] = await to(Api.GET("users/current"));
@@ -90,18 +104,61 @@ export default class DocumentsView extends Component {
     });
   };
 
+  /**
+   * Editor Actions
+   */
+
   updateSelectedObject = sender =>
     this.setState(prevState =>
-      newStateForChanges(
+      updatedDocumentStateForObjectChanges(
         sender,
         prevState.selectedObject,
         prevState.currentDocument
       )
     );
 
+  addObject = sender => {
+    const newObject = {
+      ...sender,
+      z: this.state.currentDocument.shapes.length + 1,
+      id: shortid.generate(),
+    };
+    this.setState(prevState => ({
+      currentDocument: {
+        ...prevState.currentDocument,
+        shapes: [...prevState.currentDocument.shapes, newObject],
+      },
+      selectedObject: newObject,
+    }));
+  };
+
+  deleteObject = () => {
+    const objectToDelete = this.state.selectedObject;
+    const shapes = this.state.currentDocument.shapes
+      .filter(shape => shape.id !== objectToDelete.id)
+      .map(shape => {
+        if (shape.z > objectToDelete.z) {
+          shape.z -= 1;
+        }
+        return shape;
+      });
+    this.setState(prevState => ({
+      selectedObject: null,
+      currentDocument: { ...prevState.currentDocument, shapes },
+    }));
+  };
+
+  adjustObjectLayer = sender =>
+    this.setState(prevState =>
+      updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
+    );
+
+  /**
+   * Render
+   */
+
   render() {
     const {
-      props: { sidePanelVisible = false },
       state: {
         user,
         documents,
@@ -109,6 +166,7 @@ export default class DocumentsView extends Component {
         selectedObject,
         openDocumentModalVisible,
         newDocumentModalVisible,
+        layersPanelVisible,
       },
     } = this;
     return (
@@ -136,6 +194,10 @@ export default class DocumentsView extends Component {
           currentDocument={currentDocument}
           showNewDocumentModal={this.toggleNewDocument}
           showOpenDocumentModal={this.toggleOpenDocument}
+          toggleLayersPanel={this.toggleLayersPanel}
+          layersPanelVisible={layersPanelVisible}
+          addObject={this.addObject}
+          deleteObject={this.deleteObject}
         />
         <MetricsBar
           shape={selectedObject}
@@ -148,10 +210,10 @@ export default class DocumentsView extends Component {
             renderContent={
               <div>
                 <LayersSidebar
-                  visible={sidePanelVisible}
+                  visible={layersPanelVisible}
                   currentDocument={currentDocument}
                   selectedObject={selectedObject}
-                  adjustShapeLayer={() => {}}
+                  adjustObjectLayer={this.adjustObjectLayer}
                   updateSelectedObject={this.updateSelectedObject}
                 />
                 <Route

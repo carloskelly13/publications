@@ -38,7 +38,6 @@ export default class IndexView extends Component {
   render() {
     return (
       <div>
-        {JSON.stringify(this.state.user)}
         <LoginForm handleOnSubmit={this.login} />
       </div>
     );

@@ -2,7 +2,7 @@ import React from "react";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
 
-export default ({ disabled, clipboardData, selectedObject }) => (
+export default ({ disabled, clipboardData, selectedObject, deleteObject }) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Edit</TextButton>}
@@ -32,7 +32,7 @@ export default ({ disabled, clipboardData, selectedObject }) => (
       <MenuItem
         key="delete-menu-item"
         disabled={!selectedObject}
-        onClick={() => {}}
+        onClick={deleteObject}
       >
         Delete
       </MenuItem>,
