@@ -20,6 +20,7 @@ import {
 import {
   updatedDocumentStateForObjectChanges,
   updatedDocumentStateForLayerChanges,
+  updatedDocumentStateForClipboardAction,
 } from "./editor-actions";
 import shortid from "shortid";
 
@@ -44,6 +45,7 @@ export default class DocumentsView extends Component {
     documents: null,
     currentDocument: null,
     selectedObject: null,
+    clipboardContents: null,
     newDocumentModalVisible: false,
     openDocumentModalVisible: false,
     layersPanelVisible: false,
@@ -151,6 +153,11 @@ export default class DocumentsView extends Component {
   adjustObjectLayer = sender =>
     this.setState(prevState =>
       updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
+    );
+
+  handleClipboardAction = action =>
+    this.setState(prevState =>
+      updatedDocumentStateForClipboardAction(action, prevState)
     );
 
   /**

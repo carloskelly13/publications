@@ -81,3 +81,11 @@ export const updatedDocumentStateForLayerChanges = (
     selectedObject: normalizedSelectedObject,
   };
 };
+
+export const updatedDocumentStateForClipboardAction = (
+  action,
+  // eslint-disable-next-line no-unused-vars
+  { clipboardContents, selectedObject, currentDocument }
+) => {
+  return {};
+};
