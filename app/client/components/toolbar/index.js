@@ -28,6 +28,7 @@ const Toolbar = props => {
     deleteObject,
     showNewDocumentModal,
     showOpenDocumentModal,
+    logOut,
   } = props;
   return (
     <ToolbarBase>
@@ -38,6 +39,7 @@ const Toolbar = props => {
           currentDocument={currentDocument}
           showNewDocumentModal={showNewDocumentModal}
           showOpenDocumentModal={showOpenDocumentModal}
+          logOut={logOut}
         />
         <EditMenu
           selectedObject={selectedObject}

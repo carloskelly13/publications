@@ -18,11 +18,13 @@ export default class IndexView extends Component {
     this.getCurrentUser();
   }
 
+  navigateToDocuments = () => this.context.router.history.replace("/documents");
+
   getCurrentUser = async () => {
     const [err, user] = await to(Api.GET("users/current"));
     if (!err) {
       this.setState({ user });
-      this.context.router.history.replace("/documents");
+      this.navigateToDocuments();
     }
   };
 
@@ -33,6 +35,7 @@ export default class IndexView extends Component {
       return;
     }
     this.setState({ errorFetchingUser: false, user });
+    this.navigateToDocuments();
   };
 
   render() {

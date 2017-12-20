@@ -12,7 +12,7 @@ import OpenDocumentDialog from "../open-document";
 import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
-import Api from "../../util/api";
+import Api, { clearCsrfHeaders } from "../../util/api";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -73,6 +73,12 @@ export default class DocumentsView extends Component {
   /**
    * Data Actions
    */
+
+  logOut = async () => {
+    await to(Api.DELETE("users/logout"));
+    clearCsrfHeaders();
+    this.context.router.history.replace("/");
+  };
 
   getCurrentUser = async () => {
     const [err, user] = await to(Api.GET("users/current"));
@@ -205,6 +211,7 @@ export default class DocumentsView extends Component {
           layersPanelVisible={layersPanelVisible}
           addObject={this.addObject}
           deleteObject={this.deleteObject}
+          logOut={this.logOut}
         />
         <MetricsBar
           shape={selectedObject}

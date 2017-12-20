@@ -5,7 +5,7 @@ import { TextButton } from "../ui/text-button";
 export default ({
   currentDocument,
   saveDocument = () => {},
-  logOut = () => {},
+  logOut,
   showNewDocumentModal,
   showOpenDocumentModal,
   setZoom,
