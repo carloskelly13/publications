@@ -1,0 +1,25 @@
+
+spring:
+  session:
+    store-type: 'none'
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: 'update'
+  database:
+    driverClassName: 'org.postgresql.Driver'
+  datasource:
+    platform: 'postgres'
+    url: 'jdbc:postgresql://localhost/publications'
+    username: 'publications'
+    password: 'publications'
+  devtools:
+    livereload:
+      enabled: true
+
+server:
+  session:
+    cookie:
+      max-age: 259200
+    timeout: 259200

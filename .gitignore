@@ -35,3 +35,6 @@ dist
 local.properties
 /.vscode
 /.idea
+/server/.idea
+/server/.settings
+/server/.sts4-cache
