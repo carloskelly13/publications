@@ -28,6 +28,9 @@ const Toolbar = props => {
     deleteObject,
     showNewDocumentModal,
     showOpenDocumentModal,
+    handleClipboardAction,
+    clipboardContents,
+    setZoom,
     logOut,
   } = props;
   return (
@@ -39,15 +42,18 @@ const Toolbar = props => {
           currentDocument={currentDocument}
           showNewDocumentModal={showNewDocumentModal}
           showOpenDocumentModal={showOpenDocumentModal}
+          setZoom={setZoom}
           logOut={logOut}
         />
         <EditMenu
           selectedObject={selectedObject}
           deleteObject={deleteObject}
+          clipboardContents={clipboardContents}
+          handleClipboardAction={handleClipboardAction}
           disabled={!currentDocument}
         />
         <NewShapeMenu disabled={!currentDocument} addObject={addObject} />
-        <ZoomMenu disabled={!currentDocument} />
+        <ZoomMenu setZoom={setZoom} disabled={!currentDocument} />
       </ContentContainer>
       <ContentContainer>
         <TextButton disabled={!currentDocument} onClick={toggleLayersPanel}>

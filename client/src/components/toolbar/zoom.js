@@ -4,7 +4,7 @@ import { TextButton } from "../ui/text-button";
 
 const zoomLevels = [0.5, 0.75, 1, 1.25, 1.5, 2, 4];
 
-export default ({ setZoom = () => {}, disabled }) => (
+export default ({ setZoom, disabled }) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Zoom</TextButton>}

@@ -21,6 +21,8 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
+
 export default class EditorView extends React.Component {
   state = {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 },
@@ -47,28 +49,27 @@ export default class EditorView extends React.Component {
   };
 
   handleKeyPress = event => {
-    if (!this.props.selectedShape || this.props.selectedShape.isEditing) {
+    if (!this.props.selectedObject || this.props.selectedObject.isEditing) {
       return;
     }
 
-    const arrowKeys = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
-    if (arrowKeys.indexOf(event.keyCode) > -1) {
+    if (ALLOWED_KEYS.indexOf(event.keyCode) > -1) {
       event.preventDefault();
     }
 
     const changes = {};
     switch (event.keyCode) {
       case Keys.Up:
-        changes.y = this.props.selectedShape.y - 0.05;
+        changes.y = this.props.selectedObject.y - 0.05;
         break;
       case Keys.Down:
-        changes.y = this.props.selectedShape.y + 0.05;
+        changes.y = this.props.selectedObject.y + 0.05;
         break;
       case Keys.Left:
-        changes.x = this.props.selectedShape.x - 0.05;
+        changes.x = this.props.selectedObject.x - 0.05;
         break;
       case Keys.Right:
-        changes.x = this.props.selectedShape.x + 0.05;
+        changes.x = this.props.selectedObject.x + 0.05;
         break;
     }
 
@@ -77,7 +78,7 @@ export default class EditorView extends React.Component {
       changeKeys.forEach(
         key => (changes[key] = parseFloat(changes[key].toFixed(2)))
       );
-      this.props.updateSelectedShape(changes);
+      this.props.updateSelectedObject(changes);
     }
   };
 

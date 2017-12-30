@@ -8,31 +8,38 @@ export const addEditorStateToDocument = document => ({
   ...document,
   shapes: document.shapes.map(shape => {
     if (shape.type === "text") {
-      const contentState = stateFromHTML(shape.text, {
-        customInlineFn: importTextStyle,
-      });
-      shape.editorState = EditorState.createWithContent(contentState);
-      shape.isEditing = false;
+      return addEditorStateToObject(shape);
     }
     return shape;
   }),
 });
 
+export const addEditorStateToObject = shape => {
+  const contentState = stateFromHTML(shape.text, {
+    customInlineFn: importTextStyle,
+  });
+  shape.editorState = EditorState.createWithContent(contentState);
+  shape.isEditing = false;
+  return shape;
+};
+
+export const convertObjStylesToHTML = shape => {
+  if (shape.type === "text") {
+    const { editorState, ...jsonShape } = shape;
+    const inlineStyles = textStyleExporter(editorState);
+    jsonShape.text = stateToHTML(editorState.getCurrentContent(), {
+      inlineStyles,
+    });
+    return jsonShape;
+  }
+  return shape;
+};
+
 export const packageDocumentToJson = document => ({
   width: document.width,
   height: document.height,
   name: document.name,
-  shapes: document.shapes.map(shape => {
-    if (shape.type === "text") {
-      const { editorState, ...jsonShape } = shape;
-      const inlineStyles = textStyleExporter(editorState);
-      jsonShape.text = stateToHTML(editorState.getCurrentContent(), {
-        inlineStyles,
-      });
-      return jsonShape;
-    }
-    return shape;
-  }),
+  shapes: document.shapes.map(shape => convertObjStylesToHTML(shape)),
 });
 
 export const documentsWithEditorState = documents =>

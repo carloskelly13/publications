@@ -1,4 +1,19 @@
 import { EditorState } from "draft-js";
+import cloneDeep from "lodash/fp/cloneDeep";
+import omit from "lodash/fp/omit";
+import compose from "lodash/fp/compose";
+import {
+  addEditorStateToObject,
+  convertObjStylesToHTML,
+} from "../../util/documents";
+import shortid from "shortid";
+
+export const omitTransientDataFromObj = omit([
+  "z",
+  "editorState",
+  "id",
+  "isEditing",
+]);
 
 export const updatedDocumentStateForObjectChanges = (
   changes,
@@ -87,5 +102,54 @@ export const updatedDocumentStateForClipboardAction = (
   // eslint-disable-next-line no-unused-vars
   { clipboardContents, selectedObject, currentDocument }
 ) => {
-  return {};
+  const updatedState = {};
+
+  const duplicateObj = () =>
+    compose(cloneDeep, omitTransientDataFromObj, convertObjStylesToHTML)(
+      selectedObject
+    );
+
+  if (action === "copy") {
+    updatedState.clipboardContents = duplicateObj();
+  } else if (action === "cut") {
+    return {
+      clipboardContents: duplicateObj(),
+      ...updatedDocumentStateForDeleteAction(selectedObject, currentDocument),
+    };
+  } else if (action === "paste") {
+    const z = currentDocument.shapes.length + 1;
+    const newObject = cloneDeep(clipboardContents);
+    newObject.z = z;
+    newObject.id = shortid.generate();
+
+    if (newObject.type === "text") {
+      addEditorStateToObject(newObject);
+    }
+
+    updatedState.currentDocument = {
+      ...currentDocument,
+      shapes: [...currentDocument.shapes, newObject],
+    };
+    updatedState.selectedObject = newObject;
+  }
+
+  return updatedState;
+};
+
+export const updatedDocumentStateForDeleteAction = (
+  objectToDelete,
+  currentDocument
+) => {
+  const shapes = currentDocument.shapes
+    .filter(shape => shape.id !== objectToDelete.id)
+    .map(shape => {
+      if (shape.z > objectToDelete.z) {
+        shape.z -= 1;
+      }
+      return shape;
+    });
+  return {
+    selectedObject: null,
+    currentDocument: { ...currentDocument, shapes },
+  };
 };

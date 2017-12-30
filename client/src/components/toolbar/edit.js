@@ -2,7 +2,13 @@ import React from "react";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
 
-export default ({ disabled, clipboardData, selectedObject, deleteObject }) => (
+export default ({
+  disabled,
+  clipboardContents,
+  selectedObject,
+  deleteObject,
+  handleClipboardAction,
+}) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Edit</TextButton>}
@@ -10,21 +16,21 @@ export default ({ disabled, clipboardData, selectedObject, deleteObject }) => (
       <MenuItem
         key="cut-menu-item"
         disabled={!selectedObject}
-        onClick={() => {}}
+        onClick={() => handleClipboardAction("cut")}
       >
         Cut
       </MenuItem>,
       <MenuItem
         key="copy-menu-item"
         disabled={!selectedObject}
-        onClick={() => {}}
+        onClick={() => handleClipboardAction("copy")}
       >
         Copy
       </MenuItem>,
       <MenuItem
         key="paste-menu-item"
-        disabled={!clipboardData}
-        onClick={() => {}}
+        disabled={!clipboardContents}
+        onClick={() => handleClipboardAction("paste")}
       >
         Paste
       </MenuItem>,

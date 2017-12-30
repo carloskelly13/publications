@@ -21,6 +21,7 @@ import {
   updatedDocumentStateForObjectChanges,
   updatedDocumentStateForLayerChanges,
   updatedDocumentStateForClipboardAction,
+  updatedDocumentStateForDeleteAction,
 } from "./editor-actions";
 import shortid from "shortid";
 
@@ -49,6 +50,7 @@ export default class DocumentsView extends Component {
     newDocumentModalVisible: false,
     openDocumentModalVisible: false,
     layersPanelVisible: false,
+    zoom: 1,
   };
 
   componentDidMount() {
@@ -109,6 +111,7 @@ export default class DocumentsView extends Component {
     this.setState({
       currentDocument: addEditorStateToDocument(doc),
       selectedObject: null,
+      zoom: 1,
     });
   };
 
@@ -125,6 +128,8 @@ export default class DocumentsView extends Component {
       )
     );
 
+  setZoom = (zoom = 1) => this.setState({ zoom });
+
   addObject = sender => {
     const newObject = {
       ...sender,
@@ -140,21 +145,13 @@ export default class DocumentsView extends Component {
     }));
   };
 
-  deleteObject = () => {
-    const objectToDelete = this.state.selectedObject;
-    const shapes = this.state.currentDocument.shapes
-      .filter(shape => shape.id !== objectToDelete.id)
-      .map(shape => {
-        if (shape.z > objectToDelete.z) {
-          shape.z -= 1;
-        }
-        return shape;
-      });
-    this.setState(prevState => ({
-      selectedObject: null,
-      currentDocument: { ...prevState.currentDocument, shapes },
-    }));
-  };
+  deleteObject = sender =>
+    this.setState(prevState =>
+      updatedDocumentStateForDeleteAction(
+        sender || prevState.selectedObject,
+        prevState.currentDocument
+      )
+    );
 
   adjustObjectLayer = sender =>
     this.setState(prevState =>
@@ -180,6 +177,7 @@ export default class DocumentsView extends Component {
         openDocumentModalVisible,
         newDocumentModalVisible,
         layersPanelVisible,
+        clipboardContents,
       },
     } = this;
     return (
@@ -208,9 +206,12 @@ export default class DocumentsView extends Component {
           showNewDocumentModal={this.toggleNewDocument}
           showOpenDocumentModal={this.toggleOpenDocument}
           toggleLayersPanel={this.toggleLayersPanel}
+          clipboardContents={clipboardContents}
+          handleClipboardAction={this.handleClipboardAction}
           layersPanelVisible={layersPanelVisible}
           addObject={this.addObject}
           deleteObject={this.deleteObject}
+          setZoom={this.setZoom}
           logOut={this.logOut}
         />
         <MetricsBar
@@ -239,6 +240,7 @@ export default class DocumentsView extends Component {
                       currentDocument={currentDocument}
                       getDocument={this.getDocument}
                       updateSelectedObject={this.updateSelectedObject}
+                      zoom={this.state.zoom}
                     />
                   )}
                 />
