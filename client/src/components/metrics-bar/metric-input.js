@@ -47,16 +47,22 @@ export default class MetricInput extends Component {
   }
 
   render() {
-    const { label, unit, small, mini } = this.props;
+    const { label, unit, small, mini, disabled } = this.props;
     return (
       <ContentContainer verticalAlign style={{ marginRight: "0.75em" }}>
-        <Text center color={AppColors.DarkGray} size="0.75em" mr="0.33em">
+        <Text
+          center
+          color={disabled ? AppColors.DisabledGray : AppColors.DarkGray}
+          size="0.75em"
+          mr="0.33em"
+        >
           {label}:
         </Text>
         <ContentContainer verticalAlign>
           <TextInput
             withLabel
             alignRight
+            disabled={disabled}
             small={small}
             mini={mini}
             id={label}
@@ -65,7 +71,7 @@ export default class MetricInput extends Component {
             onKeyPress={this.handleKeyPress}
             value={this.state.presentedValue}
           />
-          <InputLabelText size="0.8em" htmlFor={label}>
+          <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
             {unit}
           </InputLabelText>
         </ContentContainer>

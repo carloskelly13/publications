@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import getOr from "lodash/fp/getOr";
 import { RichUtils } from "draft-js";
 import { styles as textStyles } from "../shapes/text-box";
 import ColorPicker from "./../color-picker";
@@ -39,15 +40,9 @@ const supportsBorder = shape =>
 const supportsRadius = shape => !!shape && shape.type === "rect";
 const isText = shape => !!shape && shape.type === "text";
 
-export default ({ shape, updateSelectedObject }) => {
-  if (!shape) {
-    return (
-      <MetricsBarContainer>
-        <MetricsBar />
-      </MetricsBarContainer>
-    );
-  }
+const get = getOr("");
 
+export default ({ shape, updateSelectedObject }) => {
   let currentStyle = null;
   let isTextSelected = false;
   if (isText(shape)) {
@@ -62,33 +57,37 @@ export default ({ shape, updateSelectedObject }) => {
           <MetricInput
             small
             property="x"
-            value={shape.x}
+            value={get("x", shape)}
             label="X"
             unit="in"
+            disabled={!shape}
             onChange={updateSelectedObject}
           />
           <MetricInput
             small
             property="y"
-            value={shape.y}
+            value={get("y", shape)}
             label="Y"
             unit="in"
+            disabled={!shape}
             onChange={updateSelectedObject}
           />
           <MetricInput
             small
             property="width"
-            value={shape.width}
+            value={get("width", shape)}
             label="Width"
             unit="in"
+            disabled={!shape}
             onChange={updateSelectedObject}
           />
           <MetricInput
             small
             property="height"
-            value={shape.height}
+            value={get("height", shape)}
             label="Height"
             unit="in"
+            disabled={!shape}
             onChange={updateSelectedObject}
           />
           {isText(shape) ? (
@@ -103,12 +102,14 @@ export default ({ shape, updateSelectedObject }) => {
               alpha={1}
             />
           ) : (
-            <ColorPicker
-              property="fill"
-              onChange={updateSelectedObject}
-              hex={shape.fill}
-              alpha={shape.fillOpacity}
-            />
+            shape && (
+              <ColorPicker
+                property="fill"
+                onChange={updateSelectedObject}
+                hex={shape.fill}
+                alpha={shape.fillOpacity}
+              />
+            )
           )}
           {isText(shape) && (
             <MetricInput

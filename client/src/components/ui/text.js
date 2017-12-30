@@ -61,6 +61,7 @@ export const LightText = styled(Text)`
 export const InputLabelText = styled.label`
   border-left: none;
   padding: 1px 0.25em 1px;
-  color: ${AppColors.DarkGray};
+  color: ${({ disabled }) =>
+    disabled ? AppColors.DisabledGray : AppColors.DarkGray};
   font-size: ${({ size }) => size || "1em"};
 `;

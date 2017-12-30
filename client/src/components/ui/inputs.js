@@ -35,7 +35,9 @@ export const TextInput = styled.input`
   }};
 
   &:disabled {
-    background: ${AppColors.MediumGray};
+    background: ${AppColors.White4};
+    border-color: ${AppColors.Gray20};
+    cursor: default;
     color: ${AppColors.MediumGray};
   }
   &:focus {
