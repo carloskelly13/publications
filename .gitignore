@@ -41,3 +41,4 @@ local.properties
 /server/out
 /server/publications/.settings
 /server/build
+/server/server.iml
