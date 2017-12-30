@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Toolbar as ToolbarBase } from "../ui/toolbar";
+import ToolbarBase from "../ui/toolbar";
 import FileMenu from "./file";
 import NewShapeMenu from "./new-shape";
 import EditMenu from "./edit";

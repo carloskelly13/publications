@@ -4,6 +4,7 @@ import com.carlospaelinck.domain.Document;
 import com.carlospaelinck.security.UserDetails;
 import com.carlospaelinck.services.DocumentService;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ public class DocumentController {
 
   @RequestMapping(method = RequestMethod.GET)
   List<Document> list(@AuthenticationPrincipal UserDetails userDetails) {
-    return documentService.findAllByUser(userDetails.getUser());
+    return documentService.findAllByUser(userDetails.getUser(), new Sort(Sort.Direction.DESC, "lastModified"));
   }
 
   @RequestMapping(method = RequestMethod.POST)

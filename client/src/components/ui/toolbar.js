@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import { AppColors } from "../../util/constants";
 
@@ -19,4 +20,8 @@ const Toolbar = styled.div`
   }
 `;
 
-export { Toolbar };
+export default ({ children }) => (
+  <div style={{ display: "block" }}>
+    <Toolbar>{children}</Toolbar>
+  </div>
+);

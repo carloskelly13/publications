@@ -16,8 +16,6 @@ import java.util.List;
 @Service
 @Transactional
 public class DocumentService {
-  private final Sort sortOrder = new Sort(Sort.Direction.DESC, "lastModified");
-
   @Inject
   private DocumentRepository documentRepository;
 
@@ -26,7 +24,7 @@ public class DocumentService {
     return documentRepository.findOne(id);
   }
 
-  public List<Document> findAllByUser(User user) {
+  public List<Document> findAllByUser(User user, Sort sortOrder) {
     return documentRepository.findAllByUser(user, sortOrder);
   }
 

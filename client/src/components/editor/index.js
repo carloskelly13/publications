@@ -15,6 +15,7 @@ const Container = styled.div`
   transition: width 350ms ease-in-out;
   background: ${AppColors.Gray20};
   overflow: scroll;
+  outline: none;
   width: ${({ sidePanelVisible }) =>
     sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull};
   z-index: 1;
