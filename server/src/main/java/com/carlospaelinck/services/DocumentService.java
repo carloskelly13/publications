@@ -3,6 +3,7 @@ package com.carlospaelinck.services;
 import com.carlospaelinck.domain.Document;
 import com.carlospaelinck.domain.User;
 import com.carlospaelinck.repositories.DocumentRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 @Transactional
 public class DocumentService {
+  private final Sort sortOrder = new Sort(Sort.Direction.DESC, "lastModified");
 
   @Inject
   private DocumentRepository documentRepository;
@@ -25,7 +27,7 @@ public class DocumentService {
   }
 
   public List<Document> findAllByUser(User user) {
-    return documentRepository.findAllByUser(user);
+    return documentRepository.findAllByUser(user, sortOrder);
   }
 
   public Document create(Document document) {
