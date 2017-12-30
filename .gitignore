@@ -38,3 +38,5 @@ local.properties
 /server/.idea
 /server/.settings
 /server/.sts4-cache
+/server/out
+/server/publications/.settings
