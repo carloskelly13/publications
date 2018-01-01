@@ -4,7 +4,7 @@ import { TextButton } from "../ui/text-button";
 
 export default ({
   currentDocument,
-  saveDocument = () => {},
+  saveDocument,
   logOut,
   showNewDocumentModal,
   showOpenDocumentModal,
@@ -17,10 +17,7 @@ export default ({
         <MenuItem onClick={showNewDocumentModal}>New…</MenuItem>
         <MenuItem onClick={showOpenDocumentModal}>Open…</MenuItem>
         <MenuDivider />
-        <MenuItem
-          disabled={!currentDocument}
-          onClick={() => saveDocument(currentDocument)}
-        >
+        <MenuItem disabled={!currentDocument} onClick={saveDocument}>
           Save
         </MenuItem>
         <MenuItem

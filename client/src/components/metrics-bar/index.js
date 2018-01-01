@@ -17,6 +17,7 @@ import IconButton from "../ui/icon-button";
 
 const MetricsBarContainer = styled.div`
   display: block;
+  z-index: 3;
 `;
 
 const MetricsBar = styled.div`
@@ -25,7 +26,6 @@ const MetricsBar = styled.div`
   padding: 4px 1em 0;
   background: ${AppColors.White};
   border-bottom: 1px solid ${AppColors.Gray40};
-  z-index: 3;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

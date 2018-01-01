@@ -16,6 +16,7 @@ import Api, { clearCsrfHeaders } from "../../util/api";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
+  packageDocumentToJson,
 } from "../../util/documents";
 import {
   updatedDocumentStateForObjectChanges,
@@ -115,6 +116,20 @@ export default class DocumentsView extends Component {
     });
   };
 
+  saveDocument = async () => {
+    const { id } = this.state.currentDocument;
+    const [err] = await to(
+      Api.PUT(
+        `documents/${id}`,
+        packageDocumentToJson(this.state.currentDocument)
+      )
+    );
+    if (err) {
+      return;
+    }
+    console.log("Saved Document."); // eslint-disable-line no-console
+  };
+
   /**
    * Editor Actions
    */
@@ -208,6 +223,7 @@ export default class DocumentsView extends Component {
           toggleLayersPanel={this.toggleLayersPanel}
           clipboardContents={clipboardContents}
           handleClipboardAction={this.handleClipboardAction}
+          saveDocument={this.saveDocument}
           layersPanelVisible={layersPanelVisible}
           addObject={this.addObject}
           deleteObject={this.deleteObject}

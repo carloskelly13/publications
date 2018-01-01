@@ -13,7 +13,6 @@ const Toolbar = styled.div`
   user-select: none;
   padding: 0 0.5em 0 1em;
   width: calc(100% - 1.5em);
-  z-index: 5;
 
   @media print {
     display: none;
@@ -21,7 +20,7 @@ const Toolbar = styled.div`
 `;
 
 export default ({ children }) => (
-  <div style={{ display: "block" }}>
+  <div style={{ display: "block", zIndex: 5 }}>
     <Toolbar>{children}</Toolbar>
   </div>
 );

@@ -14,6 +14,10 @@ export const TextButton = styled.button`
   padding: 0.25em 0.75em;
   border-radius: 0;
   text-align: center;
+
+  &:disabled {
+    color: ${AppColors.DisabledGray};
+  }
 `;
 
 export default TextButton;

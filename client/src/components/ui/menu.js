@@ -101,8 +101,8 @@ export default class extends React.Component<MenuProps> {
     const { renderMenu, renderButton, disabled } = this.props;
     const disabledStyle = disabled
       ? {
-          opacity: 0.33,
-          cursor: "not-allowed",
+          color: AppColors.DisabledGray,
+          cursor: "default",
         }
       : {};
     return (
@@ -113,7 +113,7 @@ export default class extends React.Component<MenuProps> {
             onClick: this.handleToggleButtonClick,
             style: {
               margin: 0,
-              borderRadius: 0,
+              borderRadius: menuActive ? "2px 2px 0 0" : 0,
               background: menuActive ? AppColors.Highlight : "transparent",
               color: menuActive ? AppColors.White : AppColors.DarkGray,
               ...disabledStyle,

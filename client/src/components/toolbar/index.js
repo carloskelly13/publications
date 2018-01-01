@@ -29,6 +29,7 @@ const Toolbar = props => {
     showNewDocumentModal,
     showOpenDocumentModal,
     handleClipboardAction,
+    saveDocument,
     clipboardContents,
     setZoom,
     logOut,
@@ -42,6 +43,7 @@ const Toolbar = props => {
           currentDocument={currentDocument}
           showNewDocumentModal={showNewDocumentModal}
           showOpenDocumentModal={showOpenDocumentModal}
+          saveDocument={saveDocument}
           setZoom={setZoom}
           logOut={logOut}
         />
