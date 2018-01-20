@@ -2,17 +2,17 @@ package com.carlospaelinck.controllers;
 
 import com.carlospaelinck.domain.User;
 import com.carlospaelinck.exceptions.ConflictException;
-import com.carlospaelinck.security.UserDetails;
+import com.carlospaelinck.security.PubUserDetails;
 import com.carlospaelinck.services.UserService;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -20,34 +20,35 @@ public class UserController {
   @Inject
   UserService userService;
 
-  @RequestMapping(value = "/current", method = RequestMethod.GET)
-  User current(@AuthenticationPrincipal UserDetails userDetails) {
+  @GetMapping("/current")
+  User current(@AuthenticationPrincipal PubUserDetails userDetails) {
     return userService.get(userDetails.getUser().getEmailAddress());
   }
 
-  @RequestMapping(method = RequestMethod.POST)
+  @PostMapping
   User create(@RequestBody User user) {
     return userService.create(user);
   }
 
-  @RequestMapping(method = RequestMethod.PUT)
-  User update(HttpServletRequest request, @RequestBody User user, @AuthenticationPrincipal UserDetails userDetails) {
+  @PutMapping
+  User update(HttpServletRequest request, @RequestBody User user, @AuthenticationPrincipal PubUserDetails userDetails, HttpServletResponse response) {
     if (userDetails.getUser().getTemporary() && userService.get(user.getEmailAddress()) != null) {
-      throw new ConflictException();
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return null;
     }
 
-    User updatedUser = userService.update(user);
-    userDetails.setUser(updatedUser);
+    User currentUser = userDetails.getUser();
+    User updatedUser = userService.update(currentUser, user);
     return updatedUser;
   }
 
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  User login(@RequestBody User user) {
-    return userService.login(user);
+  @PostMapping("/login")
+  Authentication login(@RequestBody User user) {
+    return userService.authenticate(user);
   }
 
-  @RequestMapping(value = "/logout", method = RequestMethod.DELETE)
-  void logout(HttpServletRequest request, @AuthenticationPrincipal UserDetails userDetails) throws ServletException {
+  @DeleteMapping("/logout")
+  void logout(HttpServletRequest request, @AuthenticationPrincipal PubUserDetails userDetails) throws ServletException {
     userService.logout(userDetails.getUser().getEmailAddress());
     request.logout();
   }

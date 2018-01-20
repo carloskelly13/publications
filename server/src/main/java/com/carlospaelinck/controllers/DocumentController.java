@@ -1,7 +1,7 @@
 package com.carlospaelinck.controllers;
 
 import com.carlospaelinck.domain.Document;
-import com.carlospaelinck.security.UserDetails;
+import com.carlospaelinck.security.PubUserDetails;
 import com.carlospaelinck.services.DocumentService;
 
 import org.springframework.data.domain.Sort;
@@ -20,12 +20,12 @@ public class DocumentController {
   DocumentService documentService;
 
   @RequestMapping(method = RequestMethod.GET)
-  List<Document> list(@AuthenticationPrincipal UserDetails userDetails) {
+  List<Document> list(@AuthenticationPrincipal PubUserDetails userDetails) {
     return documentService.findAllByUser(userDetails.getUser(), new Sort(Sort.Direction.DESC, "lastModified"));
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  Document create(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Document document) {
+  Document create(@AuthenticationPrincipal PubUserDetails userDetails, @RequestBody Document document) {
     document.setUser(userDetails.getUser());
     return documentService.create(document);
   }
@@ -41,7 +41,7 @@ public class DocumentController {
   }
 
   @RequestMapping(value = "/{documentId}", method = RequestMethod.PUT)
-  Document update(@AuthenticationPrincipal UserDetails userDetails, @PathVariable("documentId") String documentId, @RequestBody Document document) {
+  Document update(@AuthenticationPrincipal PubUserDetails userDetails, @PathVariable("documentId") String documentId, @RequestBody Document document) {
     document.setId(documentId);
     document.setUser(userDetails.getUser());
     return documentService.update(document);

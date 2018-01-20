@@ -28,7 +28,7 @@ public class MethodSecurityExpressionRoot
   }
 
   public boolean isOwner(Object object) {
-    UserDetails principal = (UserDetails) this.getPrincipal();
+    PubUserDetails principal = (PubUserDetails) this.getPrincipal();
 
     if (object instanceof Document) {
       Document document = (Document) object;

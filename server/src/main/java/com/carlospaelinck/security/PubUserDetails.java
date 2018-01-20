@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-public class UserDetails extends org.springframework.security.core.userdetails.User {
+public class PubUserDetails extends org.springframework.security.core.userdetails.User {
   @Getter
   @Setter
   User user;
 
-  public UserDetails(User user) {
+  public PubUserDetails(User user) {
     super(user.getEmailAddress(), user.getPasswordHash(), AuthorityUtils.createAuthorityList());
     this.user = user;
   }

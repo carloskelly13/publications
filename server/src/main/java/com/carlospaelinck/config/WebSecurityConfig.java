@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfFilter;
-import com.carlospaelinck.security.UserDetailsService;
+import com.carlospaelinck.security.UserDetailsServiceImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Inject
-  UserDetailsService userDetailsService;
+  UserDetailsServiceImpl userDetailsServiceImpl;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Inject
   protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth
-      .userDetailsService(userDetailsService)
+      .userDetailsService(userDetailsServiceImpl)
       .passwordEncoder(new BCryptPasswordEncoder());
   }
 }

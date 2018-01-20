@@ -35,20 +35,22 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public User update(User user) {
-    user.setPasswordHash(new BCryptPasswordEncoder().encode(user.getPassword()));
-    return userRepository.save(user);
+  public User update(User currentUser, User updatedUser) {
+    currentUser.setEmailAddress(updatedUser.getEmailAddress());
+    currentUser.setTemporary(false);
+    currentUser.setPasswordHash(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
+    return userRepository.save(currentUser);
   }
 
-  public User login(User user) {
-    UsernamePasswordAuthenticationToken authRequest =
-        new UsernamePasswordAuthenticationToken(user.getEmailAddress(), user.getPassword());
+  public Authentication authenticate(User user) {
+    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(user.getEmailAddress(),
+        user.getPassword());
 
     // Authenticate the user
     Authentication authentication = authenticationManager.authenticate(authRequest);
     SecurityContext securityContext = SecurityContextHolder.getContext();
     securityContext.setAuthentication(authentication);
-    return userRepository.findOneByEmailAddress(user.getEmailAddress());
+    return authentication;
   }
 
   public void logout(String emailAddress) {
