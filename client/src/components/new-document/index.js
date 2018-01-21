@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import Button from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
@@ -13,10 +13,11 @@ import Api from "../../util/api";
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
 `;
+
 type Props = {
   onDismiss: Function,
 };
-export default class NewDocumentDialog extends Component<Props> {
+export default class NewDocumentDialog extends React.Component<Props> {
   state = {
     name: "New Document",
     width: 8.5,
@@ -44,7 +45,7 @@ export default class NewDocumentDialog extends Component<Props> {
       <NewDocumentContainer>
         <Header>Create New Document</Header>
         <Message>
-          Specify the name, width and height of your new document.
+          Specify the name, width, and height of your new document.
         </Message>
         <Formik
           initialValues={{

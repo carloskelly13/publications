@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/users")
 public class UserController {
   @Inject
-  UserService userService;
+  private UserService userService;
 
   @GetMapping("/current")
   User current(@AuthenticationPrincipal PubUserDetails userDetails) {
@@ -38,8 +38,7 @@ public class UserController {
     }
 
     User currentUser = userDetails.getUser();
-    User updatedUser = userService.update(currentUser, user);
-    return updatedUser;
+    return userService.update(currentUser, user);
   }
 
   @PostMapping("/login")

@@ -6,10 +6,18 @@ import FileBrowser, { FileBrowserLoadingContainer } from "./file-browser";
 import AsyncViewContent from "../async-content";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Spinner } from "../ui/spinner";
+import { Header } from "../ui/text";
+import { AppColors } from "../../util/constants";
 
 const OpenDocumentContainer = styled(ModalContent)`
   min-width: 630px;
+  width: 85%;
   padding: 0 0 40px;
+`;
+
+const HeaderContainer = styled.div`
+  padding: 1.5em 1.5em 1em;
+  border-bottom: 1px solid ${AppColors.Gray};
 `;
 
 type Props = {
@@ -41,6 +49,9 @@ export default class OpenDocument extends React.Component<Props, State> {
     const { props: { onDismiss, documents }, state: { selectedId } } = this;
     return (
       <OpenDocumentContainer>
+        <HeaderContainer>
+          <Header>Open Document</Header>
+        </HeaderContainer>
         <AsyncViewContent
           waitFor={documents}
           renderLoading={

@@ -2,9 +2,19 @@ import styled from "styled-components";
 import { AppColors, appFont } from "../../util/constants";
 
 export const Header = styled.h1`
-  font-weight: 500;
-  font-size: 1.2em;
+  font-weight: 600;
+  font-size: 1.1em;
   margin: 0 0 5px;
+`;
+
+export const PaddedHeader = styled(Header)`
+  margin: 0;
+  padding: 15px;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  background: hsla(0, 0%, 100%, 0.85);
+  border-bottom: 1px solid ${AppColors.Gray};
 `;
 
 export const Message = styled.p`

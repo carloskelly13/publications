@@ -6,33 +6,29 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
   .modal-transition-enter {
-    opacity: 0;
+    transform: translateY(-100%);
   }
 
   .modal-transition-enter.modal-transition-enter-active {
-    opacity: 1;
-    transition: opacity 200ms ease-in-out;
+    transform: translateY(0);
+    transition: transform 600ms ease-in-out;
   }
 
   .modal-transition-leave {
-    opacity: 1;
+    transform: translateY(0);
   }
 
   .modal-transition-leave.modal-transition-leave-active {
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
+    transform: translateY(-100%);
+    transition: transform 600ms ease-in-out;
   }
 `;
 
 const ModalContainer = styled.div`
-  align-items: center;
-  background: hsla(0, 0%, 0%, 0.5);
   bottom: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
   height: 100%;
   left: 0;
-  justify-content: space-around;
   overflow: hidden;
   position: fixed;
   right: 0;
@@ -43,10 +39,10 @@ const ModalContainer = styled.div`
 
 export const ModalContent = styled.div`
   background: #fff;
-  box-shadow: 0 1px 10px hsla(0, 0%, 0%, 0.25);
-  border-radius: 6px;
+  box-shadow: 0 1px 35px hsla(0, 0%, 0%, 0.35);
+  border-radius: 0 0 6px 6px;
   margin: auto;
-  padding: 1em 1em calc(1em + 50px);
+  padding: 1.5em 1.5em calc(1.5em + 50px);
   position: relative;
   overflow: hidden;
 `;
@@ -58,8 +54,8 @@ type Props = {
 const Modal = ({ renderContent, visible }: Props) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
-    transitionEnterTimeout={200}
-    transitionLeaveTimeout={350}
+    transitionEnterTimeout={600}
+    transitionLeaveTimeout={600}
   >
     {visible && <ModalContainer>{renderContent}</ModalContainer>}
   </ReactCSSTransitionGroup>

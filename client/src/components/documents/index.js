@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import Route from "react-router-dom/Route";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
@@ -13,6 +12,7 @@ import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
 import Api, { clearCsrfHeaders } from "../../util/api";
+import { ViewContainer, ViewContent } from "./styled-components";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -25,17 +25,6 @@ import {
   updatedDocumentStateForDeleteAction,
 } from "./editor-actions";
 import shortid from "shortid";
-
-const ViewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const ViewContent = styled.div`
-  display: flex;
-  flex: 1 0 calc(100% - 85px);
-`;
 
 export default class DocumentsView extends Component {
   static contextTypes = {
@@ -107,6 +96,7 @@ export default class DocumentsView extends Component {
   getDocument = async id => {
     const [err, doc] = await to(Api.GET(`documents/${id}`));
     if (err) {
+      this.context.router.history.replace("/documents");
       return;
     }
     this.setState({
@@ -239,17 +229,17 @@ export default class DocumentsView extends Component {
             waitFor={user}
             renderLoading={<LoadingView />}
             renderContent={
-              <div>
-                <LayersSidebar
-                  visible={layersPanelVisible}
-                  currentDocument={currentDocument}
-                  selectedObject={selectedObject}
-                  adjustObjectLayer={this.adjustObjectLayer}
-                  updateSelectedObject={this.updateSelectedObject}
-                />
-                <Route
-                  path="/documents/:id"
-                  render={props => (
+              <Route
+                path="/documents/:id"
+                render={props => (
+                  <React.Fragment>
+                    <LayersSidebar
+                      visible={layersPanelVisible}
+                      currentDocument={currentDocument}
+                      selectedObject={selectedObject}
+                      adjustObjectLayer={this.adjustObjectLayer}
+                      updateSelectedObject={this.updateSelectedObject}
+                    />
                     <EditorView
                       {...props}
                       selectedObject={selectedObject}
@@ -258,9 +248,9 @@ export default class DocumentsView extends Component {
                       updateSelectedObject={this.updateSelectedObject}
                       zoom={this.state.zoom}
                     />
-                  )}
-                />
-              </div>
+                  </React.Fragment>
+                )}
+              />
             }
           />
         </ViewContent>

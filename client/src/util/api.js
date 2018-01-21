@@ -1,4 +1,5 @@
 import { Urls, baseRequestHeaders } from "./constants";
+import get from "lodash/fp/get";
 
 const responseHandler = response => {
   if (response.status !== 200) {
@@ -25,6 +26,8 @@ export const getCsrfHeaders = () => ({
   "x-csrf-param": window.sessionStorage.getItem("x-csrf-param"),
   "x-csrf-token": window.sessionStorage.getItem("x-csrf-token"),
 });
+
+export const getUserFromAuth = get("principal.user");
 
 export default {
   GET: path =>

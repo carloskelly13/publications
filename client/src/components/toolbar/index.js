@@ -13,9 +13,12 @@ import { AppColors } from "../../util/constants";
 const Header = styled.span`
   color: ${AppColors.Highlight};
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 0.9em;
   margin: 0 0.65em 0 0;
 `;
+
+const documentName = name =>
+  name.length <= 15 ? name : `${name.substring(0, 14)}…`;
 
 const Toolbar = props => {
   const {
@@ -37,7 +40,13 @@ const Toolbar = props => {
   return (
     <ToolbarBase>
       <ContentContainer verticalAlign>
-        <Header>Publications</Header>
+        <Header>
+          Publications{currentDocument && (
+            <span style={{ color: AppColors.DarkGray }}>
+              &nbsp;– {documentName(currentDocument.name)}
+            </span>
+          )}
+        </Header>
         <FileMenu
           disabled={!user}
           currentDocument={currentDocument}
