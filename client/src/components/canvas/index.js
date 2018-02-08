@@ -1,7 +1,7 @@
 import React from "react";
 import { CanvasBackground } from "./background";
 import { CanvasSVG } from "./canvas-svg";
-import { renderShapes } from "./render-shapes";
+import Shapes from "./render-shapes";
 
 const zoomForDocumentSize = ({ width, height }) => {
   if (width >= 32 || height >= 32) {
@@ -64,12 +64,12 @@ export default class extends React.Component {
           />
         </g>
         <g>
-          {renderShapes({
-            ...this.props,
-            zoom,
-            setActiveDraftJSEditor: this.setActiveDraftJSEditor,
-            activeDraftJSEditor: this.state.activeDraftJSEditor,
-          })}
+          <Shapes
+            {...this.props}
+            zoom={zoom}
+            setActiveDraftJSEditor={this.setActiveDraftJSEditor}
+            activeDraftJSEditor={this.state.activeDraftJSEditor}
+          />
         </g>
       </CanvasSVG>
     );

@@ -1,41 +1,37 @@
 import React, { createElement } from "react";
-import { Rectangle, Ellipse, TextBox } from "../shapes";
+import shapeNodes from "../shapes";
 import SelectableShape from "../shapes/selectable-shape";
-import get from "lodash/get";
+import getOr from "lodash/fp/getOr";
 
-const shapeNodes = { text: TextBox, ellipse: Ellipse, rect: Rectangle };
+const getShapeId = getOr("id", null);
 
-export const renderShapes = props => {
-  const {
-    sortedShapes,
-    dpi,
-    zoom,
-    updateSelectedShape,
-    allowsEditing,
-    selectedShape,
-    activeDraftJSEditor,
-    setActiveDraftJSEditor,
-  } = props;
+export default ({
+  sortedShapes,
+  dpi,
+  zoom,
+  updateSelectedShape,
+  allowsEditing,
+  selectedShape,
+  activeDraftJSEditor,
+  setActiveDraftJSEditor,
+}) => sortedShapes.map(shape => {
+  let shapeProps = { shape, zoom, dpi };
+  if (shape.type === "text") {
+    shapeProps = { ...shapeProps, updateSelectedShape, activeDraftJSEditor };
+  }
+  const shapeNode = createElement(shapeNodes[shape.type], shapeProps);
 
-  return sortedShapes.map(shape => {
-    let shapeProps = { shape, zoom, dpi };
-    if (shape.type === "text") {
-      shapeProps = { ...shapeProps, updateSelectedShape, activeDraftJSEditor };
-    }
-    const shapeNode = createElement(shapeNodes[shape.type], shapeProps);
-
-    return (
-      <SelectableShape
-        key={`cs-${shape.id}`}
-        dpi={dpi}
-        zoom={zoom}
-        selectedShapeId={get(selectedShape, "id", null)}
-        shape={shape}
-        onChange={updateSelectedShape}
-        setActiveDraftJSEditor={setActiveDraftJSEditor}
-        selectable={allowsEditing}
-        renderShape={shapeNode}
-      />
-    );
-  });
-};
+  return (
+    <SelectableShape
+      key={`cs-${shape.id}`}
+      dpi={dpi}
+      zoom={zoom}
+      selectedShapeId={getShapeId(selectedShape)}
+      shape={shape}
+      onChange={updateSelectedShape}
+      setActiveDraftJSEditor={setActiveDraftJSEditor}
+      selectable={allowsEditing}
+      renderShape={shapeNode}
+    />
+  );
+})
