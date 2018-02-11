@@ -1,6 +1,13 @@
+// @flow
+import type { PubShape } from "../../util/types";
 import React from "react";
 
-class Rectangle extends React.PureComponent {
+type Props = {
+  shape: PubShape,
+  zoom: number,
+  dpi: number,
+};
+class Rectangle extends React.PureComponent<Props> {
   render() {
     const {
       shape: {

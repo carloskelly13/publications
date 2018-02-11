@@ -1,6 +1,6 @@
 import hexRgb from "hex-rgb";
 
 export const convertToRGBA = (hex, alpha) => {
-  const [r, g, b] = hexRgb(hex);
-  return { r, g, b, a: alpha };
+  const rgb = hexRgb(hex);
+  return { r: rgb.red, g: rgb.green, b: rgb.blue, a: alpha };
 };

@@ -8,9 +8,9 @@ const ButtonWrapper = styled.button`
     ${({ active }) => (active ? AppColors.Gray50 : AppColors.Gray40)};
   border-radius: 4px;
   color: ${({ active }) => (active ? AppColors.White : AppColors.DarkGray)};
-  font-size: 0.85em;
+  font-size: 0.95em;
   font-weight: 400;
-  padding: 2px 12px;
+  padding: 3px 18px;
   outline: none;
   margin: ${props =>
     `${0} ${props.marginRight ? "0.5em" : 0} ${0} ${

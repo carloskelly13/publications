@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from "react";
 import styled from "styled-components";
 import { AppColors } from "../../util/constants";
@@ -39,7 +38,8 @@ export const MenuDivider = styled.div`
 `;
 
 export const MenuItem = styled.button`
-  padding: 0.4em 3em 0.4em 1em;
+  padding: ${({ noExtraRightPadding }) =>
+    noExtraRightPadding ? "0.4em 1em" : "0.4em 3em 0.4em 1em"};
   border: none;
   background: transparent;
   margin: none;

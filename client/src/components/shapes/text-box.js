@@ -21,8 +21,8 @@ class TextBox extends React.PureComponent {
     const metrics = {
       x: dpi * shape.x,
       y: dpi * shape.y,
-      width: dpi * 1 * shape.width,
-      height: dpi * 1 * shape.height,
+      width: dpi * shape.width,
+      height: dpi * shape.height,
     };
     const transform = `scale(${zoom})`;
 

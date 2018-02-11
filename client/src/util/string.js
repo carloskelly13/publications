@@ -11,3 +11,6 @@ export const lastModifiedString = date => {
   }
   return format(date, "MMM D");
 };
+
+export const documentName = name =>
+  name.length <= 15 ? name : `${name.substring(0, 14)}…`;

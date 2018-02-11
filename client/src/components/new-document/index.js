@@ -17,7 +17,13 @@ const NewDocumentContainer = styled(ModalContent)`
 type Props = {
   onDismiss: Function,
 };
-export default class NewDocumentDialog extends React.Component<Props> {
+type State = {
+  name: string,
+  width: number,
+  height: number,
+  formValid: boolean,
+};
+export default class NewDocumentDialog extends React.Component<Props, State> {
   state = {
     name: "New Document",
     width: 8.5,
@@ -30,7 +36,7 @@ export default class NewDocumentDialog extends React.Component<Props> {
     return errors;
   };
 
-  createNewDocument = async documentAttrs => {
+  createNewDocument = async (documentAttrs: Object) => {
     const payload = { ...documentAttrs, shapes: [] };
     const [err] = await to(Api.POST("documents", payload));
     if (err) {

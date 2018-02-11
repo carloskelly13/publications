@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import LoginForm from "./login-form";
 import to from "await-to-js";
 import Api, { getUserFromAuth } from "../../util/api";
 
-export default class IndexView extends Component {
+export default class IndexView extends React.Component {
   static contextTypes = {
     router: PropTypes.object.isRequired,
   };
@@ -14,7 +14,7 @@ export default class IndexView extends Component {
     errorFetchingUser: null,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getCurrentUser();
   }
 

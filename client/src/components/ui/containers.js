@@ -3,7 +3,7 @@ import type { ComponentType } from "react";
 import styled from "styled-components";
 
 type Props = {
-  verticalAlign: boolean,
+  verticalAlign?: boolean,
 };
 export const ContentContainer: ComponentType<Props> = styled.div`
   display: flex;

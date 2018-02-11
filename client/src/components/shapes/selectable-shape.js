@@ -1,9 +1,10 @@
 // @flow
+import type { Node } from "react";
 import React from "react";
 import ResizeMoveFrame from "./frame";
 
 type Props = {
-  renderShape: React.Node,
+  renderShape: Node,
   shape: Object,
   selectedShapeId?: string,
   selectable: boolean,

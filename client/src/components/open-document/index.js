@@ -1,35 +1,15 @@
+// @flow
+import type { OpenDocProps, OpenDocState } from "./types";
 import React from "react";
-import styled from "styled-components";
-import { ModalContent } from "../modal";
 import Button from "../ui/framed-button";
 import FileBrowser, { FileBrowserLoadingContainer } from "./file-browser";
 import AsyncViewContent from "../async-content";
+import { HeaderContainer, OpenDocumentContainer } from "./components";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Spinner } from "../ui/spinner";
 import { Header } from "../ui/text";
-import { AppColors } from "../../util/constants";
 
-const OpenDocumentContainer = styled(ModalContent)`
-  min-width: 630px;
-  width: 85%;
-  padding: 0 0 40px;
-`;
-
-const HeaderContainer = styled.div`
-  padding: 1.5em 1.5em 1em;
-  border-bottom: 1px solid ${AppColors.Gray};
-`;
-
-type Props = {
-  documents?: Array,
-  onDismiss: Function,
-  replaceRoute: Function,
-  getDocuments: Function,
-};
-type State = {
-  selectedId: string,
-};
-export default class OpenDocument extends React.Component<Props, State> {
+export default class extends React.Component<OpenDocProps, OpenDocState> {
   state = {
     selectedId: "",
   };
@@ -38,7 +18,7 @@ export default class OpenDocument extends React.Component<Props, State> {
     this.props.getDocuments();
   }
 
-  handleFileClicked = id => this.setState(() => ({ selectedId: id }));
+  handleFileClicked = (id: string) => this.setState(() => ({ selectedId: id }));
 
   handleOpenButtonClicked = () => {
     this.props.onDismiss();
@@ -53,7 +33,7 @@ export default class OpenDocument extends React.Component<Props, State> {
           <Header>Open Document</Header>
         </HeaderContainer>
         <AsyncViewContent
-          waitFor={documents}
+          waitFor={documents.length !== 0}
           renderLoading={
             <FileBrowserLoadingContainer>
               <Spinner />

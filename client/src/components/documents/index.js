@@ -1,3 +1,5 @@
+// @flow
+import type { PubDocument, PubShape } from "../../util/types";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Route from "react-router-dom/Route";
@@ -11,6 +13,7 @@ import OpenDocumentDialog from "../open-document";
 import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
+import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, ViewContent } from "./styled-components";
 import {
@@ -26,14 +29,26 @@ import {
 } from "./editor-actions";
 import shortid from "shortid";
 
-export default class DocumentsView extends Component {
+type DocumentState = {
+  user: ?Object,
+  documents: PubDocument[],
+  currentDocument: ?PubDocument,
+  selectedObject: ?PubShape,
+  clipboardContents: ?PubShape,
+  newDocumentModalVisible: boolean,
+  openDocumentModalVisible: boolean,
+  layersPanelVisible: boolean,
+  zoom: number,
+};
+
+export default class DocumentsView extends Component<{}, DocumentState> {
   static contextTypes = {
     router: PropTypes.object.isRequired,
   };
 
   state = {
     user: null,
-    documents: null,
+    documents: [],
     currentDocument: null,
     selectedObject: null,
     clipboardContents: null,
@@ -51,7 +66,7 @@ export default class DocumentsView extends Component {
    * Display Actions
    */
 
-  toggleVisibility = identifier => {
+  toggleVisibility = (identifier: string) => {
     const key = `${identifier}Visible`;
     this.setState(prevState => ({
       [key]: !prevState[key],
@@ -84,7 +99,7 @@ export default class DocumentsView extends Component {
   getDocuments = async () => {
     const [err, documents] = await to(Api.GET("documents"));
     if (err) {
-      this.setState({ documents: null });
+      this.setState({ documents: [] });
       return;
     }
     this.setState({
@@ -93,7 +108,7 @@ export default class DocumentsView extends Component {
     });
   };
 
-  getDocument = async id => {
+  getDocument = async (id: string) => {
     const [err, doc] = await to(Api.GET(`documents/${id}`));
     if (err) {
       this.context.router.history.replace("/documents");
@@ -107,6 +122,9 @@ export default class DocumentsView extends Component {
   };
 
   saveDocument = async () => {
+    if (!this.state.currentDocument) {
+      return;
+    }
     const { id } = this.state.currentDocument;
     const [err] = await to(
       Api.PUT(
@@ -124,7 +142,7 @@ export default class DocumentsView extends Component {
    * Editor Actions
    */
 
-  updateSelectedObject = sender =>
+  updateSelectedObject = (sender: ?Object) =>
     this.setState(prevState =>
       updatedDocumentStateForObjectChanges(
         sender,
@@ -133,9 +151,12 @@ export default class DocumentsView extends Component {
       )
     );
 
-  setZoom = (zoom = 1) => this.setState({ zoom });
+  setZoom = (zoom: number = 1) => this.setState({ zoom });
 
-  addObject = sender => {
+  addObject = (sender: Object) => {
+    if (!this.state.currentDocument) {
+      return;
+    }
     const newObject = {
       ...sender,
       z: this.state.currentDocument.shapes.length + 1,
@@ -144,13 +165,13 @@ export default class DocumentsView extends Component {
     this.setState(prevState => ({
       currentDocument: {
         ...prevState.currentDocument,
-        shapes: [...prevState.currentDocument.shapes, newObject],
+        shapes: [...getOr("currentDocument.shapes", [])(prevState), newObject],
       },
       selectedObject: newObject,
     }));
   };
 
-  deleteObject = sender =>
+  deleteObject = (sender: ?Object) =>
     this.setState(prevState =>
       updatedDocumentStateForDeleteAction(
         sender || prevState.selectedObject,
@@ -158,12 +179,12 @@ export default class DocumentsView extends Component {
       )
     );
 
-  adjustObjectLayer = sender =>
+  adjustObjectLayer = (sender: Object) =>
     this.setState(prevState =>
       updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
     );
 
-  handleClipboardAction = action =>
+  handleClipboardAction = (action: string) =>
     this.setState(prevState =>
       updatedDocumentStateForClipboardAction(action, prevState)
     );
@@ -208,17 +229,20 @@ export default class DocumentsView extends Component {
           user={user}
           selectedObject={selectedObject}
           currentDocument={currentDocument}
-          showNewDocumentModal={this.toggleNewDocument}
-          showOpenDocumentModal={this.toggleOpenDocument}
-          toggleLayersPanel={this.toggleLayersPanel}
           clipboardContents={clipboardContents}
-          handleClipboardAction={this.handleClipboardAction}
-          saveDocument={this.saveDocument}
           layersPanelVisible={layersPanelVisible}
-          addObject={this.addObject}
-          deleteObject={this.deleteObject}
-          setZoom={this.setZoom}
-          logOut={this.logOut}
+          zoom={this.state.zoom}
+          actions={{
+            addObject: this.addObject,
+            deleteObject: this.deleteObject,
+            handleClipboardAction: this.handleClipboardAction,
+            logOut: this.logOut,
+            saveDocument: this.saveDocument,
+            setZoom: this.setZoom,
+            showNewDocumentModal: this.toggleNewDocument,
+            showOpenDocumentModal: this.toggleOpenDocument,
+            toggleLayersPanel: this.toggleLayersPanel,
+          }}
         />
         <MetricsBar
           shape={selectedObject}
@@ -232,7 +256,7 @@ export default class DocumentsView extends Component {
               <Route
                 path="/documents/:id"
                 render={props => (
-                  <React.Fragment>
+                  <div>
                     <LayersSidebar
                       visible={layersPanelVisible}
                       currentDocument={currentDocument}
@@ -248,7 +272,7 @@ export default class DocumentsView extends Component {
                       updateSelectedObject={this.updateSelectedObject}
                       zoom={this.state.zoom}
                     />
-                  </React.Fragment>
+                  </div>
                 )}
               />
             }
