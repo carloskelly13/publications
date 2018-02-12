@@ -1,6 +1,6 @@
-import hexRgb from "hex-rgb";
+import tinycolor from "tinycolor2";
 
-export const convertToRGBA = (hex, alpha) => {
-  const rgb = hexRgb(hex);
-  return { r: rgb.red, g: rgb.green, b: rgb.blue, a: alpha };
-};
+export const convertToRGBA = (hex, alpha) => ({
+  ...tinycolor(hex).toRgb(),
+  a: alpha,
+});

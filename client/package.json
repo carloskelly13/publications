@@ -15,18 +15,12 @@
   "dependencies": {
     "await-to-js": "^2.0.1",
     "babel-polyfill": "^6.26.0",
-    "clone-deep": "^0.2.4",
     "date-fns": "^1.29.0",
     "draft-js": "^0.10.4",
     "draft-js-custom-styles": "^1.3.1",
     "draft-js-export-html": "^1.2.0",
     "draft-js-import-html": "^1.2.1",
-    "events": "^1.1.1",
-    "fbjs": "^0.8.3",
-    "fecha": "^2.1.0",
     "formik": "^0.9.4",
-    "greenlet": "^0.1.0",
-    "hex-rgb": "2.0.0",
     "history": "4.7.2",
     "lodash": "^4.17.4",
     "object-assign": "^4.1.1",
@@ -39,18 +33,10 @@
     "react-color": "2.13.8",
     "react-dom": "^16.2.0",
     "react-motion": "^0.5.2",
-    "react-redux": "^5.0.6",
     "react-router": "4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-router-redux": "5.0.0-alpha.6",
-    "react-saga": "^0.2.6",
-    "redux": "^3.7.2",
-    "redux-actions": "^2.2.1",
-    "redux-saga": "^0.16.0",
-    "reselect": "^3.0.1",
     "shortid": "^2.2.8",
     "styled-components": "3.1.6",
-    "supports-color": "^4.4.0",
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
@@ -85,8 +71,8 @@
     "path": "^0.12.7",
     "prettier": "1.9.2",
     "url-loader": "^0.5.7",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack": "3.11.0",
+    "webpack-dev-server": "2.11.1"
   },
   "author": "Carlos Paelinck",
   "license": "MIT"
