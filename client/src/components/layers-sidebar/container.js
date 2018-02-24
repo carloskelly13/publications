@@ -6,10 +6,11 @@ export const LayersSidebarContainer = styled.div`
   background: ${AppColors.White};
   border-left: 1px solid ${AppColors.Gray50};
   z-index: 2;
-  height: calc(100% - 54px);
+  height: 100%;
   flex-direction: column;
   right: 0;
   display: ${({ visible }) => (visible ? "flex" : "none")};
+  overflow: scroll;
 
   @media print {
     display: none;

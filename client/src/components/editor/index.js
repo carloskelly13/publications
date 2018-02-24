@@ -55,6 +55,14 @@ export default class EditorView extends React.Component {
       event.preventDefault();
     }
 
+    if (event.keyCode === Keys.Esc) {
+      this.context.actions.updateSelectedObject(null);
+      return;
+    } else if (event.keyCode === Keys.Delete) {
+      this.context.actions.deleteObject();
+      return;
+    }
+
     const changes = {};
     switch (event.keyCode) {
       case Keys.Up:

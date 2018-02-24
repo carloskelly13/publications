@@ -48,6 +48,8 @@ export const Keys = {
   Up: 38,
   Right: 39,
   Down: 40,
+  Esc: 27,
+  Delete: 8,
 };
 
 export const breakpointLg = "min-width: 768px";

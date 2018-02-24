@@ -15,7 +15,7 @@ import Modal from "../modal";
 import to from "await-to-js";
 import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
-import { ViewContainer, ViewContent } from "./styled-components";
+import { ViewContainer, ViewContent, DocumentView } from "./components";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -253,13 +253,7 @@ export default class DocumentsView extends Component<{}, State> {
               <Route
                 path="/documents/:id"
                 render={props => (
-                  <div
-                    style={{
-                      width: "100vw",
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
+                  <DocumentView>
                     <EditorView
                       {...props}
                       selectedObject={this.state.selectedObject}
@@ -271,7 +265,7 @@ export default class DocumentsView extends Component<{}, State> {
                       currentDocument={this.state.currentDocument}
                       selectedObject={this.state.selectedObject}
                     />
-                  </div>
+                  </DocumentView>
                 )}
               />
             }
