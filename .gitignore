@@ -43,3 +43,5 @@ local.properties
 /server/build
 /server/server.iml
 /server/bin
+/client/client-app.iml
+/server/src/main/spring-service.iml

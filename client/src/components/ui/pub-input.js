@@ -84,6 +84,7 @@ type Props = {
   label?: string,
   marginBottom?: string,
   marginRight?: string,
+  autoComplete?: string,
   type: string,
 };
 export const FormInput = ({
@@ -93,6 +94,7 @@ export const FormInput = ({
   displayName,
   marginBottom,
   marginRight,
+  autoComplete,
   label,
   type,
 }: Props) => (
@@ -104,10 +106,11 @@ export const FormInput = ({
         id={name}
         onChange={onChange}
         name={name}
+        autoComplete={autoComplete}
         value={value}
         type={type}
       />
-      {!!label && <PubInputLabel>{label}</PubInputLabel>}
+      {label && <PubInputLabel>{label}</PubInputLabel>}
     </PubInputGroup>
     <FormInputLabel htmlFor={name}>{displayName}</FormInputLabel>
   </FormInputContainer>
