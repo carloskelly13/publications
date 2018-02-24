@@ -36,10 +36,8 @@ export const FileItem = ({ doc, handleClick, selected }) => (
       <Canvas
         selected={selected}
         thumbnail
-        documentMetrics={{
-          width: doc.width,
-          height: doc.height,
-        }}
+        width={doc.width}
+        height={doc.height}
         sortedShapes={doc.shapes}
       />
     </SvgContainer>

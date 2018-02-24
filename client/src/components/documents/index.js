@@ -156,7 +156,6 @@ export default class DocumentsView extends Component<{}, State> {
     if (err) {
       return;
     }
-    console.log("Saved Document."); // eslint-disable-line no-console
   };
 
   /**

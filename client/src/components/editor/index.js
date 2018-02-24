@@ -107,7 +107,6 @@ export default class EditorView extends React.Component {
       },
       state: { scrollOffset },
     } = this;
-    const { actions } = this.context;
     return (
       <Container
         sidePanelVisible={sidePanelVisible}

@@ -28,7 +28,7 @@ const renderGridLines = ({ x, y, zoom, width, height, dpi }) => {
   ];
 };
 
-export class CanvasBackground extends React.PureComponent {
+export class CanvasBackground extends React.Component {
   render() {
     const {
       width,
