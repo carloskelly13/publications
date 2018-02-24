@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const FrameRect = styled.rect`
@@ -33,7 +34,12 @@ const frameAnchors = {
   ],
 };
 
-export default class ResizeMoveFrame extends Component {
+export default class ResizeMoveFrame extends React.Component {
+  static contextTypes = {
+    actions: PropTypes.object.isRequired,
+    setActiveDraftJSEditor: PropTypes.func.isRequired,
+  };
+
   static get defaultState() {
     return {
       eX: 0,
@@ -49,7 +55,7 @@ export default class ResizeMoveFrame extends Component {
   state = ResizeMoveFrame.defaultState;
 
   componentWillUnmount() {
-    this.props.setActiveDraftJSEditor(null);
+    this.context.setActiveDraftJSEditor(null);
     document.removeEventListener("mousemove", this.handleFrameResized);
     document.removeEventListener("mousemove", this.handleFrameDragged);
   }
@@ -97,8 +103,8 @@ export default class ResizeMoveFrame extends Component {
     }
     this.isEditingText = true;
     this.setState({ shouldRender: false });
-    this.props.setActiveDraftJSEditor(this.props.shape.id);
-    this.props.onChange({ isEditing: true });
+    this.context.setActiveDraftJSEditor(this.props.shape.id);
+    this.context.actions.updateSelectedObject({ isEditing: true });
   };
 
   handleAnchorMouseDown = event => {
@@ -126,7 +132,7 @@ export default class ResizeMoveFrame extends Component {
       this.state.oY +
       (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
 
-    this.props.onChange({
+    this.context.actions.updateSelectedObject({
       x: parseFloat(x.toFixed(2)),
       y: parseFloat(y.toFixed(2)),
     });
@@ -181,11 +187,11 @@ export default class ResizeMoveFrame extends Component {
       updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2));
     }
 
-    this.props.onChange(updatedMetrics);
+    this.context.actions.updateSelectedObject(updatedMetrics);
   };
 
   handleTextChange = ({ target }) => {
-    this.props.onChange({ text: target.value });
+    this.context.actions.updateSelectedObject({ text: target.value });
   };
 
   render() {

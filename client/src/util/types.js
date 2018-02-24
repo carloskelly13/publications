@@ -6,17 +6,6 @@ export type ToolbarProps = {
   layersPanelVisible: boolean,
   clipboardContents: ?Object,
   zoom: number,
-  actions: {
-    toggleLayersPanel: () => void,
-    addObject: Object => void,
-    deleteObject: (?Object) => void,
-    showNewDocumentModal: () => void,
-    showOpenDocumentModal: () => void,
-    handleClipboardAction: string => void,
-    saveDocument: () => Promise<void>,
-    setZoom: number => void,
-    logOut: () => Promise<void>,
-  },
 };
 
 export type PubDocument = {

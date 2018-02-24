@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { CanvasBackground } from "./background";
 import { CanvasSVG } from "./canvas-svg";
 import Shapes from "./render-shapes";
@@ -16,6 +17,14 @@ const zoomForDocumentSize = ({ width, height }) => {
 };
 
 export default class extends React.Component {
+  static contextTypes = {
+    actions: PropTypes.object.isRequired,
+  };
+
+  static childContextTypes = {
+    setActiveDraftJSEditor: PropTypes.func,
+  };
+
   static defaultProps = {
     dpi: 96,
     allowsEditing: false,
@@ -26,22 +35,27 @@ export default class extends React.Component {
     activeDraftJSEditor: null,
   };
 
+  getChildContext = () => ({
+    setActiveDraftJSEditor: this.setActiveDraftJSEditor,
+  });
+
   setActiveDraftJSEditor = id => this.setState({ activeDraftJSEditor: id });
 
   render() {
     const {
       dpi,
+      width,
+      height,
       allowsEditing,
       thumbnail,
       selected,
-      documentMetrics,
-      updateSelectedShape,
       backgroundGridLineRanges,
     } = this.props;
+    const { updateSelectedObject } = this.context.actions;
     let { zoom } = this.props;
 
     if (thumbnail) {
-      zoom = zoomForDocumentSize(documentMetrics);
+      zoom = zoomForDocumentSize({ width, height });
     }
 
     return (
@@ -49,18 +63,18 @@ export default class extends React.Component {
         thumbnail={thumbnail}
         selected={selected}
         allowsEditing={allowsEditing}
-        width={documentMetrics.width * dpi * zoom}
-        height={documentMetrics.height * dpi * zoom}
+        width={width * dpi * zoom}
+        height={height * dpi * zoom}
       >
         <g>
           <CanvasBackground
             selectable={allowsEditing}
-            width={documentMetrics.width}
-            height={documentMetrics.height}
+            width={width}
+            height={height}
             dpi={dpi}
             zoom={zoom}
             gridLineRanges={backgroundGridLineRanges}
-            handleBackgroundClicked={() => updateSelectedShape(null)}
+            handleBackgroundClicked={() => updateSelectedObject(null)}
           />
         </g>
         <g>

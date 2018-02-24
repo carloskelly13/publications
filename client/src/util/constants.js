@@ -52,11 +52,6 @@ export const Keys = {
 
 export const breakpointLg = "min-width: 768px";
 
-const _sidePanelWidth = 25;
-export const sidePanelWidth = `${_sidePanelWidth}vw`;
-export const contentPanelWidthFull = "100vw";
-export const contentPanelWidthPartial = `${100 - _sidePanelWidth}vw`;
-
 export const AppColors = {
   Active: "#727172",
   ActiveDark: "#626162",

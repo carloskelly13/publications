@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Editor } from "draft-js";
 import createStyles from "draft-js-custom-styles";
 
@@ -8,14 +9,12 @@ export const { styles, customStyleFn, exporter } = createStyles(
 );
 
 class TextBox extends React.PureComponent {
+  static contextTypes = {
+    actions: PropTypes.object.isRequired,
+  };
+
   render() {
-    const {
-      shape,
-      zoom,
-      dpi,
-      updateSelectedShape,
-      activeDraftJSEditor,
-    } = this.props;
+    const { shape, zoom, dpi, activeDraftJSEditor } = this.props;
 
     const readOnly = activeDraftJSEditor !== shape.id;
     const metrics = {
@@ -41,7 +40,9 @@ class TextBox extends React.PureComponent {
           <Editor
             customStyleFn={customStyleFn}
             editorState={shape.editorState}
-            onChange={state => updateSelectedShape({ editorState: state })}
+            onChange={state =>
+              this.context.actions.updateSelectedObject({ editorState: state })
+            }
             readOnly={readOnly}
           />
         </foreignObject>

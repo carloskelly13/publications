@@ -29,7 +29,7 @@ import {
 } from "./editor-actions";
 import shortid from "shortid";
 
-type DocumentState = {
+type State = {
   user: ?Object,
   documents: PubDocument[],
   currentDocument: ?PubDocument,
@@ -41,9 +41,13 @@ type DocumentState = {
   zoom: number,
 };
 
-export default class DocumentsView extends Component<{}, DocumentState> {
+export default class DocumentsView extends Component<{}, State> {
   static contextTypes = {
     router: PropTypes.object.isRequired,
+  };
+
+  static childContextTypes = {
+    actions: PropTypes.object,
   };
 
   state = {
@@ -57,6 +61,23 @@ export default class DocumentsView extends Component<{}, DocumentState> {
     layersPanelVisible: false,
     zoom: 1,
   };
+
+  getChildContext = () => ({
+    actions: {
+      addObject: this.addObject,
+      deleteObject: this.deleteObject,
+      handleClipboardAction: this.handleClipboardAction,
+      logOut: this.logOut,
+      getDocument: this.getDocument,
+      saveDocument: this.saveDocument,
+      setZoom: this.setZoom,
+      showNewDocumentModal: this.toggleNewDocument,
+      showOpenDocumentModal: this.toggleOpenDocument,
+      toggleLayersPanel: this.toggleLayersPanel,
+      updateSelectedObject: this.updateSelectedObject,
+      adjustObjectLayer: this.adjustObjectLayer,
+    },
+  });
 
   componentDidMount() {
     this.getCurrentUser();
@@ -194,83 +215,61 @@ export default class DocumentsView extends Component<{}, DocumentState> {
    */
 
   render() {
-    const {
-      state: {
-        user,
-        documents,
-        currentDocument,
-        selectedObject,
-        openDocumentModalVisible,
-        newDocumentModalVisible,
-        layersPanelVisible,
-        clipboardContents,
-      },
-    } = this;
     return (
       <ViewContainer>
         <Modal
           renderContent={
             <OpenDocumentDialog
-              documents={documents}
+              documents={this.state.documents}
               getDocuments={this.getDocuments}
-              replaceRoute={this.context.router.history.replace}
               onDismiss={this.toggleOpenDocument}
             />
           }
-          visible={openDocumentModalVisible}
+          visible={this.state.openDocumentModalVisible}
         />
         <Modal
           renderContent={
             <NewDocumentDialog onDismiss={this.toggleNewDocument} />
           }
-          visible={newDocumentModalVisible}
+          visible={this.state.newDocumentModalVisible}
         />
         <Toolbar
-          user={user}
-          selectedObject={selectedObject}
-          currentDocument={currentDocument}
-          clipboardContents={clipboardContents}
-          layersPanelVisible={layersPanelVisible}
+          user={this.state.user}
+          selectedObject={this.state.selectedObject}
+          currentDocument={this.state.currentDocument}
+          clipboardContents={this.state.clipboardContents}
+          layersPanelVisible={this.state.layersPanelVisible}
           zoom={this.state.zoom}
-          actions={{
-            addObject: this.addObject,
-            deleteObject: this.deleteObject,
-            handleClipboardAction: this.handleClipboardAction,
-            logOut: this.logOut,
-            saveDocument: this.saveDocument,
-            setZoom: this.setZoom,
-            showNewDocumentModal: this.toggleNewDocument,
-            showOpenDocumentModal: this.toggleOpenDocument,
-            toggleLayersPanel: this.toggleLayersPanel,
-          }}
         />
         <MetricsBar
-          shape={selectedObject}
+          shape={this.state.selectedObject}
           updateSelectedObject={this.updateSelectedObject}
         />
         <ViewContent>
           <AsyncViewContent
-            waitFor={user}
+            waitFor={this.state.user}
             renderLoading={<LoadingView />}
             renderContent={
               <Route
                 path="/documents/:id"
                 render={props => (
-                  <div>
-                    <LayersSidebar
-                      visible={layersPanelVisible}
-                      currentDocument={currentDocument}
-                      selectedObject={selectedObject}
-                      adjustObjectLayer={this.adjustObjectLayer}
-                      updateSelectedObject={this.updateSelectedObject}
-                    />
+                  <div
+                    style={{
+                      width: "100vw",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
                     <EditorView
                       {...props}
-                      selectedObject={selectedObject}
-                      currentDocument={currentDocument}
-                      getDocument={this.getDocument}
-                      updateSelectedObject={this.updateSelectedObject}
+                      selectedObject={this.state.selectedObject}
+                      currentDocument={this.state.currentDocument}
                       zoom={this.state.zoom}
+                    />
+                    <LayersSidebar
+                      visible={this.state.layersPanelVisible}
+                      currentDocument={this.state.currentDocument}
+                      selectedObject={this.state.selectedObject}
                     />
                   </div>
                 )}

@@ -1,23 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
-import get from "lodash/get";
+import get from "lodash/fp/get";
 import range from "lodash/range";
-import {
-  AppColors,
-  contentPanelWidthFull,
-  contentPanelWidthPartial,
-  Keys,
-} from "../../util/constants";
+import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
 
 const Container = styled.div`
   transition: width 350ms ease-in-out;
-  background: ${AppColors.Gray20};
   overflow: scroll;
   outline: none;
-  width: ${({ sidePanelVisible }) =>
-    sidePanelVisible ? contentPanelWidthPartial : contentPanelWidthFull};
   z-index: 1;
   height: 100%;
 `;
@@ -25,23 +18,27 @@ const Container = styled.div`
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
 
 export default class EditorView extends React.Component {
+  static contextTypes = {
+    actions: PropTypes.object.isRequired,
+  };
+
   state = {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 },
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { match: { params: { id } } } = this.props;
     if (id) {
-      this.props.getDocument(id);
+      this.context.actions.getDocument(id);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const { match: { params: { id } } } = nextProps;
-    if (get(this.props.currentDocument, "id") !== id) {
+    if (get("id")(this.props.currentDocument) !== id) {
       this.containerRef.scrollTop = 0;
       this.containerRef.scrollLeft = 0;
-      this.props.getDocument(id);
+      this.context.actions.getDocument(id);
     }
   }
 
@@ -79,7 +76,7 @@ export default class EditorView extends React.Component {
       changeKeys.forEach(
         key => (changes[key] = parseFloat(changes[key].toFixed(2)))
       );
-      this.props.updateSelectedObject(changes);
+      this.context.actions.updateSelectedObject(changes);
     }
   };
 
@@ -96,13 +93,13 @@ export default class EditorView extends React.Component {
       props: {
         currentDocument,
         selectedObject,
-        updateSelectedObject,
         editModeActive = true,
         sidePanelVisible = false,
         zoom = 1,
       },
       state: { scrollOffset },
     } = this;
+    const { actions } = this.context;
     return (
       <Container
         sidePanelVisible={sidePanelVisible}
@@ -121,16 +118,12 @@ export default class EditorView extends React.Component {
             />
             <Canvas
               allowsEditing
-              doc={currentDocument}
+              width={currentDocument.width}
+              height={currentDocument.height}
               dpi={96}
               zoom={zoom}
               selectedShape={selectedObject}
               sortedShapes={currentDocument.shapes}
-              documentMetrics={{
-                width: currentDocument.width,
-                height: currentDocument.height,
-              }}
-              updateSelectedShape={updateSelectedObject}
               backgroundGridLineRanges={this.gridLineRanges()}
             />
             <style

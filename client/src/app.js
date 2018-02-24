@@ -11,7 +11,7 @@ export const App = () => (
   <BaseView>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={IndexView} />  
+        <Route exact path="/" component={IndexView} />
         <Route path="/documents" component={DocumentsView} />
       </Switch>
     </BrowserRouter>

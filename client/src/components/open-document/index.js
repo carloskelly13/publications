@@ -1,15 +1,31 @@
 // @flow
-import type { OpenDocProps, OpenDocState } from "./types";
+import type { PubDocument } from "../../util/types";
 import React from "react";
+import PropTypes from "prop-types";
 import Button from "../ui/framed-button";
-import FileBrowser, { FileBrowserLoadingContainer } from "./file-browser";
+import FileBrowser from "./file-browser";
 import AsyncViewContent from "../async-content";
-import { HeaderContainer, OpenDocumentContainer } from "./components";
+import {
+  OpenDocumentContainer,
+  FileBrowserLoadingContainer,
+} from "./components";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Spinner } from "../ui/spinner";
-import { Header } from "../ui/text";
 
-export default class extends React.Component<OpenDocProps, OpenDocState> {
+type Props = {
+  documents: PubDocument[],
+  onDismiss: () => void,
+  getDocuments: () => Promise<void>,
+};
+type State = {
+  selectedId: string,
+};
+
+export default class extends React.Component<Props, State> {
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
+
   state = {
     selectedId: "",
   };
@@ -22,16 +38,13 @@ export default class extends React.Component<OpenDocProps, OpenDocState> {
 
   handleOpenButtonClicked = () => {
     this.props.onDismiss();
-    this.props.replaceRoute(`/documents/${this.state.selectedId}`);
+    this.context.router.history.push(`/documents/${this.state.selectedId}`);
   };
 
   render() {
     const { props: { onDismiss, documents }, state: { selectedId } } = this;
     return (
       <OpenDocumentContainer>
-        <HeaderContainer>
-          <Header>Open Document</Header>
-        </HeaderContainer>
         <AsyncViewContent
           waitFor={documents.length !== 0}
           renderLoading={

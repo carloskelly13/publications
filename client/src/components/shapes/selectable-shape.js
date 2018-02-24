@@ -1,5 +1,6 @@
 // @flow
 import type { Node } from "react";
+import PropTypes from "prop-types";
 import React from "react";
 import ResizeMoveFrame from "./frame";
 
@@ -9,18 +10,24 @@ type Props = {
   selectedShapeId?: string,
   selectable: boolean,
   setActiveDraftJSEditor: Function,
-  onChange: Function,
   zoom: number,
   dpi: number,
 };
-export default (props: Props) => {
-  const { selectable, shape, onChange, renderShape, selectedShapeId } = props;
-  const isSelected = selectable && selectedShapeId === shape.id;
+export default class extends React.Component<Props> {
+  static contextTypes = {
+    actions: PropTypes.object.isRequired,
+  };
 
-  return (
-    <g onClick={selectable ? () => onChange(shape) : null}>
-      {renderShape}
-      {isSelected && <ResizeMoveFrame {...props} />}
-    </g>
-  );
-};
+  render() {
+    const { selectable, shape, renderShape, selectedShapeId } = this.props;
+    const isSelected = selectable && selectedShapeId === shape.id;
+    const { updateSelectedObject } = this.context.actions;
+
+    return (
+      <g onClick={selectable ? () => updateSelectedObject(shape) : null}>
+        {renderShape}
+        {isSelected && <ResizeMoveFrame {...this.props} />}
+      </g>
+    );
+  }
+}

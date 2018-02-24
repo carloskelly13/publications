@@ -21,7 +21,6 @@ const backgroundColorForState = ({ selected }) => {
 const LayerItemContent = styled.div`
   background: ${props => backgroundColorForState(props)};
   padding: 10px 6px;
-  border-bottom: 1px solid ${AppColors.Border};
 `;
 
 export const LayerItem = ({ shape, handleOnClick, selected }) => (

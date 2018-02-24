@@ -3,20 +3,22 @@ import { injectGlobal } from "styled-components";
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
   .modal-transition-enter {
-    transform: translateY(-100%);
+    opacity: 0;
   }
 
   .modal-transition-enter.modal-transition-enter-active {
-    transform: translateY(0);
-    transition: transform 600ms ease-in-out;
+    opacity: 1;
+    transition: all 250ms ease-in-out;
   }
 
   .modal-transition-leave {
-    transform: translateY(0);
+    transform: scale(1.0);
+    opacity: 1;
   }
 
   .modal-transition-leave.modal-transition-leave-active {
-    transform: translateY(-100%);
-    transition: transform 600ms ease-in-out;
+    transform: scale(1.05);
+    opacity: 0;
+    transition: all 250ms ease-in-out;
   }
 `;

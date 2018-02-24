@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { sidePanelWidth, AppColors } from "../../util/constants";
+import { AppColors } from "../../util/constants";
 
 export const LayersSidebarContainer = styled.div`
-  width: ${sidePanelWidth};
-  position: fixed;
+  min-width: 250px;
   background: ${AppColors.White};
   border-left: 1px solid ${AppColors.Gray50};
   z-index: 2;

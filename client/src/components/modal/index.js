@@ -12,8 +12,8 @@ type Props = {
 export default ({ renderContent, visible }: Props) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
-    transitionEnterTimeout={600}
-    transitionLeaveTimeout={600}
+    transitionEnterTimeout={250}
+    transitionLeaveTimeout={250}
   >
     {visible && <ModalContainer>{renderContent}</ModalContainer>}
   </ReactCSSTransitionGroup>

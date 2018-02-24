@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const ModalContainer = styled.div`
   bottom: 0;
-  display: block;
+  display: flex;
   height: 100%;
   left: 0;
   overflow: hidden;
@@ -11,12 +11,15 @@ export const ModalContainer = styled.div`
   top: 0;
   width: 100%;
   z-index: 9005;
+  align-items: center;
+  justify-content: center;
+  background: hsla(0, 0%, 0%, 0.2);
 `;
 
 export const ModalContent = styled.div`
   background: #fff;
   box-shadow: 0 1px 35px hsla(0, 0%, 0%, 0.35);
-  border-radius: 0 0 6px 6px;
+  border-radius: 6px;
   margin: auto;
   padding: 1.5em 1.5em calc(1.5em + 50px);
   position: relative;
