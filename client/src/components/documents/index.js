@@ -29,8 +29,12 @@ import {
 } from "./editor-actions";
 import shortid from "shortid";
 
-type State = {
+type Props = {
   user: ?Object,
+  setAppUser: (?Object) => void,
+};
+
+type State = {
   documents: PubDocument[],
   currentDocument: ?PubDocument,
   selectedObject: ?PubShape,
@@ -41,7 +45,7 @@ type State = {
   zoom: number,
 };
 
-export default class DocumentsView extends Component<{}, State> {
+export default class DocumentsView extends Component<Props, State> {
   static contextTypes = {
     router: PropTypes.object.isRequired,
   };
@@ -51,7 +55,6 @@ export default class DocumentsView extends Component<{}, State> {
   };
 
   state = {
-    user: null,
     documents: [],
     currentDocument: null,
     selectedObject: null,
@@ -80,7 +83,15 @@ export default class DocumentsView extends Component<{}, State> {
   });
 
   componentDidMount() {
-    this.getCurrentUser();
+    if (!this.props.user) {
+      this.getCurrentUser();
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.props.user) {
+      this.context.router.history.replace("/");
+    }
   }
 
   /**
@@ -105,16 +116,12 @@ export default class DocumentsView extends Component<{}, State> {
   logOut = async () => {
     await to(Api.DELETE("users/logout"));
     clearCsrfHeaders();
-    this.context.router.history.replace("/");
+    this.props.setAppUser(null);
   };
 
   getCurrentUser = async () => {
-    const [err, user] = await to(Api.GET("users/current"));
-    if (err) {
-      this.context.router.history.replace("/");
-      return;
-    }
-    this.setState({ user });
+    const [_, user] = await to(Api.GET("users/current"));
+    this.props.setAppUser(user || null);
   };
 
   getDocuments = async () => {
@@ -233,7 +240,7 @@ export default class DocumentsView extends Component<{}, State> {
           visible={this.state.newDocumentModalVisible}
         />
         <Toolbar
-          user={this.state.user}
+          user={this.props.user}
           selectedObject={this.state.selectedObject}
           currentDocument={this.state.currentDocument}
           clipboardContents={this.state.clipboardContents}
@@ -246,7 +253,7 @@ export default class DocumentsView extends Component<{}, State> {
         />
         <ViewContent>
           <AsyncViewContent
-            waitFor={this.state.user}
+            waitFor={this.props.user}
             renderLoading={<LoadingView />}
             renderContent={
               <Route

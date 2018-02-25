@@ -11,7 +11,10 @@ type State = {
   isLoading: boolean,
 };
 export default class LoadingView extends React.Component<Props, State> {
-  state = { isLoading: true };
+  constructor(props: Props) {
+    super(props);
+    this.state = { isLoading: !props.waitFor };
+  }
 
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.waitFor) {
