@@ -13,7 +13,7 @@ export default ({
   <Menu
     renderButton={<TextButton>File</TextButton>}
     renderMenu={
-      <div>
+      <>
         <MenuItem onClick={showNewDocumentModal}>New…</MenuItem>
         <MenuItem onClick={showOpenDocumentModal}>Open…</MenuItem>
         <MenuDivider />
@@ -35,7 +35,7 @@ export default ({
         <MenuDivider />
         <MenuItem onClick={logOut}>Log Out</MenuItem>
         <MenuItem onClick={() => {}}>About Publications…</MenuItem>
-      </div>
+      </>
     }
   />
 );

@@ -1,5 +1,3 @@
-import { EditorState, ContentState } from "draft-js";
-
 export const Urls = {
   ApiBase: `http://${window.location.host}/api`,
 };
@@ -93,56 +91,4 @@ export const newDocument = {
   height: 11,
   shapes: [],
   new: true,
-};
-
-export const Shapes = {
-  Rectangle: {
-    type: "rect",
-    x: 0.25,
-    y: 0.25,
-    r: 0,
-    angle: 0,
-    width: 1,
-    height: 1,
-    fill: "#609eeb",
-    stroke: "#4e8bda",
-    strokeWidth: 1,
-    strokeOpacity: 1.0,
-    fillOpacity: 1.0,
-  },
-  Ellipse: {
-    type: "ellipse",
-    x: 0.25,
-    y: 0.25,
-    r: 0,
-    angle: 0,
-    width: 1,
-    height: 1,
-    fill: "#609eeb",
-    stroke: "#4e8bda",
-    strokeWidth: 1,
-    strokeOpacity: 1.0,
-    fillOpacity: 1.0,
-  },
-  Text: {
-    type: "text",
-    x: 0.25,
-    y: 0.25,
-    r: 0,
-    text: "",
-    editorState: EditorState.createWithContent(
-      ContentState.createFromText("Double click to insert text")
-    ),
-    fontFamily: "Source Sans Pro",
-    fontSize: 14,
-    fontStyle: "normal",
-    fontWeight: "400",
-    angle: 0,
-    width: 2,
-    height: 1,
-    strokeWidth: 0,
-    color: "#434a54",
-    opacity: 1.0,
-    textAlign: "left",
-  },
 };

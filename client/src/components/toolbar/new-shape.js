@@ -1,6 +1,6 @@
 import React from "react";
 import Menu, { MenuItem } from "../ui/menu";
-import { Shapes } from "../../util/constants";
+import { Shapes } from "../../util/new-shapes";
 import { TextButton } from "../ui/text-button";
 
 export default ({ addObject, disabled }) => (

@@ -1,8 +1,7 @@
 import React from "react";
 import BaseView from "./components/base";
-import IndexView from "./components/index";
-import DocumentsView from "./components/documents";
-
+import AsyncIndexView from "./components/index/async-view";
+import AsyncDocumentView from "./components/documents/async-view";
 import { BrowserRouter } from "react-router-dom";
 import Switch from "react-router-dom/Switch";
 import Route from "react-router-dom/Route";
@@ -24,11 +23,11 @@ export default class extends React.Component {
             <Route
               exact
               path="/"
-              render={props => <IndexView {...props} {...authProps} />}
+              render={props => <AsyncIndexView {...props} {...authProps} />}
             />
             <Route
               path="/documents"
-              render={props => <DocumentsView {...props} {...authProps} />}
+              render={props => <AsyncDocumentView {...props} {...authProps} />}
             />
           </Switch>
         </BrowserRouter>
