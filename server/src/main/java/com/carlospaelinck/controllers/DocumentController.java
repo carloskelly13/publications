@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(value = "/documents")
 public class DocumentController {
   @Inject
-  DocumentService documentService;
+  private DocumentService documentService;
 
   @RequestMapping(method = RequestMethod.GET)
   List<Document> list(@AuthenticationPrincipal PubUserDetails userDetails) {
