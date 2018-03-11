@@ -8,11 +8,14 @@ import Canvas from "../canvas";
 import Ruler from "../rulers";
 
 const Container = styled.div`
-  transition: width 350ms ease-in-out;
   overflow: scroll;
   outline: none;
   z-index: 1;
-  height: 100%;
+  flex: 1;
+
+  @media print {
+    overflow: hidden;
+  }
 `;
 
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
@@ -137,11 +140,7 @@ export default class EditorView extends React.Component {
               dangerouslySetInnerHTML={{
                 __html: `
                   @page {
-                    size: ${
-                      currentDocument.width > currentDocument.height
-                        ? "landscape"
-                        : "portrait"
-                    };
+                    size: auto;
                     margin: 0mm;
                     marks: none;
                   }

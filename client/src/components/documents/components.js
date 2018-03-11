@@ -15,4 +15,9 @@ export const DocumentView = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: row;
+  height: calc(100vh - 56px);
+
+  @media print {
+    height: 100vh;
+  }
 `;

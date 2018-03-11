@@ -15,7 +15,7 @@ import Modal from "../modal";
 import to from "await-to-js";
 import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
-import { ViewContainer, ViewContent, DocumentView } from "./components";
+import { ViewContainer, DocumentView } from "./components";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -251,32 +251,30 @@ export default class DocumentsView extends Component<Props, State> {
           shape={this.state.selectedObject}
           updateSelectedObject={this.updateSelectedObject}
         />
-        <ViewContent>
-          <AsyncViewContent
-            waitFor={this.props.user}
-            renderLoading={<LoadingView />}
-            renderContent={
-              <Route
-                path="/documents/:id"
-                render={props => (
-                  <DocumentView>
-                    <EditorView
-                      {...props}
-                      selectedObject={this.state.selectedObject}
-                      currentDocument={this.state.currentDocument}
-                      zoom={this.state.zoom}
-                    />
-                    <LayersSidebar
-                      visible={this.state.layersPanelVisible}
-                      currentDocument={this.state.currentDocument}
-                      selectedObject={this.state.selectedObject}
-                    />
-                  </DocumentView>
-                )}
-              />
-            }
-          />
-        </ViewContent>
+        <AsyncViewContent
+          waitFor={this.props.user}
+          renderLoading={<LoadingView />}
+          renderContent={
+            <Route
+              path="/documents/:id"
+              render={props => (
+                <DocumentView>
+                  <EditorView
+                    {...props}
+                    selectedObject={this.state.selectedObject}
+                    currentDocument={this.state.currentDocument}
+                    zoom={this.state.zoom}
+                  />
+                  <LayersSidebar
+                    visible={this.state.layersPanelVisible}
+                    currentDocument={this.state.currentDocument}
+                    selectedObject={this.state.selectedObject}
+                  />
+                </DocumentView>
+              )}
+            />
+          }
+        />
       </ViewContainer>
     );
   }
