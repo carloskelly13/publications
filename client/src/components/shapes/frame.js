@@ -1,11 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import throttle from "lodash/fp/throttle";
+
+/**
+ * Webkit-based browsers have no perf-related issues with events.
+ * Edge and Firefox have a 50ms throttle.
+ */
+const isChrome =
+  /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+const isSafari =
+  /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+const throttleWrapped = isChrome || isSafari ? e => e : throttle(50);
 
 const FrameRect = styled.rect`
   @media print {
     display: none;
   }
+  touch-action: manipulation;
 `;
 
 export const TextArea = styled.textarea`
@@ -122,7 +134,7 @@ export default class ResizeMoveFrame extends React.Component {
     document.removeEventListener("mousemove", this.handleFrameResized);
   };
 
-  handleFrameDragged = event => {
+  handleFrameDragged = throttleWrapped(event => {
     this.isDragging = true;
 
     const x =
@@ -136,10 +148,10 @@ export default class ResizeMoveFrame extends React.Component {
       x: parseFloat(x.toFixed(2)),
       y: parseFloat(y.toFixed(2)),
     });
-  };
+  });
 
   // eslint-disable-next-line max-statements
-  handleFrameResized = event => {
+  handleFrameResized = throttleWrapped(event => {
     const updatedMetrics = {};
 
     if (this.resizeAnchor.includes("n")) {
@@ -188,7 +200,7 @@ export default class ResizeMoveFrame extends React.Component {
     }
 
     this.context.actions.updateSelectedObject(updatedMetrics);
-  };
+  });
 
   handleTextChange = ({ target }) => {
     this.context.actions.updateSelectedObject({ text: target.value });
