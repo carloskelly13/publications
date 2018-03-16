@@ -4,13 +4,13 @@
   "description": "A web app for page layout and design.",
   "main": "app.js",
   "scripts": {
-    "lint": "eslint --ext .js,.jsx app/client",
+    "lint": "eslint --ext .js src",
     "build:prod": "BABEL_ENV=production webpack --progress --mode production",
     "build:dev": "webpack --progress --mode development",
     "start": "webpack-dev-server --port 4040 --mode development",
     "test": "",
-    "precommit": "npm run lint",
-    "prepush": "npm run lint"
+    "precommit": "lint",
+    "prepush": "lint"
   },
   "dependencies": {
     "await-to-js": "^2.0.1",
