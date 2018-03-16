@@ -1,6 +1,4 @@
 import React from "react";
-import styled from "styled-components";
-import { AppColors } from "../../util/constants";
 import { FileItem } from "./file-item";
 import {
   SearchInput,
@@ -15,21 +13,23 @@ type Props = {
 };
 
 export default class extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = { searchKeyword: "", filteredDocuments: this.props.documents };
-  }
+  state = {
+    searchKeyword: "",
+  };
 
   handleSearchKeywordChanged = ({ target }) =>
     this.setState({
       searchKeyword: target.value,
-      filteredDocuments: this.props.documents.filter(doc =>
-        doc.name.toLowerCase().includes(target.value.trim().toLowerCase())
-      ),
     });
 
   render() {
     const { handleFileClicked, selectedFileId } = this.props;
+    const filteredDocuments = this.props.documents.filter(doc =>
+      doc.name
+        .toLowerCase()
+        .includes(this.state.searchKeyword.trim().toLowerCase())
+    );
+
     return (
       <FileBrowserContainer>
         <SearchInput
@@ -38,7 +38,7 @@ export default class extends React.Component<Props> {
           placeholder="Search for Documents"
         />
         <FileBrowserContentContainer>
-          {this.state.filteredDocuments.map(doc => (
+          {filteredDocuments.map(doc => (
             <FileItem
               selected={selectedFileId === doc.id}
               handleClick={() => handleFileClicked(doc.id)}
