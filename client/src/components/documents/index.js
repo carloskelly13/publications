@@ -192,7 +192,7 @@ export default class DocumentsView extends Component<Props, State> {
     this.setState(prevState => ({
       currentDocument: {
         ...prevState.currentDocument,
-        shapes: [...getOr("currentDocument.shapes", [])(prevState), newObject],
+        shapes: [...getOr([], "currentDocument.shapes")(prevState), newObject],
       },
       selectedObject: newObject,
     }));

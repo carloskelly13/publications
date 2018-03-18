@@ -7,16 +7,14 @@ export default ({ addObject, disabled }) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Insert</TextButton>}
-    renderMenu={[
-      <MenuItem key="rectangle" onClick={() => addObject(Shapes.Rectangle)}>
-        Rectangle
-      </MenuItem>,
-      <MenuItem key="ellipse" onClick={() => addObject(Shapes.Ellipse)}>
-        Ellipse
-      </MenuItem>,
-      <MenuItem key="text-box" onClick={() => addObject(Shapes.Text)}>
-        Text Box
-      </MenuItem>,
-    ]}
+    renderMenu={
+      <>
+        <MenuItem onClick={() => addObject(Shapes.Rectangle)}>
+          Rectangle
+        </MenuItem>
+        <MenuItem onClick={() => addObject(Shapes.Ellipse)}>Ellipse</MenuItem>
+        <MenuItem onClick={() => addObject(Shapes.Text)}>Text Box</MenuItem>
+      </>
+    }
   />
 );

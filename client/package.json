@@ -9,8 +9,8 @@
     "build:dev": "webpack --progress --mode development",
     "start": "webpack-dev-server --port 4040 --mode development",
     "test": "",
-    "precommit": "lint",
-    "prepush": "lint"
+    "precommit": "yarn lint",
+    "prepush": "yarn lint"
   },
   "dependencies": {
     "await-to-js": "^2.0.1",

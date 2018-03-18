@@ -40,7 +40,7 @@ export default ({
         disabled={!selectedObject}
         onClick={deleteObject}
       >
-        Delete
+        Delete Object
       </MenuItem>,
     ]}
   />
