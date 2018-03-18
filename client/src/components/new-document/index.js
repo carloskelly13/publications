@@ -56,11 +56,10 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
         <Formik
           initialValues={{
             name: "New Document",
-            width: 8.5,
-            height: 11,
+            orientation: "portrait",
           }}
           validate={this.validateForm}
-          onSubmit={values => this.createNewDocument(values)}
+          onSubmit={values => console.log(values)}
           render={({ values, handleChange, handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <FormGroup>
@@ -72,19 +71,19 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
                 />
               </FormGroup>
               <FormGroup>
-                <FormInput
-                  name="height"
-                  label="inches"
+                <input
+                  name="orientation"
+                  type="radio"
+                  value="portrait"
                   onChange={handleChange}
-                  value={values.height}
-                  displayName="Height"
+                  checked={values.orientation === "portrait"}
                 />
-                <FormInput
-                  name="width"
-                  label="inches"
+                <input
+                  name="orientation"
+                  type="radio"
+                  value="landscape"
                   onChange={handleChange}
-                  value={values.width}
-                  displayName="Width"
+                  checked={values.orientation === "landscape"}
                 />
               </FormGroup>
               <ModalButtonContainer>
