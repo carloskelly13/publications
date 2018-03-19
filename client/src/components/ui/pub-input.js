@@ -70,6 +70,20 @@ export const FormGroup = styled.div`
   }
 `;
 
+export const RadioFormGroup = styled(FormGroup)`
+  justify-content: flex-start;
+  align-items: center;
+  margin: 15px 0 0;
+
+  input {
+    margin: 0 10px 0 0;
+  }
+
+  label {
+    font-size: 0.95em;
+  }
+`;
+
 const PubInputGroup = styled.div`
   display: flex;
   flex-direction: row;

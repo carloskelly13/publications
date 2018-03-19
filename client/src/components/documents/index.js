@@ -235,7 +235,10 @@ export default class DocumentsView extends Component<Props, State> {
         />
         <Modal
           renderContent={
-            <NewDocumentDialog onDismiss={this.toggleNewDocument} />
+            <NewDocumentDialog
+              onDismiss={this.toggleNewDocument}
+              didCreateDocument={() => {}}
+            />
           }
           visible={this.state.newDocumentModalVisible}
         />

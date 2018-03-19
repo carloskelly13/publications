@@ -5,10 +5,15 @@ import Button from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Header, Message } from "../ui/text";
 import { ModalContent } from "../modal";
-import { FormInput, FormGroup } from "../ui/pub-input";
+import { FormInput, FormGroup, RadioFormGroup } from "../ui/pub-input";
 import { Formik } from "formik";
 import to from "await-to-js";
 import Api from "../../util/api";
+
+const metrics = {
+  portrait: { width: 8.5, height: 11 },
+  landscape: { width: 11, height: 8.5 },
+};
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -16,6 +21,7 @@ const NewDocumentContainer = styled(ModalContent)`
 
 type Props = {
   onDismiss: Function,
+  didCreateDocument: Function,
 };
 type State = {
   name: string,
@@ -36,13 +42,18 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
     return errors;
   };
 
-  createNewDocument = async (documentAttrs: Object) => {
-    const payload = { ...documentAttrs, shapes: [] };
+  createNewDocument = async (sender: { name: string, orientation: string }) => {
+    const payload = {
+      name: sender.name,
+      ...metrics[sender.orientation],
+      shapes: [],
+    };
     const [err] = await to(Api.POST("documents", payload));
     if (err) {
       return;
     }
     this.props.onDismiss();
+    this.props.didCreateDocument();
   };
 
   render() {
@@ -51,7 +62,7 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
       <NewDocumentContainer>
         <Header>Create New Document</Header>
         <Message>
-          Specify the name, width, and height of your new document.
+          Specify the name and orientation of your new document.
         </Message>
         <Formik
           initialValues={{
@@ -59,7 +70,7 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
             orientation: "portrait",
           }}
           validate={this.validateForm}
-          onSubmit={values => console.log(values)}
+          onSubmit={values => this.createNewDocument(values)}
           render={({ values, handleChange, handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <FormGroup>
@@ -67,25 +78,34 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
                   name="name"
                   onChange={handleChange}
                   value={values.name}
-                  displayName="Name"
                 />
               </FormGroup>
-              <FormGroup>
+              <RadioFormGroup>
                 <input
                   name="orientation"
                   type="radio"
                   value="portrait"
+                  id="orientation-portrait"
                   onChange={handleChange}
                   checked={values.orientation === "portrait"}
                 />
+                <label htmlFor="orientation-portrait">
+                  Portrait (8.5&#8221; &#215; 11&#8221;)
+                </label>
+              </RadioFormGroup>
+              <RadioFormGroup>
                 <input
                   name="orientation"
                   type="radio"
                   value="landscape"
+                  id="orientation-landscape"
                   onChange={handleChange}
                   checked={values.orientation === "landscape"}
                 />
-              </FormGroup>
+                <label htmlFor="orientation-landscape">
+                  Landscape (11&#8221; &#215; 8.5&#8221;)
+                </label>
+              </RadioFormGroup>
               <ModalButtonContainer>
                 <Button marginRight type="submit">
                   Create Document
