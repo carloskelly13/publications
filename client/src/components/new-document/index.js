@@ -20,15 +20,17 @@ const NewDocumentContainer = styled(ModalContent)`
 `;
 
 type Props = {
-  onDismiss: Function,
-  didCreateDocument: Function,
+  onDismiss: () => void,
+  didCreateDocument: string => Promise<void>,
 };
+
 type State = {
   name: string,
   width: number,
   height: number,
   formValid: boolean,
 };
+
 export default class NewDocumentDialog extends React.Component<Props, State> {
   state = {
     name: "New Document",
@@ -48,12 +50,12 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
       ...metrics[sender.orientation],
       shapes: [],
     };
-    const [err] = await to(Api.POST("documents", payload));
+    const [err, doc] = await to(Api.POST("documents", payload));
     if (err) {
       return;
     }
     this.props.onDismiss();
-    this.props.didCreateDocument();
+    this.props.didCreateDocument(doc.id);
   };
 
   render() {

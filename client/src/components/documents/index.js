@@ -216,6 +216,13 @@ export default class DocumentsView extends Component<Props, State> {
       updatedDocumentStateForClipboardAction(action, prevState)
     );
 
+  handleDidCreateDocument = async (id: string) => {
+    if (this.state.currentDocument) {
+      await this.saveDocument();
+      this.context.router.history.push(`/documents/${id}`);
+    }
+  };
+
   /**
    * Render
    */
@@ -237,7 +244,7 @@ export default class DocumentsView extends Component<Props, State> {
           renderContent={
             <NewDocumentDialog
               onDismiss={this.toggleNewDocument}
-              didCreateDocument={() => {}}
+              didCreateDocument={this.handleDidCreateDocument}
             />
           }
           visible={this.state.newDocumentModalVisible}
