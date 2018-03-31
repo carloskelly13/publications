@@ -12,7 +12,7 @@ const IconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 0.9em;
+  font-size: 0.95em;
 `;
 
 const BaseIcon = styled.div`
@@ -44,7 +44,7 @@ const TextIcon = styled(BaseIcon)`
 `;
 
 const MetricsContainer = styled.div`
-  font-size: 0.8em;
+  font-size: 0.95em;
   color: ${({ selected }) => (selected ? "#fff" : AppColors.MidTextGray)};
   align-items: flex-end;
   justify-content: space-between;

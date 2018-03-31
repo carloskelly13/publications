@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { AppColors, appFont } from "../../util/constants";
 import enhanceWithClickOutside from "react-click-outside";
 
 export const Menu = styled.ul`
@@ -44,7 +44,8 @@ export const MenuItem = styled.button`
   background: transparent;
   margin: none;
   display: block;
-  font-size: 0.9em;
+  font-size: 0.95em;
+  font-family: ${appFont};
   width: 100%;
   text-align: left;
   outline: none;

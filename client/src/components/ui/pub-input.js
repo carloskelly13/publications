@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { AppColors, appFont } from "../../util/constants";
 
 export const PubInput = styled.input`
   border: 1px solid ${AppColors.Gray40};
@@ -8,7 +8,8 @@ export const PubInput = styled.input`
   box-sizing: border-box;
   color: #444;
   display: ${({ block }) => (block ? "block" : "inline-block")};
-  font-size: 13px;
+  font-family: ${appFont};
+  font-size: 0.95em;
   line-height: 1em;
   margin: 0;
   padding: 3px 6px;

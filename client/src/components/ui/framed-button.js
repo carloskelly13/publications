@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { AppColors, appFont } from "../../util/constants";
 
 const ButtonWrapper = styled.button`
   background: ${({ active }) => (active ? AppColors.Gray50 : "#fff")};
@@ -8,8 +8,9 @@ const ButtonWrapper = styled.button`
     ${({ active }) => (active ? AppColors.Gray50 : AppColors.Gray40)};
   border-radius: 4px;
   color: ${({ active }) => (active ? AppColors.White : AppColors.DarkGray)};
+  font-family: ${appFont};
   font-size: 0.95em;
-  font-weight: 400;
+  font-weight: 500;
   padding: 3px 18px;
   outline: none;
   margin: ${props =>
