@@ -30,7 +30,7 @@ export default ({
           Print and Export PDF…
         </MenuItem>
         <MenuItem disabled={!currentDocument} onClick={() => {}}>
-          Delete Document
+          Delete…
         </MenuItem>
         <MenuDivider />
         <MenuItem onClick={logOut}>Log Out</MenuItem>

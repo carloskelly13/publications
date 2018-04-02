@@ -7,10 +7,11 @@ import FileMenu from "./file";
 import NewShapeMenu from "./new-shape";
 import EditMenu from "./edit";
 import ZoomMenu from "./zoom";
-import TextButton from "../ui/text-button";
+import LayersMenu from "./layers";
+import PublicationsLogo from "../ui/icons/logo";
 import { ContentContainer } from "../ui/containers";
 import { documentName } from "../../util/string";
-import { Header } from "./components";
+import { Header, LogoContainer } from "./components";
 
 export default class extends React.PureComponent<ToolbarProps> {
   static contextTypes = {
@@ -32,11 +33,13 @@ export default class extends React.PureComponent<ToolbarProps> {
     return (
       <ToolbarBase>
         <ContentContainer verticalAlign>
-          <Header>
-            {currentDocument && currentDocument.name
-              ? documentName(currentDocument.name)
-              : "Publications"}
-          </Header>
+          <LogoContainer>
+            <PublicationsLogo />
+          </LogoContainer>
+          {currentDocument &&
+            currentDocument.name && (
+              <Header>{documentName(currentDocument.name)}</Header>
+            )}
           <FileMenu
             disabled={!user}
             currentDocument={currentDocument}
@@ -57,19 +60,15 @@ export default class extends React.PureComponent<ToolbarProps> {
             disabled={!currentDocument}
             addObject={actions.addObject}
           />
+          <LayersMenu
+            toggleLayersPanel={actions.toggleLayersPanel}
+            layersPanelVisible={layersPanelVisible}
+          />
           <ZoomMenu
             zoom={zoom}
             setZoom={actions.setZoom}
             disabled={!currentDocument}
           />
-        </ContentContainer>
-        <ContentContainer>
-          <TextButton
-            disabled={!currentDocument}
-            onClick={actions.toggleLayersPanel}
-          >
-            {layersPanelVisible ? "Hide" : "Show"}&nbsp;Layers
-          </TextButton>
         </ContentContainer>
       </ToolbarBase>
     );

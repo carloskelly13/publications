@@ -4,6 +4,14 @@ import { TextButton } from "../ui/text-button";
 
 export const Header = styled(TextButton)`
   color: ${AppColors.Highlight};
-  padding: 0.25em 0.5em 0.25em 0;
+  padding-left: 0;
+  margin: 0;
   cursor: default;
+`;
+
+export const LogoContainer = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
 `;
