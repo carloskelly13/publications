@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import getOr from "lodash/fp/getOr";
 import { RichUtils } from "draft-js";
@@ -15,6 +14,7 @@ import { AppColors } from "../../util/constants";
 import { ContentContainer } from "../ui/containers";
 import MetricInput from "./metric-input";
 import IconButton from "../ui/icon-button";
+import { ActionsContext } from "../../contexts";
 
 const MetricsBarContainer = styled.div`
   display: block;
@@ -44,14 +44,8 @@ const isText = shape => !!shape && shape.type === "text";
 const get = getOr("");
 
 export default class extends React.Component {
-  static contextTypes = {
-    actions: PropTypes.object,
-  };
-
   render() {
     const { shape } = this.props;
-    const { updateSelectedObject } = this.context.actions;
-
     let currentStyle = null;
     let isTextSelected = false;
     if (isText(shape)) {
@@ -60,146 +54,153 @@ export default class extends React.Component {
     }
 
     return (
-      <MetricsBarContainer>
-        <MetricsBar>
-          <ContentContainer verticalAlign>
-            <MetricInput
-              small
-              property="x"
-              value={get("x", shape)}
-              label="X"
-              unit="in"
-              disabled={!shape}
-              onChange={updateSelectedObject}
-            />
-            <MetricInput
-              small
-              property="y"
-              value={get("y", shape)}
-              label="Y"
-              unit="in"
-              disabled={!shape}
-              onChange={updateSelectedObject}
-            />
-            <MetricInput
-              small
-              property="width"
-              value={get("width", shape)}
-              label="Width"
-              unit="in"
-              disabled={!shape}
-              onChange={updateSelectedObject}
-            />
-            <MetricInput
-              small
-              property="height"
-              value={get("height", shape)}
-              label="Height"
-              unit="in"
-              disabled={!shape}
-              onChange={updateSelectedObject}
-            />
-            {isText(shape) ? (
-              <ColorPicker
-                property="color"
-                onChange={({ color }) =>
-                  updateSelectedObject({
-                    editorState: textStyles.color.add(shape.editorState, color),
-                  })
-                }
-                hex={colorFromStyles(currentStyle)}
-                alpha={1}
-              />
-            ) : (
-              shape && (
-                <ColorPicker
-                  property="fill"
+      <ActionsContext.Consumer>
+        {({ updateSelectedObject }) => (
+          <MetricsBarContainer>
+            <MetricsBar>
+              <ContentContainer verticalAlign>
+                <MetricInput
+                  small
+                  property="x"
+                  value={get("x", shape)}
+                  label="X"
+                  unit="in"
+                  disabled={!shape}
                   onChange={updateSelectedObject}
-                  hex={shape.fill}
-                  alpha={shape.fillOpacity}
                 />
-              )
-            )}
-            {isText(shape) && (
-              <MetricInput
-                mini
-                property="fontSize"
-                value={sizeFromStyles(currentStyle)}
-                label="Size"
-                unit="px"
-                onChange={({ fontSize }) => {
-                  const numericValue = parseInt(fontSize);
-                  if (
-                    !isNaN(numericValue) &&
-                    numericValue >= 6 &&
-                    numericValue <= 144
-                  ) {
-                    updateSelectedObject({
-                      editorState: textStyles.fontSize.add(
-                        shape.editorState,
-                        `${numericValue}px`
-                      ),
-                    });
-                  }
-                }}
-              />
-            )}
-            {supportsBorder(shape) && [
-              <ColorPicker
-                key="stroke-color-picker"
-                property="stroke"
-                onChange={updateSelectedObject}
-                hex={shape.stroke}
-                alpha={shape.strokeOpacity}
-              />,
-              <MetricInput
-                mini
-                property="strokeWidth"
-                key="stroke-metric-input"
-                value={shape.strokeWidth}
-                label="Border"
-                unit="pt"
-                onChange={updateSelectedObject}
-              />,
-            ]}
-            {supportsRadius(shape) && (
-              <MetricInput
-                mini
-                property="r"
-                value={shape.r}
-                label="Radius"
-                unit="pt"
-                onChange={updateSelectedObject}
-              />
-            )}
-            {isText(shape) &&
-              INLINE_STYLES.map(type => (
-                <IconButton
-                  key={type.label}
-                  size={15}
-                  disabled={!isTextSelected}
-                  style={{ margin: "0 0.25em" }}
-                  onClick={() =>
-                    updateSelectedObject({
-                      editorState: RichUtils.toggleInlineStyle(
-                        shape.editorState,
-                        type.style
-                      ),
-                    })
-                  }
-                >
-                  {React.createElement(type.icon, {
-                    color:
-                      currentStyle.has(type.style) && isTextSelected
-                        ? AppColors.Highlight
-                        : AppColors.DarkGray,
-                    size: 13,
-                  })}
-                </IconButton>
-              ))}
-          </ContentContainer>
-        </MetricsBar>
-      </MetricsBarContainer>
+                <MetricInput
+                  small
+                  property="y"
+                  value={get("y", shape)}
+                  label="Y"
+                  unit="in"
+                  disabled={!shape}
+                  onChange={updateSelectedObject}
+                />
+                <MetricInput
+                  small
+                  property="width"
+                  value={get("width", shape)}
+                  label="Width"
+                  unit="in"
+                  disabled={!shape}
+                  onChange={updateSelectedObject}
+                />
+                <MetricInput
+                  small
+                  property="height"
+                  value={get("height", shape)}
+                  label="Height"
+                  unit="in"
+                  disabled={!shape}
+                  onChange={updateSelectedObject}
+                />
+                {isText(shape) ? (
+                  <ColorPicker
+                    property="color"
+                    onChange={({ color }) =>
+                      updateSelectedObject({
+                        editorState: textStyles.color.add(
+                          shape.editorState,
+                          color
+                        ),
+                      })
+                    }
+                    hex={colorFromStyles(currentStyle)}
+                    alpha={1}
+                  />
+                ) : (
+                  shape && (
+                    <ColorPicker
+                      property="fill"
+                      onChange={updateSelectedObject}
+                      hex={shape.fill}
+                      alpha={shape.fillOpacity}
+                    />
+                  )
+                )}
+                {isText(shape) && (
+                  <MetricInput
+                    mini
+                    property="fontSize"
+                    value={sizeFromStyles(currentStyle)}
+                    label="Size"
+                    unit="px"
+                    onChange={({ fontSize }) => {
+                      const numericValue = parseInt(fontSize);
+                      if (
+                        !isNaN(numericValue) &&
+                        numericValue >= 6 &&
+                        numericValue <= 144
+                      ) {
+                        updateSelectedObject({
+                          editorState: textStyles.fontSize.add(
+                            shape.editorState,
+                            `${numericValue}px`
+                          ),
+                        });
+                      }
+                    }}
+                  />
+                )}
+                {supportsBorder(shape) && [
+                  <ColorPicker
+                    key="stroke-color-picker"
+                    property="stroke"
+                    onChange={updateSelectedObject}
+                    hex={shape.stroke}
+                    alpha={shape.strokeOpacity}
+                  />,
+                  <MetricInput
+                    mini
+                    property="strokeWidth"
+                    key="stroke-metric-input"
+                    value={shape.strokeWidth}
+                    label="Border"
+                    unit="pt"
+                    onChange={updateSelectedObject}
+                  />,
+                ]}
+                {supportsRadius(shape) && (
+                  <MetricInput
+                    mini
+                    property="r"
+                    value={shape.r}
+                    label="Radius"
+                    unit="pt"
+                    onChange={updateSelectedObject}
+                  />
+                )}
+                {isText(shape) &&
+                  INLINE_STYLES.map(type => (
+                    <IconButton
+                      key={type.label}
+                      size={15}
+                      disabled={!isTextSelected}
+                      style={{ margin: "0 0.25em" }}
+                      onClick={() =>
+                        updateSelectedObject({
+                          editorState: RichUtils.toggleInlineStyle(
+                            shape.editorState,
+                            type.style
+                          ),
+                        })
+                      }
+                    >
+                      {React.createElement(type.icon, {
+                        color:
+                          currentStyle.has(type.style) && isTextSelected
+                            ? AppColors.Highlight
+                            : AppColors.DarkGray,
+                        size: 13,
+                      })}
+                    </IconButton>
+                  ))}
+              </ContentContainer>
+            </MetricsBar>
+          </MetricsBarContainer>
+        )}
+      </ActionsContext.Consumer>
     );
   }
 }

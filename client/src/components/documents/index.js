@@ -28,6 +28,7 @@ import {
   updatedDocumentStateForDeleteAction,
 } from "./editor-actions";
 import shortid from "shortid";
+import { ActionsContext } from "../../contexts";
 
 type Props = {
   user: ?Object,
@@ -93,6 +94,21 @@ export default class DocumentsView extends Component<Props, State> {
       this.context.router.history.replace("/");
     }
   }
+
+  getActions = () => ({
+    addObject: this.addObject,
+    deleteObject: this.deleteObject,
+    handleClipboardAction: this.handleClipboardAction,
+    logOut: this.logOut,
+    getDocument: this.getDocument,
+    saveDocument: this.saveDocument,
+    setZoom: this.setZoom,
+    showNewDocumentModal: this.toggleNewDocument,
+    showOpenDocumentModal: this.toggleOpenDocument,
+    toggleLayersPanel: this.toggleLayersPanel,
+    updateSelectedObject: this.updateSelectedObject,
+    adjustObjectLayer: this.adjustObjectLayer,
+  });
 
   /**
    * Display Actions
@@ -229,63 +245,65 @@ export default class DocumentsView extends Component<Props, State> {
 
   render() {
     return (
-      <ViewContainer>
-        <Modal
-          renderContent={
-            <OpenDocumentDialog
-              documents={this.state.documents}
-              getDocuments={this.getDocuments}
-              onDismiss={this.toggleOpenDocument}
-            />
-          }
-          visible={this.state.openDocumentModalVisible}
-        />
-        <Modal
-          renderContent={
-            <NewDocumentDialog
-              onDismiss={this.toggleNewDocument}
-              didCreateDocument={this.handleDidCreateDocument}
-            />
-          }
-          visible={this.state.newDocumentModalVisible}
-        />
-        <Toolbar
-          user={this.props.user}
-          selectedObject={this.state.selectedObject}
-          currentDocument={this.state.currentDocument}
-          clipboardContents={this.state.clipboardContents}
-          layersPanelVisible={this.state.layersPanelVisible}
-          zoom={this.state.zoom}
-        />
-        <MetricsBar
-          shape={this.state.selectedObject}
-          updateSelectedObject={this.updateSelectedObject}
-        />
-        <AsyncViewContent
-          waitFor={this.props.user}
-          renderLoading={<LoadingView />}
-          renderContent={
-            <Route
-              path="/documents/:id"
-              render={props => (
-                <DocumentView>
-                  <EditorView
-                    {...props}
-                    selectedObject={this.state.selectedObject}
-                    currentDocument={this.state.currentDocument}
-                    zoom={this.state.zoom}
-                  />
-                  <LayersSidebar
-                    visible={this.state.layersPanelVisible}
-                    currentDocument={this.state.currentDocument}
-                    selectedObject={this.state.selectedObject}
-                  />
-                </DocumentView>
-              )}
-            />
-          }
-        />
-      </ViewContainer>
+      <ActionsContext.Provider value={this.getActions()}>
+        <ViewContainer>
+          <Modal
+            renderContent={
+              <OpenDocumentDialog
+                documents={this.state.documents}
+                getDocuments={this.getDocuments}
+                onDismiss={this.toggleOpenDocument}
+              />
+            }
+            visible={this.state.openDocumentModalVisible}
+          />
+          <Modal
+            renderContent={
+              <NewDocumentDialog
+                onDismiss={this.toggleNewDocument}
+                didCreateDocument={this.handleDidCreateDocument}
+              />
+            }
+            visible={this.state.newDocumentModalVisible}
+          />
+          <Toolbar
+            user={this.props.user}
+            selectedObject={this.state.selectedObject}
+            currentDocument={this.state.currentDocument}
+            clipboardContents={this.state.clipboardContents}
+            layersPanelVisible={this.state.layersPanelVisible}
+            zoom={this.state.zoom}
+          />
+          <MetricsBar
+            shape={this.state.selectedObject}
+            updateSelectedObject={this.updateSelectedObject}
+          />
+          <AsyncViewContent
+            waitFor={this.props.user}
+            renderLoading={<LoadingView />}
+            renderContent={
+              <Route
+                path="/documents/:id"
+                render={props => (
+                  <DocumentView>
+                    <EditorView
+                      {...props}
+                      selectedObject={this.state.selectedObject}
+                      currentDocument={this.state.currentDocument}
+                      zoom={this.state.zoom}
+                    />
+                    <LayersSidebar
+                      visible={this.state.layersPanelVisible}
+                      currentDocument={this.state.currentDocument}
+                      selectedObject={this.state.selectedObject}
+                    />
+                  </DocumentView>
+                )}
+              />
+            }
+          />
+        </ViewContainer>
+      </ActionsContext.Provider>
     );
   }
 }
