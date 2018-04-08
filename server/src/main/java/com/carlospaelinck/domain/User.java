@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Builder
 @Table(name = "\"user\"")
 public class User {
   @Id

@@ -32,17 +32,6 @@ public class UserController {
     return userService.create(user);
   }
 
-  @PostMapping("/test-drive")
-  User createTestDriveUser() {
-    User user = User.builder()
-      .emailAddress("test-drive-" + UUID.randomUUID().toString() + "@publicationsapp.com")
-      .password("password")
-      .temporary(true)
-      .documents(Collections.emptyList())
-      .build();
-    return userService.create(user);
-  }
-
   @PutMapping
   User update(HttpServletRequest request, @RequestBody User user, @AuthenticationPrincipal PubUserDetails userDetails, HttpServletResponse response) {
     if (userDetails.getUser().getTemporary() && userService.get(user.getEmailAddress()) != null) {
