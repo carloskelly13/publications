@@ -44,6 +44,7 @@ export default class IndexView extends React.Component {
     return (
       <ViewContainer>
         <LoginForm handleOnSubmit={this.login} />
+        <button onClick={this.navigateToDocuments}>Create New Document</button>
       </ViewContainer>
     );
   }

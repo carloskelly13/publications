@@ -35,7 +35,7 @@ export default (props: ToolbarProps) => {
                 <Header>{documentName(currentDocument.name)}</Header>
               )}
             <FileMenu
-              disabled={!user}
+              loggedIn={!!user}
               currentDocument={currentDocument}
               showNewDocumentModal={actions.showNewDocumentModal}
               showOpenDocumentModal={actions.showOpenDocumentModal}

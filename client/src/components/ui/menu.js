@@ -84,6 +84,7 @@ export const MenuContainer = enhanceWithClickOutside(
 type MenuProps = {
   renderMenu: React.Node,
   renderButton: React.Node,
+  disabled?: boolean,
 };
 export default class extends React.Component<MenuProps> {
   state = {

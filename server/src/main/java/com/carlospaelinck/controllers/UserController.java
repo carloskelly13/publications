@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -27,6 +29,17 @@ public class UserController {
 
   @PostMapping
   User create(@RequestBody User user) {
+    return userService.create(user);
+  }
+
+  @PostMapping("/test-drive")
+  User createTestDriveUser() {
+    User user = User.builder()
+      .emailAddress("test-drive-" + UUID.randomUUID().toString() + "@publicationsapp.com")
+      .password("password")
+      .temporary(true)
+      .documents(Collections.emptyList())
+      .build();
     return userService.create(user);
   }
 

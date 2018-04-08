@@ -5,8 +5,6 @@ import PropTypes from "prop-types";
 import Route from "react-router-dom/Route";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
-import LoadingView from "./loading";
-import AsyncViewContent from "../async-content";
 import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../layers-sidebar/index";
 import OpenDocumentDialog from "../open-document";
@@ -86,12 +84,6 @@ export default class DocumentsView extends Component<Props, State> {
   componentDidMount() {
     if (!this.props.user) {
       this.getCurrentUser();
-    }
-  }
-
-  componentDidUpdate() {
-    if (!this.props.user) {
-      this.context.router.history.replace("/");
     }
   }
 
@@ -278,29 +270,23 @@ export default class DocumentsView extends Component<Props, State> {
             shape={this.state.selectedObject}
             updateSelectedObject={this.updateSelectedObject}
           />
-          <AsyncViewContent
-            waitFor={this.props.user}
-            renderLoading={<LoadingView />}
-            renderContent={
-              <Route
-                path="/documents/:id"
-                render={props => (
-                  <DocumentView>
-                    <EditorView
-                      {...props}
-                      selectedObject={this.state.selectedObject}
-                      currentDocument={this.state.currentDocument}
-                      zoom={this.state.zoom}
-                    />
-                    <LayersSidebar
-                      visible={this.state.layersPanelVisible}
-                      currentDocument={this.state.currentDocument}
-                      selectedObject={this.state.selectedObject}
-                    />
-                  </DocumentView>
-                )}
-              />
-            }
+          <Route
+            path="/documents/:id"
+            render={props => (
+              <DocumentView>
+                <EditorView
+                  {...props}
+                  selectedObject={this.state.selectedObject}
+                  currentDocument={this.state.currentDocument}
+                  zoom={this.state.zoom}
+                />
+                <LayersSidebar
+                  visible={this.state.layersPanelVisible}
+                  currentDocument={this.state.currentDocument}
+                  selectedObject={this.state.selectedObject}
+                />
+              </DocumentView>
+            )}
           />
         </ViewContainer>
       </ActionsContext.Provider>

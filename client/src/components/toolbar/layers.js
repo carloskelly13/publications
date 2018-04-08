@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import * as React from "react";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
 
