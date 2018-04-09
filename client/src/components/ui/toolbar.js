@@ -4,7 +4,7 @@ import { AppColors } from "../../util/constants";
 
 const Toolbar = styled.div`
   align-items: flex-end;
-  background: ${AppColors.White};
+  background: ${AppColors.DarkGray};
   box-pack: justify;
   display: flex;
   height: 27px;

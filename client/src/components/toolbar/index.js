@@ -30,10 +30,11 @@ export default (props: ToolbarProps) => {
             <LogoContainer>
               <PublicationsLogo />
             </LogoContainer>
-            {currentDocument &&
-              currentDocument.name && (
-                <Header>{documentName(currentDocument.name)}</Header>
-              )}
+            <Header>
+              {currentDocument && currentDocument.name
+                ? documentName(currentDocument.name)
+                : "Publications"}
+            </Header>
             <FileMenu
               loggedIn={!!user}
               currentDocument={currentDocument}

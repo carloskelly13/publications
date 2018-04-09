@@ -63,10 +63,11 @@ export const AppColors = {
   ActiveLight: "#685ffd",
   LightGray: "#f5f5f5",
   Border: "#aaa",
+  Background: "#4b4545",
   MediumGray: "#f0f0f0",
   Gray: "#e5e5e5",
   MidTextGray: "#7a7b7a",
-  DarkGray: "#263238",
+  DarkGray: "#373232",
   DisabledGray: "#aaa",
   LightActive: "#e9e8f5",
   IconColor: "#444",
@@ -77,8 +78,9 @@ export const AppColors = {
   Gray50: "#6f7878",
   Gray60: "#535a5a",
   Gray80: "#343334",
+  ReallyDarkGray: "2a2626",
   White4: "#f3f3f3",
-  Highlight: "#3c6df0",
+  Highlight: "#009bef",
   HighlightDark: "#3151b7",
 };
 

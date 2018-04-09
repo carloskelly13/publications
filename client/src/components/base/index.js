@@ -3,6 +3,7 @@ import { appFont, AppColors } from "../../util/constants";
 
 export default styled.div`
   font-family: ${appFont};
+  background: ${AppColors.Background};
   color: ${AppColors.DarkGray};
   font-size: 14px;
   margin: 0;

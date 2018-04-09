@@ -13,11 +13,10 @@ export const Menu = styled.ul`
   border-radius: 0 4px 4px 4px;
   position: absolute;
   border-top: none;
-  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px 1px hsla(0, 0%, 0%, 0.2);
   top: 25px;
   cursor: default;
   outline: none;
-  border: 1px solid ${AppColors.Gray50};
   z-index: 6;
 `;
 

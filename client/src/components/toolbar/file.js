@@ -25,9 +25,9 @@ export default ({
     renderButton={<TextButton>File</TextButton>}
     renderMenu={
       <>
-        <MenuItem onClick={showNewDocumentModal}>New…</MenuItem>
+        <MenuItem onClick={showNewDocumentModal}>New Document…</MenuItem>
         <MenuItem onClick={showOpenDocumentModal} disabled={!loggedIn}>
-          Open…
+          View all Documents…
         </MenuItem>
         <MenuDivider />
         <MenuItem
@@ -44,9 +44,6 @@ export default ({
           }}
         >
           Print and Export PDF…
-        </MenuItem>
-        <MenuItem disabled={!currentDocument || !loggedIn} onClick={() => {}}>
-          Delete…
         </MenuItem>
         <MenuDivider />
         <MenuItem onClick={() => {}}>About Publications…</MenuItem>

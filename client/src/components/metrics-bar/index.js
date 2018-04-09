@@ -25,7 +25,7 @@ const MetricsBar = styled.div`
   height: 23px;
   width: calc(100% - 2em);
   padding: 4px 1em 0;
-  background: ${AppColors.White};
+  background: ${AppColors.DarkGray};
   border-bottom: 1px solid ${AppColors.Gray40};
   display: flex;
   align-items: flex-start;

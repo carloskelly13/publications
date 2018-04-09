@@ -5,17 +5,15 @@ import { GridLine } from "../../components/canvas/grid-line";
 import styled from "styled-components";
 
 const RulerContainer = styled.div`
-  background: ${AppColors.White4};
+  background: ${AppColors.DarkGray};
   position: fixed;
   left: 25vw;
   height: 25px;
   z-index: 1;
-  border-bottom: 1px solid ${AppColors.Gray40};
-  border-right: 1px solid ${AppColors.Gray40};
 
   path {
     fill: none;
-    stroke: #ccc;
+    stroke: hsla(0, 0%, 100%, 0.25);
     stroke-width: 1;
     shape-rendering: crispEdges;
   }
@@ -54,7 +52,7 @@ export default class Ruler extends Component {
   renderMajorLabel(index, mark, direction) {
     return (
       <text
-        fill="#444"
+        fill={AppColors.Gray30}
         fontSize="12"
         x={direction === "V" ? mark + 27 : 4}
         y={direction === "V" ? 12 : mark - 2}

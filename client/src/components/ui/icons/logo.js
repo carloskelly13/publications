@@ -15,14 +15,14 @@ export default () => (
           points="11.0857864 -2.10660172 13.9142136 -2.10660172 13.9142136 19.1066017 11.0857864 19.1066017"
         />
         <g>
-          <use fill="#FFF" xlinkHref="#path-1" />
+          <use fill="#263238" xlinkHref="#path-1" />
           <path
             stroke={AppColors.Highlight}
             d="M0.5,3.5 L0.5,6.5 L14.5,6.5 L14.5,20.5 L17.5,20.5 L17.5,3.5 L0.5,3.5 Z"
           />
         </g>
         <g>
-          <use fill="#FFF" xlinkHref="#path-2" />
+          <use fill="#263238" xlinkHref="#path-2" />
           <path
             stroke={AppColors.Highlight}
             d="M19.5,15.5 L5.5,15.5 L5.5,1.5 L2.5,1.5 L2.5,18.5 L19.5,18.5 L19.5,15.5 Z"
