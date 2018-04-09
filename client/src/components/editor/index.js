@@ -29,19 +29,13 @@ export default class EditorView extends React.Component {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 },
   };
 
-  componentDidMount() {
-    const { match: { params: { id } } } = this.props;
-    if (id) {
-      this.context.actions.getDocument(id);
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
-    const { match: { params: { id } } } = nextProps;
-    if (get("id")(this.props.currentDocument) !== id) {
+    if (
+      get("id")(this.props.currentDocument) !==
+      get("id")(nextProps.currentDocument)
+    ) {
       this.containerRef.scrollTop = 0;
       this.containerRef.scrollLeft = 0;
-      this.context.actions.getDocument(id);
     }
   }
 

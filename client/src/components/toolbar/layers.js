@@ -4,11 +4,13 @@ import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
 
 type Props = {
+  disabled: boolean,
   layersPanelVisible: boolean,
   toggleLayersPanel: () => void,
 };
-export default ({ toggleLayersPanel, layersPanelVisible }: Props) => (
+export default ({ disabled, toggleLayersPanel, layersPanelVisible }: Props) => (
   <Menu
+    disabled={disabled}
     renderButton={<TextButton>Layers</TextButton>}
     renderMenu={
       <>

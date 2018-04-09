@@ -17,7 +17,6 @@ export default ({
   loggedIn,
   currentDocument,
   saveDocument,
-  logOut,
   showNewDocumentModal,
   showOpenDocumentModal,
   setZoom,
@@ -31,7 +30,10 @@ export default ({
           Open…
         </MenuItem>
         <MenuDivider />
-        <MenuItem disabled={!currentDocument} onClick={saveDocument}>
+        <MenuItem
+          disabled={!currentDocument || !loggedIn}
+          onClick={saveDocument}
+        >
           Save
         </MenuItem>
         <MenuItem
@@ -47,7 +49,6 @@ export default ({
           Delete…
         </MenuItem>
         <MenuDivider />
-        <MenuItem onClick={logOut}>Log Out</MenuItem>
         <MenuItem onClick={() => {}}>About Publications…</MenuItem>
       </>
     }

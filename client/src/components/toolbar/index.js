@@ -55,6 +55,7 @@ export default (props: ToolbarProps) => {
               addObject={actions.addObject}
             />
             <LayersMenu
+              disabled={!currentDocument}
               toggleLayersPanel={actions.toggleLayersPanel}
               layersPanelVisible={layersPanelVisible}
             />

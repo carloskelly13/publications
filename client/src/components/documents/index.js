@@ -2,7 +2,6 @@
 import type { PubDocument, PubShape } from "../../util/types";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Route from "react-router-dom/Route";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
@@ -14,6 +13,7 @@ import to from "await-to-js";
 import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
+import { metrics } from "../../util/constants";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -45,10 +45,6 @@ type State = {
 };
 
 export default class DocumentsView extends Component<Props, State> {
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-  };
-
   static childContextTypes = {
     actions: PropTypes.object,
   };
@@ -145,9 +141,11 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   getDocument = async (id: string) => {
+    if (!this.props.user) {
+      return;
+    }
     const [err, doc] = await to(Api.GET(`documents/${id}`));
     if (err) {
-      this.context.router.history.replace("/documents");
       return;
     }
     this.setState({
@@ -224,10 +222,26 @@ export default class DocumentsView extends Component<Props, State> {
       updatedDocumentStateForClipboardAction(action, prevState)
     );
 
-  handleDidCreateDocument = async (id: string) => {
+  handleCreateNewDocument = async (sender: {
+    name: string,
+    orientation: string,
+  }) => {
+    const payload = {
+      name: sender.name,
+      ...metrics[sender.orientation],
+      shapes: [],
+    };
+    if (!this.props.user) {
+      this.setState({ currentDocument: payload, selectedObject: null });
+      return;
+    }
+    const [err] = await to(Api.POST("documents", payload));
+    if (err) {
+      return;
+    }
     if (this.state.currentDocument) {
       await this.saveDocument();
-      this.context.router.history.push(`/documents/${id}`);
+      this.setState({ currentDocument: payload, selectedObject: null });
     }
   };
 
@@ -253,7 +267,7 @@ export default class DocumentsView extends Component<Props, State> {
             renderContent={
               <NewDocumentDialog
                 onDismiss={this.toggleNewDocument}
-                didCreateDocument={this.handleDidCreateDocument}
+                didCreateDocument={this.handleCreateNewDocument}
               />
             }
             visible={this.state.newDocumentModalVisible}
@@ -270,24 +284,18 @@ export default class DocumentsView extends Component<Props, State> {
             shape={this.state.selectedObject}
             updateSelectedObject={this.updateSelectedObject}
           />
-          <Route
-            path="/documents/:id"
-            render={props => (
-              <DocumentView>
-                <EditorView
-                  {...props}
-                  selectedObject={this.state.selectedObject}
-                  currentDocument={this.state.currentDocument}
-                  zoom={this.state.zoom}
-                />
-                <LayersSidebar
-                  visible={this.state.layersPanelVisible}
-                  currentDocument={this.state.currentDocument}
-                  selectedObject={this.state.selectedObject}
-                />
-              </DocumentView>
-            )}
-          />
+          <DocumentView>
+            <EditorView
+              selectedObject={this.state.selectedObject}
+              currentDocument={this.state.currentDocument}
+              zoom={this.state.zoom}
+            />
+            <LayersSidebar
+              visible={this.state.layersPanelVisible}
+              currentDocument={this.state.currentDocument}
+              selectedObject={this.state.selectedObject}
+            />
+          </DocumentView>
         </ViewContainer>
       </ActionsContext.Provider>
     );

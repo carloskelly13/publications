@@ -7,13 +7,6 @@ import { Header, Message } from "../ui/text";
 import { ModalContent } from "../modal";
 import { FormInput, FormGroup, RadioFormGroup } from "../ui/pub-input";
 import { Formik } from "formik";
-import to from "await-to-js";
-import Api from "../../util/api";
-
-const metrics = {
-  portrait: { width: 8.5, height: 11 },
-  landscape: { width: 11, height: 8.5 },
-};
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -21,7 +14,10 @@ const NewDocumentContainer = styled(ModalContent)`
 
 type Props = {
   onDismiss: () => void,
-  didCreateDocument: string => Promise<void>,
+  didCreateDocument: (sender: {
+    name: string,
+    orientation: string,
+  }) => Promise<void>,
 };
 
 type State = {
@@ -45,17 +41,8 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
   };
 
   createNewDocument = async (sender: { name: string, orientation: string }) => {
-    const payload = {
-      name: sender.name,
-      ...metrics[sender.orientation],
-      shapes: [],
-    };
-    const [err, doc] = await to(Api.POST("documents", payload));
-    if (err) {
-      return;
-    }
+    this.props.didCreateDocument(sender);
     this.props.onDismiss();
-    this.props.didCreateDocument(doc.id);
   };
 
   render() {

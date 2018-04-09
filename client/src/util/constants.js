@@ -4,6 +4,11 @@ export const Urls = {
 
 export const Typefaces = ["Source Sans Pro"];
 
+export const metrics = {
+  portrait: { width: 8.5, height: 11 },
+  landscape: { width: 11, height: 8.5 },
+};
+
 export const appFont =
   // eslint-disable-next-line quotes
   '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif';
