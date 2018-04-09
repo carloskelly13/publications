@@ -18,6 +18,10 @@ const FrameRect = styled.rect`
     display: none;
   }
   touch-action: manipulation;
+
+  &:hover {
+    fill: #9b82f3;
+  }
 `;
 
 export const TextArea = styled.textarea`
@@ -229,19 +233,30 @@ export default class ResizeMoveFrame extends React.Component {
           <FrameRect
             x={xAnchor}
             y={yAnchor}
-            rx={2}
-            ry={2}
+            rx={frameAnchors.size / 2}
+            ry={frameAnchors.size / 2}
             width={frameAnchors.size}
             height={frameAnchors.size}
             stroke="hsla(0, 0%, 0%, 0.5)"
             strokeWidth="1"
-            fill="#fff"
+            fill="#785ef0"
             fillOpacity="1"
             strokeOpacity="1"
-            style={style}
+          />
+          <FrameRect
+            x={xAnchor + 1}
+            y={yAnchor + 1}
+            rx={frameAnchors.size - 2 / 2}
+            ry={frameAnchors.size - 2 / 2}
+            width={frameAnchors.size - 2}
+            height={frameAnchors.size - 2}
+            strokeWidth="1"
+            fill="transparent"
+            stroke="#71cddd"
             data-coordinate={anchor.coordinate}
             onMouseDown={this.handleAnchorMouseDown}
             onMouseUp={this.handleAnchorMouseUp}
+            style={style}
           />
         </g>
       );

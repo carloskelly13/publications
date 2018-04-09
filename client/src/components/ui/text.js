@@ -72,6 +72,6 @@ export const InputLabelText = styled.label`
   border-left: none;
   padding: 1px 0.25em 1px;
   color: ${({ disabled }) =>
-    disabled ? AppColors.DisabledGray : AppColors.DarkGray};
+    disabled ? AppColors.DisabledGray : AppColors.LightGray};
   font-size: ${({ size }) => size || "1em"};
 `;

@@ -14,6 +14,7 @@ import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
+import { Shapes } from "../../util/new-shapes";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -51,7 +52,13 @@ export default class DocumentsView extends Component<Props, State> {
 
   state = {
     documents: [],
-    currentDocument: null,
+    currentDocument: {
+      id: "123",
+      name: "New Document",
+      width: 8.5,
+      height: 11,
+      shapes: [{ id: "", ...Shapes.Rectangle }],
+    },
     selectedObject: null,
     clipboardContents: null,
     newDocumentModalVisible: false,

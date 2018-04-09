@@ -6,7 +6,7 @@ export const TextButton = styled.button`
   border: none;
   box-sizing: border-box;
   cursor: pointer;
-  color: ${AppColors.DarkGray};
+  color: ${AppColors.White};
   display: inline-block;
   font-family: ${appFont};
   font-size: ${({ size }) => size || "0.95em"};
@@ -17,7 +17,7 @@ export const TextButton = styled.button`
   text-align: center;
 
   &:disabled {
-    color: ${AppColors.DisabledGray};
+    color: ${AppColors.White4};
   }
 `;
 

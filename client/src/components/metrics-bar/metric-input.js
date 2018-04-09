@@ -52,7 +52,7 @@ export default class MetricInput extends Component {
       <ContentContainer verticalAlign style={{ marginRight: "0.75em" }}>
         <Text
           center
-          color={disabled ? AppColors.DisabledGray : AppColors.DarkGray}
+          color={disabled ? AppColors.DisabledGray : AppColors.LightGray}
           size="0.75em"
           mr="0.33em"
         >

@@ -52,11 +52,11 @@ const MetricsContainer = styled.div`
 
 const Metric = styled.span`
   font-weight: 500;
-  color: ${({ selected }) => (selected ? "#fff" : AppColors.DarkGray)};
+  color: ${({ selected }) => (selected ? "#fff" : AppColors.MidTextGray)};
 `;
 
 const ShapeType = styled.div`
-  color: ${({ selected }) => (selected ? "#fff" : AppColors.DarkGray)};
+  color: ${({ selected }) => (selected ? "#fff" : AppColors.Gray30)};
 `;
 
 export const renderIcon = (shape, selected) => {

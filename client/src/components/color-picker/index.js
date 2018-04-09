@@ -51,7 +51,7 @@ export default enhanceWithClickOutside(
       const { state: { isOpen }, props: { hex, alpha, property } } = this;
       return (
         <ContentContainer verticalAlign style={{ marginRight: "0.75em" }}>
-          <Text center color={AppColors.DarkGray} size="0.75em" mr="0.33em">
+          <Text center color={AppColors.LightGray} size="0.75em" mr="0.33em">
             {capitalizeString(property)}:
           </Text>
           <ContentContainer verticalAlign style={{ position: "relative" }}>

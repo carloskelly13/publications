@@ -11,7 +11,17 @@ const Content = styled.div`
   display: flex;
   flex: 1;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+`;
+
+const Spacer = styled.span`
+  display: inline-block;
+  width: 14px;
+`;
+
+const Label = styled.span`
+  display: inline-block;
+  padding: 0 0 0 7px;
 `;
 
 type Props = {
@@ -31,8 +41,8 @@ export default ({ zoom, setZoom, disabled }: Props) => (
         onClick={() => setZoom(zoomLevel)}
       >
         <Content>
-          {zoomLevel * 100}%
-          {zoomLevel === zoom && <CheckmarkIcon />}
+          {zoomLevel === zoom ? <CheckmarkIcon /> : <Spacer />}
+          <Label>{zoomLevel * 100}%</Label>
         </Content>
       </MenuItem>
     ))}

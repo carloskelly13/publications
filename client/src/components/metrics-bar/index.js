@@ -26,7 +26,7 @@ const MetricsBar = styled.div`
   width: calc(100% - 2em);
   padding: 4px 1em 0;
   background: ${AppColors.DarkGray};
-  border-bottom: 1px solid ${AppColors.Gray40};
+  border-bottom: 1px solid ${AppColors.ReallyDarkGray};
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -190,8 +190,8 @@ export default class extends React.Component {
                       {React.createElement(type.icon, {
                         color:
                           currentStyle.has(type.style) && isTextSelected
-                            ? AppColors.Highlight
-                            : AppColors.DarkGray,
+                            ? AppColors.White
+                            : AppColors.MidTextGray,
                         size: 13,
                       })}
                     </IconButton>

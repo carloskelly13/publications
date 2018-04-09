@@ -2,11 +2,11 @@ import styled from "styled-components";
 import { AppColors, appFont } from "../../util/constants";
 
 export const TextInput = styled.input`
-  border: 1px solid ${AppColors.Gray40};
+  border: 1px solid #7d7373;
   border-radius: 2px;
   padding: 0 4px;
-  color: ${AppColors.DarkGray};
-  background: #fff;
+  color: ${AppColors.White};
+  background: #4b4545;
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {
@@ -35,13 +35,13 @@ export const TextInput = styled.input`
   }};
 
   &:disabled {
-    background: ${AppColors.White4};
-    border-color: ${AppColors.Gray20};
+    background: ${AppColors.DarkGray};
+    border-color: ${AppColors.ReallyDarkGray};
     cursor: default;
     color: ${AppColors.MediumGray};
   }
   &:focus {
     border-color ${AppColors.Highlight};
-    box-shadow: inset 0 1px 2px #eee, 0 0 0 1px ${AppColors.Highlight};
+    box-shadow: 0 0 0 1px ${AppColors.Highlight};
   }
 `;

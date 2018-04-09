@@ -4,14 +4,15 @@ import { AppColors } from "../../util/constants";
 export const ColorPickerButton = styled.button`
   width: 32px;
   height: 15px;
-  border: 1px solid ${AppColors.Gray40};
-  box-shadow: inset 0 0 0 1px #fff;
+  border: 1px solid #7d7373;
+  box-shadow: inset 0 0 0 1px ${AppColors.DarkGray};
   border-radius: 2px;
   background: ${({ color }) => color};
   outline: none;
   margin: 0;
   &:focus {
-    box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px ${AppColors.Highlight};
+    box-shadow: inset 0 0 0 1px ${AppColors.DarkGray},
+      0 0 0 1px ${AppColors.Highlight};
   }
 `;
 

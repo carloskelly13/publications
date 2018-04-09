@@ -4,17 +4,17 @@ import { AppColors, appFont } from "../../util/constants";
 import enhanceWithClickOutside from "react-click-outside";
 
 export const Menu = styled.ul`
-  background: #fff;
+  background: ${AppColors.Background};
   list-style: none;
-  color: ${AppColors.DarkGray};
-  padding: 2px 0;
+  color: ${AppColors.White};
+  padding: 4px 0;
   margin: 0;
   min-width: 125px;
   border-radius: 0 4px 4px 4px;
   position: absolute;
   border-top: none;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px 1px hsla(0, 0%, 0%, 0.2);
-  top: 25px;
+  box-shadow: 0 2px 3px 1px hsla(0, 0%, 0%, 0.3);
+  top: 28px;
   cursor: default;
   outline: none;
   z-index: 6;
@@ -42,6 +42,7 @@ export const MenuItem = styled.button`
   border: none;
   background: transparent;
   margin: none;
+  color: ${AppColors.White};
   display: block;
   font-size: 0.95em;
   font-family: ${appFont};
@@ -114,9 +115,9 @@ export default class extends React.Component<MenuProps> {
             onClick: this.handleToggleButtonClick,
             style: {
               margin: 0,
-              borderRadius: menuActive ? "2px 2px 0 0" : 0,
-              background: menuActive ? AppColors.Highlight : "transparent",
-              color: menuActive ? AppColors.White : AppColors.DarkGray,
+              borderRadius: menuActive ? "4px 4px 0 0" : 0,
+              background: menuActive ? AppColors.Background : "transparent",
+              color: AppColors.White,
               ...disabledStyle,
             },
             disabled,

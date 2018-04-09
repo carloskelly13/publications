@@ -1,9 +1,9 @@
 import React from "react";
-
+import { AppColors } from "../../../util/constants";
 export default () => (
   <svg viewBox="0 0 14 14" width={14} height={14}>
     <polyline
-      stroke="black"
+      stroke={AppColors.White}
       strokeWidth="2"
       fill="none"
       fillRule="evenodd"
