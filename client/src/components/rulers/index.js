@@ -7,7 +7,7 @@ import styled from "styled-components";
 const RulerContainer = styled.div`
   background: ${AppColors.DarkGray};
   position: fixed;
-  left: 25vw;
+  left: 25px;
   height: 25px;
   z-index: 1;
 

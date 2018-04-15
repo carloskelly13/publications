@@ -8,7 +8,7 @@ export const CanvasSVG = styled.svg`
   ${props =>
     !props.thumbnail &&
     css`
-      margin: 25px 1em 1em 25px;
+      margin: 26px 1em 1em 25px;
     `};
 
   @media print {

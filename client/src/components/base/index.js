@@ -1,11 +1,20 @@
-import styled from "styled-components";
+import styled, { injectGlobal } from "styled-components";
 import { appFont, AppColors } from "../../util/constants";
 
+// eslint-disable-next-line no-unused-expressions
+injectGlobal`
+  html, body {
+    font-family: ${appFont};
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "dlig" 1;
+    -moz-font-feature-settings: "kern" 1, "dlig" 1;
+    font-size: 14px;
+  }
+`;
+
 export default styled.div`
-  font-family: ${appFont};
   background: ${AppColors.Background};
   color: ${AppColors.DarkGray};
-  font-size: 14px;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -16,7 +25,4 @@ export default styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "kern" 1, "dlig" 1;
-  -moz-font-feature-settings: "kern" 1, "dlig" 1;
 `;

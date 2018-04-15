@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { AppColors, appFont } from "../../util/constants";
 import enhanceWithClickOutside from "react-click-outside";
 
@@ -18,6 +18,13 @@ export const Menu = styled.ul`
   cursor: default;
   outline: none;
   z-index: 6;
+
+  ${({ alignRight }) =>
+    alignRight &&
+    css`
+      border-radius: 4px 0 4px 4px;
+      right: 7px;
+    `};
 `;
 
 export const MenuContentContainer = styled.div`
@@ -100,7 +107,7 @@ export default class extends React.Component<MenuProps> {
 
   render() {
     const { menuActive } = this.state;
-    const { renderMenu, renderButton, disabled } = this.props;
+    const { renderMenu, renderButton, disabled, alignRight } = this.props;
     const disabledStyle = disabled
       ? {
           color: AppColors.DisabledGray,
@@ -115,7 +122,7 @@ export default class extends React.Component<MenuProps> {
             onClick: this.handleToggleButtonClick,
             style: {
               margin: 0,
-              borderRadius: menuActive ? "4px 4px 0 0" : 0,
+              borderRadius: menuActive ? "2px 2px 0 0" : 0,
               background: menuActive ? AppColors.Background : "transparent",
               color: AppColors.White,
               ...disabledStyle,
@@ -124,7 +131,11 @@ export default class extends React.Component<MenuProps> {
           },
           <span>{renderButton.props.children}</span>
         )}
-        {menuActive && <Menu onClick={this.closeMenu}>{renderMenu}</Menu>}
+        {menuActive && (
+          <Menu alignRight={alignRight} onClick={this.closeMenu}>
+            {renderMenu}
+          </Menu>
+        )}
       </MenuContainer>
     );
   }

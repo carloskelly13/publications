@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { AppColors } from "../../util/constants";
 
 export const ModalContainer = styled.div`
   bottom: 0;
@@ -17,7 +18,7 @@ export const ModalContainer = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  background: #fff;
+  background: ${AppColors.BrightWarmWhite};
   box-shadow: 0 1px 35px hsla(0, 0%, 0%, 0.35);
   border-radius: 6px;
   margin: auto;

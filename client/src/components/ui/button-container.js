@@ -3,9 +3,9 @@ import { AppColors } from "../../util/constants";
 
 export const ModalButtonContainer = styled.div`
   position: absolute;
-  background: ${AppColors.White4};
+  background: ${AppColors.WarmWhite};
   bottom: 0;
-  border-top: 1px solid ${AppColors.Gray};
+  border-top: 1px solid ${AppColors.WarmGray};
   border-radius: 0 0 6px 6px;
   width: calc(100% - 1em);
   left: 0;

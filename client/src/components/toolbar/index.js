@@ -6,6 +6,7 @@ import FileMenu from "./file";
 import NewShapeMenu from "./new-shape";
 import EditMenu from "./edit";
 import ZoomMenu from "./zoom";
+import UserMenu from "./user-menu";
 import LayersMenu from "./layers";
 import PublicationsLogo from "../ui/icons/logo";
 import { ContentContainer } from "../ui/containers";
@@ -65,6 +66,9 @@ export default (props: ToolbarProps) => {
               setZoom={actions.setZoom}
               disabled={!currentDocument}
             />
+          </ContentContainer>
+          <ContentContainer>
+            <UserMenu user={user} />
           </ContentContainer>
         </ToolbarBase>
       )}
