@@ -20,9 +20,9 @@ export const ModalContainer = styled.div`
 export const ModalContent = styled.div`
   background: ${AppColors.BrightWarmWhite};
   box-shadow: 0 1px 35px hsla(0, 0%, 0%, 0.35);
-  border-radius: 6px;
+  border-radius: 4px;
   margin: auto;
-  padding: 1.5em 1.5em calc(1.5em + 50px);
+  padding: 0 0 calc(1.5em + 50px);
   position: relative;
   overflow: hidden;
 `;

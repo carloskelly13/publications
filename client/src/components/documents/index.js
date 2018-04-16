@@ -7,6 +7,7 @@ import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../layers-sidebar/index";
 import OpenDocumentDialog from "../open-document";
+import LoginDialog from "../login";
 import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
@@ -14,7 +15,7 @@ import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
-import { Shapes } from "../../util/new-shapes";
+// import { Shapes } from "../../util/new-shapes";
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
@@ -42,6 +43,7 @@ type State = {
   newDocumentModalVisible: boolean,
   openDocumentModalVisible: boolean,
   layersPanelVisible: boolean,
+  loginModalVisible: boolean,
   zoom: number,
 };
 
@@ -52,37 +54,17 @@ export default class DocumentsView extends Component<Props, State> {
 
   state = {
     documents: [],
-    currentDocument: {
-      id: "123",
-      name: "New Document",
-      width: 8.5,
-      height: 11,
-      shapes: [{ id: "", ...Shapes.Rectangle }],
-    },
+    currentDocument: null,
     selectedObject: null,
     clipboardContents: null,
     newDocumentModalVisible: false,
     openDocumentModalVisible: false,
     layersPanelVisible: false,
+    loginModalVisible: false,
     zoom: 1,
   };
 
-  getChildContext = () => ({
-    actions: {
-      addObject: this.addObject,
-      deleteObject: this.deleteObject,
-      handleClipboardAction: this.handleClipboardAction,
-      logOut: this.logOut,
-      getDocument: this.getDocument,
-      saveDocument: this.saveDocument,
-      setZoom: this.setZoom,
-      showNewDocumentModal: this.toggleNewDocument,
-      showOpenDocumentModal: this.toggleOpenDocument,
-      toggleLayersPanel: this.toggleLayersPanel,
-      updateSelectedObject: this.updateSelectedObject,
-      adjustObjectLayer: this.adjustObjectLayer,
-    },
-  });
+  getChildContext = () => ({ actions: { ...this.getActions() } });
 
   componentDidMount() {
     if (!this.props.user) {
@@ -103,6 +85,7 @@ export default class DocumentsView extends Component<Props, State> {
     toggleLayersPanel: this.toggleLayersPanel,
     updateSelectedObject: this.updateSelectedObject,
     adjustObjectLayer: this.adjustObjectLayer,
+    toggleLoginDialog: this.toggleLoginDialog,
   });
 
   /**
@@ -118,6 +101,7 @@ export default class DocumentsView extends Component<Props, State> {
 
   toggleNewDocument = this.toggleVisibility.bind(this, "newDocumentModal");
   toggleOpenDocument = this.toggleVisibility.bind(this, "openDocumentModal");
+  toggleLoginDialog = this.toggleVisibility.bind(this, "loginModal");
   toggleLayersPanel = this.toggleVisibility.bind(this, "layersPanel");
 
   /**
@@ -155,11 +139,7 @@ export default class DocumentsView extends Component<Props, State> {
     if (err) {
       return;
     }
-    this.setState({
-      currentDocument: addEditorStateToDocument(doc),
-      selectedObject: null,
-      zoom: 1,
-    });
+    this.setCurrentDocument(addEditorStateToDocument(doc));
   };
 
   saveDocument = async () => {
@@ -192,6 +172,9 @@ export default class DocumentsView extends Component<Props, State> {
     );
 
   setZoom = (zoom: number = 1) => this.setState({ zoom });
+
+  setCurrentDocument = (doc: ?PubDocument) =>
+    this.setState({ currentDocument: doc, selectedObject: null, zoom: 1 });
 
   addObject = (sender: Object) => {
     if (!this.state.currentDocument) {
@@ -238,18 +221,16 @@ export default class DocumentsView extends Component<Props, State> {
       ...metrics[sender.orientation],
       shapes: [],
     };
-    if (!this.props.user) {
-      this.setState({ currentDocument: payload, selectedObject: null });
-      return;
+    if (this.props.user) {
+      const [err] = await to(Api.POST("documents", payload));
+      if (err) {
+        return;
+      }
+      if (this.state.currentDocument) {
+        await this.saveDocument();
+      }
     }
-    const [err] = await to(Api.POST("documents", payload));
-    if (err) {
-      return;
-    }
-    if (this.state.currentDocument) {
-      await this.saveDocument();
-      this.setState({ currentDocument: payload, selectedObject: null });
-    }
+    this.setCurrentDocument(payload);
   };
 
   /**
@@ -262,9 +243,19 @@ export default class DocumentsView extends Component<Props, State> {
         <ViewContainer>
           <Modal
             renderContent={
+              <LoginDialog
+                onLogin={this.props.setAppUser}
+                onDismiss={this.toggleLoginDialog}
+              />
+            }
+            visible={this.state.loginModalVisible}
+          />
+          <Modal
+            renderContent={
               <OpenDocumentDialog
                 documents={this.state.documents}
                 getDocuments={this.getDocuments}
+                onOpenDocument={this.getDocument}
                 onDismiss={this.toggleOpenDocument}
               />
             }

@@ -5,24 +5,26 @@ import { TextButton } from "../ui/text-button";
 
 type Props = {
   user: ?Object,
+  showLoginDialog: () => void,
+  logOut: () => Promise<any>,
 };
 export default (props: Props) => (
   <Menu
     alignRight
     renderButton={
       <TextButton>
-        {props.user ? props.user.name : "Log In / Create Account"}
+        {props.user ? props.user.emailAddress : "Log In / Create Account"}
       </TextButton>
     }
     renderMenu={
       props.user ? (
         <>
-          <MenuItem>Log Out</MenuItem>
+          <MenuItem onClick={props.logOut}>Log Out</MenuItem>
         </>
       ) : (
         <>
-          <MenuItem>Log In…</MenuItem>
-          <MenuItem>Create a free Publications account…</MenuItem>
+          <MenuItem onClick={props.showLoginDialog}>Log In…</MenuItem>
+          <MenuItem disabled>Create a free Publications account…</MenuItem>
         </>
       )
     }

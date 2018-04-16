@@ -1,7 +1,6 @@
 // @flow
 import type { PubDocument } from "../../util/types";
 import React from "react";
-import PropTypes from "prop-types";
 import Button from "../ui/framed-button";
 import FileBrowser from "./file-browser";
 import AsyncViewContent from "../async-content";
@@ -16,16 +15,13 @@ type Props = {
   documents: PubDocument[],
   onDismiss: () => void,
   getDocuments: () => Promise<void>,
+  onOpenDocument: string => Promise<any>,
 };
 type State = {
   selectedId: string,
 };
 
 export default class extends React.Component<Props, State> {
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-  };
-
   state = {
     selectedId: "",
   };
@@ -38,7 +34,7 @@ export default class extends React.Component<Props, State> {
 
   handleOpenButtonClicked = () => {
     this.props.onDismiss();
-    this.context.router.history.push(`/documents/${this.state.selectedId}`);
+    this.props.onOpenDocument(this.state.selectedId);
   };
 
   render() {

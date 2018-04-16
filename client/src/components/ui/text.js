@@ -1,10 +1,17 @@
 import styled from "styled-components";
-import { AppColors, appFont } from "../../util/constants";
+import { AppColors, Colors, appFont } from "../../util/constants";
 
 export const Header = styled.h1`
   font-weight: 600;
   font-size: 1.1em;
   margin: 0 0 5px;
+`;
+
+export const ModalHeader = styled(Header)`
+  color: ${Colors.Modal.TitleText};
+  font-size: 1.25em;
+  font-weight: 700;
+  margin: 1em 1em 1.1em;
 `;
 
 export const PaddedHeader = styled(Header)`

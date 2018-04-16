@@ -71,7 +71,6 @@ export const AppColors = {
   DisabledGray: "#7d7373",
   LightActive: "#e9e8f5",
   IconColor: "#444",
-  White: "#fefefe",
   Gray20: "#c0bfc0",
   Gray30: "#9fa3a3",
   Gray40: "#8c9090",
@@ -81,10 +80,37 @@ export const AppColors = {
   DarkGray: "#373232",
   ReallyDarkGray: "#2a2626",
   BrightWarmWhite: "#fbf8f8",
+  White: "#fefefe",
   WarmWhite: "#f6f3f3",
+  WarmMidWhite: "#e6e3e3",
   White4: "#f3f3f3",
   Highlight: "#9b82f3",
-  HighlightDark: "#3151b7",
+  HighlightDark: "#785ef0",
+  HighlightReallyDark: "#473793",
+};
+
+export const Colors = {
+  Modal: {
+    TitleText: "#373232",
+    ButtonContainerBorder: "#dad7d7",
+    ButtonContainerBackground: "#e6e3e3",
+  },
+  FormInput: {
+    Text: "#373232",
+    Border: "#a6a5a6",
+    FocusBorder: "#785ef0",
+    FocusOutline: "#9b82f3",
+    Placeholder: "#a6a5a6",
+  },
+  NewDocument: {
+    RadioBorder: "#a6a5a6",
+    RadioText: "#373232",
+    RadioBackground: "white",
+    RadioSelectedText: "white",
+    RadioSelectedBorder: "#785ef0",
+    RadioSelectedOutline: "#9b82f3",
+    RadioSelectedBackground: "#9b82f3",
+  },
 };
 
 export const baseRequestHeaders = {

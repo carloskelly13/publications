@@ -1,19 +1,17 @@
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 
 export const ModalButtonContainer = styled.div`
+  background-color: ${Colors.Modal.ButtonContainerBackground};
+  border-top: 1px solid ${Colors.Modal.ButtonContainerBorder};
   position: absolute;
-  background: ${AppColors.WarmWhite};
   bottom: 0;
-  border-top: 1px solid ${AppColors.WarmGray};
-  border-radius: 0 0 6px 6px;
-  width: calc(100% - 1em);
+  padding: 0 1em;
   left: 0;
   right: 0;
-  height: 40px;
+  height: 50px;
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  padding: 0 1em 0 0;
   justify-content: flex-end;
 `;

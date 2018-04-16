@@ -23,7 +23,8 @@ const ButtonWrapper = styled.button`
   }
 
   &:active {
-    background: ${({ active }) => (active ? AppColors.ActiveDark : "#f5f5f5")};
+    background: ${({ active }) =>
+      active ? AppColors.ActiveDark : AppColors.WarmMidWhite};
   }
 
   &:disabled {

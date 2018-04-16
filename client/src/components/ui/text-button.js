@@ -9,7 +9,7 @@ export const TextButton = styled.button`
   color: ${AppColors.White};
   display: inline-block;
   font-family: ${appFont};
-  font-size: ${({ size }) => size || "0.95em"};
+  font-size: ${({ size }) => size || "0.90em"};
   font-weight: 500;
   outline: none;
   padding: 0.25em 0.75em;
