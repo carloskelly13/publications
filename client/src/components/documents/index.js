@@ -146,16 +146,20 @@ export default class DocumentsView extends Component<Props, State> {
     if (!this.state.currentDocument) {
       return;
     }
-    const { id } = this.state.currentDocument;
-    const [err] = await to(
-      Api.PUT(
-        `documents/${id}`,
-        packageDocumentToJson(this.state.currentDocument)
-      )
-    );
+    const packagedDocument = packageDocumentToJson(this.state.currentDocument);
+    const id = getOr(null, "id")(this.state.currentDocument);
+    if (id) {
+      const [err] = await to(Api.PUT(`documents/${id}`, packagedDocument));
+      if (err) {
+        return;
+      }
+      return;
+    }
+    const [err, doc] = await to(Api.POST("documents", packagedDocument));
     if (err) {
       return;
     }
+    this.setCurrentDocument(doc);
   };
 
   /**
@@ -170,11 +174,18 @@ export default class DocumentsView extends Component<Props, State> {
         prevState.currentDocument
       )
     );
-
   setZoom = (zoom: number = 1) => this.setState({ zoom });
 
   setCurrentDocument = (doc: ?PubDocument) =>
-    this.setState({ currentDocument: doc, selectedObject: null, zoom: 1 });
+    this.setState(prevState => {
+      if (
+        getOr("-1", "currentDocument.id")(prevState) === getOr("-2", "id")(doc)
+      ) {
+        return { currentDocument: doc };
+      } else {
+        return { currentDocument: doc, selectedObject: null, zoom: 1 };
+      }
+    });
 
   addObject = (sender: Object) => {
     if (!this.state.currentDocument) {
@@ -222,13 +233,15 @@ export default class DocumentsView extends Component<Props, State> {
       shapes: [],
     };
     if (this.props.user) {
-      const [err] = await to(Api.POST("documents", payload));
+      const [err, doc] = await to(Api.POST("documents", payload));
       if (err) {
         return;
       }
       if (this.state.currentDocument) {
         await this.saveDocument();
       }
+      this.setCurrentDocument(doc);
+      return;
     }
     this.setCurrentDocument(payload);
   };

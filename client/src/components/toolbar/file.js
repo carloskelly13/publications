@@ -8,7 +8,6 @@ type Props = {
   loggedIn: boolean,
   currentDocument: ?PubDocument,
   saveDocument: () => Promise<any>,
-  logOut: () => void,
   showNewDocumentModal: () => void,
   showOpenDocumentModal: () => void,
   setZoom: number => void,
