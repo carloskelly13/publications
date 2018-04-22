@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -30,12 +31,15 @@ public class DocumentService {
 
   public Document create(Document document) {
     document.setLastModified(new Date());
+    document.setId(UUID.randomUUID().toString());
+    document.getShapes().forEach(s -> s.setDocument(document));
     return documentRepository.save(document);
   }
 
   @PreAuthorize("isOwner(this.get(#document.id))")
   public Document update(Document document) {
     document.setLastModified(new Date());
+    document.getShapes().forEach(s -> s.setDocument(document));
     return documentRepository.save(document);
   }
 

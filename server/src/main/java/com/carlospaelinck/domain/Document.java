@@ -45,7 +45,11 @@ public class Document {
   @Setter
   Date lastModified;
 
-  @OneToMany(targetEntity = Shape.class, cascade = CascadeType.ALL)
+  @OneToMany(
+      targetEntity = Shape.class,
+      cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE },
+      mappedBy = "document"
+  )
   @Getter
   @Setter
   List<Shape> shapes;

@@ -1,12 +1,13 @@
 package com.carlospaelinck.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -17,6 +18,13 @@ public class Shape {
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   String id;
+
+  @ManyToOne(targetEntity = Document.class, optional = false)
+  @Getter
+  @Setter
+  @JsonIgnore
+  @NotNull
+  Document document;
 
   @NotNull
   @Getter
