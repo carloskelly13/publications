@@ -6,6 +6,7 @@ import range from "lodash/range";
 import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
+import StartView from "../start-view";
 
 const Container = styled.div`
   overflow: scroll;
@@ -112,7 +113,7 @@ export default class EditorView extends React.Component {
         onScroll={this.handleViewScrollEvent}
         tabIndex={0}
       >
-        {currentDocument && (
+        {currentDocument ? (
           <div>
             <Ruler
               showDetail={editModeActive}
@@ -145,6 +146,8 @@ export default class EditorView extends React.Component {
               }}
             />
           </div>
+        ) : (
+          <StartView />
         )}
       </Container>
     );

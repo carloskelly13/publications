@@ -111,6 +111,10 @@ export const Colors = {
     RadioSelectedOutline: "#9b82f3",
     RadioSelectedBackground: "#9b82f3",
   },
+  Logo: {
+    Outline: "#9b82f3",
+    Background: "#4b4545",
+  },
 };
 
 export const baseRequestHeaders = {

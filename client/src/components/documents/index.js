@@ -15,7 +15,7 @@ import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
-// import { Shapes } from "../../util/new-shapes";
+
 import {
   documentsWithEditorState,
   addEditorStateToDocument,
