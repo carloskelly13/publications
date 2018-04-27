@@ -115,6 +115,9 @@ export const Colors = {
     Outline: "#9b82f3",
     Background: "#4b4545",
   },
+  StartView: {
+    AppNameColor: "#9b82f3",
+  },
 };
 
 export const baseRequestHeaders = {
