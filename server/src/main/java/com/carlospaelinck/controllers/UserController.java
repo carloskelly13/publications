@@ -34,11 +34,6 @@ public class UserController {
 
   @PutMapping
   User update(HttpServletRequest request, @RequestBody User user, @AuthenticationPrincipal PubUserDetails userDetails, HttpServletResponse response) {
-    if (userDetails.getUser().getTemporary() && userService.get(user.getEmailAddress()) != null) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      return null;
-    }
-
     User currentUser = userDetails.getUser();
     return userService.update(currentUser, user);
   }

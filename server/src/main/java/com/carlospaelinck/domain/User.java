@@ -36,11 +36,6 @@ public class User {
   @Transient
   String password;
 
-  @NotNull
-  @Getter
-  @Setter
-  Boolean temporary;
-
   @OneToMany(targetEntity = Document.class, mappedBy = "user")
   @Getter
   @Setter

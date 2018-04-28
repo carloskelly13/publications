@@ -37,7 +37,6 @@ public class UserService {
 
   public User update(User currentUser, User updatedUser) {
     currentUser.setEmailAddress(updatedUser.getEmailAddress());
-    currentUser.setTemporary(false);
     currentUser.setPasswordHash(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
     return userRepository.save(currentUser);
   }
@@ -55,12 +54,6 @@ public class UserService {
 
   public void logout(String emailAddress) {
     User user = userRepository.findOneByEmailAddress(emailAddress);
-
-    if (user.getTemporary()) {
-      user.getDocuments().forEach(documentService::delete);
-      userRepository.delete(user);
-    }
-
     SecurityContextHolder.getContext().setAuthentication(null);
   }
 }
