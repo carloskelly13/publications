@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { ModalContent } from "../modal";
-import { AppColors } from "../../util/constants";
-import { TextInput } from "../ui/inputs";
+import { AppColors, Colors } from "../../util/constants";
+import FormInput from "../ui/form-input";
 
 export const OpenDocumentContainer = styled(ModalContent)`
   min-width: 630px;
   width: 85%;
-  padding: 0 0 40px;
+  padding: 0 0 51px;
 `;
 
 export const HeaderContainer = styled.div`
@@ -28,6 +28,7 @@ export const FileBrowserLoadingContainer = styled(FileBrowserBaseContainer)`
 `;
 
 export const FileBrowserContentContainer = styled(FileBrowserBaseContainer)`
+  border-top: 1px solid ${Colors.OpenDocument.FileBrowserBorder};
   overflow: scroll;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -39,15 +40,7 @@ export const FileBrowserContainer = styled.div`
   flex-direction: column;
 `;
 
-export const SearchInput = styled(TextInput)`
-  background: #f9f9f9;
-  flex: 1;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  text-align: center;
-  border-radius: 0;
-  padding: 10px 2px;
-  font-size: 15px;
-  font-weight: 600;
+export const SearchInput = styled(FormInput)`
+  margin: 15px;
+  width: calc(100% - 30px);
 `;

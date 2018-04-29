@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { lastModifiedString } from "../../util/string";
 import Canvas from "../canvas";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 
 const FileItemContainer = styled.div`
   text-align: center;
@@ -22,11 +22,12 @@ const SvgContainer = styled.div`
   display: inline-block;
   margin: 0 auto;
   padding: 3px 3px 0;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px ${Colors.DocumentThumbnail.Outline};
   ${({ selected }) =>
     selected &&
     css`
-      border-radius: 2px;
-      box-shadow: 0 0 0 2px ${AppColors.Highlight};
+      box-shadow: 0 0 0 3px ${Colors.DocumentThumbnail.SelectedOutline};
     `};
 `;
 

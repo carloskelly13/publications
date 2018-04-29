@@ -111,12 +111,19 @@ export const Colors = {
     RadioSelectedOutline: "#9b82f3",
     RadioSelectedBackground: "#9b82f3",
   },
+  OpenDocument: {
+    FileBrowserBorder: "#a6a5a6",
+  },
   Logo: {
     Outline: "#9b82f3",
     Background: "#4b4545",
   },
   StartView: {
     AppNameColor: "#9b82f3",
+  },
+  DocumentThumbnail: {
+    Outline: "#5f5757",
+    SelectedOutline: "#9b82f3",
   },
 };
 
