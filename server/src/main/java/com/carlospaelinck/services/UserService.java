@@ -53,7 +53,6 @@ public class UserService {
   }
 
   public void logout(String emailAddress) {
-    User user = userRepository.findOneByEmailAddress(emailAddress);
     SecurityContextHolder.getContext().setAuthentication(null);
   }
 }
