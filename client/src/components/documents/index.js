@@ -15,6 +15,7 @@ import getOr from "lodash/fp/getOr";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
+import StartModal from "../start-modal";
 
 import {
   documentsWithEditorState,
@@ -42,6 +43,7 @@ type State = {
   clipboardContents: ?PubShape,
   newDocumentModalVisible: boolean,
   openDocumentModalVisible: boolean,
+  startModalVisible: boolean,
   layersPanelVisible: boolean,
   loginModalVisible: boolean,
   zoom: number,
@@ -59,6 +61,7 @@ export default class DocumentsView extends Component<Props, State> {
     clipboardContents: null,
     newDocumentModalVisible: false,
     openDocumentModalVisible: false,
+    startModalVisible: false,
     layersPanelVisible: false,
     loginModalVisible: false,
     zoom: 1,
@@ -86,6 +89,7 @@ export default class DocumentsView extends Component<Props, State> {
     updateSelectedObject: this.updateSelectedObject,
     adjustObjectLayer: this.adjustObjectLayer,
     toggleLoginDialog: this.toggleLoginDialog,
+    hideStartModal: this.hideStartModal,
   });
 
   /**
@@ -104,6 +108,8 @@ export default class DocumentsView extends Component<Props, State> {
   toggleLoginDialog = this.toggleVisibility.bind(this, "loginModal");
   toggleLayersPanel = this.toggleVisibility.bind(this, "layersPanel");
 
+  hideStartModal = () => this.setState({ startModalVisible: false });
+
   /**
    * Data Actions
    */
@@ -116,7 +122,10 @@ export default class DocumentsView extends Component<Props, State> {
 
   getCurrentUser = async () => {
     const [_, user] = await to(Api.GET("users/current"));
-    this.props.setAppUser(user || null);
+    if (user) {
+      this.props.setAppUser(user);
+    }
+    this.setState({ startModalVisible: true });
   };
 
   getDocuments = async () => {
@@ -254,6 +263,10 @@ export default class DocumentsView extends Component<Props, State> {
     return (
       <ActionsContext.Provider value={this.getActions()}>
         <ViewContainer>
+          <Modal
+            renderContent={<StartModal />}
+            visible={this.state.startModalVisible}
+          />
           <Modal
             renderContent={
               <LoginDialog

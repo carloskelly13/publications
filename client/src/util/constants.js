@@ -91,6 +91,7 @@ export const AppColors = {
 
 export const Colors = {
   Modal: {
+    ModalBackground: "#fbf8f8",
     TitleText: "#373232",
     ButtonContainerBorder: "#dad7d7",
     ButtonContainerBackground: "#e6e3e3",
@@ -113,6 +114,10 @@ export const Colors = {
   },
   OpenDocument: {
     FileBrowserBorder: "#a6a5a6",
+  },
+  StartModal: {
+    ButtonIcon: "#373232",
+    ButtonText: "#373232",
   },
   Logo: {
     Outline: "#9b82f3",
