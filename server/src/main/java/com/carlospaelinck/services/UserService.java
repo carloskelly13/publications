@@ -16,15 +16,14 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class UserService {
+  private UserRepository userRepository;
+  private AuthenticationManager authenticationManager;
 
   @Inject
-  UserRepository userRepository;
-
-  @Inject
-  DocumentService documentService;
-
-  @Inject
-  AuthenticationManager authenticationManager;
+  public UserService(UserRepository userRepository, AuthenticationManager authenticationManager) {
+    this.userRepository = userRepository;
+    this.authenticationManager = authenticationManager;
+  }
 
   public User get(String emailAddress) {
     return userRepository.findOneByEmailAddress(emailAddress);

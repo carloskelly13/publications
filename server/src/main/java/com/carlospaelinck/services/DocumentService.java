@@ -17,8 +17,12 @@ import java.util.UUID;
 @Service
 @Transactional
 public class DocumentService {
+  private final DocumentRepository documentRepository;
+
   @Inject
-  private DocumentRepository documentRepository;
+  public DocumentService(DocumentRepository documentRepository) {
+    this.documentRepository = documentRepository;
+  }
 
   @PostAuthorize("isOwner(returnObject)")
   public Document get(String id) {
@@ -46,11 +50,6 @@ public class DocumentService {
   @PreAuthorize("isOwner(this.get(#id))")
   public void delete(String id) {
     Document document = get(id);
-    documentRepository.delete(document);
-  }
-
-  @PreAuthorize("isOwner(document)")
-  public void delete(Document document) {
     documentRepository.delete(document);
   }
 }

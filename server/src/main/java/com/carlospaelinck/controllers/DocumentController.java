@@ -5,8 +5,6 @@ import com.carlospaelinck.security.PubUserDetails;
 import com.carlospaelinck.services.DocumentService;
 
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/documents")
 public class DocumentController {
+  private final DocumentService documentService;
+
   @Inject
-  private DocumentService documentService;
+  public DocumentController(DocumentService documentService) {
+    this.documentService = documentService;
+  }
 
   @RequestMapping(method = RequestMethod.GET)
   List<Document> list(@AuthenticationPrincipal PubUserDetails userDetails) {
@@ -45,10 +47,5 @@ public class DocumentController {
     document.setId(documentId);
     document.setUser(userDetails.getUser());
     return documentService.update(document);
-  }
-
-  @RequestMapping(value = "/{documentId}/pdf", method = RequestMethod.GET)
-  ResponseEntity<HttpStatus> pdf() {
-    return new ResponseEntity<>(HttpStatus.GONE);
   }
 }

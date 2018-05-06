@@ -18,6 +18,7 @@ const Container = styled.div`
   }
 `;
 
+const getIdFromDocument = get("id");
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
 
 export default class EditorView extends React.Component {
@@ -31,8 +32,8 @@ export default class EditorView extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      get("id")(this.props.currentDocument) !==
-      get("id")(nextProps.currentDocument)
+      getIdFromDocument(this.props.currentDocument) !==
+      getIdFromDocument(nextProps.currentDocument)
     ) {
       this.containerRef.scrollTop = 0;
       this.containerRef.scrollLeft = 0;

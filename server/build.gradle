@@ -1,14 +1,14 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.8.RELEASE'
+		springBootVersion = '1.5.12.RELEASE'
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-			classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-      classpath('io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE')
-    }
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE')
+	}
 }
 
 apply plugin: 'idea'
@@ -17,7 +17,7 @@ apply plugin: 'war'
 
 war {
 	baseName = 'publications-rest'
-	version = '2.3.0'
+	version = '3.0.0'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
