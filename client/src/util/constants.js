@@ -118,6 +118,7 @@ export const Colors = {
   StartModal: {
     ButtonIcon: "#373232",
     ButtonText: "#373232",
+    ButtonActiveBorder: "#9b82f3",
   },
   Logo: {
     Outline: "#9b82f3",

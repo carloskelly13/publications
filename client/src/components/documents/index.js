@@ -118,12 +118,17 @@ export default class DocumentsView extends Component<Props, State> {
     await to(Api.DELETE("users/logout"));
     clearCsrfHeaders();
     this.props.setAppUser(null);
+
+    if (!this.state.currentDocument) {
+      this.setState({ startModalVisible: true });
+    }
   };
 
   getCurrentUser = async () => {
     const [_, user] = await to(Api.GET("users/current"));
     if (user) {
       this.props.setAppUser(user);
+      return;
     }
     this.setState({ startModalVisible: true });
   };

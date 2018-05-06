@@ -24,16 +24,44 @@ const StartModalContent = styled(ModalContent)`
   width: 600px;
 `;
 
+const StartButtonContainer = styled.div`
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+
+  > button {
+    margin-bottom: 0.5em;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
+
 const StartButton = styled(TextButton)`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  padding: 10px;
+  flex: 1;
+  border-radius: 4px;
+
+  &:hover {
+    box-shadow: 0 0 0 2px ${Colors.StartModal.ButtonActiveBorder};
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px ${Colors.StartModal.ButtonActiveBorder};
+  }
 `;
 
 const ButtonTextContainer = styled.div`
   flex: 1;
   text-align: left;
-  margin: 0 0 0 8px;
+  margin: 0 0 0 15px;
 `;
 
 const ButtonTitle = styled.div`
@@ -54,43 +82,46 @@ export default () => (
         <Container>
           <LogoBanner backgroundColor={Colors.Modal.ModalBackground} />
         </Container>
-        <StartButton
-          onClick={() => {
-            hideStartModal();
-            setTimeout(showNewDocumentModal, 250);
-          }}
-        >
-          <DocumentIcon />
-          <ButtonTextContainer>
-            <ButtonTitle>New Document</ButtonTitle>
-            <ButtonDescription>
-              Start with a new portrait or landscape document.
-            </ButtonDescription>
-          </ButtonTextContainer>
-        </StartButton>
-        <StartButton onClick={() => {}}>
-          <UserLockIcon />
-          <ButtonTextContainer>
-            <ButtonTitle>Log In</ButtonTitle>
-            <ButtonDescription>
-              Log into Publications to save and open existing documents.
-            </ButtonDescription>
-          </ButtonTextContainer>
-        </StartButton>
-        <ModalButtonContainer>
-          <Button marginRight onClick={hideStartModal}>
-            Close
-          </Button>
-        </ModalButtonContainer>
-        <StartButton onClick={() => {}}>
-          <UserBadgeIcon />
-          <ButtonTextContainer>
-            <ButtonTitle>Sign Up</ButtonTitle>
-            <ButtonDescription>
-              Create a free Publications account so you can save your documents.
-            </ButtonDescription>
-          </ButtonTextContainer>
-        </StartButton>
+        <StartButtonContainer>
+          <StartButton
+            onClick={() => {
+              hideStartModal();
+              setTimeout(showNewDocumentModal, 250);
+            }}
+          >
+            <DocumentIcon />
+            <ButtonTextContainer>
+              <ButtonTitle>New Document</ButtonTitle>
+              <ButtonDescription>
+                Start with a new portrait or landscape document.
+              </ButtonDescription>
+            </ButtonTextContainer>
+          </StartButton>
+          <StartButton onClick={() => {}}>
+            <UserLockIcon />
+            <ButtonTextContainer>
+              <ButtonTitle>Log In</ButtonTitle>
+              <ButtonDescription>
+                Log into Publications to save and open existing documents.
+              </ButtonDescription>
+            </ButtonTextContainer>
+          </StartButton>
+          <ModalButtonContainer>
+            <Button marginRight onClick={hideStartModal}>
+              Close
+            </Button>
+          </ModalButtonContainer>
+          <StartButton onClick={() => {}}>
+            <UserBadgeIcon />
+            <ButtonTextContainer>
+              <ButtonTitle>Sign Up</ButtonTitle>
+              <ButtonDescription>
+                Create a free Publications account so you can save your
+                documents.
+              </ButtonDescription>
+            </ButtonTextContainer>
+          </StartButton>
+        </StartButtonContainer>
         <ModalButtonContainer>
           <Button marginRight onClick={hideStartModal}>
             Close
