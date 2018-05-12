@@ -1,5 +1,5 @@
 // @flow
-import type { PubDocument, PubShape } from "../../util/types";
+import type { PubDocument, PubShape, PubUser } from "../../util/types";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Toolbar from "../toolbar";
@@ -32,8 +32,8 @@ import shortid from "shortid";
 import { ActionsContext } from "../../contexts";
 
 type Props = {
-  user: ?Object,
-  setAppUser: (?Object) => void,
+  user: ?PubUser,
+  setAppUser: (?PubUser) => void,
 };
 
 type State = {

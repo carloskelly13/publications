@@ -1,6 +1,6 @@
 // @flow
 export type ToolbarProps = {
-  user: ?Object,
+  user: ?PubUser,
   selectedObject: ?Object,
   currentDocument: ?Object,
   layersPanelVisible: boolean,
@@ -28,4 +28,9 @@ export type PubShape = {
   stroke: string,
   strokeWidth: number,
   strokeOpacity: number,
+};
+
+export type PubUser = {
+  emailAddress: string,
+  id: string,
 };

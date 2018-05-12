@@ -8,6 +8,7 @@ import to from "await-to-js";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { ModalButtonContainer } from "../ui/button-container";
+import type { PubUser } from "../../util/types";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;
@@ -18,7 +19,7 @@ const Form = styled.form`
 `;
 
 type Props = {
-  onLogin: Object => void,
+  onLogin: PubUser => void,
   onDismiss: () => void,
 };
 export default class extends React.Component<Props> {
