@@ -5,10 +5,9 @@ import com.carlospaelinck.domain.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface DocumentRepository extends PagingAndSortingRepository<Document, String> {
-  List<Document> findAllByUser(User user, Sort sort);
+  Set<Document> findAllByUser(User user, Sort sort);
 }

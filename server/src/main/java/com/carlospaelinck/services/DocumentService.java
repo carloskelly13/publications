@@ -7,12 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -25,11 +22,11 @@ public class DocumentService {
   }
 
   @PostAuthorize("isOwner(returnObject)")
-  public Document get(String id) {
-    return documentRepository.findOne(id);
+  public Optional<Document> get(String id) {
+    return documentRepository.findById(id);
   }
 
-  public List<Document> findAllByUser(User user, Sort sortOrder) {
+  public Set<Document> findAllByUser(User user, Sort sortOrder) {
     return documentRepository.findAllByUser(user, sortOrder);
   }
 
@@ -48,8 +45,12 @@ public class DocumentService {
   }
 
   @PreAuthorize("isOwner(this.get(#id))")
-  public void delete(String id) {
-    Document document = get(id);
-    documentRepository.delete(document);
+  public Boolean delete(String id) {
+    Optional<Document> document = documentRepository.findById(id);
+    if (document.isPresent()) {
+      documentRepository.delete(document.get());
+      return true;
+    }
+    return false;
   }
 }

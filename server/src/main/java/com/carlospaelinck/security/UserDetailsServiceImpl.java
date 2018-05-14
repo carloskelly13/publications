@@ -11,8 +11,12 @@ import javax.inject.Named;
 @Named
 public class UserDetailsServiceImpl implements org.springframework.security.core.userdetails.UserDetailsService {
 
+  private final UserRepository userRepository;
+
   @Inject
-  UserRepository userRepository;
+  public UserDetailsServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   @Override
   public UserDetails loadUserByUsername(String username)

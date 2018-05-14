@@ -7,6 +7,8 @@ import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
 
+import java.util.Optional;
+
 public class MethodSecurityExpressionRoot
   extends SecurityExpressionRoot
   implements MethodSecurityExpressionOperations {
@@ -27,11 +29,11 @@ public class MethodSecurityExpressionRoot
     super(authentication);
   }
 
-  public boolean isOwner(Object object) {
+  public boolean isOwner(Optional<Document> optionalDocument) {
     PubUserDetails principal = (PubUserDetails) this.getPrincipal();
 
-    if (object instanceof Document) {
-      Document document = (Document) object;
+    if (optionalDocument.isPresent()) {
+      Document document = optionalDocument.get();
       return document.getUser().getId().equals(principal.getUser().getId());
     }
 
