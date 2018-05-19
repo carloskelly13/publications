@@ -10,7 +10,7 @@ public class PubUserDetails extends org.springframework.security.core.userdetail
   @Setter
   User user;
 
-  public PubUserDetails(User user) {
+  PubUserDetails(User user) {
     super(user.getEmailAddress(), user.getPasswordHash(), AuthorityUtils.createAuthorityList());
     this.user = user;
   }
