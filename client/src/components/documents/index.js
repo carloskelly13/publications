@@ -12,6 +12,7 @@ import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
 import getOr from "lodash/fp/getOr";
+import memoize from "lodash/fp/memoize";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
@@ -75,7 +76,7 @@ export default class DocumentsView extends Component<Props, State> {
     }
   }
 
-  getActions = () => ({
+  getActions = memoize(() => ({
     addObject: this.addObject,
     deleteObject: this.deleteObject,
     handleClipboardAction: this.handleClipboardAction,
@@ -90,7 +91,7 @@ export default class DocumentsView extends Component<Props, State> {
     adjustObjectLayer: this.adjustObjectLayer,
     toggleLoginDialog: this.toggleLoginDialog,
     hideStartModal: this.hideStartModal,
-  });
+  }));
 
   /**
    * Display Actions
@@ -118,6 +119,7 @@ export default class DocumentsView extends Component<Props, State> {
     await to(Api.DELETE("users/logout"));
     clearCsrfHeaders();
     this.props.setAppUser(null);
+    window.localStorage.removeItem("currentDocumentId");
 
     if (!this.state.currentDocument) {
       this.setState({ startModalVisible: true });
@@ -128,6 +130,14 @@ export default class DocumentsView extends Component<Props, State> {
     const [_, user] = await to(Api.GET("users/current"));
     if (user) {
       this.props.setAppUser(user);
+
+      const lastViewedDocumentId = window.localStorage.getItem(
+        "currentDocumentId"
+      );
+      if (lastViewedDocumentId) {
+        this.getDocument(lastViewedDocumentId);
+      }
+
       return;
     }
     this.setState({ startModalVisible: true });
@@ -191,15 +201,28 @@ export default class DocumentsView extends Component<Props, State> {
   setZoom = (zoom: number = 1) => this.setState({ zoom });
 
   setCurrentDocument = (doc: ?PubDocument) =>
-    this.setState(prevState => {
-      if (
-        getOr("-1", "currentDocument.id")(prevState) === getOr("-2", "id")(doc)
-      ) {
-        return { currentDocument: doc };
-      } else {
-        return { currentDocument: doc, selectedObject: null, zoom: 1 };
+    this.setState(
+      prevState => {
+        if (
+          getOr("-1", "currentDocument.id")(prevState) ===
+          getOr("-2", "id")(doc)
+        ) {
+          return { currentDocument: doc, layersPanelVisible: true };
+        } else {
+          return {
+            currentDocument: doc,
+            layersPanelVisible: true,
+            selectedObject: null,
+            zoom: 1,
+          };
+        }
+      },
+      () => {
+        if (doc && "id" in doc) {
+          window.localStorage.setItem("currentDocumentId", doc.id);
+        }
       }
-    });
+    );
 
   addObject = (sender: Object) => {
     if (!this.state.currentDocument) {

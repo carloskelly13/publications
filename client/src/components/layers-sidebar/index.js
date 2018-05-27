@@ -1,21 +1,23 @@
+// @flow
+import type { PubDocument, PubShape } from "../../util/types";
 import React from "react";
-import PropTypes from "prop-types";
-import { LayersSidebarContainer } from "./container";
-import { LayerItem } from "./layer-item";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import "react-motion";
 import get from "lodash/get";
+import { LayersSidebarContainer, Title } from "./components";
+import { LayerItem } from "./layer-item";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { ActionsContext } from "../../contexts";
 
-export default class extends React.Component {
-  static contextTypes = {
-    actions: PropTypes.object.isRequired,
-  };
-
-  render() {
-    const { visible, currentDocument, selectedObject } = this.props;
-    const { adjustObjectLayer, updateSelectedObject } = this.context.actions;
-    return (
+type Props = {
+  visible: boolean,
+  currentDocument: PubDocument | null,
+  selectedObject: PubShape | null,
+};
+export default ({ visible, currentDocument, selectedObject }: Props) => (
+  <ActionsContext.Consumer>
+    {({ adjustObjectLayer, updateSelectedObject }) => (
       <LayersSidebarContainer visible={visible}>
+        <Title>Layers</Title>
         <DragDropContext onDragEnd={adjustObjectLayer}>
           <Droppable droppableId="droppable">
             {provided => (
@@ -34,6 +36,6 @@ export default class extends React.Component {
           </Droppable>
         </DragDropContext>
       </LayersSidebarContainer>
-    );
-  }
-}
+    )}
+  </ActionsContext.Consumer>
+);

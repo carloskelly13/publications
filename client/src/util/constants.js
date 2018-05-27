@@ -131,6 +131,13 @@ export const Colors = {
     Outline: "#5f5757",
     SelectedOutline: "#9b82f3",
   },
+  LayersSidebar: {
+    Text: "#fff",
+    Background: "#373232",
+    Border: "#2a2626",
+    ItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
+    ItemBorder: "hsla(0, 0%, 0%, 0.33)",
+  },
 };
 
 export const baseRequestHeaders = {

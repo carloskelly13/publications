@@ -7,7 +7,7 @@ import NewShapeMenu from "./new-shape";
 import EditMenu from "./edit";
 import ZoomMenu from "./zoom";
 import UserMenu from "./user-menu";
-import LayersMenu from "./layers";
+// import LayersMenu from "./layers";
 import { ContentContainer } from "../ui/containers";
 import { documentName } from "../../util/string";
 import { Header } from "./components";
@@ -18,7 +18,7 @@ export default (props: ToolbarProps) => {
     user,
     selectedObject,
     currentDocument,
-    layersPanelVisible,
+    // layersPanelVisible,
     clipboardContents,
     zoom,
   } = props;
@@ -51,11 +51,11 @@ export default (props: ToolbarProps) => {
               disabled={!currentDocument}
               addObject={actions.addObject}
             />
-            <LayersMenu
+            {/* <LayersMenu
               disabled={!currentDocument}
               toggleLayersPanel={actions.toggleLayersPanel}
               layersPanelVisible={layersPanelVisible}
-            />
+            /> */}
             <ZoomMenu
               zoom={zoom}
               setZoom={actions.setZoom}

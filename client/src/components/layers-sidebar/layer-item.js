@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
 import LayerInfo from "./layer-info";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 
 const getItemStyle = draggableStyle => ({
   userSelect: "none",
@@ -13,22 +13,36 @@ const getItemStyle = draggableStyle => ({
 
 const backgroundColorForState = ({ selected }) => {
   if (selected) {
-    return AppColors.ActiveDark;
+    return Colors.LayersSidebar.ItemSelectedBackground;
   }
   return "transparent";
 };
 
+const LayerItemInnerContainer = styled.div`
+  &:hover {
+    background: hsla(0, 0%, 100%, 0.1);
+  }
+`;
+
+const LayerItemContainer = styled.div`
+  border-top: 1px ${Colors.LayersSidebar.ItemBorder} solid;
+
+  &:last-child {
+    border-bottom: 1px ${Colors.LayersSidebar.ItemBorder} solid;
+  }
+`;
+
 const LayerItemContent = styled.div`
   background: ${props => backgroundColorForState(props)};
-  padding: 10px 6px;
+  padding: 3px 0;
 `;
 
 export const LayerItem = ({ shape, handleOnClick, selected }) => (
   <Draggable key={shape.id} draggableId={shape.id}>
     {(provided, snapshot) => (
-      <div onClick={handleOnClick}>
-        <div
-          ref={provided.innerRef}
+      <LayerItemContainer onClick={handleOnClick}>
+        <LayerItemInnerContainer
+          innerRef={provided.innerRef}
           style={getItemStyle(provided.draggableStyle)}
           {...provided.dragHandleProps}
         >
@@ -38,9 +52,9 @@ export const LayerItem = ({ shape, handleOnClick, selected }) => (
           >
             <LayerInfo shape={shape} selected={selected} />
           </LayerItemContent>
-        </div>
+        </LayerItemInnerContainer>
         {provided.placeholder}
-      </div>
+      </LayerItemContainer>
     )}
   </Draggable>
 );

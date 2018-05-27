@@ -1,8 +1,6 @@
 package com.carlospaelinck.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -90,5 +88,6 @@ public class Shape {
 
   @Getter
   @Setter
+  @Column(columnDefinition = "text")
   String text;
 }
