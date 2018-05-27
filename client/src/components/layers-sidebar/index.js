@@ -10,8 +10,8 @@ import { ActionsContext } from "../../contexts";
 
 type Props = {
   visible: boolean,
-  currentDocument: PubDocument | null,
-  selectedObject: PubShape | null,
+  currentDocument: ?PubDocument,
+  selectedObject: ?PubShape,
 };
 export default ({ visible, currentDocument, selectedObject }: Props) => (
   <ActionsContext.Consumer>
