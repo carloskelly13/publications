@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import styled, { css } from "styled-components";
-import { AppColors, appFont } from "../../util/constants";
+import { AppColors, Colors, appFont } from "../../util/constants";
 import enhanceWithClickOutside from "react-click-outside";
 
 export const Menu = styled.ul`
-  background: ${AppColors.Background};
+  background: ${Colors.Menu.Background};
   list-style: none;
   color: ${AppColors.White};
   padding: 4px 0;
@@ -12,9 +12,9 @@ export const Menu = styled.ul`
   min-width: 125px;
   border-radius: 0 4px 4px 4px;
   position: absolute;
-  border-top: none;
-  box-shadow: 0 2px 3px 1px hsla(0, 0%, 0%, 0.3);
-  top: 28px;
+  border: 1px solid ${Colors.Menu.MenuBorder};
+  box-shadow: 1px 1px 5px 0 hsla(0, 0%, 0%, 0.25);
+  top: 27px;
   cursor: default;
   outline: none;
   z-index: 6;
@@ -123,8 +123,10 @@ export default class extends React.Component<MenuProps> {
             style: {
               margin: 0,
               borderRadius: menuActive ? "2px 2px 0 0" : 0,
-              background: menuActive ? AppColors.Background : "transparent",
-              color: AppColors.White,
+              background: menuActive
+                ? Colors.Menu.ButtonActiveBackground
+                : "transparent",
+              color: Colors.Menu.Text,
               ...disabledStyle,
             },
             disabled,

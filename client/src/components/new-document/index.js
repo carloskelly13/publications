@@ -26,11 +26,13 @@ const PageRadioButton = styled.input`
   &:not(:checked) + label {
     background-color: ${Colors.NewDocument.RadioBackground};
     border: 1px solid ${Colors.NewDocument.RadioBorder};
+    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.1);
     color: ${Colors.NewDocument.RadioText};
   }
   &:checked + label {
     border: 1px solid ${Colors.NewDocument.RadioSelectedBorder};
-    box-shadow: 0 0 0 2px ${Colors.NewDocument.RadioSelectedOutline};
+    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.2),
+      0 0 0 2px ${Colors.NewDocument.RadioSelectedOutline};
     background-color: ${Colors.NewDocument.RadioSelectedBackground};
     color: ${Colors.NewDocument.RadioSelectedText};
   }

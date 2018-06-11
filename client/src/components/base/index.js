@@ -1,5 +1,5 @@
 import styled, { injectGlobal } from "styled-components";
-import { appFont, AppColors } from "../../util/constants";
+import { appFont, AppColors, Colors } from "../../util/constants";
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
@@ -13,7 +13,7 @@ injectGlobal`
 `;
 
 export default styled.div`
-  background: ${AppColors.Background};
+  background: ${Colors.App.Background};
   color: ${AppColors.DarkGray};
   margin: 0;
   padding: 0;

@@ -90,23 +90,43 @@ export const AppColors = {
 };
 
 export const Colors = {
+  App: {
+    Background: "#2b2c2f",
+    Toolbar: "#38393d",
+    ToolbarBorder: "#1e1f21",
+  },
+  Button: {
+    Border: "hsla(0, 0%, 0%, 0.5)",
+    Outline: "#9b82f3",
+    Background: "#5c5e65",
+    Text: "#fff",
+  },
+  Menu: {
+    Background: "rgba(41, 41, 44, 0.95)",
+    ButtonActiveBackground: "rgba(91, 91, 94, 0.55)",
+    MenuBorder: "rgba(91, 91, 94, 0.45)",
+    Text: "#fff",
+  },
   Modal: {
-    ModalBackground: "#fbf8f8",
-    TitleText: "#373232",
-    ButtonContainerBorder: "#dad7d7",
-    ButtonContainerBackground: "#e6e3e3",
+    ModalBackground: "#2c2d30",
+    TitleText: "#fff",
+    FrameHighlight: "#4a4b50",
+    ButtonContainerBorder: "#1e1f21",
+    ButtonContainerBackground: "#38393d",
   },
   FormInput: {
-    Text: "#373232",
-    Border: "#a6a5a6",
+    Background: "#38393d",
+    MetricBackground: "#4a4b50",
+    Text: "#fff",
+    Border: "hsla(0, 0%, 100%, 0.01)",
     FocusBorder: "#785ef0",
     FocusOutline: "#9b82f3",
-    Placeholder: "#a6a5a6",
+    Placeholder: "#6a6c71",
   },
   NewDocument: {
-    RadioBorder: "#a6a5a6",
-    RadioText: "#373232",
-    RadioBackground: "white",
+    RadioBorder: "hsla(0, 0%, 0%, 0.5)",
+    RadioText: "#fff",
+    RadioBackground: "#5c5e65",
     RadioSelectedText: "white",
     RadioSelectedBorder: "#785ef0",
     RadioSelectedOutline: "#9b82f3",
@@ -116,8 +136,8 @@ export const Colors = {
     FileBrowserBorder: "#a6a5a6",
   },
   StartModal: {
-    ButtonIcon: "#373232",
-    ButtonText: "#373232",
+    ButtonIcon: "#fff",
+    ButtonText: "#fff",
     ButtonActiveBorder: "#9b82f3",
   },
   Logo: {
@@ -133,10 +153,14 @@ export const Colors = {
   },
   LayersSidebar: {
     Text: "#fff",
-    Background: "#373232",
-    Border: "#2a2626",
+    Background: "#38393d",
+    Border: "#1e1f21",
     ItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
     ItemBorder: "hsla(0, 0%, 0%, 0.33)",
+  },
+  Rulers: {
+    Background: "#38393d",
+    Text: "#fff",
   },
 };
 

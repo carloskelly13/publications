@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import { AppColors, appFont } from "../../util/constants";
+import { Colors, appFont } from "../../util/constants";
 
 export const TextInput = styled.input`
-  border: 1px solid #7d7373;
-  border-radius: 2px;
+  border: none;
+  border-radius: 0;
   padding: 0 4px;
-  color: ${AppColors.White};
-  background: #4b4545;
+  color: ${Colors.FormInput.Text};
+  background: ${Colors.FormInput.MetricBackground};
+  box-shadow: inset 1px 1px 0 hsla(0, 0%, 0%, 0.4),
+    inset -1px -1px 0 hsla(0, 0%, 100%, 0.1);
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {
@@ -35,13 +37,10 @@ export const TextInput = styled.input`
   }};
 
   &:disabled {
-    background: ${AppColors.DarkGray};
-    border-color: ${AppColors.ReallyDarkGray};
     cursor: default;
-    color: ${AppColors.MediumGray};
   }
   &:focus {
-    border-color ${AppColors.Highlight};
-    box-shadow: 0 0 0 1px ${AppColors.Highlight};
+    border-radius: 1px;
+    box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
   }
 `;

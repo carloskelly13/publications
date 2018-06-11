@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import range from "lodash/range";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 import { GridLine } from "../../components/canvas/grid-line";
 import styled from "styled-components";
 
 const RulerContainer = styled.div`
-  background: ${AppColors.DarkGray};
+  background: ${Colors.Rulers.Background};
   position: fixed;
   left: 25px;
   height: 25px;
@@ -52,7 +52,7 @@ export default class Ruler extends Component {
   renderMajorLabel(index, mark, direction) {
     return (
       <text
-        fill={AppColors.Gray30}
+        fill={Colors.Rulers.Text}
         fontSize="12"
         x={direction === "V" ? mark + 27 : 4}
         y={direction === "V" ? 12 : mark - 2}

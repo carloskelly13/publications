@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { AppColors, appFont } from "../../util/constants";
+import { Colors, appFont } from "../../util/constants";
 
 const ButtonWrapper = styled.button`
-  background: ${({ active }) => (active ? AppColors.Gray50 : "#fff")};
-  border: 1px solid
-    ${({ active }) => (active ? AppColors.Gray50 : AppColors.Gray40)};
+  background: ${Colors.Button.Background};
+  border: 1px solid ${Colors.Button.Border};
   border-radius: 4px;
-  color: ${({ active }) => (active ? AppColors.White : AppColors.DarkGray)};
+  box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.15);
+  color: ${Colors.Button.Text};
   font-family: ${appFont};
   font-size: 0.95em;
   font-weight: 500;
@@ -19,17 +19,15 @@ const ButtonWrapper = styled.button`
     }`};
 
   &:focus {
-    box-shadow: 0 0 0 2px #c8c7c8;
+    box-shadow: 0 0 0 2px ${Colors.Button.Outline};
   }
 
   &:active {
-    background: ${({ active }) =>
-      active ? AppColors.ActiveDark : AppColors.WarmMidWhite};
+    box-shadow: inset 1px 1px 0 hsla(0, 0%, 0%, 0.15);
   }
 
   &:disabled {
-    color: #bbb;
-    background: #fcfbfc;
+    opacity: 0.5;
   }
 `;
 

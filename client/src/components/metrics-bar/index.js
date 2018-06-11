@@ -10,7 +10,7 @@ import {
   getSelectedText,
   INLINE_STYLES,
 } from "../../util/text";
-import { AppColors } from "../../util/constants";
+import { AppColors, Colors } from "../../util/constants";
 import { ContentContainer } from "../ui/containers";
 import MetricInput from "./metric-input";
 import IconButton from "../ui/icon-button";
@@ -25,8 +25,8 @@ const MetricsBar = styled.div`
   height: 23px;
   width: calc(100% - 2em);
   padding: 4px 1em 0;
-  background: ${AppColors.DarkGray};
-  border-bottom: 1px solid ${AppColors.ReallyDarkGray};
+  background: ${Colors.App.Toolbar};
+  border-bottom: 1px solid ${Colors.App.ToolbarBorder};
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

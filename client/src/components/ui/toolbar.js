@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 
 const Toolbar = styled.div`
   align-items: flex-end;
-  background: ${AppColors.DarkGray};
+  background: ${Colors.App.Toolbar};
   box-pack: justify;
   display: flex;
   height: 27px;

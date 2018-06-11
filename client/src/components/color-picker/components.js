@@ -1,18 +1,20 @@
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 
 export const ColorPickerButton = styled.button`
-  width: 32px;
-  height: 15px;
-  border: 1px solid #7d7373;
-  box-shadow: inset 0 0 0 1px ${AppColors.DarkGray};
-  border-radius: 2px;
+  width: 14px;
+  height: 14px;
+  background: ${Colors.FormInput.MetricBackground};
+  box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.2),
+    1px 1px 0 hsla(0, 0%, 0%, 0.2);
+  border-radius: 50%;
+  border: none;
   background: ${({ color }) => color};
   outline: none;
   margin: 0;
   &:focus {
-    box-shadow: inset 0 0 0 1px ${AppColors.DarkGray},
-      0 0 0 1px ${AppColors.Highlight};
+    box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.5),
+      0 0 0 2px ${Colors.FormInput.FocusOutline};
   }
 `;
 
