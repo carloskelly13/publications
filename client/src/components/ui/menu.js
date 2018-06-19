@@ -8,7 +8,7 @@ export const Menu = styled.ul`
   list-style: none;
   color: ${AppColors.White};
   padding: 4px 0;
-  margin: 0;
+  margin: 0 0 0 -1px;
   min-width: 125px;
   border-radius: 0 4px 4px 4px;
   position: absolute;
@@ -22,8 +22,9 @@ export const Menu = styled.ul`
   ${({ alignRight }) =>
     alignRight &&
     css`
+      margin: 0;
       border-radius: 4px 0 4px 4px;
-      right: 7px;
+      right: 6px;
     `};
 `;
 
