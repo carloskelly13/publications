@@ -20,7 +20,12 @@ import {
 
 export default () => (
   <ActionsContext.Consumer>
-    {({ hideStartModal, showNewDocumentModal, toggleLoginDialog }) => (
+    {({
+      hideStartModal,
+      showNewDocumentModal,
+      toggleLoginDialog,
+      showNewAccountModal,
+    }) => (
       <StartModalContent>
         <Container>
           <LogoBanner backgroundColor={Colors.Modal.ModalBackground} />
@@ -59,7 +64,12 @@ export default () => (
               Close
             </Button>
           </ModalButtonContainer>
-          <StartButton onClick={() => {}}>
+          <StartButton
+            onClick={() => {
+              hideStartModal();
+              setTimeout(showNewAccountModal, 250);
+            }}
+          >
             <UserBadgeIcon />
             <ButtonTextContainer>
               <ButtonTitle>Sign Up</ButtonTitle>

@@ -8,6 +8,7 @@ import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../layers-sidebar/index";
 import OpenDocumentDialog from "../open-document";
 import LoginDialog from "../login";
+import NewAccountDialog, { NewAccount } from "../new-account";
 import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
@@ -47,6 +48,7 @@ type State = {
   startModalVisible: boolean,
   layersPanelVisible: boolean,
   loginModalVisible: boolean,
+  newAccountModalVisible: boolean,
   zoom: number,
 };
 
@@ -65,6 +67,7 @@ export default class DocumentsView extends Component<Props, State> {
     startModalVisible: false,
     layersPanelVisible: false,
     loginModalVisible: false,
+    newAccountModalVisible: false,
     zoom: 1,
   };
 
@@ -91,6 +94,7 @@ export default class DocumentsView extends Component<Props, State> {
     adjustObjectLayer: this.adjustObjectLayer,
     toggleLoginDialog: this.toggleLoginDialog,
     hideStartModal: this.hideStartModal,
+    showNewAccountModal: this.showNewAccountModal,
   }));
 
   /**
@@ -110,6 +114,8 @@ export default class DocumentsView extends Component<Props, State> {
   toggleLayersPanel = this.toggleVisibility.bind(this, "layersPanel");
 
   hideStartModal = () => this.setState({ startModalVisible: false });
+  showNewAccountModal = () => this.setState({ newAccountModalVisible: true });
+  hideNewAccountModal = () => this.setState({ newAccountModalVisible: false });
 
   /**
    * Data Actions
@@ -124,6 +130,15 @@ export default class DocumentsView extends Component<Props, State> {
     if (!this.state.currentDocument) {
       this.setState({ startModalVisible: true });
     }
+  };
+
+  createAccount = async (account: NewAccount) => {
+    const [error, user] = await to(Api.POST("users", account));
+    if (error) {
+      return "There was an error creating your account. Verify the email address is not already in use.";
+    }
+    this.props.setAppUser(user);
+    return null;
   };
 
   getCurrentUser = async () => {
@@ -303,6 +318,15 @@ export default class DocumentsView extends Component<Props, State> {
               />
             }
             visible={this.state.loginModalVisible}
+          />
+          <Modal
+            renderContent={
+              <NewAccountDialog
+                onCreateAccount={this.createAccount}
+                onDismiss={this.hideNewAccountModal}
+              />
+            }
+            visible={this.state.newAccountModalVisible}
           />
           <Modal
             renderContent={
