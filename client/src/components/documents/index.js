@@ -8,7 +8,7 @@ import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../layers-sidebar/index";
 import OpenDocumentDialog from "../open-document";
 import LoginDialog from "../login";
-import NewAccountDialog from "../new-account";
+import NewAccountDialog, { NewAccount } from "../new-account";
 import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
@@ -130,6 +130,15 @@ export default class DocumentsView extends Component<Props, State> {
     if (!this.state.currentDocument) {
       this.setState({ startModalVisible: true });
     }
+  };
+
+  createAccount = async (account: NewAccount) => {
+    const [error, user] = await to(Api.POST("users", account));
+    if (error) {
+      return "There was an error creating your account. Verify the email address is not already in use.";
+    }
+    this.props.setAppUser(user);
+    return null;
   };
 
   getCurrentUser = async () => {
@@ -313,7 +322,7 @@ export default class DocumentsView extends Component<Props, State> {
           <Modal
             renderContent={
               <NewAccountDialog
-                onCreateAccount={() => {}}
+                onCreateAccount={this.createAccount}
                 onDismiss={this.hideNewAccountModal}
               />
             }

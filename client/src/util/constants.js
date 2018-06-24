@@ -162,6 +162,9 @@ export const Colors = {
     Background: "#38393d",
     Text: "#fff",
   },
+  Forms: {
+    ErrorText: "#e62325",
+  },
 };
 
 export const baseRequestHeaders = {

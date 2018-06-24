@@ -6,6 +6,8 @@ import { ModalHeader } from "../ui/text";
 import FormInput from "../ui/form-input";
 import { ModalButtonContainer } from "../ui/button-container";
 import Button from "../ui/framed-button";
+import * as yup from "yup";
+import { Colors } from "../../util/constants";
 
 export type NewAccount = {
   emailAddress: string,
@@ -25,22 +27,24 @@ const Form = styled.form`
   padding: 0 1em;
 `;
 
-const validateForm = values => {
-  const errors = {};
-  if (!values.emailAddress) {
-    errors.emailAddress = "Email address is not valid";
-  }
-  if (!values.password) {
-    errors.password = "Password is missing";
-  }
-  if (!values.confirmPassword) {
-    errors.confirmPassword = "Password confirmation is missing";
-  }
-  if (values.password !== values.confirmPassword) {
-    errors.password = "Passwords do not match.";
-  }
-  return errors;
-};
+const Error = styled.div`
+  color: ${Colors.Forms.ErrorText};
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 2px 5px;
+`;
+
+const validationSchema = yup.object().shape({
+  emailAddress: yup
+    .string()
+    .email()
+    .required("A valid email address is required."),
+  password: yup.string().required("Password is required."),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords do not match.")
+    .required("Password confirmation is required."),
+});
 
 export default (props: Props) => (
   <Formik
@@ -50,18 +54,25 @@ export default (props: Props) => (
       confirmPassword: "",
     }}
     isInitialValid={false}
-    onSubmit={(values, { setSubmitting }) => {
-      props.onCreateAccount({
-        emailAddress: values.emailAddress,
-        password: values.password,
-      });
-      setSubmitting(false);
-    }}
-    validateForm={validateForm}
-    render={({ values, handleChange, handleSubmit, isSubmitting }) => (
+    onSubmit={(values, { setSubmitting, setErrors }) =>
+      props
+        .onCreateAccount({
+          emailAddress: values.emailAddress,
+          password: values.password,
+        })
+        .then(error => {
+          if (error) {
+            setErrors({ emailAddress: error });
+          }
+          setSubmitting(false);
+        })
+    }
+    validationSchema={validationSchema}
+    render={({ values, handleChange, handleSubmit, isSubmitting, errors }) => (
       <NewAccountModalContent>
-        <ModalHeader>Log In</ModalHeader>
+        <ModalHeader>Create a new account</ModalHeader>
         <Form onSubmit={handleSubmit}>
+          {errors.emailAddress && <Error>{errors.emailAddress}</Error>}
           <FormInput
             placeholder="Email Address"
             type="email"
@@ -71,6 +82,8 @@ export default (props: Props) => (
             marginBottom="1em"
             value={values.emailAddress}
           />
+          {errors.password && <Error>{errors.password}</Error>}
+
           <FormInput
             placeholder="Password"
             type="password"
@@ -79,6 +92,8 @@ export default (props: Props) => (
             marginBottom="1em"
             value={values.password}
           />
+          {errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
+
           <FormInput
             placeholder="Confirm Password"
             type="password"
@@ -89,7 +104,7 @@ export default (props: Props) => (
           />
           <ModalButtonContainer>
             <Button type="submit" marginRight disabled={isSubmitting}>
-              Log In
+              Create Account
             </Button>
             <Button type="button" onClick={props.onDismiss}>
               Close
