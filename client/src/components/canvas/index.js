@@ -1,8 +1,9 @@
+// @flow
 import React from "react";
-import PropTypes from "prop-types";
 import { CanvasBackground } from "./background";
 import { CanvasSVG } from "./canvas-svg";
-import Shapes from "./render-shapes";
+import Shapes from "./shapes";
+import type { PubShape } from "../../util/types";
 
 const zoomForDocumentSize = ({ width, height }) => {
   if (width >= 32 || height >= 32) {
@@ -16,30 +17,31 @@ const zoomForDocumentSize = ({ width, height }) => {
   return 0.2;
 };
 
-export default class extends React.Component {
-  static contextTypes = {
-    actions: PropTypes.object.isRequired,
-  };
+type IProps = {
+  sortedShapes: PubShape[],
+  dpi: number,
+  zoom: number,
+  width: number,
+  height: number,
+  thumbnail: boolean,
+  selected: boolean,
+  allowsEditing: boolean,
+  selectedShape: ?PubShape,
+  backgroundGridLineRanges: { x: number[], y: number[] },
+  updateSelectedObject: (sender: ?Object) => void,
+};
 
-  static childContextTypes = {
-    setActiveDraftJSEditor: PropTypes.func,
-  };
+type IState = {
+  activeDraftJSEditor: string | null,
+};
 
-  static defaultProps = {
-    dpi: 96,
-    allowsEditing: false,
-    isSelected: false,
-  };
-
+class Canvas extends React.Component<IProps, IState> {
   state = {
     activeDraftJSEditor: null,
   };
 
-  getChildContext = () => ({
-    setActiveDraftJSEditor: this.setActiveDraftJSEditor,
-  });
-
-  setActiveDraftJSEditor = id => this.setState({ activeDraftJSEditor: id });
+  setActiveDraftJSEditor = (id: string | null) =>
+    this.setState({ activeDraftJSEditor: id });
 
   render() {
     const {
@@ -49,9 +51,11 @@ export default class extends React.Component {
       allowsEditing,
       thumbnail,
       selected,
+      selectedShape,
+      sortedShapes,
       backgroundGridLineRanges,
+      updateSelectedObject,
     } = this.props;
-    const { updateSelectedObject } = this.context.actions;
     let { zoom } = this.props;
 
     if (thumbnail) {
@@ -79,13 +83,19 @@ export default class extends React.Component {
         </g>
         <g>
           <Shapes
-            {...this.props}
+            sortedShapes={sortedShapes}
+            allowsEditing={allowsEditing}
+            dpi={dpi}
+            selectedShape={selectedShape}
             zoom={zoom}
             setActiveDraftJSEditor={this.setActiveDraftJSEditor}
             activeDraftJSEditor={this.state.activeDraftJSEditor}
+            updateSelectedObject={updateSelectedObject}
           />
         </g>
       </CanvasSVG>
     );
   }
 }
+
+export default Canvas;

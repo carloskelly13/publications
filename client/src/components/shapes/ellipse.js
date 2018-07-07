@@ -19,10 +19,10 @@ class Ellipse extends React.PureComponent {
     } = this.props;
     return (
       <ellipse
-        cx={x * dpi * zoom + width / 2.0 * dpi * zoom}
-        cy={y * dpi * zoom + height / 2.0 * dpi * zoom}
-        rx={width / 2.0 * dpi * zoom}
-        ry={height / 2.0 * dpi * zoom}
+        cx={x * dpi * zoom + (width / 2.0) * dpi * zoom}
+        cy={y * dpi * zoom + (height / 2.0) * dpi * zoom}
+        rx={(width / 2.0) * dpi * zoom}
+        ry={(height / 2.0) * dpi * zoom}
         fill={fill}
         stroke={stroke}
         fillOpacity={fillOpacity}

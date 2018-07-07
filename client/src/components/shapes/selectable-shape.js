@@ -1,33 +1,52 @@
 // @flow
-import type { Node } from "react";
-import PropTypes from "prop-types";
-import React from "react";
+import * as React from "react";
 import ResizeMoveFrame from "./frame";
+import type { PubShape } from "../../util/types";
 
 type Props = {
-  renderShape: Node,
-  shape: Object,
+  renderShape: React.Node,
+  shape: ?PubShape,
   selectedShapeId?: string,
   selectable: boolean,
-  setActiveDraftJSEditor: Function,
   zoom: number,
   dpi: number,
+  updateSelectedObject: (sender: ?Object) => void,
+  setActiveDraftJSEditor: (id: string | null) => void,
 };
-export default class extends React.Component<Props> {
-  static contextTypes = {
-    actions: PropTypes.object.isRequired,
-  };
 
-  render() {
-    const { selectable, shape, renderShape, selectedShapeId } = this.props;
-    const isSelected = selectable && selectedShapeId === shape.id;
-    const { updateSelectedObject } = this.context.actions;
+const SelectableShape: React.ComponentType<Props> = props => {
+  const {
+    selectable,
+    shape,
+    renderShape,
+    selectedShapeId,
+    updateSelectedObject,
+    dpi,
+    setActiveDraftJSEditor,
+    zoom,
+  } = props;
+  const isSelected = selectable && shape && selectedShapeId === shape.id;
 
-    return (
-      <g onClick={selectable ? () => updateSelectedObject(shape) : null}>
+  return (
+    <g onClick={selectable ? () => updateSelectedObject(shape) : null}>
+      <>
         {renderShape}
-        {isSelected && <ResizeMoveFrame {...this.props} />}
-      </g>
-    );
-  }
-}
+        {isSelected &&
+          shape && (
+            <ResizeMoveFrame
+              dpi={dpi}
+              zoom={zoom}
+              renderShape={renderShape}
+              selectable={selectable}
+              selectedShapeId={selectedShapeId}
+              setActiveDraftJSEditor={setActiveDraftJSEditor}
+              updateSelectedObject={updateSelectedObject}
+              shape={shape}
+            />
+          )}
+      </>
+    </g>
+  );
+};
+
+export default SelectableShape;

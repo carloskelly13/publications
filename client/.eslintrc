@@ -22,7 +22,10 @@
     "no-unused-vars": [
       2,
       { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
-    ]
+    ],
+    "flowtype/define-flow-type": 1,
+    "flowtype/use-flow-type": 1,
+    "flowtype/valid-syntax": 1
   },
   "parserOptions": {
     "sourceType": "module",

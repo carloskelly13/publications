@@ -3,6 +3,9 @@ import { stateFromHTML } from "draft-js-import-html";
 import { stateToHTML } from "draft-js-export-html";
 import importTextStyle from "../util/import-text-style";
 import { exporter as textStyleExporter } from "../components/shapes/text-box";
+import sortBy from "lodash/fp/sortBy";
+
+export const sortShapesByZIndex = sortBy("z");
 
 export const addEditorStateToDocument = document => ({
   ...document,

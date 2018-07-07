@@ -20,6 +20,7 @@ import { metrics } from "../../util/constants";
 import StartModal from "../start-modal";
 
 import {
+  sortShapesByZIndex,
   documentsWithEditorState,
   addEditorStateToDocument,
   packageDocumentToJson,
@@ -31,7 +32,8 @@ import {
   updatedDocumentStateForDeleteAction,
 } from "./editor-actions";
 import shortid from "shortid";
-import { ActionsContext } from "../../contexts";
+import { StateContext } from "../../contexts";
+import type { IActions } from "../../contexts";
 
 type Props = {
   user: ?PubUser,
@@ -79,7 +81,7 @@ export default class DocumentsView extends Component<Props, State> {
     }
   }
 
-  getActions = memoize(() => ({
+  getActions: () => IActions = memoize(() => ({
     addObject: this.addObject,
     deleteObject: this.deleteObject,
     handleClipboardAction: this.handleClipboardAction,
@@ -95,6 +97,8 @@ export default class DocumentsView extends Component<Props, State> {
     toggleLoginDialog: this.toggleLoginDialog,
     hideStartModal: this.hideStartModal,
     showNewAccountModal: this.showNewAccountModal,
+    showLoginModal: this.showLoginModal,
+    hideLoginModal: this.hideLoginModal,
   }));
 
   /**
@@ -116,6 +120,8 @@ export default class DocumentsView extends Component<Props, State> {
   hideStartModal = () => this.setState({ startModalVisible: false });
   showNewAccountModal = () => this.setState({ newAccountModalVisible: true });
   hideNewAccountModal = () => this.setState({ newAccountModalVisible: false });
+  showLoginModal = () => this.setState({ loginModalVisible: true });
+  hideLoginModal = () => this.setState({ loginModalVisible: false });
 
   /**
    * Data Actions
@@ -239,7 +245,7 @@ export default class DocumentsView extends Component<Props, State> {
       }
     );
 
-  addObject = (sender: Object) => {
+  addObject = (sender: PubShape) => {
     if (!this.state.currentDocument) {
       return;
     }
@@ -257,7 +263,7 @@ export default class DocumentsView extends Component<Props, State> {
     }));
   };
 
-  deleteObject = (sender: ?Object) =>
+  deleteObject = (sender: ?PubShape) =>
     this.setState(prevState =>
       updatedDocumentStateForDeleteAction(
         sender || prevState.selectedObject,
@@ -265,7 +271,7 @@ export default class DocumentsView extends Component<Props, State> {
       )
     );
 
-  adjustObjectLayer = (sender: Object) =>
+  adjustObjectLayer = (sender: PubShape) =>
     this.setState(prevState =>
       updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
     );
@@ -303,8 +309,24 @@ export default class DocumentsView extends Component<Props, State> {
    */
 
   render() {
+    const currentDocument = this.state.currentDocument
+      ? {
+          ...this.state.currentDocument,
+          shapes: sortShapesByZIndex(this.state.currentDocument.shapes),
+        }
+      : null;
+
+    const currentState = {
+      actions: this.getActions(),
+      currentDocument,
+      user: this.props.user,
+      selectedObject: this.state.selectedObject,
+      clipboardContents: this.state.clipboardContents,
+      zoom: this.state.zoom,
+      layersPanelVisible: this.state.layersPanelVisible,
+    };
     return (
-      <ActionsContext.Provider value={this.getActions()}>
+      <StateContext.Provider value={currentState}>
         <ViewContainer>
           <Modal
             renderContent={<StartModal />}
@@ -348,32 +370,22 @@ export default class DocumentsView extends Component<Props, State> {
             }
             visible={this.state.newDocumentModalVisible}
           />
-          <Toolbar
-            user={this.props.user}
-            selectedObject={this.state.selectedObject}
-            currentDocument={this.state.currentDocument}
-            clipboardContents={this.state.clipboardContents}
-            layersPanelVisible={this.state.layersPanelVisible}
-            zoom={this.state.zoom}
-          />
-          <MetricsBar
-            shape={this.state.selectedObject}
-            updateSelectedObject={this.updateSelectedObject}
-          />
+          <Toolbar />
+          <MetricsBar />
           <DocumentView>
             <EditorView
               selectedObject={this.state.selectedObject}
-              currentDocument={this.state.currentDocument}
+              currentDocument={currentDocument}
               zoom={this.state.zoom}
             />
             <LayersSidebar
               visible={this.state.layersPanelVisible}
-              currentDocument={this.state.currentDocument}
+              currentDocument={currentDocument}
               selectedObject={this.state.selectedObject}
             />
           </DocumentView>
         </ViewContainer>
-      </ActionsContext.Provider>
+      </StateContext.Provider>
     );
   }
 }

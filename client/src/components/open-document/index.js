@@ -38,7 +38,10 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { props: { onDismiss, documents }, state: { selectedId } } = this;
+    const {
+      props: { onDismiss, documents },
+      state: { selectedId },
+    } = this;
     return (
       <OpenDocumentContainer>
         <AsyncViewContent

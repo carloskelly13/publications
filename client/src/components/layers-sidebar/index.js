@@ -6,7 +6,7 @@ import get from "lodash/get";
 import { LayersSidebarContainer, Title } from "./components";
 import { LayerItem } from "./layer-item";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { ActionsContext } from "../../contexts";
+import { StateContext } from "../../contexts";
 
 type Props = {
   visible: boolean,
@@ -14,8 +14,8 @@ type Props = {
   selectedObject: ?PubShape,
 };
 export default ({ visible, currentDocument, selectedObject }: Props) => (
-  <ActionsContext.Consumer>
-    {({ adjustObjectLayer, updateSelectedObject }) => (
+  <StateContext.Consumer>
+    {({ actions: { adjustObjectLayer, updateSelectedObject } }) => (
       <LayersSidebarContainer visible={visible}>
         <Title>Layers</Title>
         <DragDropContext onDragEnd={adjustObjectLayer}>
@@ -37,5 +37,5 @@ export default ({ visible, currentDocument, selectedObject }: Props) => (
         </DragDropContext>
       </LayersSidebarContainer>
     )}
-  </ActionsContext.Consumer>
+  </StateContext.Consumer>
 );

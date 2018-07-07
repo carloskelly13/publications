@@ -1,7 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
+// @flow
+import * as React from "react";
 import styled from "styled-components";
 import throttle from "lodash/fp/throttle";
+import type { PubShape } from "../../util/types";
 
 /**
  * Webkit-based browsers have no perf-related issues with events.
@@ -50,12 +51,28 @@ const frameAnchors = {
   ],
 };
 
-export default class ResizeMoveFrame extends React.Component {
-  static contextTypes = {
-    actions: PropTypes.object.isRequired,
-    setActiveDraftJSEditor: PropTypes.func.isRequired,
-  };
+type IProps = {
+  renderShape: React.Node,
+  shape: PubShape,
+  selectedShapeId?: string,
+  selectable: boolean,
+  zoom: number,
+  dpi: number,
+  updateSelectedObject: (sender: ?Object) => void,
+  setActiveDraftJSEditor: (id: string | null) => void,
+};
 
+type IState = {
+  eX: number,
+  eY: number,
+  oX: number,
+  oY: number,
+  oW: number,
+  oH: number,
+  shouldRender: boolean,
+};
+
+export default class ResizeMoveFrame extends React.Component<IProps, IState> {
   static get defaultState() {
     return {
       eX: 0,
@@ -71,7 +88,7 @@ export default class ResizeMoveFrame extends React.Component {
   state = ResizeMoveFrame.defaultState;
 
   componentWillUnmount() {
-    this.context.setActiveDraftJSEditor(null);
+    this.props.setActiveDraftJSEditor(null);
     document.removeEventListener("mousemove", this.handleFrameResized);
     document.removeEventListener("mousemove", this.handleFrameDragged);
   }
@@ -80,7 +97,7 @@ export default class ResizeMoveFrame extends React.Component {
   isEditingText = false;
   resizeAnchor = "";
 
-  updateStateForDragging = ({ pageX, pageY }) => {
+  updateStateForDragging = ({ pageX, pageY }: SyntheticMouseEvent<Element>) => {
     this.setState({
       eX: pageX,
       eY: pageY,
@@ -89,7 +106,7 @@ export default class ResizeMoveFrame extends React.Component {
     });
   };
 
-  updateStateForResizing = ({ pageX, pageY }) => {
+  updateStateForResizing = ({ pageX, pageY }: SyntheticMouseEvent<Element>) => {
     this.setState({
       eX: pageX,
       eY: pageY,
@@ -100,7 +117,7 @@ export default class ResizeMoveFrame extends React.Component {
     });
   };
 
-  handleMouseDown = event => {
+  handleMouseDown = (event: SyntheticMouseEvent<Element>) => {
     this.updateStateForDragging(event);
     if (!this.isEditingText) {
       document.addEventListener("mousemove", this.handleFrameDragged);
@@ -119,12 +136,12 @@ export default class ResizeMoveFrame extends React.Component {
     }
     this.isEditingText = true;
     this.setState({ shouldRender: false });
-    this.context.setActiveDraftJSEditor(this.props.shape.id);
-    this.context.actions.updateSelectedObject({ isEditing: true });
+    this.props.setActiveDraftJSEditor(this.props.shape.id);
+    this.props.updateSelectedObject({ isEditing: true });
   };
 
-  handleAnchorMouseDown = event => {
-    const coordinate = event.nativeEvent.target.attributes.getNamedItem(
+  handleAnchorMouseDown = (event: SyntheticMouseEvent<Element>) => {
+    const coordinate = (event.nativeEvent.target: any).attributes.getNamedItem(
       "data-coordinate"
     ).value;
     this.resizeAnchor = coordinate;
@@ -138,7 +155,7 @@ export default class ResizeMoveFrame extends React.Component {
     document.removeEventListener("mousemove", this.handleFrameResized);
   };
 
-  handleFrameDragged = throttleWrapped(event => {
+  handleFrameDragged = throttleWrapped((event: MouseEvent) => {
     this.isDragging = true;
 
     const x =
@@ -148,67 +165,66 @@ export default class ResizeMoveFrame extends React.Component {
       this.state.oY +
       (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
 
-    this.context.actions.updateSelectedObject({
+    this.props.updateSelectedObject({
       x: parseFloat(x.toFixed(2)),
       y: parseFloat(y.toFixed(2)),
     });
   });
 
   // eslint-disable-next-line max-statements
-  handleFrameResized = throttleWrapped(event => {
-    const updatedMetrics = {};
+  handleFrameResized = throttleWrapped(
+    // eslint-disable-next-line max-statements
+    (event: MouseEvent) => {
+      const updatedMetrics = {};
 
-    if (this.resizeAnchor.includes("n")) {
-      updatedMetrics.height = Math.max(
-        this.state.oH +
-          (this.state.eY - event.pageY) / this.props.dpi / this.props.zoom,
-        0
-      );
-      if (this.props.shape.height > 0) {
-        updatedMetrics.y =
-          this.state.oY +
-          (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
+      if (this.resizeAnchor.includes("n")) {
+        updatedMetrics.height = Math.max(
+          this.state.oH +
+            (this.state.eY - event.pageY) / this.props.dpi / this.props.zoom,
+          0
+        );
+        if (this.props.shape.height > 0) {
+          updatedMetrics.y =
+            this.state.oY +
+            (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom;
+        }
+      } else if (this.resizeAnchor.includes("s")) {
+        updatedMetrics.height = Math.max(
+          this.state.oH +
+            (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom,
+          0
+        );
       }
-    } else if (this.resizeAnchor.includes("s")) {
-      updatedMetrics.height = Math.max(
-        this.state.oH +
-          (event.pageY - this.state.eY) / this.props.dpi / this.props.zoom,
-        0
-      );
-    }
 
-    if (this.resizeAnchor.includes("w")) {
-      updatedMetrics.width = Math.max(
-        this.state.oW +
-          (this.state.eX - event.pageX) / this.props.dpi / this.props.zoom,
-        0
-      );
-      if (this.props.shape.width > 0) {
-        updatedMetrics.x =
-          this.state.oX +
-          (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
+      if (this.resizeAnchor.includes("w")) {
+        updatedMetrics.width = Math.max(
+          this.state.oW +
+            (this.state.eX - event.pageX) / this.props.dpi / this.props.zoom,
+          0
+        );
+        if (this.props.shape.width > 0) {
+          updatedMetrics.x =
+            this.state.oX +
+            (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom;
+        }
+      } else if (this.resizeAnchor.includes("e")) {
+        updatedMetrics.width = Math.max(
+          this.state.oW +
+            (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom,
+          0
+        );
       }
-    } else if (this.resizeAnchor.includes("e")) {
-      updatedMetrics.width = Math.max(
-        this.state.oW +
-          (event.pageX - this.state.eX) / this.props.dpi / this.props.zoom,
-        0
-      );
+
+      const updatedProperties = Object.getOwnPropertyNames(updatedMetrics);
+
+      for (let idx = updatedProperties.length - 1; idx >= 0; idx--) {
+        const value = updatedMetrics[updatedProperties[idx]];
+        updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2));
+      }
+
+      this.props.updateSelectedObject(updatedMetrics);
     }
-
-    const updatedProperties = Object.getOwnPropertyNames(updatedMetrics);
-
-    for (let idx = updatedProperties.length - 1; idx >= 0; idx--) {
-      const value = updatedMetrics[updatedProperties[idx]];
-      updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2));
-    }
-
-    this.context.actions.updateSelectedObject(updatedMetrics);
-  });
-
-  handleTextChange = ({ target }) => {
-    this.context.actions.updateSelectedObject({ text: target.value });
-  };
+  );
 
   render() {
     const { dpi, shape, zoom } = this.props;

@@ -105,9 +105,11 @@ export const updatedDocumentStateForClipboardAction = (
   const updatedState = {};
 
   const duplicateObj = () =>
-    compose(cloneDeep, omitTransientDataFromObj, convertObjStylesToHTML)(
-      selectedObject
-    );
+    compose(
+      cloneDeep,
+      omitTransientDataFromObj,
+      convertObjStylesToHTML
+    )(selectedObject);
 
   if (action === "copy") {
     updatedState.clipboardContents = duplicateObj();

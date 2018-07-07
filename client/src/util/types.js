@@ -1,13 +1,4 @@
 // @flow
-export type ToolbarProps = {
-  user: ?PubUser,
-  selectedObject: ?Object,
-  currentDocument: ?Object,
-  layersPanelVisible: boolean,
-  clipboardContents: ?Object,
-  zoom: number,
-};
-
 export type PubDocument = {
   id: string,
   name: string,
@@ -28,6 +19,9 @@ export type PubShape = {
   stroke: string,
   strokeWidth: number,
   strokeOpacity: number,
+  isEditing: ?boolean,
+  editorState: ?any,
+  type: "rect" | "ellipse" | "text",
 };
 
 export type PubUser = {

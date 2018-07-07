@@ -48,7 +48,10 @@ export default enhanceWithClickOutside(
     };
 
     render() {
-      const { state: { isOpen }, props: { hex, alpha, property } } = this;
+      const {
+        state: { isOpen },
+        props: { hex, alpha, property },
+      } = this;
       return (
         <ContentContainer verticalAlign style={{ marginRight: "0.75em" }}>
           <Text center color={AppColors.LightGray} size="0.75em" mr="0.33em">

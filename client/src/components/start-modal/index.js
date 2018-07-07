@@ -5,7 +5,7 @@ import Button from "../ui/framed-button";
 import DocumentIcon from "../ui/icons/document";
 import UserLockIcon from "../ui/icons/user-lock";
 import UserBadgeIcon from "../ui/icons/user-badge";
-import { ActionsContext } from "../../contexts";
+import { StateContext } from "../../contexts";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Colors } from "../../util/constants";
 import {
@@ -19,12 +19,14 @@ import {
 } from "./styles";
 
 export default () => (
-  <ActionsContext.Consumer>
+  <StateContext.Consumer>
     {({
-      hideStartModal,
-      showNewDocumentModal,
-      toggleLoginDialog,
-      showNewAccountModal,
+      actions: {
+        hideStartModal,
+        showNewDocumentModal,
+        toggleLoginDialog,
+        showNewAccountModal,
+      },
     }) => (
       <StartModalContent>
         <Container>
@@ -87,5 +89,5 @@ export default () => (
         </ModalButtonContainer>
       </StartModalContent>
     )}
-  </ActionsContext.Consumer>
+  </StateContext.Consumer>
 );
