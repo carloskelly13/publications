@@ -9,33 +9,53 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { StateContext } from "../../contexts";
 
 type Props = {
-  visible: boolean,
   currentDocument: ?PubDocument,
   selectedObject: ?PubShape,
+  adjustObjectLayer: (sender: PubShape) => void,
+  updateSelectedObject: (sender: ?Object) => void,
 };
-export default ({ visible, currentDocument, selectedObject }: Props) => (
+
+export const LayersSidebar = ({
+  currentDocument,
+  selectedObject,
+  adjustObjectLayer,
+  updateSelectedObject,
+}: Props) => (
+  <LayersSidebarContainer visible={!!currentDocument}>
+    <Title>Layers</Title>
+    <DragDropContext onDragEnd={adjustObjectLayer}>
+      <Droppable droppableId="droppable">
+        {provided => (
+          <div ref={provided.innerRef}>
+            {currentDocument &&
+              currentDocument.shapes.map(shape => (
+                <LayerItem
+                  selected={shape.id === get(selectedObject, "id")}
+                  handleOnClick={() => updateSelectedObject(shape)}
+                  shape={shape}
+                  key={shape.id}
+                />
+              ))}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  </LayersSidebarContainer>
+);
+
+export default () => (
   <StateContext.Consumer>
-    {({ actions: { adjustObjectLayer, updateSelectedObject } }) => (
-      <LayersSidebarContainer visible={visible}>
-        <Title>Layers</Title>
-        <DragDropContext onDragEnd={adjustObjectLayer}>
-          <Droppable droppableId="droppable">
-            {provided => (
-              <div ref={provided.innerRef}>
-                {currentDocument &&
-                  currentDocument.shapes.map(shape => (
-                    <LayerItem
-                      selected={shape.id === get(selectedObject, "id")}
-                      handleOnClick={() => updateSelectedObject(shape)}
-                      shape={shape}
-                      key={shape.id}
-                    />
-                  ))}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </LayersSidebarContainer>
+    {({
+      actions: { adjustObjectLayer, updateSelectedObject },
+      currentDocument,
+      selectedObject,
+    }) => (
+      <LayersSidebar
+        adjustObjectLayer={adjustObjectLayer}
+        updateSelectedObject={updateSelectedObject}
+        currentDocument={currentDocument}
+        selectedObject={selectedObject}
+      />
     )}
   </StateContext.Consumer>
 );

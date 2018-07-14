@@ -373,11 +373,7 @@ export default class DocumentsView extends Component<Props, State> {
           <Toolbar />
           <MetricsBar />
           <DocumentView>
-            <EditorView
-              selectedObject={this.state.selectedObject}
-              currentDocument={currentDocument}
-              zoom={this.state.zoom}
-            />
+            <EditorView />
             <LayersSidebar
               visible={this.state.layersPanelVisible}
               currentDocument={currentDocument}
