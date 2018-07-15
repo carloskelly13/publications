@@ -7,41 +7,37 @@ interface IProps {
   dpi: number;
 }
 
-class Rectangle extends React.Component<IProps> {
-  render() {
-    const {
-      shape: {
-        x,
-        y,
-        r,
-        width,
-        height,
-        fill,
-        stroke,
-        strokeOpacity,
-        fillOpacity,
-        strokeWidth,
-      },
-      zoom,
-      dpi,
-    } = this.props;
-    const valueForLayout = value => value * dpi * zoom;
-    return (
-      <rect
-        x={valueForLayout(x)}
-        y={valueForLayout(y)}
-        rx={r * zoom}
-        ry={r * zoom}
-        width={valueForLayout(width)}
-        height={valueForLayout(height)}
-        fill={fill}
-        stroke={stroke}
-        fillOpacity={fillOpacity}
-        strokeOpacity={strokeOpacity}
-        strokeWidth={strokeWidth * zoom}
-      />
-    );
-  }
-}
+const Rectangle: React.StatelessComponent<IProps> = ({
+  shape: {
+    x,
+    y,
+    r,
+    width,
+    height,
+    fill,
+    stroke,
+    strokeOpacity,
+    fillOpacity,
+    strokeWidth,
+  },
+  zoom,
+  dpi,
+}) => {
+  return (
+    <rect
+      x={x * dpi * zoom}
+      y={y * dpi * zoom}
+      rx={r * zoom}
+      ry={r * zoom}
+      width={width * dpi * zoom}
+      height={height * dpi * zoom}
+      fill={fill}
+      stroke={stroke}
+      fillOpacity={fillOpacity}
+      strokeOpacity={strokeOpacity}
+      strokeWidth={strokeWidth * zoom}
+    />
+  );
+};
 
 export default Rectangle;

@@ -14,49 +14,46 @@ interface IProps {
   zoom: number;
   dpi: number;
   activeDraftJSEditor: string;
+  updateSelectedObject(sender?: Object | null): void;
 }
 
-class TextBox extends React.Component<IProps> {
-  static contextTypes = {
-    actions: PropTypes.object.isRequired,
+const TextBox: React.StatelessComponent<IProps> = ({
+  shape,
+  zoom,
+  dpi,
+  activeDraftJSEditor,
+  updateSelectedObject,
+}) => {
+  const readOnly = activeDraftJSEditor !== shape.id;
+  const metrics = {
+    x: dpi * shape.x,
+    y: dpi * shape.y,
+    width: dpi * shape.width,
+    height: dpi * shape.height,
   };
+  const transform = `scale(${zoom})`;
 
-  render() {
-    const { shape, zoom, dpi, activeDraftJSEditor } = this.props;
-
-    const readOnly = activeDraftJSEditor !== shape.id;
-    const metrics = {
-      x: dpi * shape.x,
-      y: dpi * shape.y,
-      width: dpi * shape.width,
-      height: dpi * shape.height,
-    };
-    const transform = `scale(${zoom})`;
-
-    return (
-      <g>
-        {!readOnly && (
-          <rect
-            {...metrics}
-            strokeWidth={1}
-            stroke="hsla(0, 0%, 0%, 0.5)"
-            fill="transparent"
-            style={{ transform }}
-          />
-        )}
-        <foreignObject {...metrics} style={{ transform }}>
-          <Editor
-            customStyleFn={customStyleFn}
-            editorState={shape.editorState}
-            onChange={state =>
-              this.context.actions.updateSelectedObject({ editorState: state })
-            }
-            readOnly={readOnly}
-          />
-        </foreignObject>
-      </g>
-    );
-  }
-}
+  return (
+    <g>
+      {!readOnly && (
+        <rect
+          {...metrics}
+          strokeWidth={1}
+          stroke="hsla(0, 0%, 0%, 0.5)"
+          fill="transparent"
+          style={{ transform }}
+        />
+      )}
+      <foreignObject {...metrics} style={{ transform }}>
+        <Editor
+          customStyleFn={customStyleFn}
+          editorState={shape.editorState}
+          onChange={state => updateSelectedObject({ editorState: state })}
+          readOnly={readOnly}
+        />
+      </foreignObject>
+    </g>
+  );
+};
 
 export default TextBox;
