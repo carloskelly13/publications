@@ -27,6 +27,14 @@
     "flowtype/use-flow-type": 1,
     "flowtype/valid-syntax": 1
   },
+
+  "settings": {
+    "import/resolver": {
+      "node": true,
+      "eslint-import-resolver-typescript": true
+    }
+  },
+
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {

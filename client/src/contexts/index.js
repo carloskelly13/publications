@@ -1,6 +1,6 @@
 // @flow
-import React from "react";
 import type { PubDocument, PubShape, PubUser } from "../util/types";
+import { StateContext } from "./app-state";
 
 export type IActions = {
   addObject: (object: PubShape) => void,
@@ -32,4 +32,4 @@ export type IAppState = {
   layersPanelVisible: boolean,
 };
 
-export const StateContext = React.createContext<IAppState>(({}: any));
+export { StateContext };

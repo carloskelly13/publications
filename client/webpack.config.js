@@ -36,6 +36,10 @@ module.exports = {
         include: [path.resolve(__dirname, "src")],
         use: "babel-loader",
       },
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+      },
       { test: /\.css$/, use: "css-loader" },
       {
         test: /\.(eot|woff|ttf|svg|png|otf)$/,
@@ -46,7 +50,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: [".js"],
+    extensions: [".js", ".ts", ".tsx"],
     modules: [path.join(__dirname, "node_modules")],
   },
 
