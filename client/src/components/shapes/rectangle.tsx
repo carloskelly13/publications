@@ -1,13 +1,13 @@
-// @flow
-import type { PubShape } from "../../util/types";
 import React from "react";
+import { IPubShape } from "../../types/pub-objects";
 
-type Props = {
-  shape: PubShape,
-  zoom: number,
-  dpi: number,
-};
-class Rectangle extends React.PureComponent<Props> {
+interface IProps {
+  shape: IPubShape;
+  zoom: number;
+  dpi: number;
+}
+
+class Rectangle extends React.Component<IProps> {
   render() {
     const {
       shape: {

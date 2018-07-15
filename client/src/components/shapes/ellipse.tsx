@@ -1,6 +1,13 @@
 import React from "react";
+import { IPubShape } from "../../types/pub-objects";
 
-class Ellipse extends React.PureComponent {
+interface IProps {
+  shape: IPubShape;
+  zoom: number;
+  dpi: number;
+}
+
+class Ellipse extends React.Component<IProps> {
   render() {
     const {
       shape: {

@@ -8,6 +8,7 @@ export interface IPubShape {
   id: string;
   type: IPubShapeType;
   width: number;
+  height: number;
   x: number;
   y: number;
   r: number;

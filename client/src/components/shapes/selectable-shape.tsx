@@ -1,20 +1,19 @@
-// @flow
-import * as React from "react";
+import React from "react";
 import ResizeMoveFrame from "./frame";
-import type { PubShape } from "../../util/types";
+import { IPubShape } from "../../types/pub-objects";
 
-type Props = {
-  renderShape: React.Node,
-  shape: ?PubShape,
-  selectedShapeId?: string,
-  selectable: boolean,
-  zoom: number,
-  dpi: number,
-  updateSelectedObject: (sender: ?Object) => void,
-  setActiveDraftJSEditor: (id: string | null) => void,
-};
+interface IProps {
+  renderShape: React.ReactNode;
+  shape?: IPubShape;
+  selectedShapeId?: string;
+  selectable: boolean;
+  zoom: number;
+  dpi: number;
+  updateSelectedObject(sender?: IPubShape): void;
+  setActiveDraftJSEditor(id: string | null): void;
+}
 
-const SelectableShape: React.ComponentType<Props> = props => {
+const SelectableShape: React.StatelessComponent<IProps> = props => {
   const {
     selectable,
     shape,
@@ -26,9 +25,8 @@ const SelectableShape: React.ComponentType<Props> = props => {
     zoom,
   } = props;
   const isSelected = selectable && shape && selectedShapeId === shape.id;
-
   return (
-    <g onClick={selectable ? () => updateSelectedObject(shape) : null}>
+    <g onClick={selectable ? () => updateSelectedObject(shape) : undefined}>
       <>
         {renderShape}
         {isSelected &&

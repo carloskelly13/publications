@@ -2,13 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Editor } from "draft-js";
 import createStyles from "draft-js-custom-styles";
+import { IPubShape } from "../../types/pub-objects";
 
 export const { styles, customStyleFn, exporter } = createStyles(
   ["font-size", "color", "font-family"],
   "PUB_"
 );
 
-class TextBox extends React.PureComponent {
+interface IProps {
+  shape: IPubShape;
+  zoom: number;
+  dpi: number;
+  activeDraftJSEditor: string;
+}
+
+class TextBox extends React.Component<IProps> {
   static contextTypes = {
     actions: PropTypes.object.isRequired,
   };
