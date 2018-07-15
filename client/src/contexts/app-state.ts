@@ -12,7 +12,7 @@ export interface IPubActions {
   showNewDocumentModal(): void;
   showOpenDocumentModal(): void;
   toggleLayersPanel(): void;
-  updateSelectedObject(sender: Object | null): void;
+  updateSelectedObject(sender?: Object | null): void;
   adjustObjectLayer(sender: IPubShape): void;
   toggleLoginDialog(): void;
   hideStartModal(): void;

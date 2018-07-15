@@ -1,13 +1,12 @@
-// @flow
-import React from "react";
+import React, { KeyboardEvent, UIEvent } from "react";
 import styled from "styled-components";
 import get from "lodash/fp/get";
 import range from "lodash/range";
 import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
-import { StateContext } from "../../contexts";
-import type { PubDocument, PubShape } from "../../util/types";
+import { StateContext } from "../../contexts/app-state";
+import { IPubDocument, IPubShape } from "../../types/pub-objects";
 
 const Container = styled.div`
   overflow: scroll;
@@ -23,23 +22,27 @@ const Container = styled.div`
 const getIdFromDocument = get("id");
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
 
-type IProps = {
-  currentDocument: ?PubDocument,
-  selectedObject: ?PubShape,
-  zoom: number,
-  updateSelectedObject: (?Object) => void,
-  deleteObject: (object: ?PubShape) => void,
-};
-type IState = {
+interface IProps {
+  currentDocument: IPubDocument | null;
+  selectedObject: IPubShape | null;
+  zoom: number;
+  updateSelectedObject(sender?: Object | null): void;
+  deleteObject(object?: IPubShape): void;
+}
+
+interface IState {
   scrollOffset: {
-    scrollTop: number,
-    scrollLeft: number,
-  },
-};
+    scrollTop: number;
+    scrollLeft: number;
+  };
+}
+
 export class EditorView extends React.Component<IProps, IState> {
   state = {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 },
   };
+
+  containerRef: HTMLDivElement;
 
   componentWillReceiveProps(nextProps: IProps) {
     if (
@@ -51,14 +54,12 @@ export class EditorView extends React.Component<IProps, IState> {
     }
   }
 
-  containerRef: any;
-
-  handleViewScrollEvent = ({ target: { scrollLeft, scrollTop } }: any) => {
+  handleViewScrollEvent = (event: UIEvent<HTMLDivElement>) => {
+    const { scrollLeft, scrollTop } = event.target as any;
     this.setState({ scrollOffset: { scrollLeft, scrollTop } });
   };
 
-  // eslint-disable-next-line max-statements
-  handleKeyPress = (event: any) => {
+  handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     const { selectedObject } = this.props;
     if (!selectedObject || selectedObject.isEditing) {
       return;
@@ -76,7 +77,7 @@ export class EditorView extends React.Component<IProps, IState> {
       return;
     }
 
-    const changes = {};
+    const changes = { y: 0, x: 0 };
     switch (event.keyCode) {
       case Keys.Up:
         changes.y = selectedObject.y - 0.05;
@@ -101,7 +102,7 @@ export class EditorView extends React.Component<IProps, IState> {
     }
   };
 
-  gridLineRanges = (): { x: number[], y: number[] } => {
+  gridLineRanges = (): { x: number[]; y: number[] } => {
     const { currentDocument, zoom = 1 } = this.props;
     if (!currentDocument) {
       return { x: [], y: [] };
@@ -172,7 +173,7 @@ export class EditorView extends React.Component<IProps, IState> {
   }
 }
 
-export default () => (
+const ConnectedCanvas: React.StatelessComponent<{}> = () => (
   <StateContext.Consumer>
     {({
       zoom,
@@ -190,3 +191,5 @@ export default () => (
     )}
   </StateContext.Consumer>
 );
+
+export default ConnectedCanvas;

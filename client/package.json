@@ -52,6 +52,7 @@
     "@babel/preset-flow": "^7.0.0-beta.52",
     "@babel/preset-react": "^7.0.0-beta.52",
     "@babel/runtime": "^7.0.0-beta.52",
+    "@types/lodash": "^4.14.112",
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
     "babel-eslint": "8.2.2",
