@@ -18,7 +18,7 @@ export default class MetricInput extends Component {
     this.state = { presentedValue: this.props.value };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { value = "" } = nextProps;
     this.setState({
       presentedValue: value,

@@ -16,7 +16,7 @@ export default class LoadingView extends React.Component<Props, State> {
     this.state = { isLoading: !props.waitFor };
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.waitFor) {
       this.setState(() => ({ isLoading: false }));
     }

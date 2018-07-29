@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Editor } from "draft-js";
 import createStyles from "draft-js-custom-styles";
 import { IPubShape } from "../../types/pub-objects";
@@ -35,7 +34,7 @@ const TextBox: React.StatelessComponent<IProps> = ({
 
   return (
     <g>
-      {!readOnly && (
+      {readOnly ? null : (
         <rect
           {...metrics}
           strokeWidth={1}

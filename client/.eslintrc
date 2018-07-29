@@ -13,6 +13,7 @@
     "react/prop-types": 0,
     "react/jsx-handler-names": 0,
     "arrow-parens": 0,
+    "camelcase": 0,
     "comma-dangle": [2, "always-multiline"],
     "react/no-multi-comp": 0,
     "no-invalid-this": 0,

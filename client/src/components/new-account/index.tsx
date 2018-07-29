@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import styled from "styled-components";
 import { ModalContent } from "../modal";
 import { ModalHeader } from "../ui/text";
@@ -9,15 +9,19 @@ import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
 
-export type NewAccount = {
-  emailAddress: string,
-  password: string,
-};
+export interface INewAccount {
+  emailAddress: string;
+  password: string;
+}
 
-type Props = {
-  onCreateAccount: (account: NewAccount) => void,
-  onDismiss: () => void,
-};
+interface INewAccountFormValues extends INewAccount {
+  confirmPassword: string;
+}
+
+interface IProps {
+  onCreateAccount(account: INewAccount): Promise<string>;
+  onDismiss(): void;
+}
 
 const NewAccountModalContent = styled(ModalContent)`
   width: 400px;
@@ -37,7 +41,7 @@ const Error = styled.div`
 const validationSchema = yup.object().shape({
   emailAddress: yup
     .string()
-    .email()
+    .email("A valid email address is required.")
     .required("A valid email address is required."),
   password: yup.string().required("Password is required."),
   confirmPassword: yup
@@ -46,7 +50,7 @@ const validationSchema = yup.object().shape({
     .required("Password confirmation is required."),
 });
 
-export default (props: Props) => (
+const NewAccountForm: React.StatelessComponent<IProps> = props => (
   <Formik
     initialValues={{
       emailAddress: "",
@@ -54,7 +58,10 @@ export default (props: Props) => (
       confirmPassword: "",
     }}
     isInitialValid={false}
-    onSubmit={(values, { setSubmitting, setErrors }) =>
+    onSubmit={(
+      values: INewAccountFormValues,
+      formikProps: FormikProps<INewAccountFormValues>
+    ) =>
       props
         .onCreateAccount({
           emailAddress: values.emailAddress,
@@ -62,13 +69,21 @@ export default (props: Props) => (
         })
         .then(error => {
           if (error) {
-            setErrors({ emailAddress: error });
+            formikProps.setErrors({ emailAddress: error });
+            return;
           }
-          setSubmitting(false);
+          formikProps.setSubmitting(false);
+          props.onDismiss();
         })
     }
     validationSchema={validationSchema}
-    render={({ values, handleChange, handleSubmit, isSubmitting, errors }) => (
+    render={({
+      handleSubmit,
+      handleChange,
+      errors,
+      values,
+      isSubmitting,
+    }: FormikProps<INewAccountFormValues>) => (
       <NewAccountModalContent>
         <ModalHeader>Create a new account</ModalHeader>
         <Form onSubmit={handleSubmit}>
@@ -115,3 +130,5 @@ export default (props: Props) => (
     )}
   />
 );
+
+export default NewAccountForm;
