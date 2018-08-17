@@ -45,3 +45,4 @@ local.properties
 /server/bin
 /client/client-app.iml
 /server/src/main/spring-service.iml
+/client/client.iml
