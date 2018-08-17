@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import getOr from "lodash/fp/getOr";
-import { RichUtils } from "draft-js";
+import { RichUtils, DraftInlineStyle } from "draft-js";
 import { styles as textStyles } from "../shapes/text-box";
 import ColorPicker from "./../color-picker";
 import {
@@ -15,7 +14,7 @@ import { ContentContainer } from "../ui/containers";
 import MetricInput from "./metric-input";
 import IconButton from "../ui/icon-button";
 import { StateContext } from "../../contexts";
-import type { PubShape } from "../../util/types";
+import { PubShape, PubShapeType } from "../../types/pub-objects";
 
 const MetricsBarContainer = styled.div`
   display: block;
@@ -37,23 +36,28 @@ const MetricsBarContent = styled.div`
   }
 `;
 
-const supportsBorder = (shape: ?PubShape) =>
-  !!shape && ["rect", "ellipse"].includes(shape.type);
-const supportsRadius = (shape: ?PubShape) => !!shape && shape.type === "rect";
-const isText = (shape: ?PubShape) => !!shape && shape.type === "text";
+const supportsBorder = (shape?: PubShape) =>
+  shape &&
+  (shape.type === PubShapeType.Rectangle ||
+    shape.type === PubShapeType.Ellipse);
+const supportsRadius = (shape?: PubShape) =>
+  shape && shape.type === PubShapeType.Rectangle;
+const isText = (shape?: PubShape) => shape && shape.type === PubShapeType.Text;
 
-const get = getOr("");
+interface Props {
+  shape?: PubShape;
+  updateSelectedObject(sender: Object | null): void;
+}
 
-type IProps = {
-  shape: ?PubShape,
-  updateSelectedObject: (sender: ?PubShape) => void,
-};
-const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
-  let currentStyle = null;
+const MetricsBar: React.StatelessComponent<Props> = ({
+  updateSelectedObject,
+  shape,
+}) => {
+  let currentStyle: DraftInlineStyle | null = null;
   let isTextSelected = false;
   if (isText(shape)) {
-    currentStyle = shape.editorState.getCurrentInlineStyle();
-    isTextSelected = getSelectedText(shape.editorState) !== "";
+    currentStyle = shape!.editorState.getCurrentInlineStyle();
+    isTextSelected = getSelectedText(shape!.editorState) !== "";
   }
   return (
     <MetricsBarContainer>
@@ -62,7 +66,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
           <MetricInput
             small
             property="x"
-            value={get("x", shape)}
+            value={(shape && shape.x) || null}
             label="X"
             unit="in"
             disabled={!shape}
@@ -71,7 +75,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
           <MetricInput
             small
             property="y"
-            value={get("y", shape)}
+            value={(shape && shape.y) || null}
             label="Y"
             unit="in"
             disabled={!shape}
@@ -80,7 +84,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
           <MetricInput
             small
             property="width"
-            value={get("width", shape)}
+            value={(shape && shape.width) || null}
             label="Width"
             unit="in"
             disabled={!shape}
@@ -89,7 +93,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
           <MetricInput
             small
             property="height"
-            value={get("height", shape)}
+            value={(shape && shape.height) || null}
             label="Height"
             unit="in"
             disabled={!shape}
@@ -100,7 +104,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
               property="color"
               onChange={({ color }) =>
                 updateSelectedObject({
-                  editorState: textStyles.color.add(shape.editorState, color),
+                  editorState: textStyles.color.add(shape!.editorState, color),
                 })
               }
               hex={colorFromStyles(currentStyle)}
@@ -123,8 +127,8 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
               value={sizeFromStyles(currentStyle)}
               label="Size"
               unit="px"
-              onChange={({ fontSize }) => {
-                const numericValue = parseInt(fontSize);
+              onChange={({ fontSize }: { fontSize: string }) => {
+                const numericValue = parseInt(fontSize, 10);
                 if (
                   !isNaN(numericValue) &&
                   numericValue >= 6 &&
@@ -132,7 +136,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
                 ) {
                   updateSelectedObject({
                     editorState: textStyles.fontSize.add(
-                      shape.editorState,
+                      shape!.editorState,
                       `${numericValue}px`
                     ),
                   });
@@ -145,14 +149,14 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
               key="stroke-color-picker"
               property="stroke"
               onChange={updateSelectedObject}
-              hex={shape.stroke}
-              alpha={shape.strokeOpacity}
+              hex={shape!.stroke}
+              alpha={shape!.strokeOpacity}
             />,
             <MetricInput
               mini
               property="strokeWidth"
               key="stroke-metric-input"
-              value={shape.strokeWidth}
+              value={shape!.strokeWidth}
               label="Border"
               unit="pt"
               onChange={updateSelectedObject}
@@ -162,7 +166,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
             <MetricInput
               mini
               property="r"
-              value={shape.r}
+              value={shape!.r}
               label="Radius"
               unit="pt"
               onChange={updateSelectedObject}
@@ -178,7 +182,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
                 onClick={() =>
                   updateSelectedObject({
                     editorState: RichUtils.toggleInlineStyle(
-                      shape.editorState,
+                      shape!.editorState,
                       type.style
                     ),
                   })
@@ -186,7 +190,7 @@ const MetricsBar = ({ updateSelectedObject, shape }: IProps) => {
               >
                 {React.createElement(type.icon, {
                   color:
-                    currentStyle.has(type.style) && isTextSelected
+                    currentStyle!.has(type.style) && isTextSelected
                       ? AppColors.White
                       : AppColors.MidTextGray,
                   size: 13,

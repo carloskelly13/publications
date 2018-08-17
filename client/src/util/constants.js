@@ -114,6 +114,9 @@ export const Colors = {
     ButtonContainerBorder: "#1e1f21",
     ButtonContainerBackground: "#38393d",
   },
+  FileOpen: {
+    BrowserBackground: "#4a4b50",
+  },
   FormInput: {
     Background: "#38393d",
     MetricBackground: "#4a4b50",

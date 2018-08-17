@@ -5,12 +5,13 @@ import {
   FileBrowserContainer,
   FileBrowserContentContainer,
 } from "./components";
+import { PubDocument } from "../../types/pub-objects";
 
-type Props = {
-  documents?: Array,
-  handleFileClicked: Function,
-  selectedFileId?: string,
-};
+interface Props {
+  selectedFileId: string | null;
+  documents: Array<PubDocument>;
+  handleFileClicked(id: string): void;
+}
 
 export default class extends React.Component<Props> {
   state = {

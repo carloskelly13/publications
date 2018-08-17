@@ -6,7 +6,7 @@ import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
 import { StateContext } from "../../contexts/app-state";
-import { IPubDocument, IPubShape } from "../../types/pub-objects";
+import { PubDocument, PubShape } from "../../types/pub-objects";
 
 const Container = styled.div`
   overflow: scroll;
@@ -22,29 +22,29 @@ const Container = styled.div`
 const getIdFromDocument = get("id");
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
 
-interface IProps {
-  currentDocument: IPubDocument | null;
-  selectedObject: IPubShape | null;
+interface Props {
+  currentDocument: PubDocument | null;
+  selectedObject: PubShape | null;
   zoom: number;
   updateSelectedObject(sender?: Object | null): void;
-  deleteObject(object?: IPubShape): void;
+  deleteObject(object?: PubShape): void;
 }
 
-interface IState {
+interface State {
   scrollOffset: {
     scrollTop: number;
     scrollLeft: number;
   };
 }
 
-export class EditorView extends React.Component<IProps, IState> {
+export class EditorView extends React.Component<Props, State> {
   state = {
     scrollOffset: { scrollLeft: 0, scrollTop: 0 },
   };
 
   containerRef: HTMLDivElement;
 
-  componentWillReceiveProps(nextProps: IProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (
       getIdFromDocument(this.props.currentDocument) !==
       getIdFromDocument(nextProps.currentDocument)
@@ -146,7 +146,6 @@ export class EditorView extends React.Component<IProps, IState> {
               dpi={96}
               zoom={zoom}
               thumbnail={false}
-              selected={false}
               selectedShape={selectedObject}
               sortedShapes={currentDocument.shapes}
               backgroundGridLineRanges={this.gridLineRanges()}

@@ -1,9 +1,9 @@
 import React from "react";
-import { IPubDocument, IPubShape, IPubUser } from "../types/pub-objects";
+import { PubDocument, PubShape, PubUser } from "../types/pub-objects";
 
 export interface IPubActions {
-  addObject(object: IPubShape): void;
-  deleteObject(object?: IPubShape): void;
+  addObject(object: PubShape): void;
+  deleteObject(object?: PubShape): void;
   handleClipboardAction(action: string): void;
   logout(): Promise<void>;
   getDocument(id: string): Promise<void>;
@@ -13,7 +13,7 @@ export interface IPubActions {
   showOpenDocumentModal(): void;
   toggleLayersPanel(): void;
   updateSelectedObject(sender?: Object | null): void;
-  adjustObjectLayer(sender: IPubShape): void;
+  adjustObjectLayer(sender: PubShape): void;
   toggleLoginDialog(): void;
   hideStartModal(): void;
   showNewAccountModal(): void;
@@ -23,11 +23,11 @@ export interface IPubActions {
 
 export interface IPubAppState {
   actions: IPubActions;
-  currentDocument: IPubDocument | null;
-  clipboardContents: IPubShape | null;
-  user: IPubUser | null;
+  currentDocument: PubDocument | null;
+  clipboardContents: PubShape | null;
+  user: PubUser | null;
   zoom: number;
-  selectedObject: IPubShape | null;
+  selectedObject: PubShape | null;
   layersPanelVisible: boolean;
 }
 

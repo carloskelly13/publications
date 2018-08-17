@@ -1,7 +1,7 @@
 import React from "react";
 import { Editor } from "draft-js";
 import createStyles from "draft-js-custom-styles";
-import { IPubShape } from "../../types/pub-objects";
+import { PubShape } from "../../types/pub-objects";
 
 export const { styles, customStyleFn, exporter } = createStyles(
   ["font-size", "color", "font-family"],
@@ -9,7 +9,7 @@ export const { styles, customStyleFn, exporter } = createStyles(
 );
 
 interface IProps {
-  shape: IPubShape;
+  shape: PubShape;
   zoom: number;
   dpi: number;
   activeDraftJSEditor: string;

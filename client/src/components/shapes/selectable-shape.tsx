@@ -1,19 +1,19 @@
 import React from "react";
 import ResizeMoveFrame from "./frame";
-import { IPubShape } from "../../types/pub-objects";
+import { PubShape } from "../../types/pub-objects";
 
-interface IProps {
+interface SelectableShapeProps {
   renderShape: React.ReactNode;
-  shape?: IPubShape;
+  shape: PubShape;
   selectedShapeId?: string;
   selectable: boolean;
   zoom: number;
   dpi: number;
-  updateSelectedObject(sender?: IPubShape): void;
+  updateSelectedObject(sender: PubShape | null): void;
   setActiveDraftJSEditor(id: string | null): void;
 }
 
-const SelectableShape: React.StatelessComponent<IProps> = props => {
+const SelectableShape: React.SFC<SelectableShapeProps> = props => {
   const {
     selectable,
     shape,

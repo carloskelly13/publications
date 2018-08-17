@@ -1,50 +1,60 @@
-import React, { Component } from "react";
+import React, { UIEvent, KeyboardEvent } from "react";
 import { TextInput } from "../ui/inputs";
 import { Text, InputLabelText } from "../ui/text";
 import { ContentContainer } from "../ui/containers";
 import { AppColors } from "../../util/constants";
 
-export default class MetricInput extends Component {
+interface Props {
+  value: number | null;
+  label: string;
+  property: string;
+  unit: string;
+  small?: boolean;
+  mini?: boolean;
+  disabled?: boolean;
+  onChange(changes: Object | null): void;
+}
+
+interface State {
+  presentedValue: number | null;
+}
+
+export default class MetricInput extends React.PureComponent<Props, State> {
   static defaultProps = {
     mini: false,
     small: false,
   };
 
-  constructor() {
-    super(...arguments);
-    this.updateValue = this.updateValue.bind(this);
-    this.validateInput = this.validateInput.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.state = { presentedValue: this.props.value };
+  constructor(props: Props) {
+    super(props);
+    this.state = { presentedValue: props.value };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { value = "" } = nextProps;
-    this.setState({
-      presentedValue: value,
-    });
+  static getDerivedStateFromProps(nextProps: Props) {
+    return { presentedValue: nextProps.value };
   }
 
-  updateValue(event) {
-    this.setState({ presentedValue: event.target.value });
-  }
+  updateValue = (event: UIEvent<HTMLInputElement>) => {
+    const parsedValue = parseFloat(event.currentTarget.value);
+    this.setState({ presentedValue: parsedValue });
+  };
 
-  validateInput() {
-    const parsedValue = parseFloat(this.state.presentedValue);
+  validateInput = () => {
+    const { presentedValue } = this.state;
     const { property, onChange } = this.props;
-    if (!isNaN(parsedValue)) {
-      this.setState({ presentedValue: parsedValue });
-      onChange({ [property]: parsedValue });
+    if (presentedValue !== null && !isNaN(presentedValue)) {
+      this.setState({ presentedValue: presentedValue });
+      onChange({ [property]: presentedValue });
     } else {
       this.setState({ presentedValue: this.props.value });
     }
-  }
+  };
 
-  handleKeyPress(event) {
+  handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter") {
       this.validateInput();
     }
-  }
+  };
 
   render() {
     const { label, unit, small, mini, disabled } = this.props;
@@ -69,7 +79,7 @@ export default class MetricInput extends Component {
             onChange={this.updateValue}
             onBlur={this.validateInput}
             onKeyPress={this.handleKeyPress}
-            value={this.state.presentedValue}
+            value={this.state.presentedValue || ""}
           />
           <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
             {unit}

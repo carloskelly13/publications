@@ -1,9 +1,8 @@
-// @flow
 import React from "react";
 import { CanvasBackground } from "./background";
 import { CanvasSVG } from "./canvas-svg";
 import Shapes from "./shapes";
-import type { PubShape } from "../../util/types";
+import { PubShape } from "../../types/pub-objects";
 
 const zoomForDocumentSize = ({ width, height }) => {
   if (width >= 32 || height >= 32) {
@@ -17,25 +16,24 @@ const zoomForDocumentSize = ({ width, height }) => {
   return 0.2;
 };
 
-type IProps = {
-  sortedShapes: PubShape[],
-  dpi: number,
-  zoom: number,
-  width: number,
-  height: number,
-  thumbnail: boolean,
-  selected: boolean,
-  allowsEditing: boolean,
-  selectedShape: ?PubShape,
-  backgroundGridLineRanges: { x: number[], y: number[] },
-  updateSelectedObject: (sender: ?Object) => void,
-};
+interface Props {
+  sortedShapes: Array<PubShape>;
+  dpi: number;
+  zoom: number;
+  width: number;
+  height: number;
+  thumbnail: boolean;
+  allowsEditing: boolean;
+  selectedShape: PubShape | null;
+  backgroundGridLineRanges?: { x: Array<number>; y: Array<number> };
+  updateSelectedObject(sender: Object | null): void;
+}
 
-type IState = {
-  activeDraftJSEditor: string | null,
-};
+interface State {
+  activeDraftJSEditor: string | null;
+}
 
-class Canvas extends React.Component<IProps, IState> {
+class Canvas extends React.Component<Props, State> {
   state = {
     activeDraftJSEditor: null,
   };
@@ -50,7 +48,6 @@ class Canvas extends React.Component<IProps, IState> {
       height,
       allowsEditing,
       thumbnail,
-      selected,
       selectedShape,
       sortedShapes,
       backgroundGridLineRanges,
@@ -65,8 +62,6 @@ class Canvas extends React.Component<IProps, IState> {
     return (
       <CanvasSVG
         thumbnail={thumbnail}
-        selected={selected}
-        allowsEditing={allowsEditing}
         width={width * dpi * zoom}
         height={height * dpi * zoom}
       >

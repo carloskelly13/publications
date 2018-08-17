@@ -1,5 +1,3 @@
-// @flow
-import type { PubDocument } from "../../util/types";
 import React from "react";
 import Button from "../ui/framed-button";
 import FileBrowser from "./file-browser";
@@ -10,16 +8,18 @@ import {
 } from "./components";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Spinner } from "../ui/spinner";
+import { PubDocument } from "../../types/pub-objects";
 
-type Props = {
-  documents: PubDocument[],
-  onDismiss: () => void,
-  getDocuments: () => Promise<void>,
-  onOpenDocument: string => Promise<any>,
-};
-type State = {
-  selectedId: string,
-};
+interface Props {
+  documents: Array<PubDocument>;
+  onDismiss(): void;
+  getDocuments(): Promise<void>;
+  onOpenDocument(id: string): Promise<any>;
+}
+
+interface State {
+  selectedId: string;
+}
 
 export default class extends React.Component<Props, State> {
   state = {

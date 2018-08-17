@@ -1,8 +1,8 @@
 import React from "react";
-import { IPubShape } from "../../types/pub-objects";
+import { PubShape } from "../../types/pub-objects";
 
 interface IProps {
-  shape: IPubShape;
+  shape: PubShape;
   zoom: number;
   dpi: number;
 }

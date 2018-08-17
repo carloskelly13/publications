@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 import { lastModifiedString } from "../../util/string";
 import Canvas from "../canvas";
 import { Colors } from "../../util/constants";
+import { PubDocument } from "../../types/pub-objects";
+import noop from "lodash/fp/noop";
 
 const FileItemContainer = styled.div`
   text-align: center;
@@ -18,7 +20,7 @@ const FileDescription = styled.div`
   font-size: 0.85em;
 `;
 
-const SvgContainer = styled.div`
+const SvgContainer = styled.div<{ selected?: boolean }>`
   display: inline-block;
   margin: 0 auto;
   padding: 3px 3px 0;
@@ -31,15 +33,29 @@ const SvgContainer = styled.div`
     `};
 `;
 
-export const FileItem = ({ doc, handleClick, selected }) => (
+interface Props {
+  doc: PubDocument;
+  selected: boolean;
+  handleClick(): void;
+}
+
+export const FileItem: React.StatelessComponent<Props> = ({
+  doc,
+  handleClick,
+  selected,
+}) => (
   <FileItemContainer onClick={handleClick}>
     <SvgContainer selected={selected}>
       <Canvas
-        selected={selected}
         thumbnail
+        dpi={96}
+        zoom={0}
+        allowsEditing={false}
         width={doc.width}
         height={doc.height}
         sortedShapes={doc.shapes}
+        selectedShape={null}
+        updateSelectedObject={noop}
       />
     </SvgContainer>
     <FileName>{doc.name}</FileName>

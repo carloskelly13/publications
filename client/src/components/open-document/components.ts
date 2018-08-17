@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ModalContent } from "../modal";
-import { AppColors, Colors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 import FormInput from "../ui/form-input";
 
 export const OpenDocumentContainer = styled(ModalContent)`
@@ -17,7 +17,7 @@ export const FileBrowserBaseContainer = styled.div`
   width: calc(100% - 1em);
   height: 370px;
   border-radius: 0;
-  background: ${AppColors.White};
+  background: ${Colors.FileOpen.BrowserBackground};
   padding: 1.5em 0.5em;
 `;
 

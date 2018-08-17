@@ -1,12 +1,12 @@
-export enum IPubShapeType {
+export enum PubShapeType {
   Rectangle = "rect",
   Ellipse = "ellipse",
   Text = "text",
 }
 
-export interface IPubShape {
+export interface PubShape {
   id: string;
-  type: IPubShapeType;
+  type: PubShapeType;
   width: number;
   height: number;
   x: number;
@@ -21,15 +21,16 @@ export interface IPubShape {
   editorState?: any;
 }
 
-export interface IPubDocument {
+export interface PubDocument {
   id: string;
   name: string;
   width: number;
   height: number;
-  shapes: Array<IPubShape>;
+  shapes: Array<PubShape>;
+  lastModified: string;
 }
 
-export interface IPubUser {
+export interface PubUser {
   id: string;
   emailAddress: string;
 }
