@@ -1,13 +1,8 @@
 import React from "react";
 import Button from "../ui/framed-button";
 import FileBrowser from "./file-browser";
-import AsyncViewContent from "../async-content";
-import {
-  OpenDocumentContainer,
-  FileBrowserLoadingContainer,
-} from "./components";
+import { OpenDocumentContainer } from "./components";
 import { ModalButtonContainer } from "../ui/button-container";
-import { Spinner } from "../ui/spinner";
 import { PubDocument } from "../../types/pub-objects";
 
 interface Props {
@@ -44,20 +39,10 @@ export default class extends React.Component<Props, State> {
     } = this;
     return (
       <OpenDocumentContainer>
-        <AsyncViewContent
-          waitFor={documents.length !== 0}
-          renderLoading={
-            <FileBrowserLoadingContainer>
-              <Spinner />
-            </FileBrowserLoadingContainer>
-          }
-          renderContent={
-            <FileBrowser
-              documents={documents}
-              selectedFileId={selectedId}
-              handleFileClicked={this.handleFileClicked}
-            />
-          }
+        <FileBrowser
+          documents={documents}
+          selectedFileId={selectedId}
+          handleFileClicked={this.handleFileClicked}
         />
         <ModalButtonContainer>
           <Button

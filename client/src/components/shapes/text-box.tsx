@@ -46,7 +46,7 @@ const TextBox: React.StatelessComponent<IProps> = ({
       <foreignObject {...metrics} style={{ transform }}>
         <Editor
           customStyleFn={customStyleFn}
-          editorState={shape.editorState}
+          editorState={shape.editorState!}
           onChange={state => updateSelectedObject({ editorState: state })}
           readOnly={readOnly}
         />

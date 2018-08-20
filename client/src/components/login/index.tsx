@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "../ui/framed-button";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import FormInput from "../ui/form-input";
 import Api, { getUserFromAuth } from "../../util/api";
 import to from "await-to-js";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { ModalButtonContainer } from "../ui/button-container";
-import type { PubUser } from "../../util/types";
+import { PubUser } from "../../types/pub-objects";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;
@@ -18,10 +18,21 @@ const Form = styled.form`
   padding: 0 1em;
 `;
 
-type Props = {
-  onLogin: PubUser => void,
-  onDismiss: () => void,
-};
+interface Props {
+  onLogin(user: PubUser): void;
+  onDismiss(): void;
+}
+
+interface LoginFormValues {
+  emailAddress: string;
+  password: string;
+}
+
+interface LoginFormErrors {
+  emailAddress?: boolean;
+  password?: boolean;
+}
+
 export default class extends React.Component<Props> {
   state = {
     errorLoggingIn: false,
@@ -40,7 +51,7 @@ export default class extends React.Component<Props> {
   };
 
   validateForm = values => {
-    const errors = {};
+    const errors: LoginFormErrors = {};
     if (!values.emailAddress) {
       errors.emailAddress = true;
     }
@@ -58,11 +69,16 @@ export default class extends React.Component<Props> {
           password: "",
         }}
         validate={this.validateForm}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values: LoginFormValues, { setSubmitting }) => {
           this.login(values);
           setSubmitting(false);
         }}
-        render={({ values, handleChange, handleSubmit, isSubmitting }) => (
+        render={({
+          values,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+        }: FormikProps<LoginFormValues>) => (
           <LoginModalContent>
             <ModalHeader>Log In</ModalHeader>
             <Form onSubmit={handleSubmit}>

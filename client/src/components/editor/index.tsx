@@ -134,6 +134,7 @@ export class EditorView extends React.Component<Props, State> {
         {currentDocument ? (
           <div>
             <Ruler
+              dpi={96}
               showDetail
               scrollOffset={scrollOffset}
               doc={currentDocument}

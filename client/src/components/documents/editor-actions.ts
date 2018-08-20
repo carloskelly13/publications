@@ -1,12 +1,17 @@
 import { EditorState } from "draft-js";
 import cloneDeep from "lodash/fp/cloneDeep";
 import omit from "lodash/fp/omit";
-import compose from "lodash/fp/compose";
+import flowRight from "lodash/fp/flowRight";
 import {
   addEditorStateToObject,
   convertObjStylesToHTML,
 } from "../../util/documents";
 import shortid from "shortid";
+import {
+  PubShape,
+  PubDocument,
+  PubShapeChanges,
+} from "../../types/pub-objects";
 
 export const omitTransientDataFromObj = omit([
   "z",
@@ -15,13 +20,19 @@ export const omitTransientDataFromObj = omit([
   "isEditing",
 ]);
 
-export const updatedDocumentStateForObjectChanges = (
+type UpdateDocumentStateForChangesFn = (
+  changes: PubShapeChanges,
+  currentObject: PubShape,
+  currentDocument: PubDocument
+) => { selectedObject: PubShape | null; currentDocument?: PubDocument };
+
+export const updatedDocumentStateForObjectChanges: UpdateDocumentStateForChangesFn = (
   changes,
   currentObject,
   currentDocument
 ) => {
   /**
-   * If changes is not null, then a new shape has been selected or existing
+   * If changes are not null, then a new shape has been selected or existing
    * shape that is currently selected has been modified
    */
   if (changes !== null) {
@@ -51,7 +62,7 @@ export const updatedDocumentStateForObjectChanges = (
         selectedObject: newObject,
         currentDocument: { ...currentDocument, shapes },
       };
-    } else if (changes.type === "text") {
+    } else if (changes.type === "text" && newObject.editorState) {
       newObject.editorState = EditorState.moveSelectionToEnd(
         newObject.editorState
       );
@@ -65,11 +76,20 @@ export const updatedDocumentStateForObjectChanges = (
   return { selectedObject: null };
 };
 
-export const updatedDocumentStateForLayerChanges = (
+export interface LayerMutationDelta {
+  source?: { index: number };
+  destination?: { index: number };
+}
+type UpdateDocumentStateForLayerChangesFn = (
+  delta: LayerMutationDelta,
+  currentDocument: PubDocument | null
+) => { currentDocument?: PubDocument; selectedObject?: PubShape };
+
+export const updatedDocumentStateForLayerChanges: UpdateDocumentStateForLayerChangesFn = (
   { source, destination },
   currentDocument
 ) => {
-  if (!source || !destination) {
+  if (!source || !destination || !currentDocument) {
     return {};
   }
   const sortedObjects = Array.from(currentDocument.shapes);
@@ -97,28 +117,53 @@ export const updatedDocumentStateForLayerChanges = (
   };
 };
 
-export const updatedDocumentStateForClipboardAction = (
+export enum ClipboardAction {
+  Copy = "copy",
+  Paste = "paste",
+  Cut = "cut",
+}
+
+type UpdateDocumentStateForClipboardActionFn = (
+  action: ClipboardAction,
+  state: {
+    clipboardContents: PubShape | null;
+    selectedObject: PubShape | null;
+    currentDocument: PubDocument | null;
+  }
+) => {
+  clipboardContents?: PubShape;
+  selectedObject?: PubShape | null;
+  currentDocument?: PubDocument;
+};
+
+const duplicateObj: (object: PubShape) => PubShape = flowRight<
+  PubShape,
+  PubShape,
+  PubShape
+>(
+  cloneDeep,
+  omitTransientDataFromObj,
+  convertObjStylesToHTML
+);
+
+export const updatedDocumentStateForClipboardAction: UpdateDocumentStateForClipboardActionFn = (
   action,
-  // eslint-disable-next-line no-unused-vars
   { clipboardContents, selectedObject, currentDocument }
 ) => {
-  const updatedState = {};
+  if (!selectedObject || !currentDocument) {
+    return {};
+  }
 
-  const duplicateObj = () =>
-    compose(
-      cloneDeep,
-      omitTransientDataFromObj,
-      convertObjStylesToHTML
-    )(selectedObject);
+  const updatedState: { [key: string]: PubDocument | PubShape } = {};
 
-  if (action === "copy") {
-    updatedState.clipboardContents = duplicateObj();
-  } else if (action === "cut") {
+  if (action === ClipboardAction.Copy) {
+    updatedState.clipboardContents = duplicateObj(selectedObject);
+  } else if (action === ClipboardAction.Cut) {
     return {
-      clipboardContents: duplicateObj(),
+      clipboardContents: duplicateObj(selectedObject),
       ...updatedDocumentStateForDeleteAction(selectedObject, currentDocument),
     };
-  } else if (action === "paste") {
+  } else if (action === ClipboardAction.Paste && clipboardContents) {
     const z = currentDocument.shapes.length + 1;
     const newObject = cloneDeep(clipboardContents);
     newObject.z = z;
@@ -138,10 +183,18 @@ export const updatedDocumentStateForClipboardAction = (
   return updatedState;
 };
 
-export const updatedDocumentStateForDeleteAction = (
+type UpdateDocumentStateForDeleteActionFn = (
+  objectToDelete: PubShape | null,
+  currentDocument: PubDocument | null
+) => { currentDocument?: PubDocument; selectedObject: PubShape | null };
+
+export const updatedDocumentStateForDeleteAction: UpdateDocumentStateForDeleteActionFn = (
   objectToDelete,
   currentDocument
 ) => {
+  if (!objectToDelete || !currentDocument) {
+    return { selectedObject: null };
+  }
   const shapes = currentDocument.shapes
     .filter(shape => shape.id !== objectToDelete.id)
     .map(shape => {

@@ -1,11 +1,8 @@
-// @flow
-import type { PubDocument, PubShape, PubUser } from "../../util/types";
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
-import LayersSidebar from "../layers-sidebar/index";
+import LayersSidebar from "../layers-sidebar";
 import OpenDocumentDialog from "../open-document";
 import LoginDialog from "../login";
 import NewAccountDialog, { NewAccount } from "../new-account";
@@ -13,14 +10,12 @@ import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
 import getOr from "lodash/fp/getOr";
-import memoize from "lodash/fp/memoize";
 import Api, { clearCsrfHeaders } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
 import StartModal from "../start-modal";
 
 import {
-  sortShapesByZIndex,
   documentsWithEditorState,
   addEditorStateToDocument,
   packageDocumentToJson,
@@ -30,35 +25,38 @@ import {
   updatedDocumentStateForLayerChanges,
   updatedDocumentStateForClipboardAction,
   updatedDocumentStateForDeleteAction,
+  ClipboardAction,
+  LayerMutationDelta,
 } from "./editor-actions";
 import shortid from "shortid";
 import { StateContext } from "../../contexts";
-import type { IActions } from "../../contexts";
+import {
+  PubUser,
+  PubDocument,
+  PubShape,
+  PubShapeChanges,
+} from "../../types/pub-objects";
 
-type Props = {
-  user: ?PubUser,
-  setAppUser: (?PubUser) => void,
-};
+interface Props {
+  user: PubUser | null;
+  setAppUser(user: PubUser | null): void;
+}
 
-type State = {
-  documents: PubDocument[],
-  currentDocument: ?PubDocument,
-  selectedObject: ?PubShape,
-  clipboardContents: ?PubShape,
-  newDocumentModalVisible: boolean,
-  openDocumentModalVisible: boolean,
-  startModalVisible: boolean,
-  layersPanelVisible: boolean,
-  loginModalVisible: boolean,
-  newAccountModalVisible: boolean,
-  zoom: number,
-};
+interface State {
+  documents: Array<PubDocument>;
+  currentDocument: PubDocument | null;
+  selectedObject: PubShape | null;
+  clipboardContents: PubShape | null;
+  newDocumentModalVisible: boolean;
+  openDocumentModalVisible: boolean;
+  startModalVisible: boolean;
+  layersPanelVisible: boolean;
+  loginModalVisible: boolean;
+  newAccountModalVisible: boolean;
+  zoom: number;
+}
 
 export default class DocumentsView extends Component<Props, State> {
-  static childContextTypes = {
-    actions: PropTypes.object,
-  };
-
   state = {
     documents: [],
     currentDocument: null,
@@ -73,15 +71,7 @@ export default class DocumentsView extends Component<Props, State> {
     zoom: 1,
   };
 
-  getChildContext = () => ({ actions: { ...this.getActions() } });
-
-  componentDidMount() {
-    if (!this.props.user) {
-      this.getCurrentUser();
-    }
-  }
-
-  getActions: () => IActions = memoize(() => ({
+  getActions = () => ({
     addObject: this.addObject,
     deleteObject: this.deleteObject,
     handleClipboardAction: this.handleClipboardAction,
@@ -89,39 +79,44 @@ export default class DocumentsView extends Component<Props, State> {
     getDocument: this.getDocument,
     saveDocument: this.saveDocument,
     setZoom: this.setZoom,
-    showNewDocumentModal: this.toggleNewDocument,
-    showOpenDocumentModal: this.toggleOpenDocument,
+    showNewDocumentModal: this.showNewDocumentModal,
+    showOpenDocumentModal: this.showOpenDocumentModal,
     toggleLayersPanel: this.toggleLayersPanel,
     updateSelectedObject: this.updateSelectedObject,
     adjustObjectLayer: this.adjustObjectLayer,
-    toggleLoginDialog: this.toggleLoginDialog,
+    toggleLoginDialog: this.showLoginModal,
     hideStartModal: this.hideStartModal,
     showNewAccountModal: this.showNewAccountModal,
     showLoginModal: this.showLoginModal,
     hideLoginModal: this.hideLoginModal,
-  }));
+  });
+
+  componentDidMount() {
+    if (!this.props.user) {
+      this.getCurrentUser();
+    }
+  }
 
   /**
    * Display Actions
    */
 
-  toggleVisibility = (identifier: string) => {
-    const key = `${identifier}Visible`;
-    this.setState(prevState => ({
-      [key]: !prevState[key],
-    }));
-  };
-
-  toggleNewDocument = this.toggleVisibility.bind(this, "newDocumentModal");
-  toggleOpenDocument = this.toggleVisibility.bind(this, "openDocumentModal");
-  toggleLoginDialog = this.toggleVisibility.bind(this, "loginModal");
-  toggleLayersPanel = this.toggleVisibility.bind(this, "layersPanel");
-
   hideStartModal = () => this.setState({ startModalVisible: false });
   showNewAccountModal = () => this.setState({ newAccountModalVisible: true });
   hideNewAccountModal = () => this.setState({ newAccountModalVisible: false });
+  showNewDocumentModal = () => this.setState({ newDocumentModalVisible: true });
+  hideNewDocumentModal = () =>
+    this.setState({ newDocumentModalVisible: false });
+  showOpenDocumentModal = () =>
+    this.setState({ openDocumentModalVisible: true });
+  hideOpenDocumentModal = () =>
+    this.setState({ openDocumentModalVisible: false });
   showLoginModal = () => this.setState({ loginModalVisible: true });
   hideLoginModal = () => this.setState({ loginModalVisible: false });
+  toggleLayersPanel = () =>
+    this.setState(prevState => ({
+      layersPanelVisible: !prevState.layersPanelVisible,
+    }));
 
   /**
    * Data Actions
@@ -139,8 +134,8 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   createAccount = async (account: NewAccount) => {
-    const [error, user] = await to(Api.POST("users", account));
-    if (error) {
+    const [error, user] = await to<PubUser>(Api.POST("users", account));
+    if (error || !user) {
       return "There was an error creating your account. Verify the email address is not already in use.";
     }
     this.props.setAppUser(user);
@@ -148,8 +143,8 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   getCurrentUser = async () => {
-    const [_, user] = await to(Api.GET("users/current"));
-    if (user) {
+    const [err, user] = await to<PubUser>(Api.GET("users/current"));
+    if (!err && user) {
       this.props.setAppUser(user);
 
       const lastViewedDocumentId = window.localStorage.getItem(
@@ -165,7 +160,7 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   getDocuments = async () => {
-    const [err, documents] = await to(Api.GET("documents"));
+    const [err, documents] = await to<Array<PubDocument>>(Api.GET("documents"));
     if (err) {
       this.setState({ documents: [] });
       return;
@@ -180,7 +175,7 @@ export default class DocumentsView extends Component<Props, State> {
     if (!this.props.user) {
       return;
     }
-    const [err, doc] = await to(Api.GET(`documents/${id}`));
+    const [err, doc] = await to<PubDocument>(Api.GET(`documents/${id}`));
     if (err) {
       return;
     }
@@ -194,14 +189,18 @@ export default class DocumentsView extends Component<Props, State> {
     const packagedDocument = packageDocumentToJson(this.state.currentDocument);
     const id = getOr(null, "id")(this.state.currentDocument);
     if (id) {
-      const [err] = await to(Api.PUT(`documents/${id}`, packagedDocument));
+      const [err] = await to<PubDocument>(
+        Api.PUT(`documents/${id}`, packagedDocument)
+      );
       if (err) {
         return;
       }
       return;
     }
-    const [err, doc] = await to(Api.POST("documents", packagedDocument));
-    if (err) {
+    const [err, doc] = await to<PubDocument>(
+      Api.POST("documents", packagedDocument)
+    );
+    if (err || !doc) {
       return;
     }
     this.setCurrentDocument(doc);
@@ -211,23 +210,26 @@ export default class DocumentsView extends Component<Props, State> {
    * Editor Actions
    */
 
-  updateSelectedObject = (sender: ?Object) =>
-    this.setState(prevState =>
-      updatedDocumentStateForObjectChanges(
-        sender,
-        prevState.selectedObject,
-        prevState.currentDocument
-      )
+  updateSelectedObject = (sender: PubShapeChanges) =>
+    this.setState(
+      (prevState: State): Pick<State, never> => {
+        const updatedState = updatedDocumentStateForObjectChanges(
+          sender,
+          prevState.selectedObject!,
+          prevState.currentDocument!
+        );
+        return updatedState;
+      }
     );
+
   setZoom = (zoom: number = 1) => this.setState({ zoom });
 
-  setCurrentDocument = (doc: ?PubDocument) =>
+  setCurrentDocument = (doc: PubDocument | null) =>
     this.setState(
-      prevState => {
-        if (
-          getOr("-1", "currentDocument.id")(prevState) ===
-          getOr("-2", "id")(doc)
-        ) {
+      (prevState: State): Pick<State, never> => {
+        const currentDocumentId = (prevState.currentDocument || { id: -1 }).id;
+        const documentId = (doc || { id: -2 }).id;
+        if (currentDocumentId === documentId) {
           return { currentDocument: doc, layersPanelVisible: true };
         } else {
           return {
@@ -246,44 +248,53 @@ export default class DocumentsView extends Component<Props, State> {
     );
 
   addObject = (sender: PubShape) => {
-    if (!this.state.currentDocument) {
+    const currentDocument = this.state.currentDocument as PubDocument | null;
+    if (!currentDocument) {
       return;
     }
     const newObject = {
       ...sender,
-      z: this.state.currentDocument.shapes.length + 1,
+      z: currentDocument.shapes.length + 1,
       id: shortid.generate(),
     };
-    this.setState(prevState => ({
-      currentDocument: {
-        ...prevState.currentDocument,
-        shapes: [...getOr([], "currentDocument.shapes")(prevState), newObject],
-      },
-      selectedObject: newObject,
-    }));
+    this.setState(
+      (prevState: State): Pick<State, never> => ({
+        currentDocument: {
+          ...prevState.currentDocument,
+          shapes: [
+            ...(prevState.currentDocument || { shapes: [] }).shapes,
+            newObject,
+          ],
+        },
+        selectedObject: newObject,
+      })
+    );
   };
 
-  deleteObject = (sender: ?PubShape) =>
-    this.setState(prevState =>
-      updatedDocumentStateForDeleteAction(
-        sender || prevState.selectedObject,
-        prevState.currentDocument
-      )
+  deleteObject = (sender?: PubShape) =>
+    this.setState(
+      (prevState: State): Pick<State, never> =>
+        updatedDocumentStateForDeleteAction(
+          sender || prevState.selectedObject,
+          prevState.currentDocument
+        )
     );
 
-  adjustObjectLayer = (sender: PubShape) =>
-    this.setState(prevState =>
-      updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
+  adjustObjectLayer = (sender: LayerMutationDelta) =>
+    this.setState(
+      (prevState: State): Pick<State, never> =>
+        updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
     );
 
-  handleClipboardAction = (action: string) =>
-    this.setState(prevState =>
-      updatedDocumentStateForClipboardAction(action, prevState)
+  handleClipboardAction = (action: ClipboardAction) =>
+    this.setState(
+      (prevState: State): Pick<State, never> =>
+        updatedDocumentStateForClipboardAction(action, prevState)
     );
 
   handleCreateNewDocument = async (sender: {
-    name: string,
-    orientation: string,
+    name: string;
+    orientation: string;
   }) => {
     const payload = {
       name: sender.name,
@@ -291,8 +302,8 @@ export default class DocumentsView extends Component<Props, State> {
       shapes: [],
     };
     if (this.props.user) {
-      const [err, doc] = await to(Api.POST("documents", payload));
-      if (err) {
+      const [err, doc] = await to<PubDocument>(Api.POST("documents", payload));
+      if (err || !doc) {
         return;
       }
       if (this.state.currentDocument) {
@@ -309,13 +320,7 @@ export default class DocumentsView extends Component<Props, State> {
    */
 
   render() {
-    const currentDocument = this.state.currentDocument
-      ? {
-          ...this.state.currentDocument,
-          shapes: sortShapesByZIndex(this.state.currentDocument.shapes),
-        }
-      : null;
-
+    const { currentDocument } = this.state;
     const currentState = {
       actions: this.getActions(),
       currentDocument,
@@ -336,7 +341,7 @@ export default class DocumentsView extends Component<Props, State> {
             renderContent={
               <LoginDialog
                 onLogin={this.props.setAppUser}
-                onDismiss={this.toggleLoginDialog}
+                onDismiss={this.hideLoginModal}
               />
             }
             visible={this.state.loginModalVisible}
@@ -356,7 +361,7 @@ export default class DocumentsView extends Component<Props, State> {
                 documents={this.state.documents}
                 getDocuments={this.getDocuments}
                 onOpenDocument={this.getDocument}
-                onDismiss={this.toggleOpenDocument}
+                onDismiss={this.hideOpenDocumentModal}
               />
             }
             visible={this.state.openDocumentModalVisible}
@@ -364,7 +369,7 @@ export default class DocumentsView extends Component<Props, State> {
           <Modal
             renderContent={
               <NewDocumentDialog
-                onDismiss={this.toggleNewDocument}
+                onDismiss={this.hideNewDocumentModal}
                 didCreateDocument={this.handleCreateNewDocument}
               />
             }

@@ -9,17 +9,17 @@ import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
 
-export interface INewAccount {
+export interface NewAccount {
   emailAddress: string;
   password: string;
 }
 
-interface INewAccountFormValues extends INewAccount {
+interface NewAccountFormValues extends NewAccount {
   confirmPassword: string;
 }
 
-interface IProps {
-  onCreateAccount(account: INewAccount): Promise<string>;
+interface Props {
+  onCreateAccount(account: NewAccount): Promise<string | null>;
   onDismiss(): void;
 }
 
@@ -50,7 +50,7 @@ const validationSchema = yup.object().shape({
     .required("Password confirmation is required."),
 });
 
-const NewAccountForm: React.StatelessComponent<IProps> = props => (
+const NewAccountForm: React.StatelessComponent<Props> = props => (
   <Formik
     initialValues={{
       emailAddress: "",
@@ -59,8 +59,8 @@ const NewAccountForm: React.StatelessComponent<IProps> = props => (
     }}
     isInitialValid={false}
     onSubmit={(
-      values: INewAccountFormValues,
-      formikProps: FormikProps<INewAccountFormValues>
+      values: NewAccountFormValues,
+      formikProps: FormikProps<NewAccountFormValues>
     ) =>
       props
         .onCreateAccount({
@@ -83,7 +83,7 @@ const NewAccountForm: React.StatelessComponent<IProps> = props => (
       errors,
       values,
       isSubmitting,
-    }: FormikProps<INewAccountFormValues>) => (
+    }: FormikProps<NewAccountFormValues>) => (
       <NewAccountModalContent>
         <ModalHeader>Create a new account</ModalHeader>
         <Form onSubmit={handleSubmit}>

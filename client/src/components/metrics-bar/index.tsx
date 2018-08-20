@@ -56,7 +56,7 @@ const MetricsBar: React.StatelessComponent<Props> = ({
   let currentStyle: DraftInlineStyle | null = null;
   let isTextSelected = false;
   if (isText(shape)) {
-    currentStyle = shape!.editorState.getCurrentInlineStyle();
+    currentStyle = shape!.editorState!.getCurrentInlineStyle();
     isTextSelected = getSelectedText(shape!.editorState) !== "";
   }
   return (
@@ -182,7 +182,7 @@ const MetricsBar: React.StatelessComponent<Props> = ({
                 onClick={() =>
                   updateSelectedObject({
                     editorState: RichUtils.toggleInlineStyle(
-                      shape!.editorState,
+                      shape!.editorState!,
                       type.style
                     ),
                   })

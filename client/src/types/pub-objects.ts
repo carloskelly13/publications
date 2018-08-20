@@ -1,7 +1,18 @@
+import { EditorState } from "draft-js";
+
 export enum PubShapeType {
   Rectangle = "rect",
   Ellipse = "ellipse",
   Text = "text",
+}
+
+export type PubShapeChanges = {
+  [key: string]: string | number | EditorState;
+} | null;
+
+export interface PubNewDocument {
+  name: string;
+  orientation: "portrait" | "landscape";
 }
 
 export interface PubShape {
@@ -11,6 +22,7 @@ export interface PubShape {
   height: number;
   x: number;
   y: number;
+  z: number;
   r: number;
   fill: string;
   fillOpacity: number;
@@ -18,7 +30,7 @@ export interface PubShape {
   strokeWidth: number;
   strokeOpacity: number;
   isEditing?: boolean;
-  editorState?: any;
+  editorState?: EditorState;
 }
 
 export interface PubDocument {

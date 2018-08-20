@@ -1,4 +1,3 @@
-// @flow
 import React from "react";
 import styled from "styled-components";
 import Button from "../ui/framed-button";
@@ -6,8 +5,9 @@ import FormInput from "../ui/form-input";
 import { ModalButtonContainer } from "../ui/button-container";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import { Colors } from "../../util/constants";
+import { PubNewDocument } from "../../types/pub-objects";
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -77,20 +77,22 @@ const PageLabelDimensions = styled.div`
   font-size: 0.85em;
 `;
 
-type Props = {
-  onDismiss: () => void,
-  didCreateDocument: (sender: {
-    name: string,
-    orientation: string,
-  }) => Promise<void>,
-};
+interface Props {
+  onDismiss: () => void;
+  didCreateDocument: (
+    sender: {
+      name: string;
+      orientation: string;
+    }
+  ) => Promise<void>;
+}
 
-type State = {
-  name: string,
-  width: number,
-  height: number,
-  formValid: boolean,
-};
+interface State {
+  name: string;
+  width: number;
+  height: number;
+  formValid: boolean;
+}
 
 export default class NewDocumentDialog extends React.Component<Props, State> {
   state = {
@@ -105,7 +107,7 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
     return errors;
   };
 
-  createNewDocument = async (sender: { name: string, orientation: string }) => {
+  createNewDocument = async (sender: { name: string; orientation: string }) => {
     this.props.didCreateDocument(sender);
     this.props.onDismiss();
   };
@@ -121,8 +123,12 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
             orientation: "portrait",
           }}
           validate={this.validateForm}
-          onSubmit={values => this.createNewDocument(values)}
-          render={({ values, handleChange, handleSubmit }) => (
+          onSubmit={(values: PubNewDocument) => this.createNewDocument(values)}
+          render={({
+            values,
+            handleChange,
+            handleSubmit,
+          }: FormikProps<PubNewDocument>) => (
             <Form onSubmit={handleSubmit}>
               <FormInput
                 placeholder="Document Name"

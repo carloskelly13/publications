@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import range from "lodash/range";
 import { Colors } from "../../util/constants";
-import { GridLine } from "../../components/canvas/grid-line";
+import { GridLine } from "../canvas/grid-line";
 import styled from "styled-components";
+import { PubDocument } from "../../types/pub-objects";
 
 const RulerContainer = styled.div`
   background: ${Colors.Rulers.Background};
@@ -25,12 +26,23 @@ const RulerContainer = styled.div`
 
 const isMajor = index => index % 4 === 0 && index > 0;
 
-export default class Ruler extends Component {
+interface Props {
+  doc: PubDocument;
+  dpi: number;
+  zoom: number;
+  showDetail: boolean;
+  scrollOffset: { scrollLeft: number; scrollTop: number };
+}
+
+export default class Ruler extends Component<Props> {
   static defaultProps = {
     dpi: 96,
   };
 
-  renderRulerMarks(rulerRange, direction) {
+  renderRulerMarks(
+    rulerRange: Array<number>,
+    direction: string
+  ): React.ReactNode {
     const majorPadding = major => (major ? 0 : 15);
     return rulerRange.map((mark, index) => {
       const major = isMajor(index);
@@ -43,13 +55,18 @@ export default class Ruler extends Component {
             dX={direction === "V" ? 25 : majorPadding(major)}
             dY={direction === "V" ? majorPadding(major) : 25}
             direction={direction}
+            major={false}
           />
         </g>
       );
     });
   }
 
-  renderMajorLabel(index, mark, direction) {
+  renderMajorLabel(
+    index: number,
+    mark: number,
+    direction: string
+  ): React.ReactNode {
     return (
       <text
         fill={Colors.Rulers.Text}

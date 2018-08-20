@@ -1,3 +1,4 @@
+import React from "react";
 import { GridLine } from "./grid-line";
 
 type RenderGridLinesFn = (
