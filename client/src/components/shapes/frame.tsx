@@ -1,8 +1,7 @@
-// @flow
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 import throttle from "lodash/fp/throttle";
-import type { PubShape } from "../../util/types";
+import { PubShape } from "../../types/pub-objects";
 
 /**
  * Webkit-based browsers have no perf-related issues with events.
@@ -51,28 +50,28 @@ const frameAnchors = {
   ],
 };
 
-type IProps = {
-  renderShape: React.Node,
-  shape: PubShape,
-  selectedShapeId?: string,
-  selectable: boolean,
-  zoom: number,
-  dpi: number,
-  updateSelectedObject: (sender: ?Object) => void,
-  setActiveDraftJSEditor: (id: string | null) => void,
-};
+interface Props {
+  renderShape: React.ReactNode;
+  shape: PubShape;
+  selectedShapeId?: string;
+  selectable: boolean;
+  zoom: number;
+  dpi: number;
+  updateSelectedObject: (sender: Object | null) => void;
+  setActiveDraftJSEditor: (id: string | null) => void;
+}
 
 type IState = {
-  eX: number,
-  eY: number,
-  oX: number,
-  oY: number,
-  oW: number,
-  oH: number,
-  shouldRender: boolean,
+  eX: number;
+  eY: number;
+  oX: number;
+  oY: number;
+  oW: number;
+  oH: number;
+  shouldRender: boolean;
 };
 
-export default class ResizeMoveFrame extends React.Component<IProps, IState> {
+export default class ResizeMoveFrame extends React.Component<Props, IState> {
   static get defaultState() {
     return {
       eX: 0,
@@ -86,74 +85,9 @@ export default class ResizeMoveFrame extends React.Component<IProps, IState> {
   }
 
   state = ResizeMoveFrame.defaultState;
-
-  componentWillUnmount() {
-    this.props.setActiveDraftJSEditor(null);
-    document.removeEventListener("mousemove", this.handleFrameResized);
-    document.removeEventListener("mousemove", this.handleFrameDragged);
-  }
-
   isDragging = false;
   isEditingText = false;
   resizeAnchor = "";
-
-  updateStateForDragging = ({ pageX, pageY }: SyntheticMouseEvent<Element>) => {
-    this.setState({
-      eX: pageX,
-      eY: pageY,
-      oX: this.props.shape.x,
-      oY: this.props.shape.y,
-    });
-  };
-
-  updateStateForResizing = ({ pageX, pageY }: SyntheticMouseEvent<Element>) => {
-    this.setState({
-      eX: pageX,
-      eY: pageY,
-      oX: this.props.shape.x,
-      oY: this.props.shape.y,
-      oW: this.props.shape.width,
-      oH: this.props.shape.height,
-    });
-  };
-
-  handleMouseDown = (event: SyntheticMouseEvent<Element>) => {
-    this.updateStateForDragging(event);
-    if (!this.isEditingText) {
-      document.addEventListener("mousemove", this.handleFrameDragged);
-    }
-  };
-
-  handleMouseUp = () => {
-    document.removeEventListener("mousemove", this.handleFrameDragged);
-    if (this.isDragging) {
-      this.isDragging = false;
-      this.setState({ ...ResizeMoveFrame.defaultState });
-      return;
-    }
-    if (this.props.shape.type !== "text") {
-      return;
-    }
-    this.isEditingText = true;
-    this.setState({ shouldRender: false });
-    this.props.setActiveDraftJSEditor(this.props.shape.id);
-    this.props.updateSelectedObject({ isEditing: true });
-  };
-
-  handleAnchorMouseDown = (event: SyntheticMouseEvent<Element>) => {
-    const coordinate = (event.nativeEvent.target: any).attributes.getNamedItem(
-      "data-coordinate"
-    ).value;
-    this.resizeAnchor = coordinate;
-    this.updateStateForResizing(event);
-    document.addEventListener("mousemove", this.handleFrameResized);
-  };
-
-  handleAnchorMouseUp = () => {
-    this.setState({ ...ResizeMoveFrame.defaultState });
-    this.resizeAnchor = "";
-    document.removeEventListener("mousemove", this.handleFrameResized);
-  };
 
   handleFrameDragged = throttleWrapped((event: MouseEvent) => {
     this.isDragging = true;
@@ -175,7 +109,7 @@ export default class ResizeMoveFrame extends React.Component<IProps, IState> {
   handleFrameResized = throttleWrapped(
     // eslint-disable-next-line max-statements
     (event: MouseEvent) => {
-      const updatedMetrics = {};
+      const updatedMetrics: { [key: string]: number } = {};
 
       if (this.resizeAnchor.includes("n")) {
         updatedMetrics.height = Math.max(
@@ -225,6 +159,69 @@ export default class ResizeMoveFrame extends React.Component<IProps, IState> {
       this.props.updateSelectedObject(updatedMetrics);
     }
   );
+
+  componentWillUnmount() {
+    this.props.setActiveDraftJSEditor(null);
+    document.removeEventListener("mousemove", this.handleFrameResized);
+    document.removeEventListener("mousemove", this.handleFrameDragged);
+  }
+
+  updateStateForDragging = ({ pageX, pageY }: React.MouseEvent<SVGElement>) => {
+    this.setState({
+      eX: pageX,
+      eY: pageY,
+      oX: this.props.shape.x,
+      oY: this.props.shape.y,
+    });
+  };
+
+  updateStateForResizing = ({ pageX, pageY }: React.MouseEvent<SVGElement>) => {
+    this.setState({
+      eX: pageX,
+      eY: pageY,
+      oX: this.props.shape.x,
+      oY: this.props.shape.y,
+      oW: this.props.shape.width,
+      oH: this.props.shape.height,
+    });
+  };
+
+  handleMouseDown = (event: React.MouseEvent<SVGElement>) => {
+    this.updateStateForDragging(event);
+    if (!this.isEditingText) {
+      document.addEventListener("mousemove", this.handleFrameDragged);
+    }
+  };
+
+  handleMouseUp = () => {
+    document.removeEventListener("mousemove", this.handleFrameDragged);
+    if (this.isDragging) {
+      this.isDragging = false;
+      this.setState({ ...ResizeMoveFrame.defaultState });
+      return;
+    }
+    if (this.props.shape.type !== "text") {
+      return;
+    }
+    this.isEditingText = true;
+    this.setState({ shouldRender: false });
+    this.props.setActiveDraftJSEditor(this.props.shape.id);
+    this.props.updateSelectedObject({ isEditing: true });
+  };
+
+  handleAnchorMouseDown = (event: React.MouseEvent<SVGElement>) => {
+    const coordinate = (event.nativeEvent
+      .target as any).attributes.getNamedItem("data-coordinate").value;
+    this.resizeAnchor = coordinate;
+    this.updateStateForResizing(event);
+    document.addEventListener("mousemove", this.handleFrameResized);
+  };
+
+  handleAnchorMouseUp = () => {
+    this.setState({ ...ResizeMoveFrame.defaultState });
+    this.resizeAnchor = "";
+    document.removeEventListener("mousemove", this.handleFrameResized);
+  };
 
   render() {
     const { dpi, shape, zoom } = this.props;

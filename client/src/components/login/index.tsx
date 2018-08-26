@@ -3,7 +3,12 @@ import styled from "styled-components";
 import Button from "../ui/framed-button";
 import { Formik, FormikProps } from "formik";
 import FormInput from "../ui/form-input";
-import Api, { getUserFromAuth } from "../../util/api";
+import {
+  apiRequest,
+  getUserFromSpringResponse,
+  RestMethod,
+  SpringAuthResponse,
+} from "../../util/api";
 import to from "await-to-js";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
@@ -39,12 +44,18 @@ export default class extends React.Component<Props> {
   };
 
   login = async payload => {
-    const [err, response] = await to(Api.POST("users/login", payload));
-    if (err) {
+    const [err, response] = await to<SpringAuthResponse | null>(
+      apiRequest(RestMethod.POST, "users/login", payload)
+    );
+    if (err || !response) {
       this.setState({ errorLoggingIn: true });
       return;
     }
-    const user = getUserFromAuth(response);
+    const user = getUserFromSpringResponse(response);
+    if (!user) {
+      this.setState({ errorLoggingIn: true });
+      return;
+    }
     this.props.onLogin(user);
     this.props.onDismiss();
     this.setState({ errorLoggingIn: false });

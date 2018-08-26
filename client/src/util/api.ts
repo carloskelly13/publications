@@ -1,14 +1,29 @@
-// @flow
 import { Urls, baseRequestHeaders } from "./constants";
 import get from "lodash/fp/get";
-import type { PubUser } from "./types";
+import { PubUser } from "../types/pub-objects";
 
-type RestMethod = "POST" | "GET" | "PUT" | "DELETE";
+export enum RestMethod {
+  POST = "POST",
+  GET = "GET",
+  PUT = "PUT",
+  DELETE = "DELETE",
+}
+
+export type SpringAuthResponse = { principal: { user: PubUser } };
 
 export const setCsrfHeaders = (headers: Headers) => {
-  window.sessionStorage.setItem("x-csrf-header", headers.get("x-csrf-header"));
-  window.sessionStorage.setItem("x-csrf-param", headers.get("x-csrf-token"));
-  window.sessionStorage.setItem("x-csrf-token", headers.get("x-csrf-token"));
+  window.sessionStorage.setItem(
+    "x-csrf-header",
+    headers.get("x-csrf-header") || ""
+  );
+  window.sessionStorage.setItem(
+    "x-csrf-param",
+    headers.get("x-csrf-token") || ""
+  );
+  window.sessionStorage.setItem(
+    "x-csrf-token",
+    headers.get("x-csrf-token") || ""
+  );
 };
 
 export const clearCsrfHeaders = () => {
@@ -23,39 +38,32 @@ export const getCsrfHeaders = () => ({
   "x-csrf-token": window.sessionStorage.getItem("x-csrf-token"),
 });
 
-type APIRequest = (
+type GetUserFromSpringResponse = (
+  response: SpringAuthResponse
+) => PubUser | null;
+export const getUserFromSpringResponse: GetUserFromSpringResponse = get(
+  "principal.user"
+);
+
+export async function apiRequest<T>(
+  method: RestMethod,
   path: string,
-  body: ?Object,
-  headers: ?Object
-) => Promise<Object>;
-
-export const getUserFromAuth: () => PubUser = get("principal.user");
-
-const apiRequestForMethod = (method: RestMethod): APIRequest => async (
-  path,
-  body = {},
-  headers = {}
-) => {
+  body?: Object,
+  headers?: Headers
+): Promise<T | null> {
   const response = await fetch(`${Urls.ApiBase}/${path}`, {
     method,
-    credentials: baseRequestHeaders.credentials,
+    credentials: baseRequestHeaders.credentials as RequestCredentials,
     body: method !== "GET" ? JSON.stringify(body) : undefined,
     headers: {
       ...baseRequestHeaders.headers,
       ...headers,
       ...(method !== "GET" ? getCsrfHeaders() : {}),
-    },
+    } as HeadersInit,
   });
   if (response.status !== 200) {
-    throw new Error(response.status);
+    throw new Error(response.status.toString());
   }
   setCsrfHeaders(response.headers);
   return await response.json();
-};
-
-export default {
-  GET: apiRequestForMethod("GET"),
-  POST: apiRequestForMethod("POST"),
-  PUT: apiRequestForMethod("PUT"),
-  DELETE: apiRequestForMethod("DELETE"),
-};
+}

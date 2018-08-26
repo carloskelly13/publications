@@ -11,7 +11,7 @@ export const metrics = {
 
 export const appFont =
   // eslint-disable-next-line quotes
-  '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif';
+  `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif`;
 
 export const colors = [
   "#fff",

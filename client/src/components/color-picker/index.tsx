@@ -6,6 +6,7 @@ import { Text } from "../ui/text";
 import { ContentContainer } from "../ui/containers";
 import { AppColors } from "../../util/constants";
 import { capitalizeString } from "../../util/string";
+import { ColorFormats } from "tinycolor2";
 
 interface ColorChangeObj {
   hex: string;
@@ -13,7 +14,7 @@ interface ColorChangeObj {
 }
 
 interface SketchPickerProps {
-  color: string;
+  color: ColorFormats.RGBA;
   onChangeComplete(change: ColorChangeObj): void;
 }
 

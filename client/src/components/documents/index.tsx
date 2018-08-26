@@ -10,7 +10,7 @@ import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
 import to from "await-to-js";
 import getOr from "lodash/fp/getOr";
-import Api, { clearCsrfHeaders } from "../../util/api";
+import { clearCsrfHeaders, apiRequest, RestMethod } from "../../util/api";
 import { ViewContainer, DocumentView } from "./components";
 import { metrics } from "../../util/constants";
 import StartModal from "../start-modal";
@@ -123,7 +123,7 @@ export default class DocumentsView extends Component<Props, State> {
    */
 
   logOut = async () => {
-    await to(Api.DELETE("users/logout"));
+    await to(apiRequest(RestMethod.DELETE, "users/logout"));
     clearCsrfHeaders();
     this.props.setAppUser(null);
     window.localStorage.removeItem("currentDocumentId");
@@ -134,7 +134,9 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   createAccount = async (account: NewAccount) => {
-    const [error, user] = await to<PubUser>(Api.POST("users", account));
+    const [error, user] = await to<PubUser | null>(
+      apiRequest(RestMethod.POST, "users", account)
+    );
     if (error || !user) {
       return "There was an error creating your account. Verify the email address is not already in use.";
     }
@@ -143,7 +145,9 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   getCurrentUser = async () => {
-    const [err, user] = await to<PubUser>(Api.GET("users/current"));
+    const [err, user] = await to<PubUser | null>(
+      apiRequest(RestMethod.GET, "users/current")
+    );
     if (!err && user) {
       this.props.setAppUser(user);
 
@@ -172,8 +176,10 @@ export default class DocumentsView extends Component<Props, State> {
   };
 
   getDocuments = async () => {
-    const [err, documents] = await to<Array<PubDocument>>(Api.GET("documents"));
-    if (err) {
+    const [err, documents] = await to<Array<PubDocument> | null>(
+      apiRequest(RestMethod.GET, "documents")
+    );
+    if (err || !documents) {
       this.setState({ documents: [] });
       return;
     }
@@ -187,8 +193,10 @@ export default class DocumentsView extends Component<Props, State> {
     if (!this.props.user) {
       return;
     }
-    const [err, doc] = await to<PubDocument>(Api.GET(`documents/${id}`));
-    if (err) {
+    const [err, doc] = await to<PubDocument | null>(
+      apiRequest(RestMethod.GET, `documents/${id}`)
+    );
+    if (err || !doc) {
       return;
     }
     this.setCurrentDocument(addEditorStateToDocument(doc));
@@ -210,16 +218,16 @@ export default class DocumentsView extends Component<Props, State> {
     }
 
     if (id) {
-      const [err] = await to<PubDocument>(
-        Api.PUT(`documents/${id}`, packagedDocument)
+      const [err] = await to<PubDocument | null>(
+        apiRequest(RestMethod.PUT, `documents/${id}`, packagedDocument)
       );
       if (err) {
         return;
       }
       return;
     }
-    const [err, doc] = await to<PubDocument>(
-      Api.POST("documents", packagedDocument)
+    const [err, doc] = await to<PubDocument | null>(
+      apiRequest(RestMethod.POST, "documents", packagedDocument)
     );
     if (err || !doc) {
       return;
@@ -323,7 +331,9 @@ export default class DocumentsView extends Component<Props, State> {
       shapes: [],
     };
     if (this.props.user) {
-      const [err, doc] = await to<PubDocument>(Api.POST("documents", payload));
+      const [err, doc] = await to<PubDocument | null>(
+        apiRequest(RestMethod.POST, "documents", payload)
+      );
       if (err || !doc) {
         return;
       }
