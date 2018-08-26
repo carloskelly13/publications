@@ -1,30 +1,46 @@
-// @flow
-import type {
-  ColorPickerProps,
-  ColorPickerState,
-  ColorChangeObj,
-} from "./types";
 import React from "react";
 import enhanceWithClickOutside from "react-click-outside";
-// import { SketchPicker } from "react-color";
 import { ColorPickerButton, PickerContents } from "./components";
 import { convertToRGBA } from "../../util/colors";
 import { Text } from "../ui/text";
 import { ContentContainer } from "../ui/containers";
 import { AppColors } from "../../util/constants";
-import { capitalizeString } from "./../../util/string";
+import { capitalizeString } from "../../util/string";
 
-let SketchPicker = null;
+interface ColorChangeObj {
+  hex: string;
+  rgb: { a: number };
+}
+
+interface SketchPickerProps {
+  color: string;
+  onChangeComplete(change: ColorChangeObj): void;
+}
+
+let SketchPicker: React.ComponentClass<SketchPickerProps> | null = null;
+
+interface Props {
+  onChange: Function;
+  property: string;
+  hex: string;
+  alpha?: number;
+}
+
+interface State {
+  isOpen: boolean;
+}
 
 export default enhanceWithClickOutside(
-  class extends React.Component<ColorPickerProps, ColorPickerState> {
+  class extends React.Component<Props, State> {
     state = {
       isOpen: false,
     };
 
     loadReactColorModule = async () => {
       const reactColor = await import(/* webpackChunkName: "reactColor" */ "react-color");
-      SketchPicker = reactColor.SketchPicker;
+      SketchPicker = reactColor.SketchPicker as React.ComponentClass<
+        SketchPickerProps
+      >;
     };
 
     handleButtonSelected = async () => {

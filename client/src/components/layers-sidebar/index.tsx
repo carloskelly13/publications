@@ -1,5 +1,3 @@
-// @flow
-import type { PubDocument, PubShape } from "../../util/types";
 import React from "react";
 import "react-motion";
 import get from "lodash/get";
@@ -7,20 +5,22 @@ import { LayersSidebarContainer, Title } from "./components";
 import { LayerItem } from "./layer-item";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { StateContext } from "../../contexts";
+import { PubDocument, PubShape } from "../../types/pub-objects";
+import { LayerMutationDelta } from "../documents/editor-actions";
 
-type Props = {
-  currentDocument: ?PubDocument,
-  selectedObject: ?PubShape,
-  adjustObjectLayer: (sender: PubShape) => void,
-  updateSelectedObject: (sender: ?Object) => void,
-};
+interface Props {
+  currentDocument: PubDocument | null;
+  selectedObject: PubShape | null;
+  adjustObjectLayer: (sender: LayerMutationDelta) => void;
+  updateSelectedObject: (sender: Object | null) => void;
+}
 
-export const LayersSidebar = ({
+export const LayersSidebar: React.SFC<Props> = ({
   currentDocument,
   selectedObject,
   adjustObjectLayer,
   updateSelectedObject,
-}: Props) => (
+}) => (
   <LayersSidebarContainer visible={!!currentDocument}>
     <Title>Layers</Title>
     <DragDropContext onDragEnd={adjustObjectLayer}>

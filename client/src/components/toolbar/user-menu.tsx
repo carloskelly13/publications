@@ -1,14 +1,15 @@
-// @flow
-import * as React from "react";
+import React from "react";
 import Menu, { MenuItem } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
+import { PubUser } from "../../types/pub-objects";
 
-type Props = {
-  user: ?Object,
-  showLoginDialog: () => void,
-  logOut: () => Promise<any>,
-};
-export default (props: Props) => (
+interface Props {
+  user: PubUser | null;
+  showLoginModal(): void;
+  logOut(): Promise<any>;
+}
+
+const UserMenu: React.SFC<Props> = props => (
   <Menu
     alignRight
     renderButton={
@@ -23,10 +24,12 @@ export default (props: Props) => (
         </>
       ) : (
         <>
-          <MenuItem onClick={props.showLoginDialog}>Log In…</MenuItem>
+          <MenuItem onClick={props.showLoginModal}>Log In…</MenuItem>
           <MenuItem disabled>Create a free Publications account…</MenuItem>
         </>
       )
     }
   />
 );
+
+export default UserMenu;

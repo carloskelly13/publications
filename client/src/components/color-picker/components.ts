@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Colors } from "../../util/constants";
 
-export const ColorPickerButton = styled.button`
+export const ColorPickerButton = styled.button<{ color: string }>`
   width: 14px;
   height: 14px;
   background: ${Colors.FormInput.MetricBackground};

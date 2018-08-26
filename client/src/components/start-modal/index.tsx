@@ -1,4 +1,3 @@
-// @flow
 import React from "react";
 import LogoBanner from "../ui/logo-banner";
 import Button from "../ui/framed-button";

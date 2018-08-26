@@ -75,7 +75,7 @@ export default class DocumentsView extends Component<Props, State> {
     addObject: this.addObject,
     deleteObject: this.deleteObject,
     handleClipboardAction: this.handleClipboardAction,
-    logOut: this.logOut,
+    logout: this.logOut,
     getDocument: this.getDocument,
     saveDocument: this.saveDocument,
     setZoom: this.setZoom,
@@ -156,6 +156,18 @@ export default class DocumentsView extends Component<Props, State> {
 
       return;
     }
+    const savedLocalDocumentJSON = window.localStorage.getItem(
+      "saved-local-document"
+    );
+    if (savedLocalDocumentJSON) {
+      try {
+        const savedLocalDocument = JSON.parse(savedLocalDocumentJSON);
+        this.setCurrentDocument(addEditorStateToDocument(savedLocalDocument));
+      } catch (e) {
+        this.setState({ startModalVisible: true });
+      }
+      return;
+    }
     this.setState({ startModalVisible: true });
   };
 
@@ -188,6 +200,15 @@ export default class DocumentsView extends Component<Props, State> {
     }
     const packagedDocument = packageDocumentToJson(this.state.currentDocument);
     const id = getOr(null, "id")(this.state.currentDocument);
+
+    if (!this.props.user) {
+      window.localStorage.setItem(
+        "saved-local-document",
+        JSON.stringify(packagedDocument)
+      );
+      return;
+    }
+
     if (id) {
       const [err] = await to<PubDocument>(
         Api.PUT(`documents/${id}`, packagedDocument)
@@ -379,11 +400,7 @@ export default class DocumentsView extends Component<Props, State> {
           <MetricsBar />
           <DocumentView>
             <EditorView />
-            <LayersSidebar
-              visible={this.state.layersPanelVisible}
-              currentDocument={currentDocument}
-              selectedObject={this.state.selectedObject}
-            />
+            <LayersSidebar />
           </DocumentView>
         </ViewContainer>
       </StateContext.Provider>

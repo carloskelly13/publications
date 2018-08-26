@@ -1,4 +1,3 @@
-// @flow
 import React from "react";
 import Menu, { MenuItem } from "../ui/menu";
 import CheckmarkIcon from "../ui/icons/checkmark";
@@ -24,12 +23,13 @@ const Label = styled.span`
   padding: 0 0 0 7px;
 `;
 
-type Props = {
-  zoom: number,
-  setZoom: number => void,
-  disabled: boolean,
-};
-export default ({ zoom, setZoom, disabled }: Props) => (
+interface Props {
+  zoom: number;
+  disabled: boolean;
+  setZoom(zoom: number): void;
+}
+
+const ZoomMenu: React.SFC<Props> = ({ zoom, setZoom, disabled }) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Zoom</TextButton>}
@@ -48,3 +48,5 @@ export default ({ zoom, setZoom, disabled }: Props) => (
     ))}
   />
 );
+
+export default ZoomMenu;

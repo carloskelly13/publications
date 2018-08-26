@@ -1,10 +1,14 @@
 import React from "react";
 import { PubDocument, PubShape, PubUser } from "../types/pub-objects";
+import {
+  ClipboardAction,
+  LayerMutationDelta,
+} from "../components/documents/editor-actions";
 
 export interface IPubActions {
   addObject(object: PubShape): void;
   deleteObject(object?: PubShape): void;
-  handleClipboardAction(action: string): void;
+  handleClipboardAction(action: ClipboardAction): void;
   logout(): Promise<void>;
   getDocument(id: string): Promise<void>;
   saveDocument(): Promise<any>;
@@ -13,7 +17,7 @@ export interface IPubActions {
   showOpenDocumentModal(): void;
   toggleLayersPanel(): void;
   updateSelectedObject(sender?: Object | null): void;
-  adjustObjectLayer(sender: PubShape): void;
+  adjustObjectLayer(sender: LayerMutationDelta): void;
   toggleLoginDialog(): void;
   hideStartModal(): void;
   showNewAccountModal(): void;

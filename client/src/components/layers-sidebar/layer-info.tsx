@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { AppColors } from "../../util/constants";
+import { PubShape } from "../../types/pub-objects";
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +24,7 @@ const BaseIcon = styled.div`
   margin: 0 5px 0 0;
 `;
 
-const RectangleIcon = styled(BaseIcon)`
+const RectangleIcon = styled(BaseIcon)<{ stroke: string; fill: string }>`
   border: 1px solid ${({ stroke }) => stroke};
   border-radius: 1px;
   background: ${({ fill }) => fill};
@@ -44,19 +45,19 @@ const TextIcon = styled(BaseIcon)`
   justify-content: center;
 `;
 
-const MetricsContainer = styled.div`
+const MetricsContainer = styled.div<{ selected: boolean }>`
   font-size: 0.95em;
   color: ${({ selected }) => (selected ? "#fff" : AppColors.MidTextGray)};
   align-items: flex-end;
   justify-content: space-between;
 `;
 
-const Metric = styled.span`
+const Metric = styled.span<{ selected: boolean }>`
   font-weight: 500;
   color: ${({ selected }) => (selected ? "#fff" : AppColors.MidTextGray)};
 `;
 
-const ShapeType = styled.div`
+const ShapeType = styled.div<{ selected: boolean }>`
   color: ${({ selected }) => (selected ? "#fff" : AppColors.Gray30)};
 `;
 
@@ -88,11 +89,11 @@ export const renderIcon = (shape, selected) => {
   }
 };
 
-type LayerInfoProps = {
-  shape: Object,
-  selected: boolean,
-};
-export default ({ shape, selected }: LayerInfoProps) => (
+interface LayerInfoProps {
+  shape: PubShape;
+  selected: boolean;
+}
+const LayerInfo: React.SFC<LayerInfoProps> = ({ shape, selected }) => (
   <Container>
     {renderIcon(shape, selected)}
     <MetricsContainer selected={selected}>
@@ -101,3 +102,4 @@ export default ({ shape, selected }: LayerInfoProps) => (
     </MetricsContainer>
   </Container>
 );
+export default LayerInfo;

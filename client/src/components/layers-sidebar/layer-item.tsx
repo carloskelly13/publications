@@ -11,7 +11,7 @@ const getItemStyle = draggableStyle => ({
   ...draggableStyle,
 });
 
-const backgroundColorForState = ({ selected }) => {
+const backgroundColorForState = (selected: boolean): string => {
   if (selected) {
     return Colors.LayersSidebar.ItemSelectedBackground;
   }
@@ -32,8 +32,8 @@ const LayerItemContainer = styled.div`
   }
 `;
 
-const LayerItemContent = styled.div`
-  background: ${props => backgroundColorForState(props)};
+const LayerItemContent = styled.div<{ selected: boolean; isDragging: boolean }>`
+  background: ${props => backgroundColorForState(props.selected)};
   padding: 3px 0;
 `;
 

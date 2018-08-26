@@ -1,5 +1,3 @@
-// @flow
-import type { PubUser, PubShape } from "../../util/types";
 import React from "react";
 import ToolbarBase from "../ui/toolbar";
 import FileMenu from "./file";
@@ -10,26 +8,28 @@ import UserMenu from "./user-menu";
 import { ContentContainer } from "../ui/containers";
 import { documentName } from "../../util/string";
 import { Header } from "./components";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/app-state";
+import { PubShape, PubDocument, PubUser } from "../../types/pub-objects";
+import { ClipboardAction } from "../documents/editor-actions";
 
-type Props = {
-  user: ?PubUser,
-  selectedObject: ?Object,
-  currentDocument: ?Object,
-  clipboardContents: ?Object,
-  zoom: number,
-  addObject: (object: PubShape) => void,
-  deleteObject: () => void,
-  showNewDocumentModal: () => void,
-  showOpenDocumentModal: () => void,
-  handleClipboardAction: (action: string) => void,
-  saveDocument: () => Promise<any>,
-  setZoom: (zoom: number) => void,
-  showLoginModal: () => void,
-  logOut: () => Promise<any>,
-};
+interface Props {
+  user: PubUser | null;
+  selectedObject: PubShape | null;
+  currentDocument: PubDocument | null;
+  clipboardContents: PubShape | null;
+  zoom: number;
+  addObject(object: PubShape): void;
+  deleteObject(): void;
+  showNewDocumentModal(): void;
+  showOpenDocumentModal(): void;
+  handleClipboardAction(action: ClipboardAction): void;
+  saveDocument(): Promise<any>;
+  setZoom(zoom: number): void;
+  showLoginModal(): void;
+  logOut(): Promise<any>;
+}
 
-export const Toolbar = (props: Props) => (
+export const Toolbar: React.SFC<Props> = props => (
   <ToolbarBase>
     <ContentContainer verticalAlign>
       <Header>
@@ -66,7 +66,7 @@ export const Toolbar = (props: Props) => (
       <UserMenu
         logOut={props.logOut}
         user={props.user}
-        showLoginDialog={props.showLoginModal}
+        showLoginModal={props.showLoginModal}
       />
     </ContentContainer>
   </ToolbarBase>
@@ -88,7 +88,7 @@ export default () => (
         deleteObject={actions.deleteObject}
         handleClipboardAction={actions.handleClipboardAction}
         saveDocument={actions.saveDocument}
-        logOut={actions.logOut}
+        logOut={actions.logout}
         showNewDocumentModal={actions.showNewDocumentModal}
         showOpenDocumentModal={actions.showOpenDocumentModal}
         showLoginModal={actions.showLoginModal}

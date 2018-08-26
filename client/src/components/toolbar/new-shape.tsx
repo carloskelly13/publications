@@ -2,8 +2,14 @@ import React from "react";
 import Menu, { MenuItem } from "../ui/menu";
 import { Shapes } from "../../util/new-shapes";
 import { TextButton } from "../ui/text-button";
+import { PubShape } from "../../types/pub-objects";
 
-export default ({ addObject, disabled }) => (
+interface Props {
+  disabled: boolean;
+  addObject(object: PubShape): void;
+}
+
+const NewShapeMenu: React.SFC<Props> = ({ addObject, disabled }) => (
   <Menu
     disabled={disabled}
     renderButton={<TextButton>Insert</TextButton>}
@@ -18,3 +24,5 @@ export default ({ addObject, disabled }) => (
     }
   />
 );
+
+export default NewShapeMenu;

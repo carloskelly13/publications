@@ -1,25 +1,25 @@
-// @flow
-import type { PubDocument } from "../../util/types";
-import * as React from "react";
+import React from "react";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
+import { PubDocument } from "../../types/pub-objects";
 
-type Props = {
-  loggedIn: boolean,
-  currentDocument: ?PubDocument,
-  saveDocument: () => Promise<any>,
-  showNewDocumentModal: () => void,
-  showOpenDocumentModal: () => void,
-  setZoom: number => void,
-};
-export default ({
+interface Props {
+  loggedIn: boolean;
+  currentDocument: PubDocument | null;
+  saveDocument(): Promise<any>;
+  showOpenDocumentModal(): void;
+  showNewDocumentModal(): void;
+  setZoom(zoom: number): void;
+}
+
+const FileMenu: React.SFC<Props> = ({
   loggedIn,
   currentDocument,
   saveDocument,
   showNewDocumentModal,
   showOpenDocumentModal,
   setZoom,
-}: Props) => (
+}) => (
   <Menu
     renderButton={<TextButton>File</TextButton>}
     renderMenu={
@@ -29,11 +29,8 @@ export default ({
           View all Documents…
         </MenuItem>
         <MenuDivider />
-        <MenuItem
-          disabled={!currentDocument || !loggedIn}
-          onClick={saveDocument}
-        >
-          Save
+        <MenuItem disabled={!currentDocument} onClick={saveDocument}>
+          Save{loggedIn ? "" : " to Local Storage"}
         </MenuItem>
         <MenuItem
           disabled={!currentDocument}
@@ -50,3 +47,5 @@ export default ({
     }
   />
 );
+
+export default FileMenu;

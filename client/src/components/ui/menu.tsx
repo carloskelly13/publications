@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import { AppColors, Colors, appFont } from "../../util/constants";
 import enhanceWithClickOutside from "react-click-outside";
 
-export const Menu = styled.ul`
+export const Menu = styled.ul<{ alignRight?: boolean }>`
   background: ${Colors.Menu.Background};
   list-style: none;
   color: ${AppColors.White};
@@ -44,7 +44,7 @@ export const MenuDivider = styled.div`
   background: hsla(0, 0%, 0%, 0.15);
 `;
 
-export const MenuItem = styled.button`
+export const MenuItem = styled.button<{ noExtraRightPadding?: boolean }>`
   padding: ${({ noExtraRightPadding }) =>
     noExtraRightPadding ? "0.4em 1em" : "0.4em 3em 0.4em 1em"};
   border: none;
@@ -80,8 +80,12 @@ export const MenuItem = styled.button`
   }
 `;
 
+interface MenuContainerProps {
+  onClickOutside(): void;
+}
+
 export const MenuContainer = enhanceWithClickOutside(
-  class extends Component {
+  class extends React.Component<MenuContainerProps> {
     handleClickOutside = () => this.props.onClickOutside();
     render() {
       return <MenuContentContainer>{this.props.children}</MenuContentContainer>;
@@ -89,12 +93,25 @@ export const MenuContainer = enhanceWithClickOutside(
   }
 );
 
-type MenuProps = {
-  renderMenu: React.Node,
-  renderButton: React.Node,
-  disabled?: boolean,
-};
-export default class extends React.Component<MenuProps> {
+interface MenuButtonProps {
+  disabled: boolean;
+  children: React.ReactNode;
+  style: React.CSSProperties;
+  onClick(): void;
+}
+
+interface MenuProps {
+  alignRight?: boolean;
+  renderMenu: React.ReactNode;
+  renderButton: React.ReactElement<MenuButtonProps>;
+  disabled?: boolean;
+}
+
+interface MenuState {
+  menuActive: boolean;
+}
+
+export default class extends React.Component<MenuProps, MenuState> {
   state = {
     menuActive: false,
   };

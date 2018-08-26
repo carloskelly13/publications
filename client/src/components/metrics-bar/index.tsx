@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { RichUtils, DraftInlineStyle } from "draft-js";
 import { styles as textStyles } from "../shapes/text-box";
-import ColorPicker from "./../color-picker";
+import ColorPicker from "../color-picker";
 import {
   colorFromStyles,
   sizeFromStyles,
@@ -37,7 +37,7 @@ const MetricsBarContent = styled.div`
 `;
 
 function getPropertyOrNull(
-  object: PubShape | undefined,
+  object: PubShape | null,
   property: string
 ): number | null {
   if (!object || typeof object[property] === "undefined") {
@@ -46,16 +46,17 @@ function getPropertyOrNull(
   return object[property];
 }
 
-const supportsBorder = (shape?: PubShape) =>
+const supportsBorder = (shape: PubShape | null) =>
   shape &&
   (shape.type === PubShapeType.Rectangle ||
     shape.type === PubShapeType.Ellipse);
-const supportsRadius = (shape?: PubShape) =>
+const supportsRadius = (shape: PubShape | null) =>
   shape && shape.type === PubShapeType.Rectangle;
-const isText = (shape?: PubShape) => shape && shape.type === PubShapeType.Text;
+const isText = (shape: PubShape | null) =>
+  shape && shape.type === PubShapeType.Text;
 
 interface Props {
-  shape?: PubShape;
+  shape: PubShape | null;
   updateSelectedObject(sender: Object | null): void;
 }
 
