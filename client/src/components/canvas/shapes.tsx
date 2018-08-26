@@ -22,6 +22,7 @@ interface ShapeProps {
   zoom: number;
   dpi: number;
   activeDraftJSEditor?: string | null;
+  updateSelectedObject?(sender?: Object | null): void;
 }
 
 const Shapes: React.StatelessComponent<Props> = props => {
@@ -40,13 +41,16 @@ const Shapes: React.StatelessComponent<Props> = props => {
       {sortedShapes.map(shape => {
         let shapeProps: ShapeProps = { shape, zoom, dpi };
         if (shape.type === "text") {
-          shapeProps = { ...shapeProps, activeDraftJSEditor };
+          shapeProps = {
+            ...shapeProps,
+            activeDraftJSEditor,
+            updateSelectedObject,
+          };
         }
         const shapeNode = React.createElement(
           shapeNodes[shape.type],
           shapeProps
         );
-
         return (
           <SelectableShape
             key={`cs-${shape.id}`}

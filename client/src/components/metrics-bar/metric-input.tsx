@@ -16,7 +16,7 @@ interface Props {
 }
 
 interface State {
-  presentedValue: number | null;
+  presentedValue: string;
 }
 
 export default class MetricInput extends React.PureComponent<Props, State> {
@@ -27,26 +27,27 @@ export default class MetricInput extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { presentedValue: props.value };
+    this.state = { presentedValue: (props.value || "").toString() };
   }
 
-  static getDerivedStateFromProps(nextProps: Props) {
-    return { presentedValue: nextProps.value };
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+    const { value } = nextProps;
+    this.setState({ presentedValue: (value || "").toString() });
   }
 
   updateValue = (event: UIEvent<HTMLInputElement>) => {
-    const parsedValue = parseFloat(event.currentTarget.value);
+    const parsedValue = event.currentTarget.value;
     this.setState({ presentedValue: parsedValue });
   };
 
   validateInput = () => {
-    const { presentedValue } = this.state;
+    const presentedValue = parseFloat(this.state.presentedValue);
     const { property, onChange } = this.props;
     if (presentedValue !== null && !isNaN(presentedValue)) {
-      this.setState({ presentedValue: presentedValue });
+      this.setState({ presentedValue: presentedValue.toString() });
       onChange({ [property]: presentedValue });
     } else {
-      this.setState({ presentedValue: this.props.value });
+      this.setState({ presentedValue: (this.props.value || "").toString() });
     }
   };
 

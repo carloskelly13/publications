@@ -36,6 +36,16 @@ const MetricsBarContent = styled.div`
   }
 `;
 
+function getPropertyOrNull(
+  object: PubShape | undefined,
+  property: string
+): number | null {
+  if (!object || typeof object[property] === "undefined") {
+    return null;
+  }
+  return object[property];
+}
+
 const supportsBorder = (shape?: PubShape) =>
   shape &&
   (shape.type === PubShapeType.Rectangle ||
@@ -66,7 +76,7 @@ const MetricsBar: React.StatelessComponent<Props> = ({
           <MetricInput
             small
             property="x"
-            value={(shape && shape.x) || null}
+            value={getPropertyOrNull(shape, "x")}
             label="X"
             unit="in"
             disabled={!shape}
@@ -75,7 +85,7 @@ const MetricsBar: React.StatelessComponent<Props> = ({
           <MetricInput
             small
             property="y"
-            value={(shape && shape.y) || null}
+            value={getPropertyOrNull(shape, "y")}
             label="Y"
             unit="in"
             disabled={!shape}
@@ -84,7 +94,7 @@ const MetricsBar: React.StatelessComponent<Props> = ({
           <MetricInput
             small
             property="width"
-            value={(shape && shape.width) || null}
+            value={getPropertyOrNull(shape, "width")}
             label="Width"
             unit="in"
             disabled={!shape}
@@ -93,7 +103,7 @@ const MetricsBar: React.StatelessComponent<Props> = ({
           <MetricInput
             small
             property="height"
-            value={(shape && shape.height) || null}
+            value={getPropertyOrNull(shape, "height")}
             label="Height"
             unit="in"
             disabled={!shape}

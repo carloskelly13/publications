@@ -31,7 +31,6 @@ const TextBox: React.StatelessComponent<IProps> = ({
     height: dpi * shape.height,
   };
   const transform = `scale(${zoom})`;
-
   return (
     <g>
       {readOnly ? null : (
