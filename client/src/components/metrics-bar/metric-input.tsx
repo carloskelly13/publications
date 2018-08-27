@@ -1,4 +1,4 @@
-import React, { UIEvent, KeyboardEvent } from "react";
+import React, { KeyboardEvent, ChangeEvent } from "react";
 import { TextInput } from "../ui/inputs";
 import { Text, InputLabelText } from "../ui/text";
 import { ContentContainer } from "../ui/containers";
@@ -35,7 +35,7 @@ export default class MetricInput extends React.PureComponent<Props, State> {
     this.setState({ presentedValue: (value || "").toString() });
   }
 
-  updateValue = (event: UIEvent<HTMLInputElement>) => {
+  updateValue = (event: ChangeEvent<HTMLInputElement>) => {
     const parsedValue = event.currentTarget.value;
     this.setState({ presentedValue: parsedValue });
   };
@@ -51,7 +51,7 @@ export default class MetricInput extends React.PureComponent<Props, State> {
     }
   };
 
-  handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
+  handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       this.validateInput();
     }
@@ -71,7 +71,6 @@ export default class MetricInput extends React.PureComponent<Props, State> {
         </Text>
         <ContentContainer verticalAlign>
           <TextInput
-            withLabel
             alignRight
             disabled={disabled}
             small={small}

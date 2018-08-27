@@ -99,7 +99,6 @@ export default class extends React.Component<Props> {
                 name="emailAddress"
                 autoComplete="email"
                 onChange={handleChange}
-                marginBottom="1em"
                 value={values.emailAddress}
               />
               <FormInput
@@ -108,7 +107,6 @@ export default class extends React.Component<Props> {
                 name="password"
                 autoComplete="current-password"
                 onChange={handleChange}
-                marginBottom="1em"
                 value={values.password}
               />
               <ModalButtonContainer>

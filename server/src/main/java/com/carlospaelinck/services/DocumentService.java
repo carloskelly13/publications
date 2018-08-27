@@ -26,7 +26,7 @@ public class DocumentService {
     return documentRepository.findById(id);
   }
 
-  public Set<Document> findAllByUser(User user, Sort sortOrder) {
+  public List<Document> findAllByUser(User user, Sort sortOrder) {
     return documentRepository.findAllByUser(user, sortOrder);
   }
 

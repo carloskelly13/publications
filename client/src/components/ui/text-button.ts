@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { AppColors, appFont } from "../../util/constants";
 
-export const TextButton = styled.button`
+export const TextButton = styled.button<{ size?: string }>`
   background: transparent;
   border: none;
   box-sizing: border-box;

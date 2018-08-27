@@ -1,7 +1,7 @@
 import { EditorState } from "draft-js";
 import { stateFromHTML } from "draft-js-import-html";
 import { stateToHTML } from "draft-js-export-html";
-import importTextStyle from "../util/import-text-style";
+import importTextStyle from "./import-text-style";
 import { exporter as textStyleExporter } from "../components/shapes/text-box";
 import sortBy from "lodash/fp/sortBy";
 

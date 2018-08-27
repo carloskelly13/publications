@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Colors } from "../../util/constants";
 
-const Toolbar = styled.div`
+const ToolbarContainer = styled.div`
   align-items: flex-end;
   background: ${Colors.App.Toolbar};
   box-pack: justify;
@@ -19,8 +19,12 @@ const Toolbar = styled.div`
   }
 `;
 
-export default ({ children }) => (
+interface Props {
+  children: React.ReactNode;
+}
+const Toolbar: React.SFC<Props> = ({ children }) => (
   <div style={{ display: "block", zIndex: 5 }}>
-    <Toolbar>{children}</Toolbar>
+    <ToolbarContainer>{children}</ToolbarContainer>
   </div>
 );
+export default Toolbar;

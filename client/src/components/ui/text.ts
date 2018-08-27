@@ -29,12 +29,26 @@ export const Message = styled.p`
   margin: 0 0 2em;
 `;
 
-export const MarginText = styled.span`
+interface MarginTextProps {
+  mr?: string;
+  mt?: string;
+  mb?: string;
+  ml?: string;
+}
+export const MarginText = styled.span<MarginTextProps>`
   margin: ${({ mr, ml, mt, mb }) =>
     `${mt || 0} ${mr || 0} ${mb || 0} ${ml || 0}`};
 `;
 
-export const Text = styled(MarginText)`
+interface TextProps {
+  size?: string;
+  center?: boolean;
+  right?: boolean;
+  block?: boolean;
+  white?: boolean;
+  uppercase?: boolean;
+}
+export const Text = styled(MarginText)<TextProps>`
   font-size: ${({ size }) => size || "1em"};
   font-family: ${appFont};
   text-align: ${props => {
@@ -75,7 +89,11 @@ export const LightText = styled(Text)`
   font-weight: 300;
 `;
 
-export const InputLabelText = styled.label`
+interface InputLabelTextProps {
+  disabled?: boolean;
+  size?: string;
+}
+export const InputLabelText = styled.label<InputLabelTextProps>`
   border-left: none;
   padding: 1px 0.25em 1px;
   color: ${({ disabled }) =>

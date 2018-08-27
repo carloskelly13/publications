@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-export default styled.button`
+export default styled.button<{ size?: number; disabled?: boolean }>`
   background: transparent;
   border: none;
   box-sizing: border-box;

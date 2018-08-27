@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class DocumentController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  Set<Document> list(@AuthenticationPrincipal PubUserDetails userDetails) {
+  List<Document> list(@AuthenticationPrincipal PubUserDetails userDetails) {
     return documentService.findAllByUser(userDetails.getUser(), new Sort(Sort.Direction.DESC, "lastModified"));
   }
 

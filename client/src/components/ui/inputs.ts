@@ -1,7 +1,15 @@
 import styled from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
-export const TextInput = styled.input`
+interface Props {
+  small?: boolean;
+  mini?: boolean;
+  large?: boolean;
+  alignRight?: boolean;
+  alignCenter?: boolean;
+}
+
+export const TextInput = styled.input<Props>`
   border: none;
   border-radius: 0;
   padding: 0 4px;

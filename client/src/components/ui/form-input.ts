@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
-const FormInput = styled.input`
+const FormInput = styled.input<{ label?: boolean | string }>`
   border: none;
   border-radius: ${({ label }) => (label ? "4px 0 0 4px" : "4px")};
   box-sizing: border-box;
@@ -15,7 +15,6 @@ const FormInput = styled.input`
   line-height: 1em;
   margin: 0 0 1em;
   padding: 0.5em;
-  vertical-align: middle;
   width: 100%;
   outline: none;
 

@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import Logo from "../ui/icons/logo";
+import Logo from "./icons/logo";
 import styled from "styled-components";
 import { Colors } from "../../util/constants";
 
@@ -11,21 +11,21 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const AppName = styled.div`
+const AppName = styled.div<{ textColor?: string; fontSize?: string }>`
   color: ${({ textColor }) => textColor};
   font-size: ${({ fontSize }) => fontSize};
   font-weight: 600;
 `;
 
-type Props = {
-  textColor: string,
-  outlineColor: string,
-  backgroundColor: string,
-  iconSize: number,
-  fontSize: string,
-};
+interface Props {
+  textColor?: string;
+  outlineColor?: string;
+  backgroundColor?: string;
+  iconSize?: number;
+  fontSize?: string;
+}
 
-const LogoBanner = (props: Props) => (
+const LogoBanner: React.SFC<Props> = props => (
   <Container>
     <Logo
       size={props.iconSize}

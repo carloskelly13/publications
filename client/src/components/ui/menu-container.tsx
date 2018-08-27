@@ -1,12 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import { Menu } from "./menu";
 import enhanceWithClickOutside from "react-click-outside";
 
-class MenuContainer extends Component {
+interface Props {
+  onClickOutside(): void;
+}
+class MenuContainer extends React.Component<Props> {
   handleClickOutside = () => this.props.onClickOutside();
 
   render() {
-    return <Menu width={this.props.width}>{this.props.children}</Menu>;
+    return <Menu>{this.props.children}</Menu>;
   }
 }
 

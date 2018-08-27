@@ -94,7 +94,6 @@ const NewAccountForm: React.StatelessComponent<Props> = props => (
             name="emailAddress"
             autoComplete="email"
             onChange={handleChange}
-            marginBottom="1em"
             value={values.emailAddress}
           />
           {errors.password && <Error>{errors.password}</Error>}
@@ -104,7 +103,6 @@ const NewAccountForm: React.StatelessComponent<Props> = props => (
             type="password"
             name="password"
             onChange={handleChange}
-            marginBottom="1em"
             value={values.password}
           />
           {errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
@@ -114,7 +112,6 @@ const NewAccountForm: React.StatelessComponent<Props> = props => (
             type="password"
             name="confirmPassword"
             onChange={handleChange}
-            marginBottom="1em"
             value={values.confirmPassword}
           />
           <ModalButtonContainer>

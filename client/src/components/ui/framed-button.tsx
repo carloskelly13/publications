@@ -2,7 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
-const ButtonWrapper = styled.button`
+const ButtonWrapper = styled.button<{
+  marginRight?: boolean;
+  marginLeft?: boolean;
+  active?: boolean;
+}>`
   background: ${Colors.Button.Background};
   border: 1px solid ${Colors.Button.Border};
   border-radius: 4px;
@@ -37,7 +41,18 @@ const ButtonContainerWrapper = styled.div`
   justify-content: space-around;
 `;
 
-export default ({
+interface Props {
+  children: React.ReactNode;
+  disabled?: boolean;
+  marginLeft?: boolean;
+  marginRight?: boolean;
+  style?: React.CSSProperties;
+  active?: boolean;
+  type?: string;
+  onClick?(): void;
+}
+
+const Button: React.SFC<Props> = ({
   children,
   disabled,
   onClick,
@@ -59,6 +74,8 @@ export default ({
     {children}
   </ButtonWrapper>
 );
+
+export default Button;
 
 export const ButtonContainer = ({ children }) => {
   if (children.length <= 1) {
