@@ -1,0 +1,12 @@
+{
+  "delay": "2000",
+  "verbose": true,
+  "ignore": ["dist", "public"],
+  "watch": ["src/server/**/*.{ts,tsx}", "config", "webpack"],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js json ts tsx",
+  "exec":
+    "node ./node_modules/.bin/ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/server/index.ts"
+}
