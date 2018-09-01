@@ -42,7 +42,7 @@ export default class extends React.Component<Props> {
           {filteredDocuments.map(doc => (
             <FileItem
               selected={selectedFileId === doc.id}
-              handleClick={() => handleFileClicked(doc.id)}
+              handleClick={() => handleFileClicked(doc.id!)}
               key={doc.id}
               doc={doc}
             />

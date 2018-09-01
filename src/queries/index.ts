@@ -1,3 +1,26 @@
+export const documentFields = `
+  id
+  name
+  width
+  height
+  shapes {
+    id
+    type
+    x
+    y
+    r
+    z
+    width
+    height
+    fill
+    stroke
+    fillOpacity
+    strokeOpacity
+    strokeWidth
+    text
+  }
+`;
+
 export const currentUserQuery = `#graphql
   query {
     currentUser {
@@ -11,25 +34,15 @@ export const currentUserQuery = `#graphql
 export const documentsQuery = `#graphql
   query {
     documents {
-      id
-      name
-      width
-      height
-      shapes {
-        type
-        x
-        y
-        r
-        z
-        width
-        height
-        fill
-        stroke
-        fillOpacity
-        strokeOpacity
-        strokeWidth
-        text
-      }
+     ${documentFields}
+    }
+  }
+`;
+
+export const documentQuery = `#graphql
+  query($id: ID!) {
+    document(id: $id) {
+     ${documentFields}
     }
   }
 `;
@@ -40,6 +53,14 @@ export const loginMutation = `#graphql
       id
       name
       token
+    }
+  }
+`;
+
+export const saveDocumentMutation = `#graphql
+  mutation($document: DocumentInput!) {
+    saveDocument(document: $document) {
+      ${documentFields}
     }
   }
 `;

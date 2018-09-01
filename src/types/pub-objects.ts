@@ -29,17 +29,17 @@ export interface PubShape {
   stroke: string;
   strokeWidth: number;
   strokeOpacity: number;
+  text?: string;
   isEditing?: boolean;
   editorState?: EditorState;
 }
 
 export interface PubDocument {
-  id: string;
+  id?: string;
   name: string;
   width: number;
   height: number;
   shapes: Array<PubShape>;
-  lastModified: string;
 }
 
 export interface PubUser {

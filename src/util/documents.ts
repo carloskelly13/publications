@@ -4,6 +4,14 @@ import { stateToHTML } from "draft-js-export-html";
 import importTextStyle from "./import-text-style";
 import { exporter as textStyleExporter } from "../components/shapes/text-box";
 import sortBy from "lodash/fp/sortBy";
+import omit from "lodash/fp/omit";
+
+const omitTransientData = omit([
+  "id",
+  "isEditing",
+  "__typename",
+  "editorState",
+]);
 
 export const sortShapesByZIndex = sortBy("z");
 
@@ -42,7 +50,10 @@ export const packageDocumentToJson = document => ({
   width: document.width,
   height: document.height,
   name: document.name,
-  shapes: document.shapes.map(shape => convertObjStylesToHTML(shape)),
+  shapes: document.shapes.map(inputShape => {
+    const outputShape = convertObjStylesToHTML(inputShape);
+    return omitTransientData(outputShape);
+  }),
 });
 
 export const documentsWithEditorState = documents =>

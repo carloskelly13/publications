@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import { lastModifiedString } from "../../util/string";
+// import { lastModifiedString } from "../../util/string";
 import Canvas from "../canvas";
 import { Colors } from "../../util/constants";
 import { PubDocument } from "../../types/pub-objects";
@@ -16,9 +16,9 @@ const FileName = styled.div`
   margin: 5px 0 0;
 `;
 
-const FileDescription = styled.div`
-  font-size: 0.85em;
-`;
+// const FileDescription = styled.div`
+//   font-size: 0.85em;
+// `;
 
 const SvgContainer = styled.div<{ selected?: boolean }>`
   display: inline-block;
@@ -59,6 +59,6 @@ export const FileItem: React.StatelessComponent<Props> = ({
       />
     </SvgContainer>
     <FileName>{doc.name}</FileName>
-    <FileDescription>{lastModifiedString(doc.lastModified)}</FileDescription>
+    {/* <FileDescription>{lastModifiedString(doc.lastModified)}</FileDescription> */}
   </FileItemContainer>
 );

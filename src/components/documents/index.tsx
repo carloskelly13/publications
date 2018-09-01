@@ -8,17 +8,13 @@ import LoginDialog from "../login";
 import NewAccountDialog, { NewAccount } from "../new-account";
 import NewDocumentDialog from "../new-document";
 import Modal from "../modal";
-// import to from "await-to-js";
-// import getOr from "lodash/fp/getOr";
-// import { clearCsrfHeaders, apiRequest, RestMethod } from "../../util/api";
+import get from "lodash/fp/get";
 import { ViewContainer, DocumentView } from "./components";
-// import { metrics } from "../../util/constants";
 import StartModal from "../start-modal";
 
 import {
   documentsWithEditorState,
-  // addEditorStateToDocument,
-  // packageDocumentToJson,
+  packageDocumentToJson,
 } from "../../util/documents";
 import {
   updatedDocumentStateForObjectChanges,
@@ -29,7 +25,12 @@ import {
   LayerMutationDelta,
 } from "./editor-actions";
 import shortid from "shortid";
-import { currentUserQuery, documentsQuery, loginMutation } from "../../queries";
+import {
+  currentUserQuery,
+  documentsQuery,
+  loginMutation,
+  saveDocumentMutation,
+} from "../../queries";
 import { StateContext } from "../../contexts";
 import {
   PubUser,
@@ -41,16 +42,18 @@ import { Connect, query, mutation } from "urql";
 import {
   LoginMutation,
   CurrentUserQuery,
-  DocumentMutations,
   RefetchCurrentUser,
   DocumentsQuery,
+  SaveDocumentMutation,
 } from "../../types/data";
+import { metrics } from "../../util/constants";
 
 interface Props {
   user: PubUser | null;
   documents: Array<PubDocument>;
   login: LoginMutation;
   refetchCurrentUser: RefetchCurrentUser;
+  saveDocument: SaveDocumentMutation;
 }
 
 interface State {
@@ -142,33 +145,12 @@ class DocumentsView extends Component<Props, State> {
     if (!this.state.currentDocument) {
       return;
     }
-    // const packagedDocument = packageDocumentToJson(this.state.currentDocument);
-    // const id = getOr(null, "id")(this.state.currentDocument);
-
-    // if (!this.props.user) {
-    //   window.localStorage.setItem(
-    //     "saved-local-document",
-    //     JSON.stringify(packagedDocument)
-    //   );
-    //   return;
-    // }
-
-    // if (id) {
-    //   const [err] = await to<PubDocument | null>(
-    //     apiRequest(RestMethod.PUT, `documents/${id}`, packagedDocument)
-    //   );
-    //   if (err) {
-    //     return;
-    //   }
-    //   return;
-    // }
-    // const [err, doc] = await to<PubDocument | null>(
-    //   apiRequest(RestMethod.POST, "documents", packagedDocument)
-    // );
-    // if (err || !doc) {
-    //   return;
-    // }
-    // this.setCurrentDocument(doc);
+    return this.props.saveDocument({
+      document: {
+        ...packageDocumentToJson(this.state.currentDocument),
+        id: get("id")(this.state.currentDocument),
+      },
+    });
   };
 
   /**
@@ -207,7 +189,7 @@ class DocumentsView extends Component<Props, State> {
       },
       () => {
         if (doc && "id" in doc) {
-          window.localStorage.setItem("currentDocumentId", doc.id);
+          window.localStorage.setItem("current_document_id", doc.id!);
         }
       }
     );
@@ -261,25 +243,26 @@ class DocumentsView extends Component<Props, State> {
     name: string;
     orientation: string;
   }) => {
-    // const payload = {
-    //   name: sender.name,
-    //   ...metrics[sender.orientation],
-    //   shapes: [],
-    // };
-    // if (this.props.user) {
-    //   const [err, doc] = await to<PubDocument | null>(
-    //     apiRequest(RestMethod.POST, "documents", payload)
-    //   );
-    //   if (err || !doc) {
-    //     return;
-    //   }
-    //   if (this.state.currentDocument) {
-    //     await this.saveDocument();
-    //   }
-    //   this.setCurrentDocument(doc);
-    //   return;
-    // }
-    // this.setCurrentDocument(payload);
+    const payload = {
+      name: sender.name,
+      ...metrics[sender.orientation],
+      shapes: [],
+    };
+    if (this.props.user) {
+      try {
+        const { saveDocument } = await this.props.saveDocument({
+          document: payload,
+        });
+        if (this.state.currentDocument) {
+          await this.saveDocument();
+        }
+        this.setCurrentDocument(saveDocument);
+        return;
+      } catch (e) {
+        return;
+      }
+    }
+    this.setCurrentDocument(payload);
   };
 
   render() {
@@ -350,16 +333,21 @@ class DocumentsView extends Component<Props, State> {
   }
 }
 
-type DocumentQueries = [CurrentUserQuery, DocumentsQuery];
+type Queries = [CurrentUserQuery, DocumentsQuery];
+interface Mutations {
+  login: LoginMutation;
+  saveDocument: SaveDocumentMutation;
+}
 
 export default () => (
-  <Connect<DocumentQueries, DocumentMutations>
+  <Connect<Queries, Mutations>
     query={[query(currentUserQuery), query(documentsQuery)]}
     mutation={{
       login: mutation(loginMutation),
+      saveDocument: mutation(saveDocumentMutation),
     }}
   >
-    {({ data, login, refetch }) => {
+    {({ data, login, refetch, saveDocument }) => {
       let user: PubUser | null = null;
       let documents: Array<PubDocument> = [];
       if (data) {
@@ -369,10 +357,11 @@ export default () => (
       }
       return (
         <DocumentsView
-          refetchCurrentUser={refetch}
-          login={login}
           user={user}
           documents={documents}
+          refetchCurrentUser={refetch}
+          login={login}
+          saveDocument={saveDocument}
         />
       );
     }}

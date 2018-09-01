@@ -12,8 +12,8 @@ export type LoginMutation = (
   options: { name: string; password: string }
 ) => { login: PubUser };
 
-export type RefetchCurrentUser = (options: any) => void;
+export type SaveDocumentMutation = (
+  options: { document: PubDocument }
+) => { saveDocument: PubDocument };
 
-export interface DocumentMutations {
-  login: LoginMutation;
-}
+export type RefetchCurrentUser = (options: any) => void;
