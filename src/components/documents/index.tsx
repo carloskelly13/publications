@@ -15,11 +15,11 @@ import { ViewContainer, DocumentView } from "./components";
 // import { metrics } from "../../util/constants";
 import StartModal from "../start-modal";
 
-// import {
-//   documentsWithEditorState,
-//   addEditorStateToDocument,
-//   packageDocumentToJson,
-// } from "../../util/documents";
+import {
+  documentsWithEditorState,
+  // addEditorStateToDocument,
+  // packageDocumentToJson,
+} from "../../util/documents";
 import {
   updatedDocumentStateForObjectChanges,
   updatedDocumentStateForLayerChanges,
@@ -127,39 +127,15 @@ class DocumentsView extends Component<Props, State> {
    * Data Actions
    */
 
-  logOut = async () => {
-    // await to(apiRequest(RestMethod.DELETE, "users/logout"));
-    // clearCsrfHeaders();
-    // this.props.setAppUser(null);
-    // window.localStorage.removeItem("currentDocumentId");
-    // if (!this.state.currentDocument) {
-    //   this.setState({ startModalVisible: true });
-    // }
-  };
+  logOut = async () => {};
 
   createAccount = async (account: NewAccount): Promise<string | null> => {
-    // const [error, user] = await to<PubUser | null>(
-    //   apiRequest(RestMethod.POST, "users", account)
-    // );
-    // if (error || !user) {
-    //   return "There was an error creating your account. Verify the email address is not already in use.";
-    // }
-    // this.props.setAppUser(user);
-    // return null;
     return null;
   };
 
-  getDocument = async (id: string) => {
-    if (!this.props.user) {
-      return;
-    }
-    // const [err, doc] = await to<PubDocument | null>(
-    //   apiRequest(RestMethod.GET, `documents/${id}`)
-    // );
-    // if (err || !doc) {
-    //   return;
-    // }
-    // this.setCurrentDocument(addEditorStateToDocument(doc));
+  getDocument = (id: string) => {
+    const doc = this.props.documents.filter(d => d.id === id)[0];
+    this.setCurrentDocument(doc);
   };
 
   saveDocument = async () => {
@@ -389,7 +365,7 @@ export default () => (
       if (data) {
         const [currentUserResponse, documentsResponse] = data;
         user = currentUserResponse.currentUser;
-        documents = documentsResponse.documents;
+        documents = documentsWithEditorState(documentsResponse.documents);
       }
       return (
         <DocumentsView

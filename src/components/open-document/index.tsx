@@ -8,7 +8,7 @@ import { PubDocument } from "../../types/pub-objects";
 interface Props {
   documents: Array<PubDocument>;
   onDismiss(): void;
-  onOpenDocument(id: string): Promise<any>;
+  onOpenDocument(id: string): void;
 }
 
 interface State {

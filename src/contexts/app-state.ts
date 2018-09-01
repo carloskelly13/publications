@@ -10,7 +10,7 @@ export interface IPubActions {
   deleteObject(object?: PubShape): void;
   handleClipboardAction(action: ClipboardAction): void;
   logout(): Promise<void>;
-  getDocument(id: string): Promise<void>;
+  getDocument(id: string): void;
   saveDocument(): Promise<any>;
   setZoom(zoom: number): void;
   showNewDocumentModal(): void;
