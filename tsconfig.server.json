@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es6", "es2017.object", "dom", "esnext.asynciterable"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "outDir": "dist/",
+    "sourceMap": true,
+    "target": "es5",
+    "typeRoots": ["node_modules/@types/"]
+  },
+  "include": ["./src/server/**/*"],
+  "exclude": ["node_modules"]
+}
