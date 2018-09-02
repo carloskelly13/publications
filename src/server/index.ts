@@ -1,4 +1,8 @@
 import express from "express";
+import webpack from "webpack";
+import webpackConfig from "../../webpack.config";
+import webpackDevMiddleware from "webpack-dev-middleware";
+import webpackHotMiddleware from "webpack-hot-middleware";
 import graphqlHttp from "express-graphql";
 import schema from "./schemas";
 import jwt from "express-jwt";
@@ -14,20 +18,23 @@ const jwtConfig = {
 const startPublications = function() {
   const mode = process.env.NODE_ENV || "DEVELOPMENT";
   const app = express();
-  let publicPath;
 
   if (mode.toUpperCase() === "DEVELOPMENT") {
-    path.resolve(__dirname, "public");
+    const compiler = webpack(webpackConfig as webpack.Configuration);
+    app.use(
+      webpackDevMiddleware(compiler, {
+        publicPath: webpackConfig.output.publicPath,
+      })
+    );
+    app.use(webpackHotMiddleware(compiler));
     app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
-    publicPath = path.resolve(__dirname, "../../dist/public");
   } else {
-    publicPath = path.resolve(__dirname, "public");
+    const publicPath = path.resolve(__dirname, "../public");
+    app.use(express.static(publicPath));
+    app.get("/", (req, res) =>
+      res.sendFile(path.resolve(publicPath, "index.html"))
+    );
   }
-  console.log(publicPath);
-  app.use(express.static(publicPath));
-  app.get("/", (req, res) =>
-    res.sendFile(path.resolve(publicPath, "index.html"))
-  );
 
   app.use(jwt(jwtConfig));
 

@@ -1,12 +1,13 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
-  mode: "development",
+  mode: "production",
 
   entry: {
-    app: ["webpack-hot-middleware/client", "./src/index.tsx"],
+    app: ["./src/index.tsx"],
   },
 
   output: {
@@ -19,12 +20,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: {
-          loader: "ts-loader",
-          options: {
-            transpileOnly: true,
-          },
-        },
+        use: { loader: "ts-loader", options: { happyPackMode: true } },
         exclude: path.join(__dirname, "/src/server/*"),
       },
       {
@@ -35,20 +31,21 @@ module.exports = {
     ],
   },
 
-  devtool: "inline-source-map",
-
   resolve: {
     extensions: [".js", ".ts", ".tsx"],
     modules: [path.join(__dirname, "node_modules")],
   },
 
-  devServer: {
-    contentBase: __dirname,
-  },
+  devtool: "source-map",
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      tslint: true,
+      checkSyntacticErrors: true,
+    }),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": "'production'",
+    }),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       inject: "body",
