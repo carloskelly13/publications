@@ -130,7 +130,10 @@ class DocumentsView extends Component<Props, State> {
    * Data Actions
    */
 
-  logOut = async () => {};
+  logOut = async () => {
+    window.localStorage.removeItem("authorization_token");
+    return await this.props.refetchCurrentUser({ skipCache: true });
+  };
 
   createAccount = async (account: NewAccount): Promise<string | null> => {
     return null;
