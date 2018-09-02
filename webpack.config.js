@@ -6,27 +6,13 @@ module.exports = {
   mode: "development",
 
   entry: {
-    app: ["webpack-hot-middleware/client?reload=true", "./src/index.tsx"],
+    app: ["./src/index.tsx"],
   },
 
   output: {
     filename: "app.js",
     path: path.resolve(__dirname, "dist/public"),
     pathinfo: true,
-  },
-
-  devServer: {
-    proxy: {
-      "/api": {
-        target: "http://localhost:8080",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/api": "",
-        },
-      },
-    },
-    historyApiFallback: true,
-    hot: false,
   },
 
   module: {
@@ -50,7 +36,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: "./src/index.html",

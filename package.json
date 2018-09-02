@@ -5,11 +5,11 @@
   "main": "index.tsx",
   "scripts": {
     "lint": "tslint 'src/**/*.{ts,tsx}' && tsc --noEmit --skipLibCheck",
-    "build:client:prod": "BABEL_ENV=production webpack --progress --mode production",
-    "build:client:dev": "webpack --progress --mode development",
+    "build:client": "BABEL_ENV=production webpack --progress --mode production",
     "build:server": "tsc -w --esModuleInterop index.ts",
     "db:migrate": "ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/server/database/migrate.ts",
-    "start": "nodemon --config ./nodemon.json -L",
+    "start:client": "NODE_ENV=development webpack --progress --mode development --watch",
+    "start:server": "nodemon --config ./nodemon.json -L",
     "test": "",
     "precommit": "npm run lint",
     "prepush": "npm run lint"
@@ -81,10 +81,7 @@
     "typescript": "^3.0.3",
     "url-loader": "^0.5.7",
     "webpack": "4.17.1",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-middleware": "^3.2.0",
-    "webpack-dev-server": "3.1.6",
-    "webpack-hot-middleware": "^2.22.3"
+    "webpack-cli": "^3.1.0"
   },
   "author": "Carlos Paelinck",
   "license": "MIT"
