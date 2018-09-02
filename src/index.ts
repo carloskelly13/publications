@@ -27,6 +27,7 @@ const startPublications = function() {
       })
     );
     app.use(webpackHotMiddleware(compiler));
+    app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
   } else {
     const publicPath = path.resolve(__dirname, "../public");
     app.use(express.static(publicPath));
@@ -44,8 +45,6 @@ const startPublications = function() {
       context: { user: request.user },
     }))
   );
-
-  app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
 
   app.use(function(err, req, res, next) {
     if (err.name === "UnauthorizedError") {
