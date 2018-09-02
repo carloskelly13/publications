@@ -2,6 +2,7 @@ import React from "react";
 import AppContainer from "./components/base";
 import DocumentView from "./components/documents";
 import { Provider, Client } from "urql";
+import ReactDOM from "react-dom";
 
 interface Headers {
   "Content-Type": string;
@@ -28,4 +29,8 @@ const App: React.SFC = () => (
   </Provider>
 );
 
-export default App;
+ReactDOM.render(<App />, document.getElementById("pub-app"));
+
+if (module.hot) {
+  module.hot.accept();
+}

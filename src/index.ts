@@ -1,10 +1,10 @@
 import express from "express";
 import webpack from "webpack";
-import webpackConfig from "../../webpack.config";
+import webpackConfig from "../webpack.config";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 import graphqlHttp from "express-graphql";
-import schema from "./schemas";
+import schema from "./platform/schemas";
 import jwt from "express-jwt";
 import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
@@ -27,7 +27,6 @@ const startPublications = function() {
       })
     );
     app.use(webpackHotMiddleware(compiler));
-    app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
   } else {
     const publicPath = path.resolve(__dirname, "../public");
     app.use(express.static(publicPath));
@@ -46,6 +45,8 @@ const startPublications = function() {
     }))
   );
 
+  app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
+
   app.use(function(err, req, res, next) {
     if (err.name === "UnauthorizedError") {
       res.status(401).send(err);
@@ -57,4 +58,4 @@ const startPublications = function() {
   });
 };
 
-startPublications();
+export { startPublications };

@@ -8,5 +8,5 @@
   },
   "ext": "js json ts tsx",
   "exec":
-    "node ./node_modules/.bin/ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/server/index.ts"
+    "node ./node_modules/.bin/ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' index.ts"
 }

@@ -353,7 +353,7 @@ export default () => (
       if (data) {
         const [currentUserResponse, documentsResponse] = data;
         user = currentUserResponse.currentUser;
-        documents = documentsWithEditorState(documentsResponse.documents);
+        documents = documentsWithEditorState(documentsResponse.documents || []);
       }
       return (
         <DocumentsView
