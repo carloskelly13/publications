@@ -8,9 +8,10 @@ import { ModalButtonContainer } from "../ui/button-container";
 import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
+import { CreateUserMutation, RefetchCurrentUser } from "../../types/data";
 
 export interface NewAccount {
-  emailAddress: string;
+  name: string;
   password: string;
 }
 
@@ -19,7 +20,8 @@ interface NewAccountFormValues extends NewAccount {
 }
 
 interface Props {
-  onCreateAccount(account: NewAccount): Promise<string | null>;
+  onCreateAccount: CreateUserMutation;
+  refetchCurrentUser: RefetchCurrentUser;
   onDismiss(): void;
 }
 
@@ -39,7 +41,7 @@ const Error = styled.div`
 `;
 
 const validationSchema = yup.object().shape({
-  emailAddress: yup
+  name: yup
     .string()
     .email("A valid email address is required.")
     .required("A valid email address is required."),
@@ -50,82 +52,88 @@ const validationSchema = yup.object().shape({
     .required("Password confirmation is required."),
 });
 
-const NewAccountForm: React.StatelessComponent<Props> = props => (
-  <Formik
-    initialValues={{
-      emailAddress: "",
-      password: "",
-      confirmPassword: "",
-    }}
-    isInitialValid={false}
-    onSubmit={(
-      values: NewAccountFormValues,
-      formikProps: FormikProps<NewAccountFormValues>
-    ) =>
-      props
-        .onCreateAccount({
-          emailAddress: values.emailAddress,
-          password: values.password,
-        })
-        .then(error => {
-          if (error) {
-            formikProps.setErrors({ emailAddress: error });
-            return;
-          }
-          formikProps.setSubmitting(false);
-          props.onDismiss();
-        })
+class NewAccountForm extends React.Component<Props> {
+  handleOnSubmit = async (
+    values: NewAccountFormValues,
+    formikProps: FormikProps<NewAccountFormValues>
+  ) => {
+    try {
+      const { createUser } = await this.props.onCreateAccount({
+        name: values.name,
+        password: values.password,
+      });
+      window.localStorage.setItem("authorization_token", createUser.token);
+      formikProps.setSubmitting(false);
+      this.props.onDismiss();
+      return this.props.refetchCurrentUser({ skipCache: true });
+    } catch (e) {
+      formikProps.setErrors({ name: e });
+      return;
     }
-    validationSchema={validationSchema}
-    render={({
-      handleSubmit,
-      handleChange,
-      errors,
-      values,
-      isSubmitting,
-    }: FormikProps<NewAccountFormValues>) => (
-      <NewAccountModalContent>
-        <ModalHeader>Create a new account</ModalHeader>
-        <Form onSubmit={handleSubmit}>
-          {errors.emailAddress && <Error>{errors.emailAddress}</Error>}
-          <FormInput
-            placeholder="Email Address"
-            type="email"
-            name="emailAddress"
-            autoComplete="email"
-            onChange={handleChange}
-            value={values.emailAddress}
-          />
-          {errors.password && <Error>{errors.password}</Error>}
+  };
 
-          <FormInput
-            placeholder="Password"
-            type="password"
-            name="password"
-            onChange={handleChange}
-            value={values.password}
-          />
-          {errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
-
-          <FormInput
-            placeholder="Confirm Password"
-            type="password"
-            name="confirmPassword"
-            onChange={handleChange}
-            value={values.confirmPassword}
-          />
-          <ModalButtonContainer>
-            <Button type="submit" marginRight disabled={isSubmitting}>
-              Create Account
-            </Button>
-            <Button type="button" onClick={props.onDismiss}>
-              Close
-            </Button>
-          </ModalButtonContainer>
-        </Form>
-      </NewAccountModalContent>
-    )}
-  />
-);
+  render() {
+    return (
+      <Formik
+        initialValues={{
+          name: "",
+          password: "",
+          confirmPassword: "",
+        }}
+        isInitialValid={false}
+        onSubmit={this.handleOnSubmit}
+        validationSchema={validationSchema}
+        render={({
+          handleSubmit,
+          handleChange,
+          errors,
+          values,
+          isSubmitting,
+        }: FormikProps<NewAccountFormValues>) => (
+          <NewAccountModalContent>
+            <ModalHeader>Create a new account</ModalHeader>
+            <Form onSubmit={handleSubmit}>
+              {errors.name && <Error>{errors.name}</Error>}
+              <FormInput
+                placeholder="Email Address"
+                type="email"
+                name="name"
+                autoComplete="email"
+                onChange={handleChange}
+                value={values.name}
+              />
+              {errors.password && <Error>{errors.password}</Error>}
+              <FormInput
+                placeholder="Password"
+                type="password"
+                name="password"
+                onChange={handleChange}
+                value={values.password}
+              />
+              {errors.confirmPassword && (
+                <Error>{errors.confirmPassword}</Error>
+              )}
+              <FormInput
+                placeholder="Confirm Password"
+                type="password"
+                name="confirmPassword"
+                onChange={handleChange}
+                value={values.confirmPassword}
+              />
+              <ModalButtonContainer>
+                <Button type="submit" marginRight disabled={isSubmitting}>
+                  Create Account
+                </Button>
+                <Button type="button" onClick={this.props.onDismiss}>
+                  Close
+                </Button>
+              </ModalButtonContainer>
+            </Form>
+          </NewAccountModalContent>
+        )}
+      />
+    );
+  }
+}
 
 export default NewAccountForm;

@@ -12,6 +12,10 @@ export type LoginMutation = (
   options: { name: string; password: string }
 ) => { login: PubUser };
 
+export type CreateUserMutation = (
+  options: { name: string; password: string }
+) => { createUser: PubUser };
+
 export type SaveDocumentMutation = (
   options: { document: PubDocument }
 ) => { saveDocument: PubDocument };

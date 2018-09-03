@@ -3,18 +3,10 @@ import styled from "styled-components";
 import Button from "../ui/framed-button";
 import { Formik, FormikProps } from "formik";
 import FormInput from "../ui/form-input";
-// import {
-//   apiRequest,
-//   getUserFromSpringResponse,
-//   RestMethod,
-//   SpringAuthResponse,
-// } from "../../util/api";
-// import to from "await-to-js";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { ModalButtonContainer } from "../ui/button-container";
 import { LoginMutation, RefetchCurrentUser } from "../../types/data";
-// import { PubUser } from "../../types/pub-objects";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;

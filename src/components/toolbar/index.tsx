@@ -22,6 +22,7 @@ interface Props {
   deleteObject(): void;
   showNewDocumentModal(): void;
   showOpenDocumentModal(): void;
+  showNewAccountModal(): void;
   handleClipboardAction(action: ClipboardAction): void;
   saveDocument(): Promise<any>;
   setZoom(zoom: number): void;
@@ -67,6 +68,7 @@ export const Toolbar: React.SFC<Props> = props => (
         logOut={props.logOut}
         user={props.user}
         showLoginModal={props.showLoginModal}
+        showNewAccountModal={props.showNewAccountModal}
       />
     </ContentContainer>
   </ToolbarBase>
@@ -87,6 +89,7 @@ export default () => (
         addObject={actions.addObject}
         deleteObject={actions.deleteObject}
         handleClipboardAction={actions.handleClipboardAction}
+        showNewAccountModal={actions.showNewAccountModal}
         saveDocument={actions.saveDocument}
         logOut={actions.logout}
         showNewDocumentModal={actions.showNewDocumentModal}

@@ -6,6 +6,7 @@ import { PubUser } from "../../types/pub-objects";
 interface Props {
   user: PubUser | null;
   showLoginModal(): void;
+  showNewAccountModal(): void;
   logOut(): Promise<any>;
 }
 
@@ -25,7 +26,9 @@ const UserMenu: React.SFC<Props> = props => (
       ) : (
         <>
           <MenuItem onClick={props.showLoginModal}>Log In…</MenuItem>
-          <MenuItem disabled>Create a free Publications account…</MenuItem>
+          <MenuItem onClick={props.showNewAccountModal}>
+            Create a free Publications account…
+          </MenuItem>
         </>
       )
     }

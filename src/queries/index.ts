@@ -57,6 +57,16 @@ export const loginMutation = `#graphql
   }
 `;
 
+export const createUserMutation = `#graphql
+  mutation($name: String!, $password: String!) {
+    createUser(name: $name, password: $password) {
+      id
+      name
+      token
+    }
+  }
+`;
+
 export const saveDocumentMutation = `#graphql
   mutation($document: DocumentInput!) {
     saveDocument(document: $document) {

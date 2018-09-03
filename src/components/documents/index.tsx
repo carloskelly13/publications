@@ -30,6 +30,7 @@ import {
   documentsQuery,
   loginMutation,
   saveDocumentMutation,
+  createUserMutation,
 } from "../../queries";
 import { StateContext } from "../../contexts";
 import {
@@ -45,6 +46,7 @@ import {
   RefetchCurrentUser,
   DocumentsQuery,
   SaveDocumentMutation,
+  CreateUserMutation,
 } from "../../types/data";
 import { metrics } from "../../util/constants";
 
@@ -52,6 +54,7 @@ interface Props {
   user: PubUser | null;
   documents: Array<PubDocument>;
   login: LoginMutation;
+  createUser: CreateUserMutation;
   refetchCurrentUser: RefetchCurrentUser;
   saveDocument: SaveDocumentMutation;
 }
@@ -133,10 +136,6 @@ class DocumentsView extends Component<Props, State> {
   logOut = async () => {
     window.localStorage.removeItem("authorization_token");
     return await this.props.refetchCurrentUser({ skipCache: true });
-  };
-
-  createAccount = async (account: NewAccount): Promise<string | null> => {
-    return null;
   };
 
   getDocument = (id: string) => {
@@ -299,7 +298,8 @@ class DocumentsView extends Component<Props, State> {
           <Modal
             renderContent={
               <NewAccountDialog
-                onCreateAccount={this.createAccount}
+                onCreateAccount={this.props.createUser}
+                refetchCurrentUser={this.props.refetchCurrentUser}
                 onDismiss={this.hideNewAccountModal}
               />
             }
@@ -340,6 +340,7 @@ type Queries = [CurrentUserQuery, DocumentsQuery];
 interface Mutations {
   login: LoginMutation;
   saveDocument: SaveDocumentMutation;
+  createUser: CreateUserMutation;
 }
 
 export default () => (
@@ -348,9 +349,10 @@ export default () => (
     mutation={{
       login: mutation(loginMutation),
       saveDocument: mutation(saveDocumentMutation),
+      createUser: mutation(createUserMutation),
     }}
   >
-    {({ data, login, refetch, saveDocument }) => {
+    {({ data, login, refetch, saveDocument, createUser }) => {
       let user: PubUser | null = null;
       let documents: Array<PubDocument> = [];
       if (data) {
@@ -364,6 +366,7 @@ export default () => (
           documents={documents}
           refetchCurrentUser={refetch}
           login={login}
+          createUser={createUser}
           saveDocument={saveDocument}
         />
       );
