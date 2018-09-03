@@ -1,30 +1,30 @@
 import React from "react";
 import posed from "react-pose";
 
-const PathOne = posed.path({
-  visible: {
+const SouthwestAnglePath = posed.path({
+  end: {
     opacity: 1,
     transform: "translate(0, 0)",
     transition: { delay: 500, duration: 1000, ease: "anticipate" },
   },
-  hidden: { opacity: 0, transform: "translate(10, -10)" },
+  start: { opacity: 0, transform: "translate(10, -10)" },
 });
 
-const PathTwo = posed.path({
-  visible: {
+const NortheastAnglePath = posed.path({
+  end: {
     opacity: 1,
     transform: "translate(0, 0)",
     transition: { delay: 500, duration: 1000, ease: "anticipate" },
   },
-  hidden: { opacity: 0, transform: "translate(-10, 10)" },
+  start: { opacity: 0, transform: "translate(-10, 10)" },
 });
 
-const Rect = posed.rect({
-  visible: {
+const SlidingArmRect = posed.rect({
+  end: {
     height: 62,
     transition: { delay: 1100, type: "spring", stiffness: 70 },
   },
-  hidden: { height: 0 },
+  start: { height: 0 },
 });
 
 interface State {
@@ -47,8 +47,8 @@ class LogoBadge extends React.PureComponent<{}, State> {
         xmlns="http://www.w3.org/2000/svg"
       >
         <g>
-          <Rect
-            pose={this.state.startAnimation ? "visible" : "hidden"}
+          <SlidingArmRect
+            pose={this.state.startAnimation ? "end" : "start"}
             fill="#fff"
             transform="rotate(225 43.517 26.517)"
             x="39.517"
@@ -58,15 +58,15 @@ class LogoBadge extends React.PureComponent<{}, State> {
             width="8"
             height="67"
           />
-          <PathTwo
-            pose={this.state.startAnimation ? "visible" : "hidden"}
+          <NortheastAnglePath
+            pose={this.state.startAnimation ? "end" : "start"}
             d="M1,12 L1,23 L47,23 L47,69 L58,69 L58,12 L1,12 Z"
             stroke="#2C2D30"
             strokeWidth="2"
             fill="#fff"
           />
-          <PathOne
-            pose={this.state.startAnimation ? "visible" : "hidden"}
+          <SouthwestAnglePath
+            pose={this.state.startAnimation ? "end" : "start"}
             d="M66,61 L66,50 L20,50 L20,4 L9,4 L9,61 L66,61 Z"
             stroke="#2C2D30"
             strokeWidth="2"
