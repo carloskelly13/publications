@@ -134,7 +134,14 @@ class DocumentsView extends Component<Props, State> {
    */
 
   logOut = async () => {
+    await this.saveDocument();
     window.localStorage.removeItem("authorization_token");
+    this.setState({
+      currentDocument: null,
+      selectedObject: null,
+      layersPanelVisible: false,
+      zoom: 1,
+    });
     return await this.props.refetchCurrentUser({ skipCache: true });
   };
 
