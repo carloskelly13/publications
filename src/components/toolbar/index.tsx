@@ -27,6 +27,7 @@ interface Props {
   saveDocument(): Promise<any>;
   setZoom(zoom: number): void;
   showLoginModal(): void;
+  showAboutModal(): void;
   logOut(): Promise<any>;
 }
 
@@ -44,6 +45,7 @@ export const Toolbar: React.SFC<Props> = props => (
         showNewDocumentModal={props.showNewDocumentModal}
         showOpenDocumentModal={props.showOpenDocumentModal}
         saveDocument={props.saveDocument}
+        showAboutModal={props.showAboutModal}
         setZoom={props.setZoom}
       />
       <EditMenu
@@ -95,6 +97,7 @@ export default () => (
         showNewDocumentModal={actions.showNewDocumentModal}
         showOpenDocumentModal={actions.showOpenDocumentModal}
         showLoginModal={actions.showLoginModal}
+        showAboutModal={actions.showAboutModal}
         setZoom={actions.setZoom}
         clipboardContents={clipboardContents}
         user={user}

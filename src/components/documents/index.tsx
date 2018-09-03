@@ -49,6 +49,7 @@ import {
   CreateUserMutation,
 } from "../../types/data";
 import { metrics } from "../../util/constants";
+import AboutPanel from "../about";
 
 interface Props {
   user: PubUser | null;
@@ -70,6 +71,7 @@ interface State {
   layersPanelVisible: boolean;
   loginModalVisible: boolean;
   newAccountModalVisible: boolean;
+  aboutModalVisible: boolean;
   zoom: number;
 }
 
@@ -85,6 +87,7 @@ class DocumentsView extends Component<Props, State> {
     layersPanelVisible: false,
     loginModalVisible: false,
     newAccountModalVisible: false,
+    aboutModalVisible: false,
     zoom: 1,
   };
 
@@ -106,6 +109,8 @@ class DocumentsView extends Component<Props, State> {
     showNewAccountModal: this.showNewAccountModal,
     showLoginModal: this.showLoginModal,
     hideLoginModal: this.hideLoginModal,
+    showAboutModal: this.showAboutModal,
+    hideAboutModal: this.hideAboutModal,
   });
 
   /**
@@ -124,6 +129,8 @@ class DocumentsView extends Component<Props, State> {
     this.setState({ openDocumentModalVisible: false });
   showLoginModal = () => this.setState({ loginModalVisible: true });
   hideLoginModal = () => this.setState({ loginModalVisible: false });
+  showAboutModal = () => this.setState({ aboutModalVisible: true });
+  hideAboutModal = () => this.setState({ aboutModalVisible: false });
   toggleLayersPanel = () =>
     this.setState(prevState => ({
       layersPanelVisible: !prevState.layersPanelVisible,
@@ -321,6 +328,10 @@ class DocumentsView extends Component<Props, State> {
               />
             }
             visible={this.state.openDocumentModalVisible}
+          />
+          <Modal
+            renderContent={<AboutPanel onDismiss={this.hideAboutModal} />}
+            visible={this.state.aboutModalVisible}
           />
           <Modal
             renderContent={

@@ -23,6 +23,8 @@ export interface IPubActions {
   showNewAccountModal(): void;
   showLoginModal(): void;
   hideLoginModal(): void;
+  showAboutModal(): void;
+  hideAboutModal(): void;
 }
 
 export interface IPubAppState {

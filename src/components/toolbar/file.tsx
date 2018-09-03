@@ -9,6 +9,7 @@ interface Props {
   saveDocument(): Promise<any>;
   showOpenDocumentModal(): void;
   showNewDocumentModal(): void;
+  showAboutModal(): void;
   setZoom(zoom: number): void;
 }
 
@@ -18,6 +19,7 @@ const FileMenu: React.SFC<Props> = ({
   saveDocument,
   showNewDocumentModal,
   showOpenDocumentModal,
+  showAboutModal,
   setZoom,
 }) => (
   <Menu
@@ -42,7 +44,7 @@ const FileMenu: React.SFC<Props> = ({
           Print and Export PDF…
         </MenuItem>
         <MenuDivider />
-        <MenuItem onClick={() => {}}>About Publications…</MenuItem>
+        <MenuItem onClick={showAboutModal}>About Publications…</MenuItem>
       </>
     }
   />
