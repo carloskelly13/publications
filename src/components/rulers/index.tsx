@@ -81,18 +81,22 @@ export default class Ruler extends Component<Props> {
 
   render() {
     const { doc, dpi, zoom, showDetail } = this.props;
-    const xRange = range(0, doc.width * dpi * zoom, 0.25 * dpi * zoom);
-    const yRange = range(0, doc.height * dpi * zoom, 0.25 * dpi * zoom);
+    const xRange = range(0, doc.pages[0].width * dpi * zoom, 0.25 * dpi * zoom);
+    const yRange = range(
+      0,
+      doc.pages[0].height * dpi * zoom,
+      0.25 * dpi * zoom
+    );
     return (
       <div>
         <RulerContainer
           style={{
-            width: `${doc.width * zoom * dpi + 25}px`,
+            width: `${doc.pages[0].width * zoom * dpi + 25}px`,
             left: `${-this.props.scrollOffset.scrollLeft}px`,
           }}
         >
           <svg
-            width={doc.width * dpi * zoom + 26}
+            width={doc.pages[0].width * dpi * zoom + 26}
             height="25"
             xmlns="http://www.w3.org/2000/svg"
             version="1.1"
@@ -103,14 +107,14 @@ export default class Ruler extends Component<Props> {
         <RulerContainer
           style={{
             top: `${80 - this.props.scrollOffset.scrollTop}px`,
-            height: `${doc.height * zoom * dpi + 1}px`,
+            height: `${doc.pages[0].height * zoom * dpi + 1}px`,
             zIndex: 0,
             left: 0,
           }}
         >
           <svg
             width="24"
-            height={doc.height * dpi * zoom}
+            height={doc.pages[0].height * dpi * zoom}
             xmlns="http://www.w3.org/2000/svg"
             version="1.1"
           >

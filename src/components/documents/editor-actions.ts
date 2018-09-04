@@ -41,7 +41,7 @@ export const updatedDocumentStateForObjectChanges: UpdateDocumentStateForChanges
      * with the previous and new properties merged
      */
     const newObject = { ...currentObject, ...changes };
-    const currentObjects = currentDocument.shapes;
+    const currentObjects = currentDocument.pages[0].shapes;
     /**
      * If a currently selected shape is being modified replace the existing
      * shape in the documents shape array with a new shapes
@@ -60,7 +60,15 @@ export const updatedDocumentStateForObjectChanges: UpdateDocumentStateForChanges
       ];
       return {
         selectedObject: newObject,
-        currentDocument: { ...currentDocument, shapes },
+        currentDocument: {
+          ...currentDocument,
+          pages: [
+            {
+              ...currentDocument.pages[0],
+              shapes,
+            },
+          ],
+        },
       };
     } else if (changes.type === "text" && newObject.editorState) {
       newObject.editorState = EditorState.moveSelectionToEnd(
@@ -92,7 +100,7 @@ export const updatedDocumentStateForLayerChanges: UpdateDocumentStateForLayerCha
   if (!source || !destination || !currentDocument) {
     return {};
   }
-  const sortedObjects = Array.from(currentDocument.shapes);
+  const sortedObjects = Array.from(currentDocument.pages[0].shapes);
   const fromIndex = source.index;
   const toIndex = destination.index;
 
@@ -111,7 +119,12 @@ export const updatedDocumentStateForLayerChanges: UpdateDocumentStateForLayerCha
   return {
     currentDocument: {
       ...currentDocument,
-      shapes: normalizedObjects,
+      pages: [
+        {
+          ...currentDocument.pages[0],
+          shapes: normalizedObjects,
+        },
+      ],
     },
     selectedObject: normalizedSelectedObject,
   };
@@ -164,7 +177,7 @@ export const updatedDocumentStateForClipboardAction: UpdateDocumentStateForClipb
       ...updatedDocumentStateForDeleteAction(selectedObject, currentDocument),
     };
   } else if (action === ClipboardAction.Paste && clipboardContents) {
-    const z = currentDocument.shapes.length + 1;
+    const z = currentDocument.pages[0].shapes.length + 1;
     const newObject = cloneDeep(clipboardContents);
     newObject.z = z;
     newObject.id = shortid.generate();
@@ -175,7 +188,12 @@ export const updatedDocumentStateForClipboardAction: UpdateDocumentStateForClipb
 
     updatedState.currentDocument = {
       ...currentDocument,
-      shapes: [...currentDocument.shapes, newObject],
+      pages: [
+        {
+          ...currentDocument.pages[0],
+          shapes: [...currentDocument.pages[0].shapes, newObject],
+        },
+      ],
     };
     updatedState.selectedObject = newObject;
   }
@@ -195,7 +213,7 @@ export const updatedDocumentStateForDeleteAction: UpdateDocumentStateForDeleteAc
   if (!objectToDelete || !currentDocument) {
     return { selectedObject: null };
   }
-  const shapes = currentDocument.shapes
+  const shapes = currentDocument.pages[0].shapes
     .filter(shape => shape.id !== objectToDelete.id)
     .map(shape => {
       if (shape.z > objectToDelete.z) {
@@ -205,6 +223,14 @@ export const updatedDocumentStateForDeleteAction: UpdateDocumentStateForDeleteAc
     });
   return {
     selectedObject: null,
-    currentDocument: { ...currentDocument, shapes },
+    currentDocument: {
+      ...currentDocument,
+      pages: [
+        {
+          ...currentDocument.pages[0],
+          shapes,
+        },
+      ],
+    },
   };
 };

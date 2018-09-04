@@ -1,6 +1,5 @@
 import { UserModel, DocumentModel } from "./models";
 import { transaction } from "objection";
-// import changeCase from "change-object-case";
 
 const createUser = async function(name, password) {
   const newUser = await UserModel.query().insert({
@@ -27,14 +26,14 @@ const getUser = async function(name) {
 
 const getDocument = function({ userId, id }) {
   return DocumentModel.query()
-    .eager("shapes")
+    .eager("pages.shapes")
     .where("user_id", userId)
     .where("id", id);
 };
 
 const deleteDocument = function({ userId, id }) {
   return DocumentModel.query()
-    .eager("shapes")
+    .eager("pages.shapes")
     .delete()
     .where("user_id", userId)
     .where("id", id);
@@ -42,14 +41,24 @@ const deleteDocument = function({ userId, id }) {
 
 const getDocuments = function(userId) {
   return DocumentModel.query()
-    .eager("shapes")
+    .eager("pages.shapes")
     .where("user_id", userId);
 };
 
 const saveDocument = function(document, userId) {
-  return transaction(DocumentModel.knex(), trx =>
-    DocumentModel.query(trx).upsertGraphAndFetch({ ...document, userId })
-  );
+  return transaction(DocumentModel.knex(), function(trx) {
+    console.log(JSON.stringify(document));
+    return DocumentModel.query(trx).upsertGraphAndFetch(
+      {
+        ...document,
+        userId,
+      }
+      // {
+      //   relate: true,
+      //   unrelate: true,
+      // }
+    );
+  });
 };
 
 const ops = {

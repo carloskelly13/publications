@@ -107,7 +107,7 @@ export class EditorView extends React.Component<Props, State> {
     if (!currentDocument) {
       return { x: [], y: [] };
     }
-    const { width, height } = currentDocument;
+    const { width, height } = currentDocument.pages[0];
     return {
       x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
       y: range(0, height * 96 * zoom, 0.25 * 96 * zoom),
@@ -142,13 +142,13 @@ export class EditorView extends React.Component<Props, State> {
             />
             <Canvas
               allowsEditing
-              width={currentDocument.width}
-              height={currentDocument.height}
+              width={currentDocument.pages[0].width}
+              height={currentDocument.pages[0].height}
               dpi={96}
               zoom={zoom}
               thumbnail={false}
               selectedShape={selectedObject}
-              sortedShapes={currentDocument.shapes}
+              sortedShapes={currentDocument.pages[0].shapes}
               backgroundGridLineRanges={this.gridLineRanges()}
               updateSelectedObject={updateSelectedObject}
             />

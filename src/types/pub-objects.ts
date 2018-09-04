@@ -34,12 +34,17 @@ export interface PubShape {
   editorState?: EditorState;
 }
 
+export interface PubPage {
+  width: number;
+  height: number;
+  pageNumber: number;
+  shapes: Array<PubShape>;
+}
+
 export interface PubDocument {
   id?: string;
   name: string;
-  width: number;
-  height: number;
-  shapes: Array<PubShape>;
+  pages: Array<PubPage>;
 }
 
 export interface PubUser {

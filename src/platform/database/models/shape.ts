@@ -11,10 +11,10 @@ export class ShapeModel extends Model {
   static relationMappings = {
     document: {
       relation: Model.BelongsToOneRelation,
-      modelClass: path.join(__dirname, "document"),
+      modelClass: path.join(__dirname, "page"),
       join: {
-        from: "shapes.document_id",
-        to: "documents.id",
+        from: "shapes.page_id",
+        to: "pages.id",
       },
     },
   };

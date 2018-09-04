@@ -7,7 +7,7 @@
     "lint": "tslint 'src/**/*.{ts,tsx}' && tsc --noEmit --skipLibCheck",
     "build:client": "webpack --mode production --config webpack.config.production.js",
     "build:server": "tsc --project tsconfig.server.json",
-    "db:migrate": "ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/server/database/migrate.ts",
+    "db:migrate": "ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/platform/database/migrate.ts",
     "start": "nodemon --config ./nodemon.json -L",
     "test": "",
     "precommit": "npm run lint",

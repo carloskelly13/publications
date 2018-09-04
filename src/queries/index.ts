@@ -1,23 +1,27 @@
 export const documentFields = `
   id
   name
-  width
-  height
-  shapes {
+  pages {
     id
-    type
-    x
-    y
-    r
-    z
+    pageNumber
     width
     height
-    fill
-    stroke
-    fillOpacity
-    strokeOpacity
-    strokeWidth
-    text
+    shapes {
+      id
+      type
+      x
+      y
+      r
+      z
+      width
+      height
+      fill
+      stroke
+      fillOpacity
+      strokeOpacity
+      strokeWidth
+      text
+    }
   }
 `;
 

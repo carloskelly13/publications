@@ -51,9 +51,9 @@ export const FileItem: React.StatelessComponent<Props> = ({
         dpi={96}
         zoom={0}
         allowsEditing={false}
-        width={doc.width}
-        height={doc.height}
-        sortedShapes={doc.shapes}
+        width={doc.pages[0].width}
+        height={doc.pages[0].height}
+        sortedShapes={doc.pages[0].shapes}
         selectedShape={null}
         updateSelectedObject={noop}
       />

@@ -27,7 +27,7 @@ export const LayersSidebar: React.SFC<Props> = ({
         {provided => (
           <div ref={provided.innerRef}>
             {currentDocument &&
-              currentDocument.shapes.map(shape => (
+              currentDocument.pages[0].shapes.map(shape => (
                 <LayerItem
                   selected={shape.id === get(selectedObject, "id")}
                   handleOnClick={() => updateSelectedObject(shape)}

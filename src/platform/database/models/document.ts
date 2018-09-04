@@ -9,12 +9,12 @@ export class DocumentModel extends Model {
   static columnNameMappers = snakeCaseMappers();
 
   static relationMappings = {
-    shapes: {
+    pages: {
       relation: Model.HasManyRelation,
-      modelClass: path.join(__dirname, "shape"),
+      modelClass: path.join(__dirname, "page"),
       join: {
         from: "documents.id",
-        to: "shapes.document_id",
+        to: "pages.document_id",
       },
     },
 
@@ -31,7 +31,5 @@ export class DocumentModel extends Model {
   readonly id!: string | number;
   user_id!: string | number;
   name!: string;
-  width!: number;
-  height!: number;
-  shapes?: Array<Object>;
+  pages?: Array<Object>;
 }

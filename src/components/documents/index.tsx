@@ -217,16 +217,18 @@ class DocumentsView extends Component<Props, State> {
     }
     const newObject = {
       ...sender,
-      z: currentDocument.shapes.length + 1,
+      z: currentDocument.pages[0].shapes.length + 1,
       id: shortid.generate(),
     };
     this.setState(
       (prevState: State): Pick<State, never> => ({
         currentDocument: {
           ...prevState.currentDocument,
-          shapes: [
-            ...(prevState.currentDocument || { shapes: [] }).shapes,
-            newObject,
+          pages: [
+            {
+              ...prevState.currentDocument.pages[0],
+              shapes: [...prevState.currentDocument.pages[0].shapes, newObject],
+            },
           ],
         },
         selectedObject: newObject,
@@ -261,8 +263,13 @@ class DocumentsView extends Component<Props, State> {
   }) => {
     const payload = {
       name: sender.name,
-      ...metrics[sender.orientation],
-      shapes: [],
+      pages: [
+        {
+          pageNumber: 1,
+          ...metrics[sender.orientation],
+          shapes: [],
+        },
+      ],
     };
     if (this.props.user) {
       try {
@@ -373,7 +380,7 @@ export default () => (
     {({ data, login, refetch, saveDocument, createUser }) => {
       let user: PubUser | null = null;
       let documents: Array<PubDocument> = [];
-      if (data) {
+      if (Array.isArray(data) && data.length === 2) {
         const [currentUserResponse, documentsResponse] = data;
         user = currentUserResponse.currentUser;
         documents = documentsWithEditorState(documentsResponse.documents || []);

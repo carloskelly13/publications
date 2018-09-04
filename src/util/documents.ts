@@ -17,12 +17,15 @@ export const sortShapesByZIndex = sortBy("z");
 
 export const addEditorStateToDocument = document => ({
   ...document,
-  shapes: document.shapes.map(shape => {
-    if (shape.type === "text") {
-      return addEditorStateToObject(shape);
-    }
-    return shape;
-  }),
+  pages: document.pages.map(page => ({
+    ...page,
+    shapes: page.shapes.map(shape => {
+      if (shape.type === "text") {
+        return addEditorStateToObject(shape);
+      }
+      return shape;
+    }),
+  })),
 });
 
 export const addEditorStateToObject = shape => {
@@ -47,13 +50,19 @@ export const convertObjStylesToHTML = shape => {
 };
 
 export const packageDocumentToJson = document => ({
-  width: document.width,
-  height: document.height,
   name: document.name,
-  shapes: document.shapes.map(inputShape => {
-    const outputShape = convertObjStylesToHTML(inputShape);
-    return omitTransientData(outputShape);
-  }),
+  pages: [
+    {
+      id: document.pages[0].id,
+      pageNumber: document.pages[0].pageNumber,
+      width: document.pages[0].width,
+      height: document.pages[0].height,
+      shapes: document.pages[0].shapes.map(inputShape => {
+        const outputShape = convertObjStylesToHTML(inputShape);
+        return omitTransientData(outputShape);
+      }),
+    },
+  ],
 });
 
 export const documentsWithEditorState = documents =>

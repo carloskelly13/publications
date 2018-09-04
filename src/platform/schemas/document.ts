@@ -24,11 +24,16 @@ const shapeFields = {
   text: { type: GraphQLString },
 };
 
+const pageFields = {
+  id: { type: GraphQLID },
+  width: { type: GraphQLFloat },
+  height: { type: GraphQLFloat },
+  pageNumber: { type: GraphQLInt },
+};
+
 const documentFields = {
   id: { type: GraphQLID },
   name: { type: GraphQLString },
-  width: { type: GraphQLFloat },
-  height: { type: GraphQLFloat },
 };
 
 const ShapeType = new GraphQLObjectType({
@@ -46,12 +51,28 @@ const ShapeInputType = new GraphQLInputObjectType({
   },
 });
 
+const PageType = new GraphQLObjectType({
+  name: "Page",
+  fields: {
+    shapes: { type: new GraphQLList(ShapeType) },
+    ...pageFields,
+  },
+});
+
+const PageInputType = new GraphQLInputObjectType({
+  name: "PageInput",
+  fields: {
+    ...pageFields,
+    shapes: { type: new GraphQLList(ShapeInputType) },
+  },
+});
+
 export const DocumentType = new GraphQLObjectType({
   name: "Document",
   fields: {
     createdAt: { type: GraphQLString },
     updatedAt: { type: GraphQLString },
-    shapes: { type: new GraphQLList(ShapeType) },
+    pages: { type: new GraphQLList(PageType) },
     ...documentFields,
   },
 });
@@ -60,6 +81,6 @@ export const DocumentInputType = new GraphQLInputObjectType({
   name: "DocumentInput",
   fields: {
     ...documentFields,
-    shapes: { type: new GraphQLList(ShapeInputType) },
+    pages: { type: new GraphQLList(PageInputType) },
   },
 });
