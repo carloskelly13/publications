@@ -1,12 +1,10 @@
 import React from "react";
-import LogoBanner from "../ui/logo-banner";
 import Button from "../ui/framed-button";
 import DocumentIcon from "../ui/icons/document";
 import UserLockIcon from "../ui/icons/user-lock";
 import UserBadgeIcon from "../ui/icons/user-badge";
-import { StateContext } from "../../contexts";
+import OpenDocumentIcon from "../ui/icons/open-document";
 import { ModalButtonContainer } from "../ui/button-container";
-import { Colors } from "../../util/constants";
 import {
   ButtonDescription,
   ButtonTextContainer,
@@ -15,41 +13,83 @@ import {
   StartButton,
   StartButtonContainer,
   StartModalContent,
+  RightContent,
+  Title,
+  Description,
 } from "./styles";
+import LogoBadge from "../ui/icons/logo-badge";
+import { Colors } from "../../util/constants";
+import { PubUser } from "../../types/pub-objects";
 
-export default () => (
-  <StateContext.Consumer>
-    {({
-      actions: {
-        hideStartModal,
-        showNewDocumentModal,
-        toggleLoginDialog,
-        showNewAccountModal,
-      },
-    }) => (
-      <StartModalContent>
-        <Container>
-          <LogoBanner backgroundColor={Colors.Modal.ModalBackground} />
-        </Container>
-        <StartButtonContainer>
+interface Props {
+  loaded: boolean;
+  user: PubUser | null;
+  hideStartModal(): void;
+  showNewDocumentModal(): void;
+  showOpenDocumentModal(): void;
+  showLoginDialog(): void;
+  showNewAccountModal(): void;
+}
+
+function StartModal(props: Props) {
+  const {
+    showNewAccountModal,
+    hideStartModal,
+    showNewDocumentModal,
+    showLoginDialog,
+    showOpenDocumentModal,
+    loaded,
+    user,
+  } = props;
+  return (
+    <StartModalContent>
+      <Container>
+        <LogoBadge backgroundColor={Colors.Modal.HeaderBackground} size={90} />
+        <RightContent>
+          <Title>
+            Publications <span style={{ fontWeight: 300 }}>Public Beta</span>
+          </Title>
+          <Description>An app for page and print design.</Description>
+        </RightContent>
+      </Container>
+      <StartButtonContainer>
+        <StartButton
+          disabled={!loaded}
+          onClick={() => {
+            hideStartModal();
+            setTimeout(showNewDocumentModal, 250);
+          }}
+        >
+          <DocumentIcon />
+          <ButtonTextContainer>
+            <ButtonTitle>New Document</ButtonTitle>
+            <ButtonDescription>
+              Start with a new portrait or landscape document.
+            </ButtonDescription>
+          </ButtonTextContainer>
+        </StartButton>
+        {user ? (
           <StartButton
+            disabled={!loaded}
             onClick={() => {
               hideStartModal();
-              setTimeout(showNewDocumentModal, 250);
+              setTimeout(showOpenDocumentModal, 250);
             }}
           >
-            <DocumentIcon />
+            <OpenDocumentIcon />
             <ButtonTextContainer>
-              <ButtonTitle>New Document</ButtonTitle>
+              <ButtonTitle>View all Documents</ButtonTitle>
               <ButtonDescription>
-                Start with a new portrait or landscape document.
+                Open, rename, or delete an existing saved document.
               </ButtonDescription>
             </ButtonTextContainer>
           </StartButton>
+        ) : (
           <StartButton
+            disabled={!loaded}
             onClick={() => {
               hideStartModal();
-              setTimeout(toggleLoginDialog, 250);
+              setTimeout(showLoginDialog, 250);
             }}
           >
             <UserLockIcon />
@@ -60,33 +100,30 @@ export default () => (
               </ButtonDescription>
             </ButtonTextContainer>
           </StartButton>
-          <ModalButtonContainer>
-            <Button marginRight onClick={hideStartModal}>
-              Close
-            </Button>
-          </ModalButtonContainer>
-          <StartButton
-            onClick={() => {
-              hideStartModal();
-              setTimeout(showNewAccountModal, 250);
-            }}
-          >
-            <UserBadgeIcon />
-            <ButtonTextContainer>
-              <ButtonTitle>Sign Up</ButtonTitle>
-              <ButtonDescription>
-                Create a free Publications account so you can save your
-                documents.
-              </ButtonDescription>
-            </ButtonTextContainer>
-          </StartButton>
-        </StartButtonContainer>
-        <ModalButtonContainer>
-          <Button marginRight onClick={hideStartModal}>
-            Close
-          </Button>
-        </ModalButtonContainer>
-      </StartModalContent>
-    )}
-  </StateContext.Consumer>
-);
+        )}
+        <StartButton
+          disabled={!loaded || user !== null}
+          onClick={() => {
+            hideStartModal();
+            setTimeout(showNewAccountModal, 250);
+          }}
+        >
+          <UserBadgeIcon />
+          <ButtonTextContainer>
+            <ButtonTitle>Sign Up</ButtonTitle>
+            <ButtonDescription>
+              Create a free Publications account so you can save your documents.
+            </ButtonDescription>
+          </ButtonTextContainer>
+        </StartButton>
+      </StartButtonContainer>
+      <ModalButtonContainer>
+        <Button marginRight onClick={hideStartModal}>
+          Close
+        </Button>
+      </ModalButtonContainer>
+    </StartModalContent>
+  );
+}
+
+export default StartModal;

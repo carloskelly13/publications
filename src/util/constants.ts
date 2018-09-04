@@ -113,6 +113,7 @@ export const Colors = {
     FrameHighlight: "#4a4b50",
     ButtonContainerBorder: "#1e1f21",
     ButtonContainerBackground: "#38393d",
+    HeaderBackground: "#1e1f21",
   },
   FileOpen: {
     BrowserBackground: "#4a4b50",

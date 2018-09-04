@@ -58,6 +58,8 @@ interface Props {
   createUser: CreateUserMutation;
   refetchCurrentUser: RefetchCurrentUser;
   saveDocument: SaveDocumentMutation;
+  dataFetching: boolean;
+  dataLoaded: boolean;
 }
 
 interface State {
@@ -83,7 +85,7 @@ class DocumentsView extends Component<Props, State> {
     clipboardContents: null,
     newDocumentModalVisible: false,
     openDocumentModalVisible: false,
-    startModalVisible: false,
+    startModalVisible: true,
     layersPanelVisible: false,
     loginModalVisible: false,
     newAccountModalVisible: false,
@@ -303,7 +305,17 @@ class DocumentsView extends Component<Props, State> {
       <StateContext.Provider value={currentState}>
         <ViewContainer>
           <Modal
-            renderContent={<StartModal />}
+            renderContent={
+              <StartModal
+                user={this.props.user}
+                loaded={this.props.dataLoaded}
+                showLoginDialog={this.showLoginModal}
+                showNewDocumentModal={this.showNewDocumentModal}
+                showOpenDocumentModal={this.showOpenDocumentModal}
+                hideStartModal={this.hideStartModal}
+                showNewAccountModal={this.showNewAccountModal}
+              />
+            }
             visible={this.state.startModalVisible}
           />
           <Modal
@@ -377,7 +389,7 @@ export default () => (
       createUser: mutation(createUserMutation),
     }}
   >
-    {({ data, login, refetch, saveDocument, createUser }) => {
+    {({ data, login, refetch, saveDocument, createUser, fetching, loaded }) => {
       let user: PubUser | null = null;
       let documents: Array<PubDocument> = [];
       if (Array.isArray(data) && data.length === 2) {
@@ -393,6 +405,8 @@ export default () => (
           login={login}
           createUser={createUser}
           saveDocument={saveDocument}
+          dataFetching={fetching}
+          dataLoaded={loaded}
         />
       );
     }}

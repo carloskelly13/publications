@@ -31,7 +31,10 @@ interface State {
   startAnimation: boolean;
 }
 
-class LogoBadge extends React.PureComponent<{}, State> {
+class LogoBadge extends React.PureComponent<
+  { size?: number; backgroundColor?: string },
+  State
+> {
   readonly state = { startAnimation: false };
 
   componentDidMount() {
@@ -39,10 +42,12 @@ class LogoBadge extends React.PureComponent<{}, State> {
   }
 
   render() {
+    const size = this.props.size || 120;
+    const backgroundColor = this.props.backgroundColor || "#2C2D30";
     return (
       <svg
-        width="120"
-        height="120"
+        width={size}
+        height={size}
         viewBox="0 0 70 70"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -61,14 +66,14 @@ class LogoBadge extends React.PureComponent<{}, State> {
           <NortheastAnglePath
             pose={this.state.startAnimation ? "end" : "start"}
             d="M1,12 L1,23 L47,23 L47,69 L58,69 L58,12 L1,12 Z"
-            stroke="#2C2D30"
+            stroke={backgroundColor}
             strokeWidth="2"
             fill="#fff"
           />
           <SouthwestAnglePath
             pose={this.state.startAnimation ? "end" : "start"}
             d="M66,61 L66,50 L20,50 L20,4 L9,4 L9,61 L66,61 Z"
-            stroke="#2C2D30"
+            stroke={backgroundColor}
             strokeWidth="2"
             fill="#fff"
           />
