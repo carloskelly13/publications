@@ -28,7 +28,7 @@ module.exports = {
         exclude: path.join(__dirname, "/src/server/*"),
       },
       {
-        test: /\.(eot|woff|ttf|svg|png|otf)$/,
+        test: /\.(eot|woff|woff2|ttf|svg|png|otf)$/,
         use: "url-loader?limit=64",
       },
       { test: /\.json$/, use: "json-loader" },

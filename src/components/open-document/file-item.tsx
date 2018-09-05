@@ -14,6 +14,7 @@ const FileName = styled.div`
   font-weight: 500;
   font-size: 0.9em;
   margin: 5px 0 0;
+  color: ${Colors.DocumentThumbnail.Text};
 `;
 
 // const FileDescription = styled.div`

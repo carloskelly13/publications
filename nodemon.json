@@ -2,7 +2,7 @@
   "delay": "2000",
   "verbose": true,
   "ignore": ["dist", "public"],
-  "watch": ["src/server/**/*.{ts,tsx}", "config", "webpack"],
+  "watch": ["src/platform/**/*.{ts,tsx}", "config", "webpack", "src/index.ts"],
   "env": {
     "NODE_ENV": "development"
   },

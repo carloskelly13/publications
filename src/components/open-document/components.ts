@@ -4,20 +4,38 @@ import { Colors } from "../../util/constants";
 import FormInput from "../ui/form-input";
 
 export const OpenDocumentContainer = styled(ModalContent)`
-  min-width: 630px;
   width: 85%;
+  height: 70%;
   padding: 0 0 51px;
+  display: flex;
+  flex-direction: row;
+  background: ${Colors.FileOpen.BrowserBackground};
 `;
 
 export const HeaderContainer = styled.div`
   padding: 1.5em 1.5em 1em;
 `;
 
+export const DeleteConfirmationBar = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  height: 65px;
+  background: #e62325;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.15),
+    inset -1px 0 0 hsla(0, 0%, 100%, 0.1), 0 1px 5px hsla(0, 0%, 0%, 0.4);
+  border-radius: 4px 4px 0 0;
+`;
+
 export const FileBrowserBaseContainer = styled.div`
   width: calc(100% - 1em);
-  height: 370px;
+  flex: 1;
   border-radius: 0;
-  background: ${Colors.FileOpen.BrowserBackground};
   padding: 1.5em 0.5em;
 `;
 
@@ -37,10 +55,19 @@ export const FileBrowserContentContainer = styled(FileBrowserBaseContainer)`
 
 export const FileBrowserContainer = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
+`;
+
+export const SearchInputContainer = styled.div`
+  background: ${Colors.Modal.ModalBackground};
+  box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.1),
+    inset -1px 0 0 hsla(0, 0%, 100%, 0.05);
+  border-radius: 4px 4px 0 0;
 `;
 
 export const SearchInput = styled(FormInput)`
   margin: 15px;
   width: calc(100% - 30px);
+  text-align: center;
 `;

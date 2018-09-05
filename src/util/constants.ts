@@ -137,7 +137,7 @@ export const Colors = {
     RadioSelectedBackground: "#9b82f3",
   },
   OpenDocument: {
-    FileBrowserBorder: "#a6a5a6",
+    FileBrowserBorder: "#1e1f21",
   },
   StartModal: {
     ButtonIcon: "#fff",
@@ -152,8 +152,9 @@ export const Colors = {
     AppNameColor: "#9b82f3",
   },
   DocumentThumbnail: {
-    Outline: "#5f5757",
+    Outline: "#969191",
     SelectedOutline: "#9b82f3",
+    Text: "#fff",
   },
   LayersSidebar: {
     Text: "#fff",
@@ -169,20 +170,10 @@ export const Colors = {
   Forms: {
     ErrorText: "#e62325",
   },
-};
-
-export const baseRequestHeaders = {
-  credentials: "include",
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+  ScrollBar: {
+    Track: "transparent",
+    Thumb: "#9b82f3",
+    ThumbHover: "#785ef0",
+    Corner: "transparent",
   },
-};
-
-export const newDocument = {
-  name: "Untitled Document",
-  width: 8.5,
-  height: 11,
-  shapes: [],
-  new: true,
 };

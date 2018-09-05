@@ -4,13 +4,14 @@ import {
   SearchInput,
   FileBrowserContainer,
   FileBrowserContentContainer,
+  SearchInputContainer,
 } from "./components";
 import { PubDocument } from "../../types/pub-objects";
 
 interface Props {
   selectedFileId: string | null;
   documents: Array<PubDocument>;
-  handleFileClicked(id: string): void;
+  handleFileClicked(doc: PubDocument): void;
 }
 
 export default class extends React.Component<Props> {
@@ -33,16 +34,18 @@ export default class extends React.Component<Props> {
 
     return (
       <FileBrowserContainer>
-        <SearchInput
-          value={this.state.searchKeyword}
-          onChange={this.handleSearchKeywordChanged}
-          placeholder="Search for Documents"
-        />
+        <SearchInputContainer>
+          <SearchInput
+            value={this.state.searchKeyword}
+            onChange={this.handleSearchKeywordChanged}
+            placeholder="Search for Documents"
+          />
+        </SearchInputContainer>
         <FileBrowserContentContainer>
           {filteredDocuments.map(doc => (
             <FileItem
               selected={selectedFileId === doc.id}
-              handleClick={() => handleFileClicked(doc.id!)}
+              handleClick={() => handleFileClicked(doc)}
               key={doc.id}
               doc={doc}
             />

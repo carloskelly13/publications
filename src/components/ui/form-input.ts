@@ -12,7 +12,6 @@ const FormInput = styled.input<{ label?: boolean | string }>`
   display: block;
   font-family: ${appFont};
   font-size: 1.1em;
-  line-height: 1em;
   margin: 0 0 1em;
   padding: 0.5em;
   width: 100%;
