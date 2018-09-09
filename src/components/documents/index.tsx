@@ -175,6 +175,12 @@ class DocumentsView extends Component<Props, State> {
   };
 
   deleteDocument = async (id: string | number) => {
+    if (this.state.currentDocument.id === id) {
+      this.setState({
+        currentDocument: null,
+        selectedObject: null,
+      });
+    }
     return await this.props.deleteDocument({ id });
   };
 
