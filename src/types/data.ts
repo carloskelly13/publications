@@ -20,4 +20,8 @@ export type SaveDocumentMutation = (
   options: { document: PubDocument }
 ) => { saveDocument: PubDocument };
 
+export type DeleteDocumentMutation = (
+  options: { id: string | number }
+) => number;
+
 export type RefetchCurrentUser = (options: any) => void;

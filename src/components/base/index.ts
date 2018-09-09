@@ -11,7 +11,7 @@ injectGlobal`
     font-size: 14px;
   }
 
-  ::-webkit-scrollbar {
+  /* ::-webkit-scrollbar {
     width: 10px;
   }
   ::-webkit-scrollbar-track {
@@ -27,7 +27,7 @@ injectGlobal`
   }
   ::-webkit-scrollbar-thumb:hover {
     background: ${Colors.ScrollBar.ThumbHover};
-  }
+  } */
 `;
 
 export default styled.div`

@@ -99,6 +99,7 @@ export const Colors = {
     Border: "hsla(0, 0%, 0%, 0.5)",
     Outline: "#9b82f3",
     Background: "#5c5e65",
+    DestructiveBackground: "#e62325",
     Text: "#fff",
   },
   Menu: {
@@ -117,6 +118,8 @@ export const Colors = {
   },
   FileOpen: {
     BrowserBackground: "#4a4b50",
+    DeleteConfirmationBarBackground: "#38393d",
+    DeleteConfirmText: "#fff",
   },
   FormInput: {
     Background: "#38393d",

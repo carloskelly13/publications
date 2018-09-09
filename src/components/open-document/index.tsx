@@ -1,7 +1,11 @@
 import React from "react";
 import Button from "../ui/framed-button";
 import FileBrowser from "./file-browser";
-import { OpenDocumentContainer, DeleteConfirmationBar } from "./components";
+import {
+  OpenDocumentContainer,
+  DeleteConfirmationBar,
+  DeleteWarning,
+} from "./components";
 import { ModalButtonContainer } from "../ui/button-container";
 import { PubDocument } from "../../types/pub-objects";
 import posed from "react-pose";
@@ -19,7 +23,8 @@ const AnimatedModalButtonContainer = posed(ModalButtonContainer)({
 interface Props {
   documents: Array<PubDocument>;
   onDismiss(): void;
-  onOpenDocument(id: string): void;
+  onOpenDocument(id: string | number): void;
+  onDeleteDocument(id: string | number): void;
 }
 
 interface State {
@@ -28,7 +33,7 @@ interface State {
 }
 
 export default class extends React.Component<Props, State> {
-  state = {
+  readonly state: State = {
     selectedDocument: null,
     showDeleteConfirmBar: false,
   };
@@ -48,6 +53,11 @@ export default class extends React.Component<Props, State> {
   handleCancelDeleteDocumentButtonClicked = () =>
     this.setState({ showDeleteConfirmBar: false });
 
+  handleConfirmDeleteDocumentButtonClicked = async () => {
+    await this.props.onDeleteDocument(this.state.selectedDocument!.id);
+    this.setState({ showDeleteConfirmBar: false });
+  };
+
   render() {
     const {
       props: { onDismiss, documents },
@@ -59,6 +69,7 @@ export default class extends React.Component<Props, State> {
         <FileBrowser
           documents={documents}
           selectedFileId={selectedId}
+          disabled={this.state.showDeleteConfirmBar}
           handleFileClicked={this.handleFileClicked}
         />
         <AnimatedModalButtonContainer
@@ -83,17 +94,22 @@ export default class extends React.Component<Props, State> {
         <AnimatedDeleteConfirmationBar
           pose={this.state.showDeleteConfirmBar ? "show" : "hide"}
         >
-          Are you sure you want to delete{" "}
-          {(this.state.selectedDocument || {}).name || ""}? This operation
-          cannot be undone.
+          <span>
+            Are you sure you want to delete{" "}
+            {(this.state.selectedDocument || { name: "" }).name || ""}?
+            <DeleteWarning>This operation cannot be undone.</DeleteWarning>
+          </span>
           <div>
             <Button
+              destructive
               marginRight
-              onClick={this.handleCancelDeleteDocumentButtonClicked}
+              onClick={this.handleConfirmDeleteDocumentButtonClicked}
             >
+              Delete
+            </Button>
+            <Button onClick={this.handleCancelDeleteDocumentButtonClicked}>
               Cancel
             </Button>
-            <Button onClick={() => {}}>Close</Button>
           </div>
         </AnimatedDeleteConfirmationBar>
       </OpenDocumentContainer>

@@ -73,7 +73,7 @@ const MutationType = new GraphQLObjectType({
     },
 
     deleteDocument: {
-      type: GraphQLInt,
+      type: DocumentType,
       args: {
         id: { type: GraphQLID },
       },

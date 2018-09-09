@@ -78,3 +78,11 @@ export const saveDocumentMutation = `#graphql
     }
   }
 `;
+
+export const deleteDocumentMutation = `#graphql
+  mutation($id: ID!) {
+    deleteDocument(id: $id) {
+      ${documentFields}
+    }
+  }
+`;

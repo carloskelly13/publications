@@ -23,13 +23,23 @@ export const DeleteConfirmationBar = styled.div`
   top: 0;
   z-index: 1;
   height: 65px;
-  background: #e62325;
+  background: ${Colors.FileOpen.DeleteConfirmationBarBackground};
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.15),
-    inset -1px 0 0 hsla(0, 0%, 100%, 0.1), 0 1px 5px hsla(0, 0%, 0%, 0.4);
+    inset -1px 0 0 hsla(0, 0%, 100%, 0.1);
   border-radius: 4px 4px 0 0;
+  padding: 0 16px;
+  color: ${Colors.FileOpen.DeleteConfirmText};
+  font-weight: bold;
+`;
+
+export const DeleteWarning = styled.div`
+  font-size: 0.85em;
+  margin-top: 3px;
+  font-weight: 400;
+  font-style: italic;
 `;
 
 export const FileBrowserBaseContainer = styled.div`
@@ -45,9 +55,11 @@ export const FileBrowserLoadingContainer = styled(FileBrowserBaseContainer)`
   justify-content: center;
 `;
 
-export const FileBrowserContentContainer = styled(FileBrowserBaseContainer)`
+export const FileBrowserContentContainer = styled(FileBrowserBaseContainer)<{
+  disabled?: boolean;
+}>`
   border-top: 1px solid ${Colors.OpenDocument.FileBrowserBorder};
-  overflow: scroll;
+  overflow: ${({ disabled }) => (disabled ? "none" : "scroll")};
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;

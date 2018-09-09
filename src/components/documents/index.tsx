@@ -31,6 +31,7 @@ import {
   loginMutation,
   saveDocumentMutation,
   createUserMutation,
+  deleteDocumentMutation,
 } from "../../queries";
 import { StateContext } from "../../contexts";
 import {
@@ -46,6 +47,7 @@ import {
   RefetchCurrentUser,
   DocumentsQuery,
   SaveDocumentMutation,
+  DeleteDocumentMutation,
   CreateUserMutation,
 } from "../../types/data";
 import { metrics } from "../../util/constants";
@@ -58,6 +60,7 @@ interface Props {
   createUser: CreateUserMutation;
   refetchCurrentUser: RefetchCurrentUser;
   saveDocument: SaveDocumentMutation;
+  deleteDocument: DeleteDocumentMutation;
   dataFetching: boolean;
   dataLoaded: boolean;
 }
@@ -169,6 +172,10 @@ class DocumentsView extends Component<Props, State> {
         id: get("id")(this.state.currentDocument),
       },
     });
+  };
+
+  deleteDocument = async (id: string | number) => {
+    return await this.props.deleteDocument({ id });
   };
 
   /**
@@ -343,6 +350,7 @@ class DocumentsView extends Component<Props, State> {
               <OpenDocumentDialog
                 documents={this.props.documents}
                 onOpenDocument={this.getDocument}
+                onDeleteDocument={this.deleteDocument}
                 onDismiss={this.hideOpenDocumentModal}
               />
             }
@@ -377,6 +385,7 @@ type Queries = [CurrentUserQuery, DocumentsQuery];
 interface Mutations {
   login: LoginMutation;
   saveDocument: SaveDocumentMutation;
+  deleteDocument: DeleteDocumentMutation;
   createUser: CreateUserMutation;
 }
 
@@ -386,10 +395,20 @@ export default () => (
     mutation={{
       login: mutation(loginMutation),
       saveDocument: mutation(saveDocumentMutation),
+      deleteDocument: mutation(deleteDocumentMutation),
       createUser: mutation(createUserMutation),
     }}
   >
-    {({ data, login, refetch, saveDocument, createUser, fetching, loaded }) => {
+    {({
+      data,
+      login,
+      refetch,
+      saveDocument,
+      deleteDocument,
+      createUser,
+      fetching,
+      loaded,
+    }) => {
       let user: PubUser | null = null;
       let documents: Array<PubDocument> = [];
       if (Array.isArray(data) && data.length === 2) {
@@ -405,6 +424,7 @@ export default () => (
           login={login}
           createUser={createUser}
           saveDocument={saveDocument}
+          deleteDocument={deleteDocument}
           dataFetching={fetching}
           dataLoaded={loaded}
         />

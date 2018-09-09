@@ -6,8 +6,10 @@ const ButtonWrapper = styled.button<{
   marginRight?: boolean;
   marginLeft?: boolean;
   active?: boolean;
+  destructive?: boolean;
 }>`
-  background: ${Colors.Button.Background};
+  background: ${({ destructive }) =>
+    Colors.Button[destructive ? "DestructiveBackground" : "Background"]};
   border: 1px solid ${Colors.Button.Border};
   border-radius: 4px;
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.15);
@@ -43,6 +45,7 @@ const ButtonContainerWrapper = styled.div`
 
 interface Props {
   children: React.ReactNode;
+  destructive?: boolean;
   disabled?: boolean;
   marginLeft?: boolean;
   marginRight?: boolean;
@@ -55,6 +58,7 @@ interface Props {
 const Button: React.SFC<Props> = ({
   children,
   disabled,
+  destructive,
   onClick,
   marginRight,
   marginLeft,
@@ -63,6 +67,7 @@ const Button: React.SFC<Props> = ({
   type = "button",
 }) => (
   <ButtonWrapper
+    destructive={destructive}
     marginRight={marginRight}
     marginLeft={marginLeft}
     onClick={onClick}
