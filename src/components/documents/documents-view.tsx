@@ -155,14 +155,15 @@ export default class DocumentsView extends React.Component<Props, State> {
     this.setCurrentDocument(doc);
   };
 
-  saveDocument = async () => {
-    if (!this.state.currentDocument) {
+  saveDocument = async (document?: PubDocument) => {
+    if (!this.state.currentDocument && !document) {
       return;
     }
+    const documentToSave = document || this.state.currentDocument;
     return this.props.saveDocument({
       document: {
-        ...packageDocumentToJson(this.state.currentDocument),
-        id: get("id")(this.state.currentDocument),
+        ...packageDocumentToJson(documentToSave),
+        id: get("id")(documentToSave),
       },
     });
   };
@@ -350,6 +351,7 @@ export default class DocumentsView extends React.Component<Props, State> {
                 documents={this.props.documents}
                 onOpenDocument={this.getDocument}
                 onDeleteDocument={this.deleteDocument}
+                onRenameDocument={this.saveDocument}
                 onDismiss={this.hideOpenDocumentModal}
               />
             }

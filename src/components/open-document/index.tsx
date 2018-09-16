@@ -9,8 +9,11 @@ import {
 import { ModalButtonContainer } from "../ui/button-container";
 import { PubDocument } from "../../types/pub-objects";
 import posed from "react-pose";
+import FormInput from "../ui/form-input";
+import styled from "styled-components";
+import { Colors } from "../../util/constants";
 
-const AnimatedDeleteConfirmationBar = posed(DeleteConfirmationBar)({
+const AnimatedActionBar = posed(DeleteConfirmationBar)({
   show: { top: 0 },
   hide: { top: -70 },
 });
@@ -20,23 +23,39 @@ const AnimatedModalButtonContainer = posed(ModalButtonContainer)({
   hide: { bottom: -51 },
 });
 
+const RenameInputContainer = styled.div`
+  flex: 1;
+  padding: 0 1em 0 0;
+  input {
+    margin: 0;
+    background: ${Colors.FormInput.MetricBackground};
+  }
+`;
+
 interface Props {
   documents: Array<PubDocument>;
   onDismiss(): void;
   onOpenDocument(id: string | number): void;
   onDeleteDocument(id: string | number): void;
+  onRenameDocument(doc: PubDocument): void;
 }
 
 interface State {
   selectedDocument: PubDocument | null;
   showDeleteConfirmBar: boolean;
+  showRenameActionBar: boolean;
+  potentialNewDocumentName: string;
 }
 
 export default class extends React.Component<Props, State> {
   readonly state: State = {
     selectedDocument: null,
     showDeleteConfirmBar: false,
+    showRenameActionBar: false,
+    potentialNewDocumentName: "",
   };
+
+  renameInputRef: HTMLInputElement;
 
   handleFileClicked = (doc: PubDocument) =>
     this.setState(() => ({ selectedDocument: doc }));
@@ -50,18 +69,42 @@ export default class extends React.Component<Props, State> {
     this.setState({ showDeleteConfirmBar: true });
   };
 
+  handleRenameDocumentClicked = () => {
+    this.setState(prevState => ({
+      showRenameActionBar: true,
+      potentialNewDocumentName: prevState.selectedDocument!.name,
+    }));
+    this.renameInputRef.focus();
+  };
+
   handleCancelDeleteDocumentButtonClicked = () =>
     this.setState({ showDeleteConfirmBar: false });
+
+  handleCancelRenameDocumentButtonClicked = () =>
+    this.setState({ showRenameActionBar: false });
 
   handleConfirmDeleteDocumentButtonClicked = async () => {
     await this.props.onDeleteDocument(this.state.selectedDocument!.id);
     this.setState({ showDeleteConfirmBar: false });
   };
 
+  handleConfirmRenameButtonClicked = async () => {
+    if (this.state.potentialNewDocumentName.trim().length) {
+      this.props.onRenameDocument({
+        ...this.state.selectedDocument,
+        name: this.state.potentialNewDocumentName,
+      });
+      this.setState({
+        showRenameActionBar: false,
+        potentialNewDocumentName: "",
+      });
+    }
+  };
+
   render() {
     const {
       props: { onDismiss, documents },
-      state: { selectedDocument },
+      state: { selectedDocument, showDeleteConfirmBar, showRenameActionBar },
     } = this;
     const selectedId = (selectedDocument && selectedDocument.id) || "";
     return (
@@ -69,11 +112,11 @@ export default class extends React.Component<Props, State> {
         <FileBrowser
           documents={documents}
           selectedFileId={selectedId}
-          disabled={this.state.showDeleteConfirmBar}
+          disabled={showDeleteConfirmBar || showRenameActionBar}
           handleFileClicked={this.handleFileClicked}
         />
         <AnimatedModalButtonContainer
-          pose={this.state.showDeleteConfirmBar ? "hide" : "show"}
+          pose={showDeleteConfirmBar || showRenameActionBar ? "hide" : "show"}
         >
           <Button
             marginRight
@@ -85,13 +128,20 @@ export default class extends React.Component<Props, State> {
           <Button
             marginRight
             disabled={selectedId === ""}
+            onClick={this.handleRenameDocumentClicked}
+          >
+            Rename Document…
+          </Button>
+          <Button
+            marginRight
+            disabled={selectedId === ""}
             onClick={this.handleDeleteButtonClicked}
           >
             Delete Document…
           </Button>
           <Button onClick={onDismiss}>Close</Button>
         </AnimatedModalButtonContainer>
-        <AnimatedDeleteConfirmationBar
+        <AnimatedActionBar
           pose={this.state.showDeleteConfirmBar ? "show" : "hide"}
         >
           <span>
@@ -111,7 +161,34 @@ export default class extends React.Component<Props, State> {
               Cancel
             </Button>
           </div>
-        </AnimatedDeleteConfirmationBar>
+        </AnimatedActionBar>
+        <AnimatedActionBar
+          pose={this.state.showRenameActionBar ? "show" : "hide"}
+        >
+          <RenameInputContainer>
+            <FormInput
+              innerRef={i => (this.renameInputRef = i)}
+              placeholder="Document Name"
+              name="name"
+              onChange={({ target }) =>
+                this.setState({ potentialNewDocumentName: target.value })
+              }
+              value={this.state.potentialNewDocumentName}
+            />
+          </RenameInputContainer>
+          <div>
+            <Button
+              marginRight
+              disabled={this.state.potentialNewDocumentName.trim().length === 0}
+              onClick={this.handleConfirmRenameButtonClicked}
+            >
+              Rename
+            </Button>
+            <Button onClick={this.handleCancelRenameDocumentButtonClicked}>
+              Cancel
+            </Button>
+          </div>
+        </AnimatedActionBar>
       </OpenDocumentContainer>
     );
   }
