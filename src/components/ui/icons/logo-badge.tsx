@@ -54,7 +54,7 @@ class LogoBadge extends React.PureComponent<
         <g>
           <SlidingArmRect
             pose={this.state.startAnimation ? "end" : "start"}
-            fill="#9b82f3"
+            fill="#fcf953"
             transform="rotate(225 43.517 26.517)"
             x="39.517"
             y="-6.983"

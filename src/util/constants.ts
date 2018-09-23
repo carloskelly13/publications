@@ -94,6 +94,7 @@ export const Colors = {
     Background: "#2b2c2f",
     Toolbar: "#38393d",
     ToolbarBorder: "#1e1f21",
+    Tint: "#9b82f3",
   },
   Button: {
     Border: "hsla(0, 0%, 0%, 0.5)",
@@ -105,8 +106,10 @@ export const Colors = {
   Menu: {
     Background: "rgba(41, 41, 44, 0.95)",
     ButtonActiveBackground: "rgba(91, 91, 94, 0.55)",
+    ItemHighlight: "#9b82f3",
     MenuBorder: "rgba(91, 91, 94, 0.45)",
     Text: "#fff",
+    TextHighlight: "#fff",
   },
   Modal: {
     ModalBackground: "#2c2d30",
@@ -134,8 +137,8 @@ export const Colors = {
     RadioBorder: "hsla(0, 0%, 0%, 0.5)",
     RadioText: "#fff",
     RadioBackground: "#5c5e65",
-    RadioSelectedText: "white",
-    RadioSelectedBorder: "#785ef0",
+    RadioSelectedText: "#fff",
+    RadioSelectedBorder: "#1e1f21",
     RadioSelectedOutline: "#9b82f3",
     RadioSelectedBackground: "#9b82f3",
   },

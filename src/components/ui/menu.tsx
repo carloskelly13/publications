@@ -60,18 +60,18 @@ export const MenuItem = styled.button<{ noExtraRightPadding?: boolean }>`
   border-radius: 0;
 
   &:hover {
-    color: #fff;
-    background: ${AppColors.Highlight};
+    color: ${Colors.Menu.TextHighlight};
+    background: ${Colors.Menu.ItemHighlight};
   }
 
   &:active {
-    color: #fff;
-    background: ${AppColors.HighlightDark};
+    color: ${Colors.Menu.TextHighlight};
+    background: ${Colors.Menu.ItemHighlight};
   }
 
   &:focus {
-    color: #fff;
-    background: ${AppColors.Highlight};
+    color: ${Colors.Menu.TextHighlight};
+    background: ${Colors.Menu.ItemHighlight};
   }
 
   &:disabled {

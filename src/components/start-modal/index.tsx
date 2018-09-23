@@ -47,9 +47,7 @@ function StartModal(props: Props) {
       <Container>
         <LogoBadge backgroundColor={Colors.Modal.HeaderBackground} size={90} />
         <RightContent>
-          <Title>
-            Publications <span style={{ fontWeight: 300 }}>Public Beta</span>
-          </Title>
+          <Title>Publications</Title>
           <Description>An app for page and print design.</Description>
         </RightContent>
       </Container>

@@ -47,7 +47,7 @@ const PageRadioContainer = styled.div`
 
 const PageLabel = styled.label`
   display: inline-block;
-  border-radius: 2px;
+  border-radius: 4px;
 `;
 
 const PortraitLabel = styled(PageLabel)`

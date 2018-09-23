@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { AppColors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 import { TextButton } from "../ui/text-button";
 
 export const Header = styled(TextButton)`
-  color: ${AppColors.Highlight};
+  color: ${Colors.App.Tint};
   padding-left: 0;
   margin: 0;
   cursor: default;

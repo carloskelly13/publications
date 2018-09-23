@@ -53,9 +53,7 @@ function AboutPanel(props: Props) {
       <Content>
         <LogoBadge />
         <RightContent>
-          <Title>
-            Publications <span style={{ fontWeight: 300 }}>Public Beta</span>
-          </Title>
+          <Title>Publications</Title>
           <Description>An app for page and print design.</Description>
           <MoreInfo>
             Publications is an{" "}
