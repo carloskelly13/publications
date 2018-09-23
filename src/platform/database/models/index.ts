@@ -1,14 +1,15 @@
 import knex from "knex";
 import { Model } from "objection";
 
+const appConfig = require("../../../../app-config.json");
 export const pg = knex({
   client: "pg",
   version: "9.6",
   connection: {
-    host: "127.0.0.1",
-    database: "publications",
-    user: "publications",
-    password: "publications",
+    host: appConfig.databaseHost,
+    database: appConfig.databaseName,
+    user: appConfig.databaseUser,
+    password: appConfig.databasePassword,
   },
 });
 

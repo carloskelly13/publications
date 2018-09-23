@@ -9,9 +9,10 @@ import jwt from "express-jwt";
 import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
 
+const appConfig = require("../app-config.json");
 const PORT = 4000;
 const jwtConfig = {
-  secret: "carlos-secret-pls-change",
+  secret: appConfig.jwtSecret,
   credentialsRequired: false,
 };
 
