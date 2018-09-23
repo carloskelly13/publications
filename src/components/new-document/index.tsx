@@ -8,6 +8,7 @@ import { ModalContent } from "../modal";
 import { Formik, FormikProps } from "formik";
 import { Colors } from "../../util/constants";
 import { PubNewDocument } from "../../types/pub-objects";
+import { StateContext } from "../../contexts";
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -94,7 +95,7 @@ interface State {
   formValid: boolean;
 }
 
-export default class NewDocumentDialog extends React.Component<Props, State> {
+export class NewDocumentDialog extends React.Component<Props, State> {
   state = {
     name: "",
     width: 8.5,
@@ -185,3 +186,14 @@ export default class NewDocumentDialog extends React.Component<Props, State> {
     );
   }
 }
+
+export default () => (
+  <StateContext.Consumer>
+    {({ actions }) => (
+      <NewDocumentDialog
+        onDismiss={actions.hideNewDocumentModal}
+        didCreateDocument={actions.handleCreateNewDocument}
+      />
+    )}
+  </StateContext.Consumer>
+);

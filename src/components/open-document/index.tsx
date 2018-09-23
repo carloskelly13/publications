@@ -12,6 +12,7 @@ import posed from "react-pose";
 import FormInput from "../ui/form-input";
 import styled from "styled-components";
 import { Colors } from "../../util/constants";
+import { StateContext } from "../../contexts";
 
 const AnimatedActionBar = posed(DeleteConfirmationBar)({
   show: { top: 0 },
@@ -47,7 +48,7 @@ interface State {
   potentialNewDocumentName: string;
 }
 
-export default class extends React.Component<Props, State> {
+class OpenDocumentDialog extends React.Component<Props, State> {
   readonly state: State = {
     selectedDocument: null,
     showDeleteConfirmBar: false,
@@ -193,3 +194,17 @@ export default class extends React.Component<Props, State> {
     );
   }
 }
+
+export default () => (
+  <StateContext.Consumer>
+    {({ documents, actions }) => (
+      <OpenDocumentDialog
+        documents={documents}
+        onOpenDocument={actions.getDocument}
+        onDeleteDocument={actions.deleteDocument}
+        onRenameDocument={actions.saveDocument}
+        onDismiss={actions.hideOpenDocumentModal}
+      />
+    )}
+  </StateContext.Consumer>
+);

@@ -9,6 +9,7 @@ import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
 import { CreateUserMutation, RefetchCurrentUser } from "../../types/data";
+import { StateContext } from "../../contexts";
 
 export interface NewAccount {
   name: string;
@@ -136,4 +137,14 @@ class NewAccountForm extends React.Component<Props> {
   }
 }
 
-export default NewAccountForm;
+export default () => (
+  <StateContext.Consumer>
+    {({ actions }) => (
+      <NewAccountForm
+        onCreateAccount={actions.createUser}
+        refetchCurrentUser={actions.refetchCurrentUser}
+        onDismiss={actions.hideNewAccountModal}
+      />
+    )}
+  </StateContext.Consumer>
+);

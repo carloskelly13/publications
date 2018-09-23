@@ -7,6 +7,7 @@ import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { ModalButtonContainer } from "../ui/button-container";
 import { LoginMutation, RefetchCurrentUser } from "../../types/data";
+import { StateContext } from "../../contexts";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;
@@ -32,7 +33,7 @@ interface LoginFormErrors {
   password?: boolean;
 }
 
-export default class extends React.Component<Props> {
+export class LoginDialog extends React.Component<Props> {
   state = {
     errorLoggingIn: false,
   };
@@ -111,3 +112,15 @@ export default class extends React.Component<Props> {
     );
   }
 }
+
+export default () => (
+  <StateContext.Consumer>
+    {({ actions }) => (
+      <LoginDialog
+        login={actions.login}
+        refetchCurrentUser={actions.refetchCurrentUser}
+        onDismiss={actions.hideLoginModal}
+      />
+    )}
+  </StateContext.Consumer>
+);

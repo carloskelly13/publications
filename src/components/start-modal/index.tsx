@@ -20,6 +20,7 @@ import {
 import LogoBadge from "../ui/icons/logo-badge";
 import { Colors } from "../../util/constants";
 import { PubUser } from "../../types/pub-objects";
+import { StateContext } from "../../contexts";
 
 interface Props {
   loaded: boolean;
@@ -126,4 +127,18 @@ function StartModal(props: Props) {
   );
 }
 
-export default StartModal;
+export default () => (
+  <StateContext.Consumer>
+    {({ user, dataLoaded, actions }) => (
+      <StartModal
+        user={user}
+        loaded={dataLoaded}
+        showLoginDialog={actions.showLoginModal}
+        showNewDocumentModal={actions.showNewDocumentModal}
+        showOpenDocumentModal={actions.showOpenDocumentModal}
+        hideStartModal={actions.hideStartModal}
+        showNewAccountModal={actions.showNewAccountModal}
+      />
+    )}
+  </StateContext.Consumer>
+);

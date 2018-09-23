@@ -3,14 +3,9 @@ import Toolbar from "../toolbar";
 import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../layers-sidebar";
-import OpenDocumentDialog from "../open-document";
-import LoginDialog from "../login";
-import NewAccountDialog from "../new-account";
-import NewDocumentDialog from "../new-document";
-import Modal from "../modal";
 import get from "lodash/fp/get";
+import Modals from "./modals";
 import { ViewContainer, DocumentView } from "./components";
-import StartModal from "../start-modal";
 import { packageDocumentToJson } from "../../util/documents";
 import {
   updatedDocumentStateForObjectChanges,
@@ -44,7 +39,7 @@ import {
   CreateUserMutation,
 } from "../../types/data";
 import { metrics } from "../../util/constants";
-import AboutPanel from "../about";
+import { PubAppState, PubActions } from "../../contexts/app-state";
 
 interface Props {
   user: PubUser | null;
@@ -89,26 +84,52 @@ export default class DocumentsView extends React.Component<Props, State> {
     zoom: 1,
   };
 
-  getActions = () => ({
+  getActions = (): PubActions => ({
     addObject: this.addObject,
     deleteObject: this.deleteObject,
+    createUser: this.props.createUser,
+    deleteDocument: this.deleteDocument,
     handleClipboardAction: this.handleClipboardAction,
+    handleCreateNewDocument: this.handleCreateNewDocument,
     logout: this.logOut,
+    login: this.props.login,
+    refetchCurrentUser: this.props.refetchCurrentUser,
     getDocument: this.getDocument,
     saveDocument: this.saveDocument,
     setZoom: this.setZoom,
     showNewDocumentModal: this.showNewDocumentModal,
+    hideNewDocumentModal: this.hideNewDocumentModal,
     showOpenDocumentModal: this.showOpenDocumentModal,
+    hideOpenDocumentModal: this.hideOpenDocumentModal,
     toggleLayersPanel: this.toggleLayersPanel,
     updateSelectedObject: this.updateSelectedObject,
     adjustObjectLayer: this.adjustObjectLayer,
     toggleLoginDialog: this.showLoginModal,
     hideStartModal: this.hideStartModal,
     showNewAccountModal: this.showNewAccountModal,
+    hideNewAccountModal: this.hideNewAccountModal,
     showLoginModal: this.showLoginModal,
     hideLoginModal: this.hideLoginModal,
     showAboutModal: this.showAboutModal,
     hideAboutModal: this.hideAboutModal,
+  });
+
+  getCurrentContextState = (): PubAppState => ({
+    actions: this.getActions(),
+    clipboardContents: this.state.clipboardContents,
+    currentDocument: this.state.currentDocument,
+    dataLoaded: this.props.dataLoaded,
+    documents: this.props.documents,
+    layersPanelVisible: this.state.layersPanelVisible,
+    selectedObject: this.state.selectedObject,
+    user: this.props.user,
+    zoom: this.state.zoom,
+    startModalVisible: this.state.startModalVisible,
+    loginModalVisible: this.state.loginModalVisible,
+    newAccountModalVisible: this.state.newAccountModalVisible,
+    openDocumentModalVisible: this.state.openDocumentModalVisible,
+    aboutModalVisible: this.state.aboutModalVisible,
+    newDocumentModalVisible: this.state.newDocumentModalVisible,
   });
 
   /**
@@ -160,6 +181,18 @@ export default class DocumentsView extends React.Component<Props, State> {
       return;
     }
     const documentToSave = document || this.state.currentDocument;
+    /**
+     * If there is both a document passed as a param and currentDocument in
+     * state then it’s being renamed. All we need to do is update the name.
+     */
+    if (document && this.state.currentDocument) {
+      this.setState(prevState => ({
+        currentDocument: {
+          ...prevState.currentDocument,
+          name: document.name,
+        },
+      }));
+    }
     return this.props.saveDocument({
       document: {
         ...packageDocumentToJson(documentToSave),
@@ -298,78 +331,9 @@ export default class DocumentsView extends React.Component<Props, State> {
   };
 
   render() {
-    const { currentDocument } = this.state;
-    const currentState = {
-      actions: this.getActions(),
-      currentDocument,
-      user: this.props.user,
-      selectedObject: this.state.selectedObject,
-      clipboardContents: this.state.clipboardContents,
-      zoom: this.state.zoom,
-      layersPanelVisible: this.state.layersPanelVisible,
-    };
     return (
-      <StateContext.Provider value={currentState}>
+      <StateContext.Provider value={this.getCurrentContextState()}>
         <ViewContainer>
-          <Modal
-            renderContent={
-              <StartModal
-                user={this.props.user}
-                loaded={this.props.dataLoaded}
-                showLoginDialog={this.showLoginModal}
-                showNewDocumentModal={this.showNewDocumentModal}
-                showOpenDocumentModal={this.showOpenDocumentModal}
-                hideStartModal={this.hideStartModal}
-                showNewAccountModal={this.showNewAccountModal}
-              />
-            }
-            visible={this.state.startModalVisible}
-          />
-          <Modal
-            renderContent={
-              <LoginDialog
-                login={this.props.login}
-                refetchCurrentUser={this.props.refetchCurrentUser}
-                onDismiss={this.hideLoginModal}
-              />
-            }
-            visible={this.state.loginModalVisible}
-          />
-          <Modal
-            renderContent={
-              <NewAccountDialog
-                onCreateAccount={this.props.createUser}
-                refetchCurrentUser={this.props.refetchCurrentUser}
-                onDismiss={this.hideNewAccountModal}
-              />
-            }
-            visible={this.state.newAccountModalVisible}
-          />
-          <Modal
-            renderContent={
-              <OpenDocumentDialog
-                documents={this.props.documents}
-                onOpenDocument={this.getDocument}
-                onDeleteDocument={this.deleteDocument}
-                onRenameDocument={this.saveDocument}
-                onDismiss={this.hideOpenDocumentModal}
-              />
-            }
-            visible={this.state.openDocumentModalVisible}
-          />
-          <Modal
-            renderContent={<AboutPanel onDismiss={this.hideAboutModal} />}
-            visible={this.state.aboutModalVisible}
-          />
-          <Modal
-            renderContent={
-              <NewDocumentDialog
-                onDismiss={this.hideNewDocumentModal}
-                didCreateDocument={this.handleCreateNewDocument}
-              />
-            }
-            visible={this.state.newDocumentModalVisible}
-          />
           <Toolbar />
           <MetricsBar />
           <DocumentView>
@@ -377,6 +341,7 @@ export default class DocumentsView extends React.Component<Props, State> {
             <LayersSidebar />
           </DocumentView>
         </ViewContainer>
+        <Modals />
       </StateContext.Provider>
     );
   }

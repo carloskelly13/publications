@@ -31,8 +31,8 @@ const FileMenu: React.SFC<Props> = ({
           View all Documents…
         </MenuItem>
         <MenuDivider />
-        <MenuItem disabled={!currentDocument} onClick={saveDocument}>
-          Save{loggedIn ? "" : " to Local Storage"}
+        <MenuItem disabled={!currentDocument} onClick={() => saveDocument()}>
+          Save
         </MenuItem>
         <MenuItem
           disabled={!currentDocument}

@@ -4,6 +4,7 @@ import Button from "../ui/framed-button";
 import { ModalContent } from "../modal";
 import styled from "styled-components";
 import LogoBadge from "../ui/icons/logo-badge";
+import { StateContext } from "../../contexts";
 
 const PanelContainer = styled(ModalContent)`
   width: 550px;
@@ -77,4 +78,8 @@ function AboutPanel(props: Props) {
   );
 }
 
-export default AboutPanel;
+export default () => (
+  <StateContext.Consumer>
+    {({ actions }) => <AboutPanel onDismiss={actions.hideAboutModal} />}
+  </StateContext.Consumer>
+);
