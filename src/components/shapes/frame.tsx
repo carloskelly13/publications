@@ -7,10 +7,18 @@ import { PubShape } from "../../types/pub-objects";
  * Webkit-based browsers have no perf-related issues with events.
  * Edge and Firefox have a 50ms throttle.
  */
-const isChrome =
-  /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-const isSafari =
-  /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+
+let isChrome = false;
+let isSafari = false;
+if (typeof window !== "undefined") {
+  isChrome =
+    /Chrome/.test(window.navigator.userAgent) &&
+    /Google Inc/.test(window.navigator.vendor);
+  isSafari =
+    /Safari/.test(window.navigator.userAgent) &&
+    /Apple Computer/.test(window.navigator.vendor);
+}
+
 const throttleWrapped = isChrome || isSafari ? e => e : throttle(50);
 
 const FrameRect = styled.rect`

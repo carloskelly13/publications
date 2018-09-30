@@ -8,6 +8,7 @@ import schema from "./platform/schemas";
 import jwt from "express-jwt";
 import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
+import documentPdfHandler from "./platform/handlers/pdf";
 
 const appConfig = require("../app-config.json");
 const PORT = 4000;
@@ -52,6 +53,8 @@ const startPublications = function() {
       res.status(401).send(err);
     }
   });
+
+  app.get("/documents/:id/pdf", documentPdfHandler);
 
   app.listen(PORT, () => {
     console.log(`Publications started on port ${PORT}.`);

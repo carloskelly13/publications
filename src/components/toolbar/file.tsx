@@ -37,11 +37,29 @@ const FileMenu: React.SFC<Props> = ({
         <MenuItem
           disabled={!currentDocument}
           onClick={() => {
-            setZoom(1.0);
-            setTimeout(() => window.print(), 100);
+            const authorizationToken = localStorage.getItem(
+              "authorization_token"
+            );
+            fetch(`/documents/${currentDocument.id}/pdf`, {
+              headers: {
+                Authorization: `Bearer ${authorizationToken}`,
+              },
+            })
+              .then(response => response.blob())
+              .then(blob => URL.createObjectURL(blob))
+              .then(url => {
+                const a = document.createElement("a");
+                document.body.appendChild(a);
+                a.href = url;
+                a.style.display = "none";
+                a.download = `pdf.pdf`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+              })
+              .catch(err => console.log(err));
           }}
         >
-          Print and Export PDF…
+          Download PDF
         </MenuItem>
         <MenuDivider />
         <MenuItem onClick={showAboutModal}>About Publications…</MenuItem>
