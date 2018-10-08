@@ -2,6 +2,7 @@ import React from "react";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
 import { PubDocument } from "../../types/pub-objects";
+import downloadPdf from "../../util/download-pdf";
 
 interface Props {
   loggedIn: boolean;
@@ -10,7 +11,6 @@ interface Props {
   showOpenDocumentModal(): void;
   showNewDocumentModal(): void;
   showAboutModal(): void;
-  setZoom(zoom: number): void;
 }
 
 const FileMenu: React.SFC<Props> = ({
@@ -20,7 +20,6 @@ const FileMenu: React.SFC<Props> = ({
   showNewDocumentModal,
   showOpenDocumentModal,
   showAboutModal,
-  setZoom,
 }) => (
   <Menu
     renderButton={<TextButton>File</TextButton>}
@@ -36,30 +35,11 @@ const FileMenu: React.SFC<Props> = ({
         </MenuItem>
         <MenuItem
           disabled={!currentDocument}
-          onClick={() => {
-            const authorizationToken = localStorage.getItem(
-              "authorization_token"
-            );
-            fetch(`/documents/${currentDocument.id}/pdf`, {
-              headers: {
-                Authorization: `Bearer ${authorizationToken}`,
-              },
-            })
-              .then(response => response.blob())
-              .then(blob => URL.createObjectURL(blob))
-              .then(url => {
-                const a = document.createElement("a");
-                document.body.appendChild(a);
-                a.href = url;
-                a.style.display = "none";
-                a.download = `pdf.pdf`;
-                a.click();
-                window.URL.revokeObjectURL(url);
-              })
-              .catch(err => console.log(err));
-          }}
+          onClick={() =>
+            saveDocument().then(() => downloadPdf(currentDocument))
+          }
         >
-          Download PDF
+          Save and Download PDF
         </MenuItem>
         <MenuDivider />
         <MenuItem onClick={showAboutModal}>About Publications…</MenuItem>

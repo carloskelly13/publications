@@ -21,7 +21,8 @@ export interface PubActions {
   handleClipboardAction(action: ClipboardAction): void;
   handleCreateNewDocument(sender: {
     name: string;
-    orientation: string;
+    width: number;
+    height: number;
   }): Promise<void>;
   logout(): Promise<void>;
   getDocument(id: string): void;

@@ -3,7 +3,7 @@ import ReactDOMServer from "react-dom/server";
 import * as htmlPdf from "html-pdf-chrome";
 import { RequestHandler } from "express";
 import db from "../database/";
-import { PubDocument } from "../../types/pub-objects";
+import { PubDocument, PubPage } from "../../types/pub-objects";
 import Canvas from "../../components/canvas";
 
 const defaultProps = {
@@ -15,14 +15,12 @@ const defaultProps = {
   updateSelectedObject: () => {},
 };
 
-const options: htmlPdf.CreateOptions = {
-  port: 9922,
-  printOptions: {
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0,
-    marginTop: 0,
-  },
+const basePrintOptions = {
+  marginBottom: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginTop: 0,
+  pageRanges: "1",
 };
 
 const baseHtml = `
@@ -36,7 +34,28 @@ const documentPdfHandler: RequestHandler = async (req, res) => {
   try {
     const [document] = await db.getDocument({ id, userId: req.user.id });
     const documentHtml = generateHtmlFromDocument(document as any);
-    const pdf = await htmlPdf.create(`${baseHtml}${documentHtml}`, options);
+    const { width, height } = document.pages[0] as PubPage;
+    const isLandscape = width > height;
+    const pdf = await htmlPdf.create(
+      `
+      ${baseHtml}
+      <div ${
+        isLandscape ? `style="transform: scale3d(1.03, 1.042, 1.0);` : ""
+      }">
+        ${documentHtml}
+      </div>
+    `,
+      {
+        port: 9922,
+        printOptions: {
+          ...basePrintOptions,
+          landscape: isLandscape,
+          paperWidth: isLandscape ? height : width,
+          paperHeight: isLandscape ? width : height,
+          printBackground: true,
+        },
+      }
+    );
     return res.send(pdf.toBuffer());
   } catch (e) {
     return res.status(404).send();

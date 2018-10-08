@@ -18,72 +18,13 @@ const Form = styled.form`
   padding: 0 1em;
 `;
 
-const PageRadioButton = styled.input`
-  &:checked,
-  &:not(:checked) {
-    position: absolute;
-    left: -9999px;
-  }
-  &:not(:checked) + label {
-    background-color: ${Colors.NewDocument.RadioBackground};
-    border: 1px solid ${Colors.NewDocument.RadioBorder};
-    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.1);
-    color: ${Colors.NewDocument.RadioText};
-  }
-  &:checked + label {
-    border: 1px solid ${Colors.NewDocument.RadioSelectedBorder};
-    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.2),
-      0 0 0 2px ${Colors.NewDocument.RadioSelectedOutline};
-    background-color: ${Colors.NewDocument.RadioSelectedBackground};
-    color: ${Colors.NewDocument.RadioSelectedText};
-  }
-`;
-
-const PageRadioContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
-const PageLabel = styled.label`
-  display: inline-block;
-  border-radius: 4px;
-`;
-
-const PortraitLabel = styled(PageLabel)`
-  width: 85px;
-  height: 110px;
-  margin-right: 1em;
-`;
-
-const LandscapeLabel = styled(PageLabel)`
-  width: 110px;
-  height: 85px;
-`;
-
-const PageLabelContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex-direction: column;
-  height: inherit;
-`;
-
-const PageLabelTitle = styled.div`
-  font-weight: 600;
-`;
-
-const PageLabelDimensions = styled.div`
-  font-size: 0.85em;
-`;
-
 interface Props {
   onDismiss: () => void;
   didCreateDocument: (
     sender: {
       name: string;
-      orientation: string;
+      width: number;
+      height: number;
     }
   ) => Promise<void>;
 }
@@ -108,7 +49,11 @@ export class NewDocumentDialog extends React.Component<Props, State> {
     return errors;
   };
 
-  createNewDocument = async (sender: { name: string; orientation: string }) => {
+  createNewDocument = async (sender: {
+    name: string;
+    width: number;
+    height: number;
+  }) => {
     this.props.didCreateDocument(sender);
     this.props.onDismiss();
   };
@@ -121,7 +66,8 @@ export class NewDocumentDialog extends React.Component<Props, State> {
         <Formik
           initialValues={{
             name: "",
-            orientation: "portrait",
+            width: 8.5,
+            height: 11,
           }}
           validate={this.validateForm}
           onSubmit={(values: PubNewDocument) => this.createNewDocument(values)}
@@ -137,40 +83,18 @@ export class NewDocumentDialog extends React.Component<Props, State> {
                 onChange={handleChange}
                 value={values.name}
               />
-              <PageRadioContainer>
-                <PageRadioButton
-                  name="orientation"
-                  type="radio"
-                  value="portrait"
-                  id="orientation-portrait"
-                  onChange={handleChange}
-                  checked={values.orientation === "portrait"}
-                />
-                <PortraitLabel htmlFor="orientation-portrait">
-                  <PageLabelContent>
-                    <PageLabelTitle>Portrait</PageLabelTitle>
-                    <PageLabelDimensions>
-                      8.5&#8221; &#215; 11&#8221;
-                    </PageLabelDimensions>
-                  </PageLabelContent>
-                </PortraitLabel>
-                <PageRadioButton
-                  name="orientation"
-                  type="radio"
-                  value="landscape"
-                  id="orientation-landscape"
-                  onChange={handleChange}
-                  checked={values.orientation === "landscape"}
-                />
-                <LandscapeLabel htmlFor="orientation-landscape">
-                  <PageLabelContent>
-                    <PageLabelTitle>Landscape</PageLabelTitle>
-                    <PageLabelDimensions>
-                      11&#8221; &#215; 8.5&#8221;
-                    </PageLabelDimensions>
-                  </PageLabelContent>
-                </LandscapeLabel>
-              </PageRadioContainer>
+              <FormInput
+                placeholder="Width"
+                name="width"
+                onChange={handleChange}
+                value={values.width}
+              />
+              <FormInput
+                placeholder="Height"
+                name="height"
+                onChange={handleChange}
+                value={values.height}
+              />
               <ModalButtonContainer>
                 <Button marginRight type="submit">
                   Create Document

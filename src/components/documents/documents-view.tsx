@@ -301,14 +301,16 @@ export default class DocumentsView extends React.Component<Props, State> {
 
   handleCreateNewDocument = async (sender: {
     name: string;
-    orientation: string;
+    width: number;
+    height: number;
   }) => {
     const payload = {
       name: sender.name,
       pages: [
         {
           pageNumber: 1,
-          ...metrics[sender.orientation],
+          width: sender.width,
+          height: sender.height,
           shapes: [],
         },
       ],
@@ -317,7 +319,7 @@ export default class DocumentsView extends React.Component<Props, State> {
       try {
         const { saveDocument } = await this.props.saveDocument({
           document: payload,
-        });
+        } as any);
         if (this.state.currentDocument) {
           await this.saveDocument();
         }
@@ -327,7 +329,7 @@ export default class DocumentsView extends React.Component<Props, State> {
         return;
       }
     }
-    this.setCurrentDocument(payload);
+    this.setCurrentDocument(payload as any);
   };
 
   render() {

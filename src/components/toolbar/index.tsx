@@ -46,7 +46,6 @@ export const Toolbar: React.SFC<Props> = props => (
         showOpenDocumentModal={props.showOpenDocumentModal}
         saveDocument={props.saveDocument}
         showAboutModal={props.showAboutModal}
-        setZoom={props.setZoom}
       />
       <EditMenu
         selectedObject={props.selectedObject}

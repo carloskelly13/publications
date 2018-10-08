@@ -12,7 +12,8 @@ export type PubShapeChanges = {
 
 export interface PubNewDocument {
   name: string;
-  orientation: "portrait" | "landscape";
+  width: number;
+  height: number;
 }
 
 export interface PubShape {
