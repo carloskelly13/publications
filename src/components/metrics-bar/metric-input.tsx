@@ -27,12 +27,14 @@ export default class MetricInput extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { presentedValue: (props.value || "").toString() };
+    this.state = {
+      presentedValue: (props.value !== null ? props.value : "").toString(),
+    };
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { value } = nextProps;
-    this.setState({ presentedValue: (value || "").toString() });
+    this.setState({ presentedValue: (value !== null ? value : "").toString() });
   }
 
   updateValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +81,11 @@ export default class MetricInput extends React.PureComponent<Props, State> {
             onChange={this.updateValue}
             onBlur={this.validateInput}
             onKeyPress={this.handleKeyPress}
-            value={this.state.presentedValue || ""}
+            value={
+              this.state.presentedValue !== null
+                ? this.state.presentedValue
+                : ""
+            }
           />
           <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
             {unit}
