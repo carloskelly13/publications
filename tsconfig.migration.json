@@ -4,7 +4,6 @@
     "allowSyntheticDefaultImports": true,
     "lib": ["es6", "es2017.object", "dom", "esnext.asynciterable"],
     "module": "commonjs",
-    "jsx": "react",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "outDir": "dist/",
@@ -12,6 +11,6 @@
     "target": "esnext",
     "typeRoots": ["node_modules/@types/"]
   },
-  "include": ["./index.ts"],
+  "include": ["./src/platform/database/migrate.ts"],
   "exclude": ["node_modules"]
 }
