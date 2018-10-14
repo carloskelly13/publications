@@ -3,6 +3,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["es6", "es2017.object", "dom", "esnext.asynciterable"],
+    "jsx": "react",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
