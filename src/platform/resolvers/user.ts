@@ -2,8 +2,8 @@ import db from "../database";
 import jsonwebtoken from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Context } from "../../types/server";
+import appConfig from "../../../app-config";
 
-const appConfig = require("../../../app-config.json");
 export const loginResolver = async function(_, { name, password }) {
   const user = await db.getUser(name);
   if (!user) {

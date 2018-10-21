@@ -9,8 +9,8 @@ import jwt from "express-jwt";
 import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
 import documentPdfHandler from "./platform/handlers/pdf";
+import appConfig from "../app-config";
 
-const appConfig = require("../app-config.json");
 const PORT = 4000;
 const jwtConfig = {
   secret: appConfig.jwtSecret,

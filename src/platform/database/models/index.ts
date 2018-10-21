@@ -1,7 +1,7 @@
 import knex from "knex";
 import { Model } from "objection";
+import appConfig from "../../../../app-config";
 
-const appConfig = require("../../../../app-config.json");
 export const pg = knex({
   client: "pg",
   version: "9.6",
