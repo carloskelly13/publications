@@ -10,7 +10,8 @@
     "db:migrate": "ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/platform/database/migrate.ts",
     "start": "nodemon --config ./nodemon.json -L",
     "test": "",
-    "prettier": "prettier --write src/**/*.ts src/**/*.tsx",
+    "prettier-watch": "onchange 'src/**/*.{ts,tsx}' -- prettier --write {{changed}}",
+    "prettier": "prettier --write 'src/**/*.{ts,tsx}'",
     "precommit": "npm run prettier && npm run lint",
     "prepush": "npm run lint"
   },
@@ -76,6 +77,7 @@
     "husky": "^0.14.3",
     "json-loader": "^0.5.7",
     "nodemon": "^1.18.3",
+    "onchange": "^5.1.0",
     "path": "^0.12.7",
     "prettier": "1.13.7",
     "ts-loader": "^4.5.0",
