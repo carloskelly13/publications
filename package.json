@@ -10,7 +10,8 @@
     "db:migrate": "ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' src/platform/database/migrate.ts",
     "start": "nodemon --config ./nodemon.json -L",
     "test": "",
-    "precommit": "npm run lint",
+    "prettier": "prettier --write src/**/*.ts src/**/*.tsx",
+    "precommit": "npm run prettier && npm run lint",
     "prepush": "npm run lint"
   },
   "dependencies": {

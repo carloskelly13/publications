@@ -97,8 +97,10 @@ const LayerInfo: React.SFC<LayerInfoProps> = ({ shape, selected }) => (
   <Container>
     {renderIcon(shape, selected)}
     <MetricsContainer selected={selected}>
-      <Metric selected={selected}>{shape.width}</Metric>&#8221;&nbsp;&times;&nbsp;
-      <Metric selected={selected}>{shape.height}</Metric>&#8221;
+      <Metric selected={selected}>{shape.width}</Metric>
+      &#8221;&nbsp;&times;&nbsp;
+      <Metric selected={selected}>{shape.height}</Metric>
+      &#8221;
     </MetricsContainer>
   </Container>
 );
