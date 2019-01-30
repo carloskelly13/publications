@@ -10,6 +10,7 @@ import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
 import documentPdfHandler from "./platform/handlers/pdf";
 import appConfig from "../app-config";
+import { GraphQLSchema } from "graphql";
 
 const PORT = 4000;
 const jwtConfig = {

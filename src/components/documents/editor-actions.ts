@@ -1,5 +1,5 @@
 import { EditorState } from "draft-js";
-import cloneDeep from "lodash/fp/cloneDeep";
+import cloneDeep from "clone-deep";
 import omit from "lodash/fp/omit";
 import flowRight from "lodash/fp/flowRight";
 import {
@@ -149,7 +149,7 @@ type UpdateDocumentStateForClipboardActionFn = (
   currentDocument?: PubDocument;
 };
 
-const duplicateObj: (object: PubShape) => PubShape = flowRight<
+export const duplicateObj: (object: PubShape) => PubShape = flowRight<
   PubShape,
   PubShape,
   PubShape

@@ -3,17 +3,23 @@ import { stateFromHTML } from "draft-js-import-html";
 import { stateToHTML } from "draft-js-export-html";
 import importTextStyle from "./import-text-style";
 import { exporter as textStyleExporter } from "../components/shapes/text-box";
-import sortBy from "lodash/fp/sortBy";
-import omit from "lodash/fp/omit";
+import pick from "lodash/fp/pick";
 
-const omitTransientData = omit([
-  "id",
-  "isEditing",
-  "__typename",
-  "editorState",
+export const omitTransientData = pick([
+  "type",
+  "width",
+  "height",
+  "x",
+  "y",
+  "z",
+  "r",
+  "fill",
+  "fillOpacity",
+  "stroke",
+  "strokeWidth",
+  "strokeOpacity",
+  "text",
 ]);
-
-export const sortShapesByZIndex = sortBy("z");
 
 export const addEditorStateToDocument = document => ({
   ...document,
@@ -48,22 +54,6 @@ export const convertObjStylesToHTML = shape => {
   }
   return shape;
 };
-
-export const packageDocumentToJson = document => ({
-  name: document.name,
-  pages: [
-    {
-      id: document.pages[0].id,
-      pageNumber: document.pages[0].pageNumber,
-      width: document.pages[0].width,
-      height: document.pages[0].height,
-      shapes: document.pages[0].shapes.map(inputShape => {
-        const outputShape = convertObjStylesToHTML(inputShape);
-        return omitTransientData(outputShape);
-      }),
-    },
-  ],
-});
 
 export const documentsWithEditorState = documents =>
   documents.map(document => addEditorStateToDocument(document));

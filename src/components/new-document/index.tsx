@@ -6,7 +6,6 @@ import { ModalButtonContainer } from "../ui/button-container";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { Formik, FormikProps } from "formik";
-import { Colors } from "../../util/constants";
 import { PubNewDocument } from "../../types/pub-objects";
 import { StateContext } from "../../contexts";
 
@@ -54,7 +53,7 @@ export class NewDocumentDialog extends React.Component<Props, State> {
     width: number;
     height: number;
   }) => {
-    this.props.didCreateDocument(sender);
+    await this.props.didCreateDocument(sender);
     this.props.onDismiss();
   };
 
@@ -115,7 +114,7 @@ export default () => (
   <StateContext.Consumer>
     {({ actions }) => (
       <NewDocumentDialog
-        onDismiss={actions.hideNewDocumentModal}
+        onDismiss={() => actions.setNewDocumentModalVisible(false)}
         didCreateDocument={actions.handleCreateNewDocument}
       />
     )}

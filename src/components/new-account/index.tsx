@@ -143,7 +143,7 @@ export default () => (
       <NewAccountForm
         onCreateAccount={actions.createUser}
         refetchCurrentUser={actions.refetchCurrentUser}
-        onDismiss={actions.hideNewAccountModal}
+        onDismiss={() => actions.setNewAccountModalVisible(false)}
       />
     )}
   </StateContext.Consumer>

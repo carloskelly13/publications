@@ -22,7 +22,7 @@ const ToolbarContainer = styled.div`
 interface Props {
   children: React.ReactNode;
 }
-const Toolbar: React.SFC<Props> = ({ children }) => (
+const Toolbar: React.FunctionComponent<Props> = ({ children }) => (
   <div style={{ display: "block", zIndex: 5 }}>
     <ToolbarContainer>{children}</ToolbarContainer>
   </div>

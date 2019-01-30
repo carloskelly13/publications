@@ -119,7 +119,7 @@ export default () => (
       <LoginDialog
         login={actions.login}
         refetchCurrentUser={actions.refetchCurrentUser}
-        onDismiss={actions.hideLoginModal}
+        onDismiss={() => actions.setLoginModalVisible(false)}
       />
     )}
   </StateContext.Consumer>

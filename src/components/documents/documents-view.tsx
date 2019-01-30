@@ -1,45 +1,42 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../layers-sidebar";
-import get from "lodash/fp/get";
+import produce from "immer";
 import Modals from "./modals";
-import { ViewContainer, DocumentView } from "./components";
-import { packageDocumentToJson } from "../../util/documents";
+import get from "lodash/fp/get";
+import pick from "lodash/fp/pick";
+import cloneDeep from "clone-deep";
+import { DocumentView, ViewContainer } from "./components";
 import {
-  updatedDocumentStateForObjectChanges,
-  updatedDocumentStateForLayerChanges,
-  updatedDocumentStateForClipboardAction,
-  updatedDocumentStateForDeleteAction,
+  addEditorStateToObject,
+  convertObjStylesToHTML,
+  omitTransientData,
+} from "../../util/documents";
+import {
   ClipboardAction,
+  duplicateObj,
   LayerMutationDelta,
 } from "./editor-actions";
 import shortid from "shortid";
-import {
-  currentUserQuery,
-  documentsQuery,
-  loginMutation,
-  saveDocumentMutation,
-  createUserMutation,
-  deleteDocumentMutation,
-} from "../../queries";
 import { StateContext } from "../../contexts";
 import {
-  PubUser,
   PubDocument,
   PubShape,
   PubShapeChanges,
+  PubShapeType,
+  PubUser,
 } from "../../types/pub-objects";
 import {
+  CreateUserMutation,
+  DeleteDocumentMutation,
   LoginMutation,
   RefetchCurrentUser,
   SaveDocumentMutation,
-  DeleteDocumentMutation,
-  CreateUserMutation,
 } from "../../types/data";
-import { metrics } from "../../util/constants";
-import { PubAppState, PubActions } from "../../contexts/app-state";
+import { PubAppState } from "../../contexts/app-state";
+import { EditorState } from "draft-js";
 
 interface Props {
   user: PubUser | null;
@@ -53,298 +50,313 @@ interface Props {
   dataLoaded: boolean;
 }
 
-interface State {
-  documents: Array<PubDocument>;
-  currentDocument: PubDocument | null;
-  selectedObject: PubShape | null;
-  clipboardContents: PubShape | null;
-  newDocumentModalVisible: boolean;
-  openDocumentModalVisible: boolean;
-  startModalVisible: boolean;
-  layersPanelVisible: boolean;
-  loginModalVisible: boolean;
-  newAccountModalVisible: boolean;
-  aboutModalVisible: boolean;
-  zoom: number;
-}
+const DocumentsView: React.FunctionComponent<Props> = props => {
+  const [currentDocument, setCurrentDocument] = useState<PubDocument | null>(
+    null
+  );
+  const [selectedObject, setSelectedObject] = useState<PubShape | null>(null);
+  const [clipboardContents, setClipboardContents] = useState<PubShape | null>(
+    null
+  );
+  const [zoom, setZoom] = useState(1);
+  const [newDocumentModalVisible, setNewDocumentModalVisible] = useState(false);
+  const [openDocumentModalVisible, setOpenDocumentModalVisible] = useState(
+    false
+  );
+  const [startModalVisible, setStartModalVisible] = useState(true);
+  const [newAccountModalVisible, setNewAccountModalVisible] = useState(false);
+  const [aboutModalVisible, setAboutModalVisible] = useState(false);
+  const [loginModalVisible, setLoginModalVisible] = useState(false);
+  const [layersPanelVisible, setLayersPanelVisible] = useState(false);
 
-export default class DocumentsView extends React.Component<Props, State> {
-  state = {
-    documents: [],
-    currentDocument: null,
-    selectedObject: null,
-    clipboardContents: null,
-    newDocumentModalVisible: false,
-    openDocumentModalVisible: false,
-    startModalVisible: true,
-    layersPanelVisible: false,
-    loginModalVisible: false,
-    newAccountModalVisible: false,
-    aboutModalVisible: false,
-    zoom: 1,
-  };
+  const getDocument = useCallback(
+    (id: string) => {
+      const doc = props.documents.filter(d => d.id === id)[0];
+      setCurrentDocument(doc);
+    },
+    [setCurrentDocument, props.documents]
+  );
 
-  getActions = (): PubActions => ({
-    addObject: this.addObject,
-    deleteObject: this.deleteObject,
-    createUser: this.props.createUser,
-    deleteDocument: this.deleteDocument,
-    handleClipboardAction: this.handleClipboardAction,
-    handleCreateNewDocument: this.handleCreateNewDocument,
-    logout: this.logOut,
-    login: this.props.login,
-    refetchCurrentUser: this.props.refetchCurrentUser,
-    getDocument: this.getDocument,
-    saveDocument: this.saveDocument,
-    setZoom: this.setZoom,
-    showNewDocumentModal: this.showNewDocumentModal,
-    hideNewDocumentModal: this.hideNewDocumentModal,
-    showOpenDocumentModal: this.showOpenDocumentModal,
-    hideOpenDocumentModal: this.hideOpenDocumentModal,
-    toggleLayersPanel: this.toggleLayersPanel,
-    updateSelectedObject: this.updateSelectedObject,
-    adjustObjectLayer: this.adjustObjectLayer,
-    toggleLoginDialog: this.showLoginModal,
-    hideStartModal: this.hideStartModal,
-    showNewAccountModal: this.showNewAccountModal,
-    hideNewAccountModal: this.hideNewAccountModal,
-    showLoginModal: this.showLoginModal,
-    hideLoginModal: this.hideLoginModal,
-    showAboutModal: this.showAboutModal,
-    hideAboutModal: this.hideAboutModal,
-  });
-
-  getCurrentContextState = (): PubAppState => ({
-    actions: this.getActions(),
-    clipboardContents: this.state.clipboardContents,
-    currentDocument: this.state.currentDocument,
-    dataLoaded: this.props.dataLoaded,
-    documents: this.props.documents,
-    layersPanelVisible: this.state.layersPanelVisible,
-    selectedObject: this.state.selectedObject,
-    user: this.props.user,
-    zoom: this.state.zoom,
-    startModalVisible: this.state.startModalVisible,
-    loginModalVisible: this.state.loginModalVisible,
-    newAccountModalVisible: this.state.newAccountModalVisible,
-    openDocumentModalVisible: this.state.openDocumentModalVisible,
-    aboutModalVisible: this.state.aboutModalVisible,
-    newDocumentModalVisible: this.state.newDocumentModalVisible,
-  });
-
-  /**
-   * Display Actions
-   */
-
-  hideStartModal = () => this.setState({ startModalVisible: false });
-  showNewAccountModal = () => this.setState({ newAccountModalVisible: true });
-  hideNewAccountModal = () => this.setState({ newAccountModalVisible: false });
-  showNewDocumentModal = () => this.setState({ newDocumentModalVisible: true });
-  hideNewDocumentModal = () =>
-    this.setState({ newDocumentModalVisible: false });
-  showOpenDocumentModal = () =>
-    this.setState({ openDocumentModalVisible: true });
-  hideOpenDocumentModal = () =>
-    this.setState({ openDocumentModalVisible: false });
-  showLoginModal = () => this.setState({ loginModalVisible: true });
-  hideLoginModal = () => this.setState({ loginModalVisible: false });
-  showAboutModal = () => this.setState({ aboutModalVisible: true });
-  hideAboutModal = () => this.setState({ aboutModalVisible: false });
-  toggleLayersPanel = () =>
-    this.setState(prevState => ({
-      layersPanelVisible: !prevState.layersPanelVisible,
-    }));
-
-  /**
-   * Data Actions
-   */
-
-  logOut = async () => {
-    await this.saveDocument();
-    window.localStorage.removeItem("authorization_token");
-    this.setState({
-      currentDocument: null,
-      selectedObject: null,
-      layersPanelVisible: false,
-      zoom: 1,
-    });
-    return await this.props.refetchCurrentUser({ skipCache: true });
-  };
-
-  getDocument = (id: string) => {
-    const doc = this.props.documents.filter(d => d.id === id)[0];
-    this.setCurrentDocument(doc);
-  };
-
-  saveDocument = async (document?: PubDocument) => {
-    if (!this.state.currentDocument && !document) {
-      return;
-    }
-    const documentToSave = document || this.state.currentDocument;
-    /**
-     * If there is both a document passed as a param and currentDocument in
-     * state then it’s being renamed. All we need to do is update the name.
-     */
-    if (document && this.state.currentDocument) {
-      this.setState(prevState => ({
-        currentDocument: {
-          ...prevState.currentDocument,
-          name: document.name,
-        },
-      }));
-    }
-    return this.props.saveDocument({
-      document: {
-        ...packageDocumentToJson(documentToSave),
-        id: get("id")(documentToSave),
-      },
-    });
-  };
-
-  deleteDocument = async (id: string | number) => {
-    if (this.state.currentDocument.id === id) {
-      this.setState({
-        currentDocument: null,
-        selectedObject: null,
+  const saveDocument = useCallback(
+    async (sender?: PubDocument) => {
+      if (!currentDocument && !sender) {
+        return;
+      }
+      let documentToSave = sender || currentDocument;
+      documentToSave = produce(documentToSave, (draftDocument: any) => {
+        if (sender && currentDocument) {
+          draftDocument.name = sender.name;
+        }
+        draftDocument.pages[0] = {
+          ...pick(
+            ["id", "width", "height", "pageNumber"],
+            draftDocument.pages[0]
+          ),
+          shapes: documentToSave.pages[0].shapes.map(shape =>
+            omitTransientData(convertObjStylesToHTML(shape))
+          ),
+        };
+        draftDocument.id = get("id")(documentToSave);
+        delete draftDocument.__typename;
       });
-    }
-    return await this.props.deleteDocument({ id });
-  };
+      return props.saveDocument({ document: documentToSave });
+    },
+    [props.saveDocument, currentDocument]
+  );
 
-  /**
-   * Editor Actions
-   */
-
-  updateSelectedObject = (sender: PubShapeChanges) =>
-    this.setState(
-      (prevState: State): Pick<State, never> => {
-        const updatedState = updatedDocumentStateForObjectChanges(
-          sender,
-          prevState.selectedObject!,
-          prevState.currentDocument!
+  const updateSelectedObject = useCallback(
+    (sender: PubShapeChanges) => {
+      if (sender === null) {
+        setSelectedObject(null);
+        return;
+      }
+      const updatedSelectedObj: PubShape = { ...selectedObject, ...sender };
+      if (updatedSelectedObj.type === PubShapeType.Text) {
+        updatedSelectedObj.editorState = EditorState.moveSelectionToEnd(
+          updatedSelectedObj.editorState
         );
-        return updatedState;
       }
-    );
+      const updatedDocument = produce(currentDocument, draftDocument => {
+        const idx = currentDocument.pages[0].shapes.findIndex(
+          shape => updatedSelectedObj.id === shape.id
+        );
+        draftDocument.pages[0].shapes[idx] = updatedSelectedObj;
+      });
+      setSelectedObject(updatedSelectedObj);
+      setCurrentDocument(updatedDocument);
+    },
+    [currentDocument, setSelectedObject, setCurrentDocument]
+  );
 
-  setZoom = (zoom: number = 1) => this.setState({ zoom });
+  const logout = useCallback(
+    async () => {
+      await saveDocument();
+      window.localStorage.removeItem("authorization_token");
+      setCurrentDocument(null);
+      setSelectedObject(null);
+      setLayersPanelVisible(false);
+      setZoom(1);
+      return await props.refetchCurrentUser({ skipCache: true });
+    },
+    [
+      saveDocument,
+      props.refetchCurrentUser,
+      setCurrentDocument,
+      setSelectedObject,
+      setLayersPanelVisible,
+      setZoom,
+    ]
+  );
 
-  setCurrentDocument = (doc: PubDocument | null) =>
-    this.setState(
-      (prevState: State): Pick<State, never> => {
-        const currentDocumentId = (prevState.currentDocument || { id: -1 }).id;
-        const documentId = (doc || { id: -2 }).id;
-        if (currentDocumentId === documentId) {
-          return { currentDocument: doc, layersPanelVisible: true };
-        } else {
-          return {
-            currentDocument: doc,
-            layersPanelVisible: true,
-            selectedObject: null,
-            zoom: 1,
-          };
-        }
-      },
-      () => {
-        if (doc && "id" in doc) {
-          window.localStorage.setItem("current_document_id", doc.id!);
-        }
-      }
-    );
+  const addObject = useCallback(
+    (sender: PubShape) => {
+      const newObject = produce(sender, draftNewObject => {
+        draftNewObject.z = currentDocument.pages[0].shapes.length + 1;
+        draftNewObject.id = shortid.generate();
+      });
+      const updatedDocument = produce(currentDocument, draftDocument => {
+        draftDocument.pages[0].shapes.push(newObject);
+      });
+      setSelectedObject(newObject);
+      setCurrentDocument(updatedDocument);
+    },
+    [setSelectedObject, setCurrentDocument, currentDocument]
+  );
 
-  addObject = (sender: PubShape) => {
-    const currentDocument = this.state.currentDocument as PubDocument | null;
-    if (!currentDocument) {
-      return;
-    }
-    const newObject = {
-      ...sender,
-      z: currentDocument.pages[0].shapes.length + 1,
-      id: shortid.generate(),
-    };
-    this.setState(
-      (prevState: State): Pick<State, never> => ({
-        currentDocument: {
-          ...prevState.currentDocument,
-          pages: [
-            {
-              ...prevState.currentDocument.pages[0],
-              shapes: [...prevState.currentDocument.pages[0].shapes, newObject],
-            },
-          ],
-        },
-        selectedObject: newObject,
-      })
-    );
-  };
-
-  deleteObject = (sender?: PubShape) =>
-    this.setState(
-      (prevState: State): Pick<State, never> =>
-        updatedDocumentStateForDeleteAction(
-          sender || prevState.selectedObject,
-          prevState.currentDocument
-        )
-    );
-
-  adjustObjectLayer = (sender: LayerMutationDelta) =>
-    this.setState(
-      (prevState: State): Pick<State, never> =>
-        updatedDocumentStateForLayerChanges(sender, prevState.currentDocument)
-    );
-
-  handleClipboardAction = (action: ClipboardAction) =>
-    this.setState(
-      (prevState: State): Pick<State, never> =>
-        updatedDocumentStateForClipboardAction(action, prevState)
-    );
-
-  handleCreateNewDocument = async (sender: {
-    name: string;
-    width: number;
-    height: number;
-  }) => {
-    const payload = {
-      name: sender.name,
-      pages: [
-        {
-          pageNumber: 1,
-          width: sender.width,
-          height: sender.height,
-          shapes: [],
-        },
-      ],
-    };
-    if (this.props.user) {
-      try {
-        const { saveDocument } = await this.props.saveDocument({
-          document: payload,
-        } as any);
-        if (this.state.currentDocument) {
-          await this.saveDocument();
-        }
-        this.setCurrentDocument(saveDocument);
-        return;
-      } catch (e) {
+  const adjustObjectLayer = useCallback(
+    (delta: LayerMutationDelta) => {
+      const { source, destination } = delta;
+      if (!source || !destination || !currentDocument) {
         return;
       }
-    }
-    this.setCurrentDocument(payload as any);
+      const doc = produce(currentDocument, draftState => {
+        const fromIndex = source.index;
+        const toIndex = destination.index;
+        const sortedObjects = Array.from(currentDocument.pages[0].shapes);
+        const [adjustedShape] = sortedObjects.splice(fromIndex, 1);
+        sortedObjects.splice(toIndex, 0, adjustedShape);
+        const shapes = sortedObjects.map((shape, index) => ({
+          ...shape,
+          z: index + 1,
+        }));
+        const selectedObject = shapes.find(
+          shape => shape.id === adjustedShape.id
+        );
+        draftState.pages[0].shapes = shapes;
+        setSelectedObject(selectedObject);
+      });
+      setCurrentDocument(doc);
+    },
+    [currentDocument, setCurrentDocument, setSelectedObject]
+  );
+
+  const deleteObject = useCallback(
+    () => {
+      if (!selectedObject || !currentDocument) {
+        return;
+      }
+      const doc = produce(currentDocument, draftState => {
+        const shapes = currentDocument.pages[0].shapes
+          .filter(shape => shape.id !== selectedObject.id)
+          .map(shape => {
+            if (shape.z > selectedObject.z) {
+              shape.z -= 1;
+            }
+            return shape;
+          });
+        draftState.pages[0].shapes = shapes;
+      });
+      setSelectedObject(null);
+      setCurrentDocument(doc);
+    },
+    [setSelectedObject, setCurrentDocument, currentDocument, selectedObject]
+  );
+
+  const handleCreateNewDocument = useCallback(
+    async (sender: { name: string; width: number; height: number }) => {
+      const payload = {
+        name: sender.name,
+        pages: [
+          {
+            pageNumber: 1,
+            width: sender.width,
+            height: sender.height,
+            shapes: [],
+          },
+        ],
+      };
+      if (props.user) {
+        try {
+          const response = await props.saveDocument({
+            document: payload,
+          } as any);
+          if (currentDocument) {
+            await saveDocument();
+          }
+          setCurrentDocument(response.saveDocument);
+          return;
+        } catch (e) {
+          return;
+        }
+      }
+      setCurrentDocument(payload as PubDocument);
+    },
+    [
+      currentDocument,
+      saveDocument,
+      setCurrentDocument,
+      props.saveDocument,
+      props.user,
+    ]
+  );
+
+  const deleteDocument = useCallback(
+    async (id: string | number) => {
+      if (currentDocument && currentDocument.id === id) {
+        setCurrentDocument(null);
+        setSelectedObject(null);
+      }
+      return await props.deleteDocument({ id });
+    },
+    [
+      props.deleteDocument,
+      currentDocument,
+      setCurrentDocument,
+      setSelectedObject,
+    ]
+  );
+
+  const handleClipboardAction = useCallback(
+    (action: ClipboardAction) => {
+      if (!currentDocument) {
+        return;
+      }
+      if (action === ClipboardAction.Copy && selectedObject) {
+        const copiedObj = duplicateObj(selectedObject);
+        setClipboardContents(copiedObj);
+      } else if (action === ClipboardAction.Cut && selectedObject) {
+        const cutObj = duplicateObj(selectedObject);
+        setClipboardContents(cutObj);
+        deleteObject();
+      } else if (action === ClipboardAction.Paste && clipboardContents) {
+        const newObject = {
+          ...cloneDeep(clipboardContents),
+          z: currentDocument.pages[0].shapes.length + 1,
+          id: shortid.generate(),
+        };
+        if (newObject.type === PubShapeType.Text) {
+          addEditorStateToObject(newObject);
+        }
+        const updatedDocument = produce(currentDocument, draftDocument => {
+          draftDocument.pages[0].shapes.push(newObject);
+        });
+        setSelectedObject(newObject);
+        setCurrentDocument(updatedDocument);
+      }
+    },
+    [
+      selectedObject,
+      currentDocument,
+      setCurrentDocument,
+      setSelectedObject,
+      clipboardContents,
+      setClipboardContents,
+    ]
+  );
+
+  const appState: PubAppState = {
+    actions: {
+      setAboutModalVisible,
+      setLoginModalVisible,
+      setLayersPanelVisible,
+      setStartModalVisible,
+      setNewAccountModalVisible,
+      setNewDocumentModalVisible,
+      setOpenDocumentModalVisible,
+      setZoom,
+      getDocument,
+      saveDocument,
+      deleteDocument,
+      addObject,
+      deleteObject,
+      updateSelectedObject,
+      adjustObjectLayer,
+      handleCreateNewDocument,
+      handleClipboardAction,
+      login: props.login,
+      createUser: props.createUser,
+      refetchCurrentUser: props.refetchCurrentUser,
+      logout,
+    },
+    aboutModalVisible,
+    clipboardContents,
+    currentDocument,
+    documents: props.documents,
+    dataLoaded: props.dataLoaded,
+    selectedObject,
+    zoom,
+    user: props.user,
+    newDocumentModalVisible,
+    openDocumentModalVisible,
+    loginModalVisible,
+    startModalVisible,
+    newAccountModalVisible,
+    layersPanelVisible,
   };
 
-  render() {
-    return (
-      <StateContext.Provider value={this.getCurrentContextState()}>
-        <ViewContainer>
-          <Toolbar />
-          <MetricsBar />
-          <DocumentView>
-            <EditorView />
-            <LayersSidebar />
-          </DocumentView>
-        </ViewContainer>
-        <Modals />
-      </StateContext.Provider>
-    );
-  }
-}
+  return (
+    <StateContext.Provider value={appState}>
+      <ViewContainer>
+        <Toolbar />
+        <MetricsBar />
+        <DocumentView>
+          <EditorView />
+          <LayersSidebar />
+        </DocumentView>
+      </ViewContainer>
+      <Modals />
+    </StateContext.Provider>
+  );
+};
+
+export default DocumentsView;

@@ -25,20 +25,20 @@ import { StateContext } from "../../contexts";
 interface Props {
   loaded: boolean;
   user: PubUser | null;
-  hideStartModal(): void;
-  showNewDocumentModal(): void;
-  showOpenDocumentModal(): void;
-  showLoginDialog(): void;
-  showNewAccountModal(): void;
+  setStartModalVisible(visible: boolean): void;
+  setNewDocumentModalVisible(visible: boolean): void;
+  setOpenDocumentModalVisible(visible: boolean): void;
+  setLoginModalVisible(visible: boolean): void;
+  setNewAccountModalVisible(visible: boolean): void;
 }
 
-function StartModal(props: Props) {
+const StartModal: React.FunctionComponent<Props> = props => {
   const {
-    showNewAccountModal,
-    hideStartModal,
-    showNewDocumentModal,
-    showLoginDialog,
-    showOpenDocumentModal,
+    setLoginModalVisible,
+    setNewAccountModalVisible,
+    setNewDocumentModalVisible,
+    setOpenDocumentModalVisible,
+    setStartModalVisible,
     loaded,
     user,
   } = props;
@@ -55,8 +55,8 @@ function StartModal(props: Props) {
         <StartButton
           disabled={!loaded}
           onClick={() => {
-            hideStartModal();
-            setTimeout(showNewDocumentModal, 250);
+            setStartModalVisible(false);
+            setTimeout(() => setNewDocumentModalVisible(true), 250);
           }}
         >
           <DocumentIcon />
@@ -71,8 +71,8 @@ function StartModal(props: Props) {
           <StartButton
             disabled={!loaded}
             onClick={() => {
-              hideStartModal();
-              setTimeout(showOpenDocumentModal, 250);
+              setStartModalVisible(false);
+              setTimeout(() => setOpenDocumentModalVisible(true), 250);
             }}
           >
             <OpenDocumentIcon />
@@ -87,8 +87,8 @@ function StartModal(props: Props) {
           <StartButton
             disabled={!loaded}
             onClick={() => {
-              hideStartModal();
-              setTimeout(showLoginDialog, 250);
+              setStartModalVisible(false);
+              setTimeout(() => setLoginModalVisible(true), 250);
             }}
           >
             <UserLockIcon />
@@ -103,8 +103,8 @@ function StartModal(props: Props) {
         <StartButton
           disabled={!loaded || user !== null}
           onClick={() => {
-            hideStartModal();
-            setTimeout(showNewAccountModal, 250);
+            setStartModalVisible(false);
+            setTimeout(() => setNewAccountModalVisible(true), 250);
           }}
         >
           <UserBadgeIcon />
@@ -117,13 +117,13 @@ function StartModal(props: Props) {
         </StartButton>
       </StartButtonContainer>
       <ModalButtonContainer>
-        <Button marginRight onClick={hideStartModal}>
+        <Button marginRight onClick={() => setStartModalVisible(false)}>
           Close
         </Button>
       </ModalButtonContainer>
     </StartModalContent>
   );
-}
+};
 
 export default () => (
   <StateContext.Consumer>
@@ -131,11 +131,11 @@ export default () => (
       <StartModal
         user={user}
         loaded={dataLoaded}
-        showLoginDialog={actions.showLoginModal}
-        showNewDocumentModal={actions.showNewDocumentModal}
-        showOpenDocumentModal={actions.showOpenDocumentModal}
-        hideStartModal={actions.hideStartModal}
-        showNewAccountModal={actions.showNewAccountModal}
+        setLoginModalVisible={actions.setLoginModalVisible}
+        setNewAccountModalVisible={actions.setNewAccountModalVisible}
+        setNewDocumentModalVisible={actions.setNewDocumentModalVisible}
+        setOpenDocumentModalVisible={actions.setOpenDocumentModalVisible}
+        setStartModalVisible={actions.setStartModalVisible}
       />
     )}
   </StateContext.Consumer>

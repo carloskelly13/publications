@@ -90,13 +90,13 @@ export default () => (
         addObject={actions.addObject}
         deleteObject={actions.deleteObject}
         handleClipboardAction={actions.handleClipboardAction}
-        showNewAccountModal={actions.showNewAccountModal}
+        showNewAccountModal={() => actions.setNewAccountModalVisible(true)}
         saveDocument={actions.saveDocument}
         logOut={actions.logout}
-        showNewDocumentModal={actions.showNewDocumentModal}
-        showOpenDocumentModal={actions.showOpenDocumentModal}
-        showLoginModal={actions.showLoginModal}
-        showAboutModal={actions.showAboutModal}
+        showNewDocumentModal={() => actions.setNewDocumentModalVisible(true)}
+        showOpenDocumentModal={() => actions.setOpenDocumentModalVisible(true)}
+        showLoginModal={() => actions.setLoginModalVisible(true)}
+        showAboutModal={() => actions.setAboutModalVisible(true)}
         setZoom={actions.setZoom}
         clipboardContents={clipboardContents}
         user={user}

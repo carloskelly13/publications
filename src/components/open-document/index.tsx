@@ -203,7 +203,7 @@ export default () => (
         onOpenDocument={actions.getDocument}
         onDeleteDocument={actions.deleteDocument}
         onRenameDocument={actions.saveDocument}
-        onDismiss={actions.hideOpenDocumentModal}
+        onDismiss={() => actions.setOpenDocumentModalVisible(false)}
       />
     )}
   </StateContext.Consumer>

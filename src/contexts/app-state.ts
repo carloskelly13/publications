@@ -16,7 +16,7 @@ export interface PubActions {
   createUser: CreateUserMutation;
   refetchCurrentUser: RefetchCurrentUser;
   addObject(object: PubShape): void;
-  deleteObject(object?: PubShape): void;
+  deleteObject(): void;
   deleteDocument(id: string | number): Promise<number>;
   handleClipboardAction(action: ClipboardAction): void;
   handleCreateNewDocument(sender: {
@@ -28,21 +28,15 @@ export interface PubActions {
   getDocument(id: string): void;
   saveDocument(): Promise<any>;
   setZoom(zoom: number): void;
-  showNewDocumentModal(): void;
-  hideNewDocumentModal(): void;
-  showOpenDocumentModal(): void;
-  hideOpenDocumentModal(): void;
-  toggleLayersPanel(): void;
+  setNewDocumentModalVisible(visible: boolean): void;
+  setOpenDocumentModalVisible(visible: boolean): void;
+  setLayersPanelVisible(visible: boolean): void;
   updateSelectedObject(sender?: Object | null): void;
   adjustObjectLayer(sender: LayerMutationDelta): void;
-  toggleLoginDialog(): void;
-  hideStartModal(): void;
-  showNewAccountModal(): void;
-  hideNewAccountModal(): void;
-  showLoginModal(): void;
-  hideLoginModal(): void;
-  showAboutModal(): void;
-  hideAboutModal(): void;
+  setStartModalVisible(visible: boolean): void;
+  setNewAccountModalVisible(visible: boolean): void;
+  setLoginModalVisible(visible: boolean): void;
+  setAboutModalVisible(visible: boolean): void;
 }
 
 export interface PubAppState {
