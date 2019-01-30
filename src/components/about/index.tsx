@@ -78,6 +78,8 @@ function AboutPanel(props: Props) {
 
 export default () => (
   <StateContext.Consumer>
-    {({ actions }) => <AboutPanel onDismiss={() => actions.setAboutModalVisible(false)} />}
+    {({ actions }) => (
+      <AboutPanel onDismiss={() => actions.setAboutModalVisible(false)} />
+    )}
   </StateContext.Consumer>
 );
