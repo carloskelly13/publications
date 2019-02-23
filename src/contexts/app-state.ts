@@ -8,7 +8,6 @@ import {
   LoginMutation,
   RefetchCurrentUser,
   CreateUserMutation,
-  DeleteDocumentMutation,
 } from "../types/data";
 
 export interface PubActions {

@@ -11,7 +11,7 @@ export const Container = styled.div`
   flex-direction: row;
   background: ${Colors.Modal.HeaderBackground};
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.15);
-  border-radius: 4px 4px 0 0;
+  border-radius: 8px 8px 0 0;
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.15),
     inset -1px 0 0 hsla(0, 0%, 100%, 0.075), inset 0 -1px 0 hsla(0, 0%, 0%, 0.4);
 `;

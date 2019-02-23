@@ -11,12 +11,11 @@ interface Props {
 
 export const TextInput = styled.input<Props>`
   border: none;
-  border-radius: 0;
+  border-radius: 2px;
   padding: 0 4px;
   color: ${Colors.FormInput.Text};
   background: ${Colors.FormInput.MetricBackground};
-  box-shadow: inset 1px 1px 0 hsla(0, 0%, 0%, 0.4),
-    inset -1px -1px 0 hsla(0, 0%, 100%, 0.1);
+  border: 1px solid hsla(0, 0%, 100%, 0.25);
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {

@@ -29,7 +29,7 @@ export const DeleteConfirmationBar = styled.div`
   align-items: center;
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.15),
     inset -1px 0 0 hsla(0, 0%, 100%, 0.1);
-  border-radius: 4px 4px 0 0;
+  border-radius: 8px 8px 0 0;
   padding: 0 16px;
   color: ${Colors.FileOpen.DeleteConfirmText};
   font-weight: bold;
@@ -75,7 +75,7 @@ export const SearchInputContainer = styled.div`
   background: ${Colors.Modal.ModalBackground};
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.1),
     inset -1px 0 0 hsla(0, 0%, 100%, 0.05);
-  border-radius: 4px 4px 0 0;
+  border-radius: 8px 8px 0 0;
 `;
 
 export const SearchInput = styled(FormInput)`

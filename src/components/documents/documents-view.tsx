@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import * as React from "react";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
@@ -51,33 +51,43 @@ interface Props {
 }
 
 const DocumentsView: React.FunctionComponent<Props> = props => {
-  const [currentDocument, setCurrentDocument] = useState<PubDocument | null>(
+  const [
+    currentDocument,
+    setCurrentDocument,
+  ] = React.useState<PubDocument | null>(null);
+  const [selectedObject, setSelectedObject] = React.useState<PubShape | null>(
     null
   );
-  const [selectedObject, setSelectedObject] = useState<PubShape | null>(null);
-  const [clipboardContents, setClipboardContents] = useState<PubShape | null>(
-    null
-  );
-  const [zoom, setZoom] = useState(1);
-  const [newDocumentModalVisible, setNewDocumentModalVisible] = useState(false);
-  const [openDocumentModalVisible, setOpenDocumentModalVisible] = useState(
+  const [
+    clipboardContents,
+    setClipboardContents,
+  ] = React.useState<PubShape | null>(null);
+  const [zoom, setZoom] = React.useState(1);
+  const [newDocumentModalVisible, setNewDocumentModalVisible] = React.useState(
     false
   );
-  const [startModalVisible, setStartModalVisible] = useState(true);
-  const [newAccountModalVisible, setNewAccountModalVisible] = useState(false);
-  const [aboutModalVisible, setAboutModalVisible] = useState(false);
-  const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [layersPanelVisible, setLayersPanelVisible] = useState(false);
+  const [
+    openDocumentModalVisible,
+    setOpenDocumentModalVisible,
+  ] = React.useState(false);
+  const [startModalVisible, setStartModalVisible] = React.useState(true);
+  const [newAccountModalVisible, setNewAccountModalVisible] = React.useState(
+    false
+  );
+  const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
+  const [loginModalVisible, setLoginModalVisible] = React.useState(false);
+  const [layersPanelVisible, setLayersPanelVisible] = React.useState(false);
 
-  const getDocument = useCallback(
-    (id: string) => {
+  const getDocument = React.useCallback(
+    async (id: string) => {
       const doc = props.documents.filter(d => d.id === id)[0];
       setCurrentDocument(doc);
+      window.history.pushState({}, null, `?docId=${doc.id}`);
     },
     [setCurrentDocument, props.documents]
   );
 
-  const saveDocument = useCallback(
+  const saveDocument = React.useCallback(
     async (sender?: PubDocument) => {
       if (!currentDocument && !sender) {
         return;
@@ -104,14 +114,17 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [props.saveDocument, currentDocument]
   );
 
-  const updateSelectedObject = useCallback(
+  const updateSelectedObject = React.useCallback(
     (sender: PubShapeChanges) => {
       if (sender === null) {
         setSelectedObject(null);
         return;
       }
       const updatedSelectedObj: PubShape = { ...selectedObject, ...sender };
-      if (updatedSelectedObj.type === PubShapeType.Text) {
+      if (
+        updatedSelectedObj.type === PubShapeType.Text &&
+        sender.id === get("id")(selectedObject)
+      ) {
         updatedSelectedObj.editorState = EditorState.moveSelectionToEnd(
           updatedSelectedObj.editorState
         );
@@ -128,7 +141,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [currentDocument, setSelectedObject, setCurrentDocument]
   );
 
-  const logout = useCallback(
+  const logout = React.useCallback(
     async () => {
       await saveDocument();
       window.localStorage.removeItem("authorization_token");
@@ -148,7 +161,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     ]
   );
 
-  const addObject = useCallback(
+  const addObject = React.useCallback(
     (sender: PubShape) => {
       const newObject = produce(sender, draftNewObject => {
         draftNewObject.z = currentDocument.pages[0].shapes.length + 1;
@@ -163,7 +176,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [setSelectedObject, setCurrentDocument, currentDocument]
   );
 
-  const adjustObjectLayer = useCallback(
+  const adjustObjectLayer = React.useCallback(
     (delta: LayerMutationDelta) => {
       const { source, destination } = delta;
       if (!source || !destination || !currentDocument) {
@@ -190,7 +203,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [currentDocument, setCurrentDocument, setSelectedObject]
   );
 
-  const deleteObject = useCallback(
+  const deleteObject = React.useCallback(
     () => {
       if (!selectedObject || !currentDocument) {
         return;
@@ -212,7 +225,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [setSelectedObject, setCurrentDocument, currentDocument, selectedObject]
   );
 
-  const handleCreateNewDocument = useCallback(
+  const handleCreateNewDocument = React.useCallback(
     async (sender: { name: string; width: number; height: number }) => {
       const payload = {
         name: sender.name,
@@ -250,7 +263,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     ]
   );
 
-  const deleteDocument = useCallback(
+  const deleteDocument = React.useCallback(
     async (id: string | number) => {
       if (currentDocument && currentDocument.id === id) {
         setCurrentDocument(null);
@@ -266,7 +279,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     ]
   );
 
-  const handleClipboardAction = useCallback(
+  const handleClipboardAction = React.useCallback(
     (action: ClipboardAction) => {
       if (!currentDocument) {
         return;
@@ -343,6 +356,20 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     newAccountModalVisible,
     layersPanelVisible,
   };
+
+  React.useEffect(
+    () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const documentId = urlParams.get("docId");
+      if (documentId === null || currentDocument) {
+        return;
+      }
+      getDocument(documentId)
+        .then(() => setStartModalVisible(false))
+        .catch(() => setStartModalVisible(true));
+    },
+    [props.documents.length]
+  );
 
   return (
     <StateContext.Provider value={appState}>
