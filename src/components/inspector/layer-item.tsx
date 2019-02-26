@@ -13,7 +13,7 @@ const getItemStyle = draggableStyle => ({
 
 const backgroundColorForState = (selected: boolean): string => {
   if (selected) {
-    return Colors.LayersSidebar.ItemSelectedBackground;
+    return Colors.Inspector.LayerItemSelectedBackground;
   }
   return "transparent";
 };
@@ -25,10 +25,14 @@ const LayerItemInnerContainer = styled.div`
 `;
 
 const LayerItemContainer = styled.div`
-  border-top: 1px ${Colors.LayersSidebar.ItemBorder} solid;
+  border-top: 1px ${Colors.Inspector.LayerItemBorder} solid;
+
+  &:first-child {
+    border-top: none;
+  }
 
   &:last-child {
-    border-bottom: 1px ${Colors.LayersSidebar.ItemBorder} solid;
+    border-bottom: 1px ${Colors.Inspector.LayerItemBorder} solid;
   }
 `;
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import Toolbar from "../toolbar";
 import EditorView from "../editor";
 import MetricsBar from "../metrics-bar";
-import LayersSidebar from "../layers-sidebar";
+import LayersSidebar from "../inspector";
 import produce from "immer";
 import Modals from "./modals";
 import get from "lodash/fp/get";
@@ -121,14 +121,14 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         return;
       }
       const updatedSelectedObj: PubShape = { ...selectedObject, ...sender };
-      if (
-        updatedSelectedObj.type === PubShapeType.Text &&
-        sender.id === get("id")(selectedObject)
-      ) {
-        updatedSelectedObj.editorState = EditorState.moveSelectionToEnd(
-          updatedSelectedObj.editorState
-        );
-      }
+      // if (
+      //   updatedSelectedObj.type === PubShapeType.Text &&
+      //   sender.id === get("id")(selectedObject)
+      // ) {
+      //   updatedSelectedObj.editorState = EditorState.moveSelectionToEnd(
+      //     updatedSelectedObj.editorState
+      //   );
+      // }
       const updatedDocument = produce(currentDocument, draftDocument => {
         const idx = currentDocument.pages[0].shapes.findIndex(
           shape => updatedSelectedObj.id === shape.id
@@ -374,8 +374,8 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
   return (
     <StateContext.Provider value={appState}>
       <ViewContainer>
-        <Toolbar />
-        <MetricsBar />
+        {/* <Toolbar />
+        <MetricsBar /> */}
         <DocumentView>
           <EditorView />
           <LayersSidebar />

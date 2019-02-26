@@ -13,39 +13,6 @@ export const appFont =
   // eslint-disable-next-line quotes
   `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif`;
 
-export const colors = [
-  "#fff",
-  "#f5f5f5",
-  "#e0e0e0",
-  "#bdbdbd",
-  "#9e9e9e",
-  "#757575",
-  "#616161",
-  "#424242",
-  "#212121",
-  "#000",
-  "#d50000",
-  "#f44336",
-  "#e91e63",
-  "#9c27b0",
-  "#ba68c8",
-  "#7e57c2",
-  "#3f51b5",
-  "#2196f3",
-  "#90caf9",
-  "#03A9f4",
-  "#00bcd4",
-  "#009688",
-  "#4caf50",
-  "#8bc34a",
-  "#aeea00",
-  "#ffeb3b",
-  "#ffc107",
-  "#ff9800",
-  "#ff5722",
-  "#795548",
-];
-
 export const Keys = {
   Left: 37,
   Up: 38,
@@ -162,12 +129,19 @@ export const Colors = {
     SelectedOutline: "#9b82f3",
     Text: "#fff",
   },
-  LayersSidebar: {
+  Inspector: {
     Text: "#fff",
     Background: "#38393d",
     Border: "#1e1f21",
-    ItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
-    ItemBorder: "hsla(0, 0%, 0%, 0.33)",
+    LayerItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
+    LayerItemBorder: "hsla(0, 0%, 0%, 0.33)",
+    TabInactiveBackground: "#38393d",
+    TabActiveBackground: "#9753e1",
+    TabIconBorderInactive: "#fff",
+    TabIconBorderActive: "#fff",
+    TabIconFillInactive: "#38393d",
+    TabIconFillActive: "#9753e1",
+    SectionTitleText: "#bf93eb",
   },
   Rulers: {
     Background: "#38393d",

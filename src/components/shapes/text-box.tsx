@@ -16,7 +16,7 @@ interface IProps {
   updateSelectedObject(sender?: Object | null): void;
 }
 
-const TextBox: React.StatelessComponent<IProps> = ({
+const TextBox: React.FunctionComponent<IProps> = ({
   shape,
   zoom,
   dpi,
@@ -30,7 +30,16 @@ const TextBox: React.StatelessComponent<IProps> = ({
     width: dpi * shape.width,
     height: dpi * shape.height,
   };
+  const ref = React.useRef(null);
   const transform = `scale(${zoom})`;
+  React.useEffect(
+    () => {
+      if (ref.current && activeDraftJSEditor === shape.id) {
+        ref.current.focus();
+      }
+    },
+    [activeDraftJSEditor]
+  );
   return (
     <g>
       {readOnly ? null : (
@@ -45,6 +54,7 @@ const TextBox: React.StatelessComponent<IProps> = ({
       <foreignObject {...metrics} style={{ transform }}>
         {typeof window !== "undefined" ? (
           <Editor
+            ref={ref}
             customStyleFn={customStyleFn}
             editorState={shape.editorState!}
             onChange={state => updateSelectedObject({ editorState: state })}

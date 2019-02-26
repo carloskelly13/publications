@@ -19,7 +19,7 @@ export const TextInput = styled.input<Props>`
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {
-      return "11px";
+      return "12px";
     } else if (props.large) {
       return "16px";
     }
@@ -34,14 +34,7 @@ export const TextInput = styled.input<Props>`
     }
     return "left";
   }};
-  width: ${props => {
-    if (props.mini) {
-      return "20px";
-    } else if (props.small) {
-      return "35px";
-    }
-    return "auto";
-  }};
+  width: 100%;
 
   &:disabled {
     cursor: default;

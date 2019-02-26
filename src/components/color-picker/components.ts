@@ -1,20 +1,18 @@
 import styled from "styled-components";
 import { Colors } from "../../util/constants";
 
-export const ColorPickerButton = styled.button<{ color: string }>`
-  width: 14px;
-  height: 14px;
-  background: ${Colors.FormInput.MetricBackground};
-  border-radius: 50%;
-  border: none;
-  box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.5), 0 0 0 2px hsla(0, 0%, 100%, 0.5);
-  background: ${({ color }) => color};
+export const ColorPickerButton = styled.button<{
+  color: string;
+  disabled?: boolean;
+}>`
+  width: 100%;
+  height: 17px;
+  border-radius: 2px;
+  border: 1px solid
+    hsla(0, 0%, 100%, ${({ disabled }) => (disabled ? 0.2 : 0.5)});
+  background: ${({ color }) => color || Colors.FormInput.MetricBackground};
   outline: none;
   margin: 0;
-  &:focus {
-    box-shadow: inset 0 0 0 1px hsla(0, 0%, 0%, 0.5),
-      0 0 0 2px ${Colors.FormInput.FocusOutline};
-  }
 `;
 
 export const PickerContents = styled.div`

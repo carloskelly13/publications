@@ -4,16 +4,28 @@ import { Text, InputLabelText } from "../ui/text";
 import { ContentContainer } from "../ui/containers";
 import { AppColors } from "../../util/constants";
 import { PubShape } from "../../types/pub-objects";
+import styled from "styled-components";
+import tinycolor from "tinycolor2";
+
+export const InputLabel = styled(Text)`
+  width: 35%;
+  text-align: right;
+`;
+
+const InputInput = styled(ContentContainer).attrs({ verticalAlign: true })`
+  width: 65%;
+`;
 
 export type InspectorChanges = Partial<PubShape> | { fontSize: string } | null;
 interface Props {
   value: number | null;
   label: string;
   property: string;
-  unit: string;
+  unit?: string;
   small?: boolean;
   mini?: boolean;
   disabled?: boolean;
+  isHEX?: boolean;
   onChange(changes: InspectorChanges): void;
 }
 
@@ -22,7 +34,7 @@ interface State {
 }
 
 const MetricInput: React.FunctionComponent<Props> = props => {
-  const { label, unit, small, mini, disabled } = props;
+  const { label, unit, disabled } = props;
   const [presentedValue, setPresentedValue] = React.useState<string>(
     (props.value !== null ? props.value : "").toString()
   );
@@ -31,10 +43,22 @@ const MetricInput: React.FunctionComponent<Props> = props => {
       setPresentedValue(event.currentTarget.value),
     [setPresentedValue]
   );
+  const ref = React.useRef<HTMLInputElement>(null);
   const validateInput = React.useCallback(
     () => {
-      const presentedValueFloat = parseFloat(presentedValue);
       const { property, onChange } = props;
+      if (props.isHEX) {
+        const proposedColor = tinycolor(presentedValue);
+        if (proposedColor.isValid()) {
+          setPresentedValue(proposedColor.toHexString());
+          onChange({ [property]: proposedColor.toHexString() });
+          return;
+        }
+        setPresentedValue((props.value || "").toString());
+        return;
+      }
+      const presentedValueFloat = parseFloat(presentedValue);
+
       if (presentedValueFloat !== null && !isNaN(presentedValueFloat)) {
         setPresentedValue(presentedValueFloat.toString());
         onChange({ [property]: presentedValueFloat });
@@ -60,31 +84,32 @@ const MetricInput: React.FunctionComponent<Props> = props => {
   );
 
   return (
-    <ContentContainer verticalAlign style={{ marginRight: "0.75em" }}>
-      <Text
+    <ContentContainer verticalAlign>
+      <InputLabel
         center
         color={disabled ? AppColors.DisabledGray : AppColors.LightGray}
         size="0.75em"
         mr="0.33em"
       >
         {label}:
-      </Text>
-      <ContentContainer verticalAlign>
+      </InputLabel>
+      <InputInput>
         <TextInput
           alignRight
+          small
           disabled={disabled}
-          small={small}
-          mini={mini}
           id={label}
           onChange={updateValue}
           onBlur={validateInput}
           onKeyPress={handleKeyPress}
           value={presentedValue}
         />
-        <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
-          {unit}
-        </InputLabelText>
-      </ContentContainer>
+        {unit && (
+          <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
+            {unit}
+          </InputLabelText>
+        )}
+      </InputInput>
     </ContentContainer>
   );
 };

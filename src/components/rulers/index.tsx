@@ -106,7 +106,7 @@ export default class Ruler extends Component<Props> {
         </RulerContainer>
         <RulerContainer
           style={{
-            top: `${80 - this.props.scrollOffset.scrollTop}px`,
+            top: `${26 - this.props.scrollOffset.scrollTop}px`,
             height: `${doc.pages[0].height * zoom * dpi + 1}px`,
             zIndex: 0,
             left: 0,
