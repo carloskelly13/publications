@@ -4,7 +4,6 @@ import {
   GraphQLID,
   GraphQLString,
   GraphQLList,
-  GraphQLInt,
 } from "graphql";
 import { DocumentType, DocumentInputType } from "./document";
 import { UserType } from "./user";
@@ -19,6 +18,7 @@ import {
   saveDocumentResolver,
   deleteDocumentResolver,
 } from "../resolvers/document";
+import { any } from "bluebird";
 
 const QueryType = new GraphQLObjectType({
   name: "Query",
@@ -43,7 +43,7 @@ const QueryType = new GraphQLObjectType({
   },
 });
 
-const MutationType = new GraphQLObjectType({
+const MutationType = new GraphQLObjectType<{}, {}>({
   name: "Mutation",
   fields: {
     login: {

@@ -4,14 +4,14 @@
   "description": "A web app for page layout and design.",
   "main": "index.tsx",
   "scripts": {
-    "lint": "tslint 'src/**/*.{ts,tsx}' && tsc --noEmit --skipLibCheck",
+    "lint": "tslint './src/**/*.{ts,tsx}' && tsc --noEmit --skipLibCheck",
     "build:client": "webpack --mode production --config webpack.config.production.js",
     "build:server": "tsc --project tsconfig.server.json",
     "db:migrate": "tsc --project tsconfig.migration.json",
     "start": "nodemon --config ./nodemon.json -L",
     "test": "",
-    "prettier-watch": "onchange 'src/**/*.{ts,tsx}' -- prettier --write {{changed}}",
-    "prettier": "prettier --write 'src/**/*.{ts,tsx}'",
+    "prettier-watch": "onchange ./src/**/*.{ts,tsx} -- prettier --write {{changed}}",
+    "prettier": "prettier --write ./src/**/*.{ts,tsx}",
     "precommit": "npm run prettier && npm run lint",
     "prepush": "npm run lint"
   },
