@@ -44,4 +44,5 @@ export const TextInput = styled.input<Props>`
     border-radius: 1px;
     box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
   }
+  width: 40px;
 `;
