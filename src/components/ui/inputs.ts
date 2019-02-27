@@ -12,6 +12,8 @@ interface Props {
 export const TextInput = styled.input<Props>`
   border: none;
   border-radius: 2px;
+  display: flex;
+  flex: 1;
   padding: 0 4px;
   color: ${Colors.FormInput.Text};
   background: ${Colors.FormInput.MetricBackground};
@@ -34,7 +36,6 @@ export const TextInput = styled.input<Props>`
     }
     return "left";
   }};
-  width: 100%;
 
   &:disabled {
     cursor: default;

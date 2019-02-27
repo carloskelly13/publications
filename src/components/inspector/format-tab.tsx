@@ -20,7 +20,6 @@ import {
   styles as textStyles,
   exporter as styleExporter,
 } from "../shapes/text-box";
-import { stateToHTML } from "draft-js-export-html";
 import IconButton from "../ui/icon-button";
 import { RichUtils } from "draft-js";
 import { AppColors, Colors } from "../../util/constants";
@@ -159,76 +158,70 @@ function FormatTab() {
           </>
         )}
       </ControlGrid>
-      {!isText(shape) && (
-        <>
-          <SectionTitle marginTop>Border</SectionTitle>
-          <ControlGrid>
-            <MetricInput
-              property="strokeWidth"
-              value={getPropertyOrNull(shape, "strokeWidth")}
-              label="Border"
-              unit="pt"
-              disabled={!shape || !supportsBorder(shape)}
-              onChange={updateSelectedObject}
-            />
-            <MetricInput
-              property="r"
-              value={getPropertyOrNull(shape, "r")}
-              label="Radius"
-              unit="pt"
-              disabled={!shape || !supportsRadius(shape)}
-              onChange={updateSelectedObject}
-            />
-          </ControlGrid>
-        </>
-      )}
-      {isText(shape) && (
-        <>
-          <SectionTitle marginTop>Font</SectionTitle>
-          <ControlGrid>
-            <MetricInput
-              property="fontSize"
-              value={sizeFromStyles(currentStyle)}
-              label="Size"
-              unit="pt"
-              disabled={!shape}
-              onChange={setFontSize}
-            />
-            <FontStyleGrid>
-              <InputLabel
-                center
-                color={AppColors.LightGray}
-                size="0.75em"
-                mr="0.33em"
-              >
-                Style:
-              </InputLabel>
-              {INLINE_STYLES.map(type => (
-                <IconButton
-                  key={type.label}
-                  size={15}
-                  style={{ margin: "0 0.25em" }}
-                  onClick={() =>
-                    updateSelectedObject({
-                      editorState: RichUtils.toggleInlineStyle(
-                        shape!.editorState!,
-                        type.style
-                      ),
-                    })
-                  }
-                >
-                  {React.createElement(type.icon, {
-                    color: currentStyle!.has(type.style)
-                      ? AppColors.White
-                      : AppColors.MidTextGray,
-                    size: 13,
-                  })}
-                </IconButton>
-              ))}
-            </FontStyleGrid>
-          </ControlGrid>
-        </>
-      )}
+      <SectionTitle marginTop>Border</SectionTitle>
+      <ControlGrid>
+        <MetricInput
+          property="strokeWidth"
+          value={getPropertyOrNull(shape, "strokeWidth")}
+          label="Border"
+          unit="pt"
+          disabled={!shape || !supportsBorder(shape)}
+          onChange={updateSelectedObject}
+        />
+        <MetricInput
+          property="r"
+          value={getPropertyOrNull(shape, "r")}
+          label="Radius"
+          unit="pt"
+          disabled={!shape || !supportsRadius(shape)}
+          onChange={updateSelectedObject}
+        />
+      </ControlGrid>
+
+      <SectionTitle marginTop>Font</SectionTitle>
+      <ControlGrid>
+        <MetricInput
+          property="fontSize"
+          value={isText(shape) ? sizeFromStyles(currentStyle) : null}
+          label="Size"
+          unit="pt"
+          disabled={!shape}
+          onChange={setFontSize}
+        />
+        <FontStyleGrid>
+          <InputLabel
+            center
+            color={AppColors.LightGray}
+            size="0.75em"
+            mr="0.33em"
+          >
+            Style:
+          </InputLabel>
+          {INLINE_STYLES.map(type => (
+            <IconButton
+              key={type.label}
+              size={15}
+              style={{ margin: "0 0.25em" }}
+              onClick={() =>
+                updateSelectedObject({
+                  editorState: RichUtils.toggleInlineStyle(
+                    shape!.editorState!,
+                    type.style
+                  ),
+                })
+              }
+            >
+              {React.createElement(type.icon, {
+                color:
+                  isText(shape) && currentStyle!.has(type.style)
+                    ? AppColors.White
+                    : AppColors.MidTextGray,
+                size: 13,
+              })}
+            </IconButton>
+          ))}
+        </FontStyleGrid>
+      </ControlGrid>
     </div>
   );
 }
