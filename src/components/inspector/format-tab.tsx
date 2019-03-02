@@ -177,7 +177,6 @@ function FormatTab() {
           onChange={updateSelectedObject}
         />
       </ControlGrid>
-
       <SectionTitle marginTop>Font</SectionTitle>
       <ControlGrid>
         <MetricInput
@@ -202,6 +201,7 @@ function FormatTab() {
               key={type.label}
               size={15}
               style={{ margin: "0 0.25em" }}
+              disabled={!isText(shape)}
               onClick={() =>
                 updateSelectedObject({
                   editorState: RichUtils.toggleInlineStyle(

@@ -1,7 +1,5 @@
 import * as React from "react";
-import Toolbar from "../toolbar";
 import EditorView from "../editor";
-import MetricsBar from "../metrics-bar";
 import LayersSidebar from "../inspector";
 import produce from "immer";
 import Modals from "./modals";
@@ -36,7 +34,6 @@ import {
   SaveDocumentMutation,
 } from "../../types/data";
 import { PubAppState } from "../../contexts/app-state";
-import { EditorState } from "draft-js";
 
 interface Props {
   user: PubUser | null;
