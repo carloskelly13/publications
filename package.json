@@ -13,8 +13,7 @@
     "test": "",
     "prettier-watch": "onchange ./src/**/*.{ts,tsx} -- prettier --write {{changed}}",
     "prettier": "prettier --write ./src/**/*.{ts,tsx}",
-    "precommit": "npm run prettier && npm run lint && npm run compile-check",
-    "prepush": ""
+    "precommit": "npm run prettier && npm run lint && npm run compile-check"
   },
   "dependencies": {
     "await-to-js": "^2.0.1",
