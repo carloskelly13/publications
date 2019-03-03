@@ -1,8 +1,8 @@
 import React from "react";
 
-type IconProps = {
+interface IconProps {
   color?: string;
-};
+}
 export default ({ color }: IconProps) => (
   <svg
     width={15}

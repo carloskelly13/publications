@@ -26,7 +26,7 @@ interface Props {
   currentDocument: PubDocument | null;
   selectedObject: PubShape | null;
   zoom: number;
-  updateSelectedObject(sender?: Object | null): void;
+  updateSelectedObject(sender?: Record<string, any> | null): void;
   deleteObject(object?: PubShape): void;
 }
 
@@ -90,6 +90,8 @@ export class EditorView extends React.Component<Props, State> {
         break;
       case Keys.Right:
         changes.x = selectedObject.x + 0.05;
+        break;
+      default:
         break;
     }
 

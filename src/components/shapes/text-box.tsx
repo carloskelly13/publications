@@ -8,15 +8,15 @@ export const { styles, customStyleFn, exporter } = createStyles(
   "PUB_"
 );
 
-interface IProps {
+interface Props {
   shape: PubShape;
   zoom: number;
   dpi: number;
   activeDraftJSEditor: string;
-  updateSelectedObject(sender?: Object | null): void;
+  updateSelectedObject(sender?: Record<string, any> | null): void;
 }
 
-const TextBox: React.FunctionComponent<IProps> = ({
+const TextBox: React.FunctionComponent<Props> = ({
   shape,
   zoom,
   dpi,
@@ -38,7 +38,7 @@ const TextBox: React.FunctionComponent<IProps> = ({
         ref.current.focus();
       }
     },
-    [activeDraftJSEditor]
+    [activeDraftJSEditor, shape.id]
   );
   return (
     <g>

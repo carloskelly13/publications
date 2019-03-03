@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import * as htmlPdf from "html-pdf-chrome";
-import { RequestHandler } from "express";
+import { Request, Response } from "express";
 import db from "../database/";
 import { PubDocument, PubPage } from "../../types/pub-objects";
 import Canvas from "../../components/canvas";
@@ -29,7 +29,17 @@ const baseHtml = `
   </style>
 `;
 
-const documentPdfHandler: RequestHandler = async (req, res) => {
+function generateHtmlFromDocument(document: PubDocument) {
+  const canvas = React.createElement(Canvas, {
+    ...defaultProps,
+    width: document.pages[0].width,
+    height: document.pages[0].height,
+    sortedShapes: document.pages[0].shapes,
+  });
+  return ReactDOMServer.renderToString(canvas);
+}
+
+export default async function documentPdfHandler(req: Request, res: Response) {
   const { id } = req.params;
   try {
     const [document] = await db.getDocument({ id, userId: req.user.id });
@@ -60,16 +70,4 @@ const documentPdfHandler: RequestHandler = async (req, res) => {
   } catch (e) {
     return res.status(404).send();
   }
-};
-
-const generateHtmlFromDocument = (document: PubDocument): string => {
-  const canvas = React.createElement(Canvas, {
-    ...defaultProps,
-    width: document.pages[0].width,
-    height: document.pages[0].height,
-    sortedShapes: document.pages[0].shapes,
-  });
-  return ReactDOMServer.renderToString(canvas);
-};
-
-export default documentPdfHandler;
+}

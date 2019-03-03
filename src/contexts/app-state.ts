@@ -1,13 +1,11 @@
 import React from "react";
 import { PubDocument, PubShape, PubUser } from "../types/pub-objects";
 import {
-  ClipboardAction,
-  LayerMutationDelta,
-} from "../components/documents/editor-actions";
-import {
   LoginMutation,
   RefetchCurrentUser,
   CreateUserMutation,
+  LayerMutationDelta,
+  ClipboardAction,
 } from "../types/data";
 
 export interface PubActions {
@@ -30,7 +28,7 @@ export interface PubActions {
   setNewDocumentModalVisible(visible: boolean): void;
   setOpenDocumentModalVisible(visible: boolean): void;
   setLayersPanelVisible(visible: boolean): void;
-  updateSelectedObject(sender?: Object | null): void;
+  updateSelectedObject(sender?: Record<string, any> | null): void;
   adjustObjectLayer(sender: LayerMutationDelta): void;
   setStartModalVisible(visible: boolean): void;
   setNewAccountModalVisible(visible: boolean): void;

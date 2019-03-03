@@ -16,13 +16,10 @@ import {
   sizeFromStyles,
   INLINE_STYLES,
 } from "../../util/text";
-import {
-  styles as textStyles,
-  exporter as styleExporter,
-} from "../shapes/text-box";
+import { styles as textStyles } from "../shapes/text-box";
 import IconButton from "../ui/icon-button";
 import { RichUtils } from "draft-js";
-import { AppColors, Colors } from "../../util/constants";
+import { AppColors } from "../../util/constants";
 
 const ControlGrid = styled.div`
   display: grid;
@@ -73,7 +70,7 @@ function FormatTab() {
         editorState: textStyles.color.add(shape!.editorState, sender.color),
       });
     },
-    [shape]
+    [shape, updateSelectedObject]
   );
 
   return (

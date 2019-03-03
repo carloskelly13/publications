@@ -1,5 +1,5 @@
 import React from "react";
-import { ColorPickerButton, PickerContents } from "./components";
+import { ColorPickerButton } from "./components";
 import { Text } from "../ui/text";
 import { ContentContainer } from "../ui/containers";
 import { AppColors } from "../../util/constants";

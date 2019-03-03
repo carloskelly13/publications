@@ -1,5 +1,6 @@
 import { Model, snakeCaseMappers } from "objection";
 import path from "path";
+import { PubShape } from "../../../types/pub-objects";
 
 export class PageModel extends Model {
   static get tableName() {
@@ -33,5 +34,5 @@ export class PageModel extends Model {
   width!: number;
   height!: number;
   pageNumber!: number;
-  shapes?: Array<Object>;
+  shapes?: Array<PubShape>;
 }

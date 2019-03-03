@@ -1,11 +1,11 @@
 import React from "react";
 import { Colors } from "../../../util/constants";
 
-type Props = {
+interface Props {
   size?: number;
   outline?: string;
   background?: string;
-};
+}
 export default ({ size = 23, outline, background }: Props) => (
   <svg width={size} height={size} viewBox="0 0 23 23">
     <defs>

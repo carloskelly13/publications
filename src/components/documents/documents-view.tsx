@@ -11,12 +11,8 @@ import {
   addEditorStateToObject,
   convertObjStylesToHTML,
   omitTransientData,
+  duplicateShape,
 } from "../../util/documents";
-import {
-  ClipboardAction,
-  duplicateObj,
-  LayerMutationDelta,
-} from "./editor-actions";
 import shortid from "shortid";
 import { StateContext } from "../../contexts";
 import {
@@ -32,6 +28,8 @@ import {
   LoginMutation,
   RefetchCurrentUser,
   SaveDocumentMutation,
+  ClipboardAction,
+  LayerMutationDelta,
 } from "../../types/data";
 import { PubAppState } from "../../contexts/app-state";
 
@@ -108,7 +106,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       });
       return props.saveDocument({ document: documentToSave });
     },
-    [props.saveDocument, currentDocument]
+    [currentDocument, props]
   );
 
   const updateSelectedObject = React.useCallback(
@@ -135,7 +133,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       setSelectedObject(updatedSelectedObj);
       setCurrentDocument(updatedDocument);
     },
-    [currentDocument, setSelectedObject, setCurrentDocument]
+    [selectedObject, currentDocument]
   );
 
   const logout = React.useCallback(
@@ -148,14 +146,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       setZoom(1);
       return await props.refetchCurrentUser({ skipCache: true });
     },
-    [
-      saveDocument,
-      props.refetchCurrentUser,
-      setCurrentDocument,
-      setSelectedObject,
-      setLayersPanelVisible,
-      setZoom,
-    ]
+    [saveDocument, props]
   );
 
   const addObject = React.useCallback(
@@ -251,13 +242,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       }
       setCurrentDocument(payload as PubDocument);
     },
-    [
-      currentDocument,
-      saveDocument,
-      setCurrentDocument,
-      props.saveDocument,
-      props.user,
-    ]
+    [props, currentDocument, saveDocument]
   );
 
   const deleteDocument = React.useCallback(
@@ -268,12 +253,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       }
       return await props.deleteDocument({ id });
     },
-    [
-      props.deleteDocument,
-      currentDocument,
-      setCurrentDocument,
-      setSelectedObject,
-    ]
+    [currentDocument, props]
   );
 
   const handleClipboardAction = React.useCallback(
@@ -282,10 +262,10 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         return;
       }
       if (action === ClipboardAction.Copy && selectedObject) {
-        const copiedObj = duplicateObj(selectedObject);
+        const copiedObj = duplicateShape(selectedObject);
         setClipboardContents(copiedObj);
       } else if (action === ClipboardAction.Cut && selectedObject) {
-        const cutObj = duplicateObj(selectedObject);
+        const cutObj = duplicateShape(selectedObject);
         setClipboardContents(cutObj);
         deleteObject();
       } else if (action === ClipboardAction.Paste && clipboardContents) {
@@ -304,14 +284,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         setCurrentDocument(updatedDocument);
       }
     },
-    [
-      selectedObject,
-      currentDocument,
-      setCurrentDocument,
-      setSelectedObject,
-      clipboardContents,
-      setClipboardContents,
-    ]
+    [currentDocument, selectedObject, clipboardContents, deleteObject]
   );
 
   const appState: PubAppState = {
@@ -365,7 +338,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         .then(() => setStartModalVisible(false))
         .catch(() => setStartModalVisible(true));
     },
-    [props.documents.length]
+    [currentDocument, getDocument, props.documents.length]
   );
 
   return (

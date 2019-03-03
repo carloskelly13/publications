@@ -11,7 +11,7 @@
     "outDir": "dist/",
     "sourceMap": true,
     "target": "esnext",
-    "typeRoots": ["node_modules/@types/"]
+    "typeRoots": ["./typings/", "node_modules/@types/"]
   },
   "include": ["./index.ts"],
   "exclude": ["node_modules"]

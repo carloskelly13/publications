@@ -1,5 +1,6 @@
 import { Model, snakeCaseMappers } from "objection";
 import path from "path";
+import { PubPage } from "../../../types/pub-objects";
 
 export class DocumentModel extends Model {
   static get tableName() {
@@ -31,5 +32,5 @@ export class DocumentModel extends Model {
   readonly id!: string | number;
   user_id!: string | number;
   name!: string;
-  pages?: Array<Object>;
+  pages?: Array<PubPage>;
 }

@@ -6,9 +6,6 @@ interface Props {
   size: number;
 }
 export default function LayersIcon(props: Props) {
-  const fill = props.active
-    ? Colors.Inspector.TabIconFillActive
-    : Colors.Inspector.TabIconFillInactive;
   const stroke = props.active
     ? Colors.Inspector.TabIconBorderActive
     : Colors.Inspector.TabIconBorderInactive;

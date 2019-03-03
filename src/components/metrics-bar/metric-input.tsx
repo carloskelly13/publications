@@ -43,7 +43,6 @@ const MetricInput: React.FunctionComponent<Props> = props => {
       setPresentedValue(event.currentTarget.value),
     [setPresentedValue]
   );
-  const ref = React.useRef<HTMLInputElement>(null);
   const validateInput = React.useCallback(
     () => {
       const { property, onChange } = props;
@@ -66,7 +65,7 @@ const MetricInput: React.FunctionComponent<Props> = props => {
         setPresentedValue((props.value || "").toString());
       }
     },
-    [presentedValue, setPresentedValue]
+    [presentedValue, setPresentedValue, props]
   );
   const handleKeyPress = React.useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {

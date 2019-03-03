@@ -26,7 +26,7 @@ interface Props {
   allowsEditing: boolean;
   selectedShape: PubShape | null;
   backgroundGridLineRanges?: { x: Array<number>; y: Array<number> };
-  updateSelectedObject(sender: Object | null): void;
+  updateSelectedObject(sender: Record<string, any> | null): void;
 }
 
 interface State {

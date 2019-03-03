@@ -10,7 +10,7 @@ import { documentName } from "../../util/string";
 import { Header } from "./components";
 import { StateContext } from "../../contexts/app-state";
 import { PubShape, PubDocument, PubUser } from "../../types/pub-objects";
-import { ClipboardAction } from "../documents/editor-actions";
+import { ClipboardAction } from "../../types/data";
 
 interface Props {
   user: PubUser | null;

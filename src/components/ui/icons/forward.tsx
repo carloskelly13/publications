@@ -1,9 +1,9 @@
 import React from "react";
 
-type IconProps = {
+interface IconProps {
   size?: number;
   color?: string;
-};
+}
 export default ({ size, color }: IconProps) => (
   <svg
     width={size || 16}

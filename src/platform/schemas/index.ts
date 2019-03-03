@@ -18,7 +18,6 @@ import {
   saveDocumentResolver,
   deleteDocumentResolver,
 } from "../resolvers/document";
-import { any } from "bluebird";
 
 const QueryType = new GraphQLObjectType({
   name: "Query",

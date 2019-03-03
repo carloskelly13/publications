@@ -65,11 +65,11 @@ interface Props {
   selectable: boolean;
   zoom: number;
   dpi: number;
-  updateSelectedObject: (sender: Object | null) => void;
+  updateSelectedObject: (sender: Record<string, any> | null) => void;
   setActiveDraftJSEditor: (id: string | null) => void;
 }
 
-type IState = {
+interface State {
   eX: number;
   eY: number;
   oX: number;
@@ -77,9 +77,9 @@ type IState = {
   oW: number;
   oH: number;
   shouldRender: boolean;
-};
+}
 
-export default class ResizeMoveFrame extends React.Component<Props, IState> {
+export default class ResizeMoveFrame extends React.Component<Props, State> {
   static get defaultState() {
     return {
       eX: 0,

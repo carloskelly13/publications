@@ -2,7 +2,7 @@ import React from "react";
 import Menu, { MenuItem, MenuDivider } from "../ui/menu";
 import { TextButton } from "../ui/text-button";
 import { PubShape } from "../../types/pub-objects";
-import { ClipboardAction } from "../documents/editor-actions";
+import { ClipboardAction } from "../../types/data";
 
 interface Props {
   disabled: boolean;

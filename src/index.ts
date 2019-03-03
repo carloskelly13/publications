@@ -1,4 +1,4 @@
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 import webpack from "webpack";
 import webpackConfig from "../webpack.config";
 import webpackDevMiddleware from "webpack-dev-middleware";
@@ -10,7 +10,6 @@ import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
 import documentPdfHandler from "./platform/handlers/pdf";
 import appConfig from "../app-config";
-import { GraphQLSchema } from "graphql";
 
 const PORT = 4000;
 const jwtConfig = {
@@ -18,7 +17,13 @@ const jwtConfig = {
   credentialsRequired: false,
 };
 
-const startPublications = function() {
+const onAuthError: ErrorRequestHandler = (err, req, res) => {
+  if (err.name === "UnauthorizedError") {
+    res.status(401).send(err);
+  }
+};
+
+export function startPublications() {
   const mode = process.env.NODE_ENV || "DEVELOPMENT";
   const app = express();
 
@@ -40,7 +45,6 @@ const startPublications = function() {
   }
 
   app.use(jwt(jwtConfig));
-
   app.use(
     "/graphql",
     graphqlHttp(request => ({
@@ -48,18 +52,9 @@ const startPublications = function() {
       context: { user: request.user },
     }))
   );
-
-  app.use(function(err, req, res, next) {
-    if (err.name === "UnauthorizedError") {
-      res.status(401).send(err);
-    }
-  });
-
+  app.use(onAuthError);
   app.get("/documents/:id/pdf", documentPdfHandler);
-
   app.listen(PORT, () => {
     console.log(`Publications started on port ${PORT}.`);
   });
-};
-
-export { startPublications };
+}
