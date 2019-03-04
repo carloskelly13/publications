@@ -4,6 +4,7 @@ import { StateContext } from "../../contexts";
 import PublicationsIcon from "../icons/publications";
 import FormatIcon from "../icons/format";
 import LayersIcon from "../icons/layers";
+import DocumentTab from "./document-tab";
 import LayersTab from "./layers-tab";
 import FormatTab from "./format-tab";
 
@@ -40,7 +41,7 @@ export default function Inspector() {
       </Tabs>
       {
         {
-          [TabKey.Document]: null,
+          [TabKey.Document]: <DocumentTab />,
           [TabKey.Format]: <FormatTab />,
           [TabKey.Layers]: <LayersTab />,
         }[activeTab]

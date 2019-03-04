@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { InterpolationValue } from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
   large?: boolean;
   alignRight?: boolean;
   alignCenter?: boolean;
+  css?: InterpolationValue[];
 }
 
 export const TextInput = styled.input<Props>`
@@ -42,5 +43,5 @@ export const TextInput = styled.input<Props>`
     border-radius: 1px;
     box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
   }
-  width: 40px;
+  ${({ css }) => css};
 `;

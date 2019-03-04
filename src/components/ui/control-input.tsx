@@ -1,10 +1,10 @@
 import React, { KeyboardEvent, ChangeEvent } from "react";
-import { TextInput } from "../ui/inputs";
-import { Text, InputLabelText } from "../ui/text";
-import { ContentContainer } from "../ui/containers";
+import { TextInput } from "./inputs";
+import { Text, InputLabelText } from "./text";
+import { ContentContainer } from "./containers";
 import { AppColors } from "../../util/constants";
 import { PubShape } from "../../types/pub-objects";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import tinycolor from "tinycolor2";
 
 export const InputLabel = styled(Text)`
@@ -12,9 +12,26 @@ export const InputLabel = styled(Text)`
   text-align: right;
 `;
 
-const InputInput = styled(ContentContainer).attrs({ verticalAlign: true })`
+const InputContent = styled(ContentContainer).attrs({ verticalAlign: true })`
   width: 65%;
 `;
+
+interface LabelProps {
+  label: string;
+  disabled?: boolean;
+}
+export function ControlInputLabel(props: LabelProps) {
+  return (
+    <InputLabel
+      center
+      color={props.disabled ? AppColors.DisabledGray : AppColors.LightGray}
+      size="0.75em"
+      mr="0.33em"
+    >
+      {props.label}:
+    </InputLabel>
+  );
+}
 
 export type InspectorChanges = Partial<PubShape> | { fontSize: string } | null;
 interface Props {
@@ -28,12 +45,7 @@ interface Props {
   isHEX?: boolean;
   onChange(changes: InspectorChanges): void;
 }
-
-interface State {
-  presentedValue: string;
-}
-
-const MetricInput: React.FunctionComponent<Props> = props => {
+export default function ControlInput(props: Props) {
   const { label, unit, disabled } = props;
   const [presentedValue, setPresentedValue] = React.useState<string>(
     (props.value !== null ? props.value : "").toString()
@@ -84,15 +96,8 @@ const MetricInput: React.FunctionComponent<Props> = props => {
 
   return (
     <ContentContainer verticalAlign>
-      <InputLabel
-        center
-        color={disabled ? AppColors.DisabledGray : AppColors.LightGray}
-        size="0.75em"
-        mr="0.33em"
-      >
-        {label}:
-      </InputLabel>
-      <InputInput>
+      <ControlInputLabel disabled={props.disabled} label={label} />
+      <InputContent>
         <TextInput
           alignRight
           small
@@ -102,20 +107,21 @@ const MetricInput: React.FunctionComponent<Props> = props => {
           onBlur={validateInput}
           onKeyPress={handleKeyPress}
           value={presentedValue}
+          css={css`
+            width: ${unit ? 40 : 55}px;
+          `}
         />
         {unit && (
           <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
             {unit}
           </InputLabelText>
         )}
-      </InputInput>
+      </InputContent>
     </ContentContainer>
   );
-};
+}
 
-MetricInput.defaultProps = {
+ControlInput.defaultProps = {
   mini: false,
   small: false,
 };
-
-export default MetricInput;

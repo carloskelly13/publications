@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import MetricInput, { InputLabel } from "../metrics-bar/metric-input";
+import ControlInput, { ControlInputLabel } from "../ui/control-input";
 import { StateContext } from "../../contexts";
 import {
   getPropertyOrNull,
@@ -9,7 +9,7 @@ import {
   supportsRadius,
   supportsBorder,
 } from "./format-tab-fns";
-import { SectionTitle } from "./components";
+import { SectionTitle, Separator, ControlGrid } from "./components";
 import ColorPicker from "../color-picker";
 import {
   colorFromStyles,
@@ -20,13 +20,6 @@ import { styles as textStyles } from "../shapes/text-box";
 import IconButton from "../ui/icon-button";
 import { RichUtils } from "draft-js";
 import { AppColors } from "../../util/constants";
-
-const ControlGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, calc(50% - 0.4em));
-  grid-gap: 0.8em;
-  padding: 0 0.8em;
-`;
 
 const FontStyleGrid = styled.div`
   display: flex;
@@ -74,10 +67,10 @@ function FormatTab() {
   );
 
   return (
-    <div>
+    <>
       <SectionTitle>Metrics</SectionTitle>
       <ControlGrid>
-        <MetricInput
+        <ControlInput
           property="x"
           value={getPropertyOrNull(shape, "x")}
           label="X"
@@ -85,7 +78,7 @@ function FormatTab() {
           disabled={!shape}
           onChange={updateSelectedObject}
         />
-        <MetricInput
+        <ControlInput
           property="y"
           value={getPropertyOrNull(shape, "y")}
           label="Y"
@@ -93,7 +86,7 @@ function FormatTab() {
           disabled={!shape}
           onChange={updateSelectedObject}
         />
-        <MetricInput
+        <ControlInput
           property="width"
           value={getPropertyOrNull(shape, "width")}
           label="Width"
@@ -101,7 +94,7 @@ function FormatTab() {
           disabled={!shape}
           onChange={updateSelectedObject}
         />
-        <MetricInput
+        <ControlInput
           property="height"
           value={getPropertyOrNull(shape, "height")}
           label="Height"
@@ -110,6 +103,7 @@ function FormatTab() {
           onChange={updateSelectedObject}
         />
       </ControlGrid>
+      <Separator />
       <SectionTitle marginTop>Color</SectionTitle>
       <ControlGrid>
         <ColorPicker
@@ -122,7 +116,7 @@ function FormatTab() {
           }
           disabled={!shape}
         />
-        <MetricInput
+        <ControlInput
           isHEX
           property={isText(shape) ? "color" : "fill"}
           value={
@@ -135,29 +129,26 @@ function FormatTab() {
           disabled={!shape}
           onChange={setFill}
         />
-        {!isText(shape) && (
-          <>
-            <ColorPicker
-              property="stroke"
-              onChange={updateSelectedObject}
-              hex={getStringPropertyOrNull(shape, "stroke")}
-              disabled={!shape || isText(shape)}
-            />
-            <MetricInput
-              isHEX
-              property="stroke"
-              value={getPropertyOrNull(shape, "stroke")}
-              label="HEX"
-              unit=""
-              disabled={!shape}
-              onChange={updateSelectedObject}
-            />
-          </>
-        )}
+        <ColorPicker
+          property="stroke"
+          onChange={updateSelectedObject}
+          hex={getStringPropertyOrNull(shape, "stroke")}
+          disabled={!shape || isText(shape)}
+        />
+        <ControlInput
+          isHEX
+          property="stroke"
+          value={getPropertyOrNull(shape, "stroke")}
+          label="HEX"
+          unit=""
+          disabled={!shape || isText(shape)}
+          onChange={updateSelectedObject}
+        />
       </ControlGrid>
+      <Separator />
       <SectionTitle marginTop>Border</SectionTitle>
       <ControlGrid>
-        <MetricInput
+        <ControlInput
           property="strokeWidth"
           value={getPropertyOrNull(shape, "strokeWidth")}
           label="Border"
@@ -165,7 +156,7 @@ function FormatTab() {
           disabled={!shape || !supportsBorder(shape)}
           onChange={updateSelectedObject}
         />
-        <MetricInput
+        <ControlInput
           property="r"
           value={getPropertyOrNull(shape, "r")}
           label="Radius"
@@ -174,9 +165,10 @@ function FormatTab() {
           onChange={updateSelectedObject}
         />
       </ControlGrid>
+      <Separator />
       <SectionTitle marginTop>Font</SectionTitle>
       <ControlGrid>
-        <MetricInput
+        <ControlInput
           property="fontSize"
           value={isText(shape) ? sizeFromStyles(currentStyle) : null}
           label="Size"
@@ -185,14 +177,7 @@ function FormatTab() {
           onChange={setFontSize}
         />
         <FontStyleGrid>
-          <InputLabel
-            center
-            color={AppColors.LightGray}
-            size="0.75em"
-            mr="0.33em"
-          >
-            Style:
-          </InputLabel>
+          <ControlInputLabel label="Style" disabled={!isText(shape)} />
           {INLINE_STYLES.map(type => (
             <IconButton
               key={type.label}
@@ -219,7 +204,8 @@ function FormatTab() {
           ))}
         </FontStyleGrid>
       </ControlGrid>
-    </div>
+      <Separator />
+    </>
   );
 }
 

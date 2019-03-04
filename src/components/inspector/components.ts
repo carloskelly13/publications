@@ -22,10 +22,41 @@ export const SectionTitle = styled.h1<{ marginTop?: boolean }>`
   font-weight: bold;
   font-size: 1.1em;
   padding: 0 0.8em;
+  margin-bottom: 0.667em;
   ${({ marginTop }) =>
     marginTop &&
     css`
-      margin-top: 2em;
+      margin-top: 1em;
+    `};
+`;
+
+export const ControlGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, calc(50% - 0.4em));
+  grid-gap: 0.8em;
+  padding: 0 0.8em;
+  margin-bottom: 2em;
+`;
+
+export const VerticalControlGrid = styled.div`
+  grid-template-rows: repeat(2, 100%);
+  grid-gap: 0.8em;
+  padding: 0 0.8em;
+  margin-bottom: 1em;
+`;
+
+export const Separator = styled.div`
+  height: 1px;
+  background-color: hsla(0, 0%, 0%, 0.25);
+`;
+
+export const Text = styled.p<{ bold?: boolean }>`
+  color: #fff;
+  margin: 0 0.8em;
+  ${({ bold }) =>
+    bold &&
+    css`
+      font-weight: bold;
     `};
 `;
 
