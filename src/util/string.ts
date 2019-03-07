@@ -13,4 +13,4 @@ export const lastModifiedString = (date: string): string => {
 };
 
 export const documentName = (name: string): string =>
-  name.length <= 15 ? name : `${name.substring(0, 14)}…`;
+  name.length <= 20 ? name : `${name.substring(0, 14)}…`;

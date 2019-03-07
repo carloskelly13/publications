@@ -18,7 +18,7 @@ const ButtonWrapper = styled.button<{
   font-family: ${appFont};
   font-size: 0.95em;
   font-weight: 500;
-  padding: 3px 18px;
+  padding: 2px 18px;
   outline: none;
   margin: ${props =>
     `${0} ${props.marginRight ? "0.5em" : 0} ${0} ${

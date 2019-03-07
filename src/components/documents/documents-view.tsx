@@ -21,6 +21,7 @@ import {
   PubShapeChanges,
   PubShapeType,
   PubUser,
+  PubPage,
 } from "../../types/pub-objects";
 import {
   CreateUserMutation,
@@ -116,14 +117,6 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         return;
       }
       const updatedSelectedObj: PubShape = { ...selectedObject, ...sender };
-      // if (
-      //   updatedSelectedObj.type === PubShapeType.Text &&
-      //   sender.id === get("id")(selectedObject)
-      // ) {
-      //   updatedSelectedObj.editorState = EditorState.moveSelectionToEnd(
-      //     updatedSelectedObj.editorState
-      //   );
-      // }
       const updatedDocument = produce(currentDocument, draftDocument => {
         const idx = currentDocument.pages[0].shapes.findIndex(
           shape => updatedSelectedObj.id === shape.id
@@ -134,6 +127,29 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       setCurrentDocument(updatedDocument);
     },
     [selectedObject, currentDocument]
+  );
+
+  const updateCurrentPage = React.useCallback(
+    (sender: Partial<PubPage>) => {
+      if (sender === null || !currentDocument) {
+        return;
+      }
+      const updatedDocument = produce(currentDocument, draftDocument => {
+        draftDocument.pages[0] = { ...draftDocument.pages[0], ...sender };
+      });
+      setCurrentDocument(updatedDocument);
+    },
+    [currentDocument]
+  );
+
+  const updateCurrentDocument = React.useCallback(
+    (sender: Partial<PubDocument>) => {
+      if (sender === null || !currentDocument) {
+        return;
+      }
+      setCurrentDocument({ ...currentDocument, ...sender });
+    },
+    [currentDocument]
   );
 
   const logout = React.useCallback(
@@ -303,6 +319,8 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       addObject,
       deleteObject,
       updateSelectedObject,
+      updateCurrentPage,
+      updateCurrentDocument,
       adjustObjectLayer,
       handleCreateNewDocument,
       handleClipboardAction,
@@ -344,8 +362,6 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
   return (
     <StateContext.Provider value={appState}>
       <ViewContainer>
-        {/* <Toolbar />
-        <MetricsBar /> */}
         <DocumentView>
           <EditorView />
           <LayersSidebar />

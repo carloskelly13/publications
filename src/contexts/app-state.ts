@@ -1,5 +1,5 @@
 import React from "react";
-import { PubDocument, PubShape, PubUser } from "../types/pub-objects";
+import { PubDocument, PubShape, PubUser, PubPage } from "../types/pub-objects";
 import {
   LoginMutation,
   RefetchCurrentUser,
@@ -29,6 +29,8 @@ export interface PubActions {
   setOpenDocumentModalVisible(visible: boolean): void;
   setLayersPanelVisible(visible: boolean): void;
   updateSelectedObject(sender?: Record<string, any> | null): void;
+  updateCurrentPage(sender?: Partial<PubPage>): void;
+  updateCurrentDocument(sender?: Partial<PubDocument>): void;
   adjustObjectLayer(sender: LayerMutationDelta): void;
   setStartModalVisible(visible: boolean): void;
   setNewAccountModalVisible(visible: boolean): void;

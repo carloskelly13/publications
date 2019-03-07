@@ -1,48 +1,38 @@
 import * as React from "react";
 import { InspectorContainer, Tabs, Tab } from "./components";
 import { StateContext } from "../../contexts";
-import PublicationsIcon from "../icons/publications";
-import FormatIcon from "../icons/format";
-import LayersIcon from "../icons/layers";
-import DocumentTab from "./document-tab";
+// import PublicationsIcon from "../icons/publications";
+// import LayersIcon from "../icons/layers";
+import DocumentTab from "./inspector-tab";
 import LayersTab from "./layers-tab";
-import FormatTab from "./format-tab";
 
 enum TabKey {
-  Document,
-  Format,
+  Inspector,
   Layers,
 }
 
 export default function Inspector() {
   const { currentDocument } = React.useContext(StateContext);
-  const [activeTab, setActiveTab] = React.useState<TabKey>(TabKey.Document);
+  const [activeTab, setActiveTab] = React.useState<TabKey>(TabKey.Inspector);
   return (
     <InspectorContainer visible={!!currentDocument}>
       <Tabs>
         <Tab
-          onClick={() => setActiveTab(TabKey.Document)}
-          active={activeTab === TabKey.Document}
+          onClick={() => setActiveTab(TabKey.Inspector)}
+          active={activeTab === TabKey.Inspector}
         >
-          <PublicationsIcon active={activeTab === TabKey.Document} />
-        </Tab>
-        <Tab
-          onClick={() => setActiveTab(TabKey.Format)}
-          active={activeTab === TabKey.Format}
-        >
-          <FormatIcon active={activeTab === TabKey.Format} />
+          Inspector
         </Tab>
         <Tab
           onClick={() => setActiveTab(TabKey.Layers)}
           active={activeTab === TabKey.Layers}
         >
-          <LayersIcon active={activeTab === TabKey.Layers} />
+          Layers
         </Tab>
       </Tabs>
       {
         {
-          [TabKey.Document]: <DocumentTab />,
-          [TabKey.Format]: <FormatTab />,
+          [TabKey.Inspector]: <DocumentTab />,
           [TabKey.Layers]: <LayersTab />,
         }[activeTab]
       }

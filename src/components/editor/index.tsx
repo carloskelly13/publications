@@ -134,7 +134,7 @@ export class EditorView extends React.Component<Props, State> {
         tabIndex={0}
       >
         {currentDocument ? (
-          <div>
+          <>
             <Ruler
               dpi={96}
               showDetail
@@ -168,7 +168,7 @@ export class EditorView extends React.Component<Props, State> {
                 `,
               }}
             />
-          </div>
+          </>
         ) : null}
       </Container>
     );

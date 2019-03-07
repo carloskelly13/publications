@@ -1,7 +1,12 @@
-import { PubShape, PubShapeType } from "../../types/pub-objects";
+import {
+  PubShape,
+  PubShapeType,
+  PubDocument,
+  PubPage,
+} from "../../types/pub-objects";
 
 export const getPropertyOrNull = (
-  object: PubShape | null,
+  object: PubShape | PubPage | PubDocument | null,
   property: string
 ): number | null => {
   if (!object || typeof object[property] === "undefined") {
