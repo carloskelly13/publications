@@ -50,8 +50,8 @@ export const FileBrowserBaseContainer = styled.div`
 `;
 
 export const FileBrowserLoadingContainer = styled(FileBrowserBaseContainer)`
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: center;
 `;
 
@@ -59,10 +59,10 @@ export const FileBrowserContentContainer = styled(FileBrowserBaseContainer)<{
   disabled?: boolean;
 }>`
   border-top: 1px solid ${Colors.OpenDocument.FileBrowserBorder};
-  overflow: ${({ disabled }) => (disabled ? "none" : "scroll")};
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: ${({ disabled }) => (disabled ? "none" : "scroll")};
 `;
 
 export const FileBrowserContainer = styled.div`
@@ -73,13 +73,22 @@ export const FileBrowserContainer = styled.div`
 
 export const SearchInputContainer = styled.div`
   background: ${Colors.Modal.ModalBackground};
+  border-radius: 8px 8px 0 0;
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.1),
     inset -1px 0 0 hsla(0, 0%, 100%, 0.05);
-  border-radius: 8px 8px 0 0;
+  display: flex;
+  flex-direction: row;
+
+  button {
+    margin: 15px 8px 15px 0;
+    :last-child {
+      margin-right: 15px;
+    }
+  }
 `;
 
 export const SearchInput = styled(FormInput)`
+  flex: 1;
   margin: 15px;
-  width: calc(100% - 30px);
   text-align: center;
 `;

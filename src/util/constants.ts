@@ -70,6 +70,11 @@ export const Colors = {
     DestructiveBackground: "#e62325",
     Text: "#fff",
   },
+  NewShapeButton: {
+    Background: "#9b82f3",
+    Border: "#7165b2",
+    Text: "#fff",
+  },
   Menu: {
     Background: "rgba(41, 41, 44, 0.95)",
     ButtonActiveBackground: "rgba(91, 91, 94, 0.55)",

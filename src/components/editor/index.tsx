@@ -7,15 +7,18 @@ import Canvas from "../canvas";
 import Ruler from "../rulers";
 import { StateContext } from "../../contexts/app-state";
 import { PubDocument, PubShape } from "../../types/pub-objects";
+import NewShapeButton from "../ui/new-shape-button";
 
 const Container = styled.div`
   overflow: scroll;
   outline: none;
   z-index: 1;
   flex: 1;
+  padding: 0 0 65px 0;
 
   @media print {
     overflow: hidden;
+    padding: 0;
   }
 `;
 
@@ -170,6 +173,7 @@ export class EditorView extends React.Component<Props, State> {
             />
           </>
         ) : null}
+        <NewShapeButton />
       </Container>
     );
   }

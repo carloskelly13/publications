@@ -101,8 +101,12 @@ export default function DocumentTab() {
     <>
       <SectionTitle marginTop>{user ? user.name : "Account"}</SectionTitle>
       <ControlGrid>
-        <Button>New…</Button>
-        <Button>Open…</Button>
+        <Button onClick={() => actions.setNewDocumentModalVisible(true)}>
+          New…
+        </Button>
+        <Button onClick={() => actions.setOpenDocumentModalVisible(true)}>
+          Open…
+        </Button>
         <Button onClick={saveDocument}>Save</Button>
         <Button onClick={downloadPdf}>PDF</Button>
       </ControlGrid>
@@ -239,7 +243,7 @@ export default function DocumentTab() {
           value={isText(shape) ? sizeFromStyles(currentStyle) : null}
           label="Size"
           unit="pt"
-          disabled={!shape}
+          disabled={!isText(shape)}
           onChange={setFontSize}
         />
         <FontStyleGrid>
