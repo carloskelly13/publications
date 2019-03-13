@@ -92,6 +92,7 @@ export function Ruler(props: Props) {
         style={{
           width: `${doc.pages[0].width * zoom * dpi + 25}px`,
           left: `${-props.scrollOffset.scrollLeft}px`,
+          top: 25,
         }}
       >
         <svg
@@ -105,7 +106,7 @@ export function Ruler(props: Props) {
       </RulerContent>
       <RulerContent
         style={{
-          top: `${26 - props.scrollOffset.scrollTop}px`,
+          top: `${51 - props.scrollOffset.scrollTop}px`,
           height: `${doc.pages[0].height * zoom * dpi + 1}px`,
           zIndex: 0,
           left: 0,

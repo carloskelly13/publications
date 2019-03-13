@@ -7,10 +7,11 @@ export const InspectorContainer = styled.div<{ visible?: boolean }>`
   display: ${({ visible }) => (visible ? "flex" : "none")};
   flex-direction: column;
   flex: 0 1 250px;
-  height: 100%;
+  height: calc(100% - 25px);
   overflow: scroll;
   position: relative;
   right: 0;
+  top: 25px;
   z-index: 5;
 
   @media print {

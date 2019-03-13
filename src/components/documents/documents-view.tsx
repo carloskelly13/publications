@@ -33,6 +33,7 @@ import {
   LayerMutationDelta,
 } from "../../types/data";
 import { PubAppState } from "../../contexts/app-state";
+import TitleBar from "../title-bar";
 
 interface Props {
   user: PubUser | null;
@@ -162,7 +163,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       setZoom(1);
       return await props.refetchCurrentUser({ skipCache: true });
     },
-    [saveDocument, props]
+    [props, saveDocument]
   );
 
   const addObject = React.useCallback(
@@ -363,6 +364,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     <StateContext.Provider value={appState}>
       <ViewContainer>
         <DocumentView>
+          <TitleBar />
           <EditorView />
           <LayersSidebar />
         </DocumentView>

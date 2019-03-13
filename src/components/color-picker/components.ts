@@ -14,9 +14,3 @@ export const ColorPickerButton = styled.button<{
   outline: none;
   margin: 0;
 `;
-
-export const PickerContents = styled.div`
-  position: absolute;
-  top: 19px;
-  left: 0;
-`;

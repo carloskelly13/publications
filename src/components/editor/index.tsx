@@ -5,7 +5,7 @@ import range from "lodash/range";
 import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
-import { StateContext } from "../../contexts/app-state";
+import { StateContext } from "../../contexts";
 import { PubDocument, PubShape } from "../../types/pub-objects";
 import NewShapeButton from "../ui/new-shape-button";
 

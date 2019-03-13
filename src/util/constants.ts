@@ -63,6 +63,10 @@ export const Colors = {
     ToolbarBorder: "#1e1f21",
     Tint: "#9b82f3",
   },
+  TitleBar: {
+    Background: "#000",
+    Text: "#fff",
+  },
   Button: {
     Border: "hsla(0, 0%, 0%, 0.5)",
     Outline: "#9b82f3",
