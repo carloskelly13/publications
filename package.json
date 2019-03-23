@@ -11,9 +11,7 @@
     "db:migrate": "tsc --project tsconfig.migration.json",
     "start": "nodemon --config ./nodemon.json -L",
     "test": "",
-    "prettier-watch": "onchange ./src/**/*.{ts,tsx} -- prettier --write {{changed}}",
-    "prettier": "prettier --write ./src/**/*.{ts,tsx}",
-    "precommit": "npm run prettier && npm run lint && npm run compile-check"
+    "precommit": "npm run lint && npm run compile-check"
   },
   "dependencies": {
     "await-to-js": "^2.0.1",
