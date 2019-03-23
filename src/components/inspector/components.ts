@@ -6,12 +6,10 @@ export const InspectorContainer = styled.div<{ visible?: boolean }>`
   border-left: 1px solid ${Colors.Inspector.Border};
   display: ${({ visible }) => (visible ? "flex" : "none")};
   flex-direction: column;
-  flex: 0 1 250px;
-  height: calc(100% - 25px);
+  height: 100%;
   overflow: scroll;
-  position: relative;
-  right: 0;
   top: 25px;
+  width: 250px;
   z-index: 5;
 
   @media print {

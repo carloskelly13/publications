@@ -2,23 +2,23 @@ import * as React from "react";
 import styled from "styled-components";
 // import { StateContext } from "../../contexts";
 import { Colors } from "../../util/constants";
+import PublicationsIcon from "../icons/publications";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  position: fixed;
   width: 100vw;
   height: 25px;
-  top: 0;
-  left: 0;
-  right: 0;
   z-index: 1;
 `;
 
-const Title = styled.div`
-  color: ${Colors.TitleBar.Text};
+const IconContainer = styled.div`
+  padding: 0 0.25em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 export default function TitleBar() {
@@ -26,7 +26,9 @@ export default function TitleBar() {
 
   return (
     <Container>
-      <Title>Publications</Title>
+      <IconContainer>
+        <PublicationsIcon size={20} />
+      </IconContainer>
     </Container>
   );
 }

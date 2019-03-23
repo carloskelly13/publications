@@ -15,7 +15,7 @@
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "prettier/prettier": "error",
+    "prettier/prettier": "off",
     "indent": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/indent": "off",

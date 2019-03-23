@@ -12,9 +12,8 @@ import NewShapeButton from "../ui/new-shape-button";
 const Container = styled.div`
   overflow: scroll;
   outline: none;
-  z-index: 1;
   flex: 1;
-  padding: 0 0 65px 0;
+  padding: 0 1em 1em 0;
 
   @media print {
     overflow: hidden;

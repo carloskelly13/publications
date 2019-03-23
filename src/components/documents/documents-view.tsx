@@ -6,31 +6,31 @@ import Modals from "./modals";
 import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
 import cloneDeep from "clone-deep";
-import { DocumentView, ViewContainer } from "./components";
+import { DocumentView, ViewContainer, ViewContent } from "./components";
 import {
   addEditorStateToObject,
   convertObjStylesToHTML,
-  omitTransientData,
   duplicateShape,
+  omitTransientData,
 } from "../../util/documents";
 import shortid from "shortid";
 import { StateContext } from "../../contexts";
 import {
   PubDocument,
+  PubPage,
   PubShape,
   PubShapeChanges,
   PubShapeType,
   PubUser,
-  PubPage,
 } from "../../types/pub-objects";
 import {
+  ClipboardAction,
   CreateUserMutation,
   DeleteDocumentMutation,
+  LayerMutationDelta,
   LoginMutation,
   RefetchCurrentUser,
   SaveDocumentMutation,
-  ClipboardAction,
-  LayerMutationDelta,
 } from "../../types/data";
 import { PubAppState } from "../../contexts/app-state";
 import TitleBar from "../title-bar";
@@ -153,18 +153,15 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [currentDocument]
   );
 
-  const logout = React.useCallback(
-    async () => {
-      await saveDocument();
-      window.localStorage.removeItem("authorization_token");
-      setCurrentDocument(null);
-      setSelectedObject(null);
-      setLayersPanelVisible(false);
-      setZoom(1);
-      return await props.refetchCurrentUser({ skipCache: true });
-    },
-    [props, saveDocument]
-  );
+  const logout = React.useCallback(async () => {
+    await saveDocument();
+    window.localStorage.removeItem("authorization_token");
+    setCurrentDocument(null);
+    setSelectedObject(null);
+    setLayersPanelVisible(false);
+    setZoom(1);
+    return await props.refetchCurrentUser({ skipCache: true });
+  }, [props, saveDocument]);
 
   const addObject = React.useCallback(
     (sender: PubShape) => {
@@ -208,27 +205,23 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [currentDocument, setCurrentDocument, setSelectedObject]
   );
 
-  const deleteObject = React.useCallback(
-    () => {
-      if (!selectedObject || !currentDocument) {
-        return;
-      }
-      const doc = produce(currentDocument, draftState => {
-        const shapes = currentDocument.pages[0].shapes
-          .filter(shape => shape.id !== selectedObject.id)
-          .map(shape => {
-            if (shape.z > selectedObject.z) {
-              shape.z -= 1;
-            }
-            return shape;
-          });
-        draftState.pages[0].shapes = shapes;
-      });
-      setSelectedObject(null);
-      setCurrentDocument(doc);
-    },
-    [setSelectedObject, setCurrentDocument, currentDocument, selectedObject]
-  );
+  const deleteObject = React.useCallback(() => {
+    if (!selectedObject || !currentDocument) {
+      return;
+    }
+    const doc = produce(currentDocument, draftState => {
+      draftState.pages[0].shapes = currentDocument.pages[0].shapes
+        .filter(shape => shape.id !== selectedObject.id)
+        .map(shape => {
+          if (shape.z > selectedObject.z) {
+            shape.z -= 1;
+          }
+          return shape;
+        });
+    });
+    setSelectedObject(null);
+    setCurrentDocument(doc);
+  }, [setSelectedObject, setCurrentDocument, currentDocument, selectedObject]);
 
   const handleCreateNewDocument = React.useCallback(
     async (sender: { name: string; width: number; height: number }) => {
@@ -346,27 +339,26 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     layersPanelVisible,
   };
 
-  React.useEffect(
-    () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const documentId = urlParams.get("docId");
-      if (documentId === null || currentDocument) {
-        return;
-      }
-      getDocument(documentId)
-        .then(() => setStartModalVisible(false))
-        .catch(() => setStartModalVisible(true));
-    },
-    [currentDocument, getDocument, props.documents.length]
-  );
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get("docId");
+    if (documentId === null || currentDocument) {
+      return;
+    }
+    getDocument(documentId)
+      .then(() => setStartModalVisible(false))
+      .catch(() => setStartModalVisible(true));
+  }, [currentDocument, getDocument, props.documents.length]);
 
   return (
     <StateContext.Provider value={appState}>
       <ViewContainer>
         <DocumentView>
           <TitleBar />
-          <EditorView />
-          <LayersSidebar />
+          <ViewContent>
+            <EditorView />
+            <LayersSidebar />
+          </ViewContent>
         </DocumentView>
       </ViewContainer>
       <Modals />

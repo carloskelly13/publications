@@ -64,7 +64,7 @@ export const Colors = {
     Tint: "#9b82f3",
   },
   TitleBar: {
-    Background: "#000",
+    Background: "#232323",
     Text: "#fff",
   },
   Button: {
@@ -146,8 +146,8 @@ export const Colors = {
     LayerItemBorder: "hsla(0, 0%, 0%, 0.33)",
     TabInactiveBackground: "#38393d",
     TabActiveBackground: "#9753e1",
-    TabIconBorderInactive: "#fff",
-    TabIconBorderActive: "#fff",
+    TabIconBorderInactive: "#232323",
+    TabIconBorderActive: "#232323",
     TabIconFillInactive: "#38393d",
     TabIconFillActive: "#9753e1",
     SectionTitleText: "#bf93eb",
