@@ -99,19 +99,19 @@ export default function DocumentTab() {
 
   return (
     <>
-      <SectionTitle marginTop>{user ? user.name : "Account"}</SectionTitle>
-      <ControlGrid>
-        <Button onClick={() => actions.setNewDocumentModalVisible(true)}>
-          New…
-        </Button>
-        <Button onClick={() => actions.setOpenDocumentModalVisible(true)}>
-          Open…
-        </Button>
-        <Button onClick={saveDocument}>Save</Button>
-        <Button onClick={downloadPdf}>PDF</Button>
-      </ControlGrid>
-      <Separator />
-      <SectionTitle marginTop>Document Properties</SectionTitle>
+      {/*<SectionTitle marginTop>{user ? user.name : "Account"}</SectionTitle>*/}
+      {/*<ControlGrid>*/}
+      {/*<Button onClick={() => actions.setNewDocumentModalVisible(true)}>*/}
+      {/*New…*/}
+      {/*</Button>*/}
+      {/*<Button onClick={() => actions.setOpenDocumentModalVisible(true)}>*/}
+      {/*Open…*/}
+      {/*</Button>*/}
+      {/*<Button onClick={saveDocument}>Save</Button>*/}
+      {/*<Button onClick={downloadPdf}>PDF</Button>*/}
+      {/*</ControlGrid>*/}
+      {/*<Separator />*/}
+      <SectionTitle marginTop>Document</SectionTitle>
       <VerticalControlGrid>
         <ControlInput
           isString
@@ -142,7 +142,7 @@ export default function DocumentTab() {
         />
       </ControlGrid>
       <Separator />
-      <SectionTitle>Object Metrics</SectionTitle>
+      <SectionTitle>Object</SectionTitle>
       <ControlGrid>
         <ControlInput
           property="x"
@@ -194,7 +194,7 @@ export default function DocumentTab() {
         />
       </ControlGrid>
       <Separator />
-      <SectionTitle marginTop>Object Color</SectionTitle>
+      <SectionTitle marginTop>Color</SectionTitle>
       <ControlGrid>
         <ColorPicker
           property={isText(shape) ? "color" : "fill"}
@@ -236,7 +236,7 @@ export default function DocumentTab() {
         />
       </ControlGrid>
       <Separator />
-      <SectionTitle marginTop>Font</SectionTitle>
+      <SectionTitle marginTop>Text</SectionTitle>
       <ControlGrid>
         <ControlInput
           property="fontSize"

@@ -1,14 +1,3 @@
-export const Urls = {
-  ApiBase: `http://${window.location.host}/api`,
-};
-
-export const Typefaces = ["Source Sans Pro"];
-
-export const metrics = {
-  portrait: { width: 8.5, height: 11 },
-  landscape: { width: 11, height: 8.5 },
-};
-
 export const appFont =
   // eslint-disable-next-line quotes
   `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif`;
@@ -21,8 +10,6 @@ export const Keys = {
   Esc: 27,
   Delete: 8,
 };
-
-export const breakpointLg = "min-width: 768px";
 
 export const AppColors = {
   Active: "#727172",
@@ -65,7 +52,8 @@ export const Colors = {
   },
   TitleBar: {
     Background: "#232323",
-    Text: "#fff",
+    Text: "#e5e5e5",
+    ActiveText: "#9b82f3",
   },
   Button: {
     Border: "hsla(0, 0%, 0%, 0.5)",
@@ -141,7 +129,7 @@ export const Colors = {
   Inspector: {
     Text: "#fff",
     Background: "#38393d",
-    Border: "#1e1f21",
+    Border: "#2a2a2a",
     LayerItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
     LayerItemBorder: "hsla(0, 0%, 0%, 0.33)",
     TabInactiveBackground: "#38393d",
@@ -150,7 +138,7 @@ export const Colors = {
     TabIconBorderActive: "#232323",
     TabIconFillInactive: "#38393d",
     TabIconFillActive: "#9753e1",
-    SectionTitleText: "#bf93eb",
+    SectionTitleText: "#bbb",
   },
   Rulers: {
     Background: "#38393d",

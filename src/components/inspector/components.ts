@@ -20,7 +20,7 @@ export const InspectorContainer = styled.div<{ visible?: boolean }>`
 export const SectionTitle = styled.h1<{ marginTop?: boolean }>`
   color: ${Colors.Inspector.SectionTitleText};
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 12px;
   padding: 0 0.8em;
   margin-bottom: 0.667em;
   ${({ marginTop }) =>
@@ -35,7 +35,7 @@ export const ControlGrid = styled.div<{ compressedMargins?: boolean }>`
   grid-template-columns: repeat(2, calc(50% - 0.4em));
   grid-gap: 0.8em;
   padding: 0 0.8em;
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
   ${({ compressedMargins }) =>
     compressedMargins &&
     css`
@@ -83,8 +83,8 @@ export const Tab = styled.div<{ active: boolean }>`
   color: ${Colors.Inspector.Text};
   cursor: default;
   display: flex;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   justify-content: center;
-  padding: 0.5em 0;
+  height: 25px;
 `;

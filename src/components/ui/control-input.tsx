@@ -31,7 +31,7 @@ export function ControlInputLabel(props: LabelProps) {
       center
       css={props.css}
       color={props.disabled ? AppColors.DisabledGray : AppColors.LightGray}
-      size="0.75em"
+      size="10px"
       mr="0.33em"
     >
       {props.label}:
@@ -65,39 +65,36 @@ export default function ControlInput(props: Props) {
       setPresentedValue(event.currentTarget.value),
     [setPresentedValue]
   );
-  const validateInput = React.useCallback(
-    () => {
-      const { property, onChange } = props;
-      if (props.isString) {
-        const proposedString = presentedValue.trim();
-        if (proposedString.length > 0) {
-          setPresentedValue(proposedString);
-          onChange({ [property]: proposedString });
-          return;
-        }
-        setPresentedValue((props.value || "").toString());
-        return;
-      } else if (props.isHEX) {
-        const proposedColor = tinycolor(presentedValue);
-        if (proposedColor.isValid()) {
-          setPresentedValue(proposedColor.toHexString());
-          onChange({ [property]: proposedColor.toHexString() });
-          return;
-        }
-        setPresentedValue((props.value || "").toString());
+  const validateInput = React.useCallback(() => {
+    const { property, onChange } = props;
+    if (props.isString) {
+      const proposedString = presentedValue.trim();
+      if (proposedString.length > 0) {
+        setPresentedValue(proposedString);
+        onChange({ [property]: proposedString });
         return;
       }
-      const presentedValueFloat = parseFloat(presentedValue);
+      setPresentedValue((props.value || "").toString());
+      return;
+    } else if (props.isHEX) {
+      const proposedColor = tinycolor(presentedValue);
+      if (proposedColor.isValid()) {
+        setPresentedValue(proposedColor.toHexString());
+        onChange({ [property]: proposedColor.toHexString() });
+        return;
+      }
+      setPresentedValue((props.value || "").toString());
+      return;
+    }
+    const presentedValueFloat = parseFloat(presentedValue);
 
-      if (presentedValueFloat !== null && !isNaN(presentedValueFloat)) {
-        setPresentedValue(presentedValueFloat.toString());
-        onChange({ [property]: presentedValueFloat });
-      } else {
-        setPresentedValue((props.value || "").toString());
-      }
-    },
-    [presentedValue, setPresentedValue, props]
-  );
+    if (presentedValueFloat !== null && !isNaN(presentedValueFloat)) {
+      setPresentedValue(presentedValueFloat.toString());
+      onChange({ [property]: presentedValueFloat });
+    } else {
+      setPresentedValue((props.value || "").toString());
+    }
+  }, [presentedValue, setPresentedValue, props]);
   const handleKeyPress = React.useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === "Enter") {
@@ -136,7 +133,7 @@ export default function ControlInput(props: Props) {
           `}
         />
         {unit && (
-          <InputLabelText size="0.8em" disabled={disabled} htmlFor={label}>
+          <InputLabelText size="10px" disabled={disabled} htmlFor={label}>
             {unit}
           </InputLabelText>
         )}

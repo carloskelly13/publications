@@ -7,7 +7,6 @@ import Canvas from "../canvas";
 import Ruler from "../rulers";
 import { StateContext } from "../../contexts";
 import { PubDocument, PubShape } from "../../types/pub-objects";
-import NewShapeButton from "../ui/new-shape-button";
 
 const Container = styled.div`
   overflow: scroll;
@@ -172,13 +171,12 @@ export class EditorView extends React.Component<Props, State> {
             />
           </>
         ) : null}
-        <NewShapeButton />
       </Container>
     );
   }
 }
 
-const ConnectedCanvas: React.StatelessComponent<{}> = () => (
+const ConnectedCanvas: React.FunctionComponent<{}> = () => (
   <StateContext.Consumer>
     {({
       zoom,

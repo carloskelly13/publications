@@ -3,6 +3,7 @@ import styled from "styled-components";
 // import { StateContext } from "../../contexts";
 import { Colors } from "../../util/constants";
 import PublicationsIcon from "../icons/publications";
+import { StateContext } from "../../contexts";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
@@ -14,21 +15,26 @@ const Container = styled.header`
   z-index: 1;
 `;
 
-const IconContainer = styled.div`
+const Title = styled.div`
   padding: 0 0.25em;
   display: flex;
   align-items: center;
+  font-size: 13px;
+  font-weight: bold;
   justify-content: flex-start;
+  color: ${Colors.TitleBar.Text};
+  svg {
+    margin-right: 0.25em;
+  }
 `;
 
 export default function TitleBar() {
-  // const { currentDocument } = React.useContext(StateContext);
-
   return (
     <Container>
-      <IconContainer>
+      <Title>
         <PublicationsIcon size={20} />
-      </IconContainer>
+        Publications
+      </Title>
     </Container>
   );
 }
