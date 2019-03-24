@@ -10,7 +10,6 @@ export const InspectorContainer = styled.div<{ visible?: boolean }>`
   overflow: scroll;
   top: 25px;
   width: 250px;
-  z-index: 5;
 
   @media print {
     display: none;

@@ -1,18 +1,19 @@
 import React, { KeyboardEvent, UIEvent } from "react";
 import styled from "styled-components";
-import get from "lodash/fp/get";
+// import get from "lodash/fp/get";
 import range from "lodash/range";
 import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
 import { StateContext } from "../../contexts";
-import { PubDocument, PubShape } from "../../types/pub-objects";
+import { PubShape } from "../../types/pub-objects";
 
 const Container = styled.div`
   overflow: scroll;
   outline: none;
   flex: 1;
-  padding: 0 1em 1em 0;
+  padding: 0 25px 25px 0;
+  position: relative;
 
   @media print {
     overflow: hidden;
@@ -20,144 +21,118 @@ const Container = styled.div`
   }
 `;
 
-const getIdFromDocument = get("id");
+const gridRangesZero = { x: [], y: [] };
+const scrollOffsetZero = {
+  scrollLeft: 0,
+  scrollTop: 0,
+};
+
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
 
-interface Props {
-  currentDocument: PubDocument | null;
-  selectedObject: PubShape | null;
-  zoom: number;
-  updateSelectedObject(sender?: Record<string, any> | null): void;
-  deleteObject(object?: PubShape): void;
-}
+export default function Editor() {
+  const { currentDocument, zoom, selectedObject, actions } = React.useContext(
+    StateContext
+  );
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [scrollOffset, setScrollOffset] = React.useState(scrollOffsetZero);
+  const [gridLineRanges, setGridLineRanges] = React.useState(gridRangesZero);
 
-interface State {
-  scrollOffset: {
-    scrollTop: number;
-    scrollLeft: number;
-  };
-}
+  const handleViewScrollEvent = React.useCallback(
+    (event: UIEvent<HTMLDivElement>) => {
+      setScrollOffset({
+        scrollTop: event.currentTarget.scrollTop,
+        scrollLeft: event.currentTarget.scrollLeft,
+      });
+    },
+    []
+  );
 
-export class EditorView extends React.Component<Props, State> {
-  state = {
-    scrollOffset: { scrollLeft: 0, scrollTop: 0 },
-  };
+  const handleKeyPress = React.useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (!selectedObject || selectedObject.isEditing) {
+        return;
+      }
+      if (ALLOWED_KEYS.indexOf(event.keyCode) > -1) {
+        event.preventDefault();
+      }
+      if (event.keyCode === Keys.Esc) {
+        actions.updateSelectedObject(null);
+        return;
+      } else if (event.keyCode === Keys.Delete) {
+        actions.deleteObject();
+        return;
+      }
+      const changes: Partial<PubShape> = {};
+      switch (event.keyCode) {
+        case Keys.Up:
+          changes.y = selectedObject.y - 0.05;
+          break;
+        case Keys.Down:
+          changes.y = selectedObject.y + 0.05;
+          break;
+        case Keys.Left:
+          changes.x = selectedObject.x - 0.05;
+          break;
+        case Keys.Right:
+          changes.x = selectedObject.x + 0.05;
+          break;
+        default:
+          break;
+      }
+      const changeKeys = Object.keys(changes);
+      if (changeKeys.length > 0) {
+        changeKeys.forEach(
+          key => (changes[key] = parseFloat(changes[key].toFixed(2)))
+        );
+        actions.updateSelectedObject(changes);
+      }
+    },
+    [actions, selectedObject]
+  );
 
-  containerRef: HTMLDivElement;
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (
-      getIdFromDocument(this.props.currentDocument) !==
-      getIdFromDocument(nextProps.currentDocument)
-    ) {
-      this.containerRef.scrollTop = 0;
-      this.containerRef.scrollLeft = 0;
-    }
-  }
-
-  handleViewScrollEvent = (event: UIEvent<HTMLDivElement>) => {
-    const { scrollLeft, scrollTop } = event.target as any;
-    this.setState({ scrollOffset: { scrollLeft, scrollTop } });
-  };
-
-  handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
-    const { selectedObject } = this.props;
-    if (!selectedObject || selectedObject.isEditing) {
-      return;
-    }
-
-    if (ALLOWED_KEYS.indexOf(event.keyCode) > -1) {
-      event.preventDefault();
-    }
-
-    if (event.keyCode === Keys.Esc) {
-      this.props.updateSelectedObject(null);
-      return;
-    } else if (event.keyCode === Keys.Delete) {
-      this.props.deleteObject();
-      return;
-    }
-
-    const changes = { y: 0, x: 0 };
-    switch (event.keyCode) {
-      case Keys.Up:
-        changes.y = selectedObject.y - 0.05;
-        break;
-      case Keys.Down:
-        changes.y = selectedObject.y + 0.05;
-        break;
-      case Keys.Left:
-        changes.x = selectedObject.x - 0.05;
-        break;
-      case Keys.Right:
-        changes.x = selectedObject.x + 0.05;
-        break;
-      default:
-        break;
-    }
-
-    const changeKeys = Object.keys(changes);
-    if (changeKeys.length > 0) {
-      changeKeys.forEach(
-        key => (changes[key] = parseFloat(changes[key].toFixed(2)))
-      );
-      this.props.updateSelectedObject(changes);
-    }
-  };
-
-  gridLineRanges = (): { x: number[]; y: number[] } => {
-    const { currentDocument, zoom = 1 } = this.props;
+  React.useEffect(() => {
     if (!currentDocument) {
-      return { x: [], y: [] };
+      setGridLineRanges(gridRangesZero);
+      return;
     }
     const { width, height } = currentDocument.pages[0];
-    return {
+    setGridLineRanges({
       x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
       y: range(0, height * 96 * zoom, 0.25 * 96 * zoom),
-    };
-  };
+    });
+  }, [currentDocument, zoom]);
 
-  render() {
-    const {
-      props: {
-        currentDocument,
-        selectedObject,
-        zoom = 1,
-        updateSelectedObject,
-      },
-      state: { scrollOffset },
-    } = this;
-    return (
-      <Container
-        innerRef={c => (this.containerRef = c)}
-        onKeyDown={this.handleKeyPress}
-        onScroll={this.handleViewScrollEvent}
-        tabIndex={0}
-      >
-        {currentDocument ? (
-          <>
-            <Ruler
-              dpi={96}
-              showDetail
-              scrollOffset={scrollOffset}
-              doc={currentDocument}
-              zoom={zoom}
-            />
-            <Canvas
-              allowsEditing
-              width={currentDocument.pages[0].width}
-              height={currentDocument.pages[0].height}
-              dpi={96}
-              zoom={zoom}
-              thumbnail={false}
-              selectedShape={selectedObject}
-              sortedShapes={currentDocument.pages[0].shapes}
-              backgroundGridLineRanges={this.gridLineRanges()}
-              updateSelectedObject={updateSelectedObject}
-            />
-            <style
-              dangerouslySetInnerHTML={{
-                __html: `
+  return (
+    <Container
+      innerRef={containerRef}
+      onScroll={handleViewScrollEvent}
+      onKeyDown={handleKeyPress}
+      tabIndex={0}
+    >
+      {currentDocument ? (
+        <>
+          <Ruler
+            dpi={96}
+            showDetail
+            scrollOffset={scrollOffset}
+            doc={currentDocument}
+            zoom={zoom}
+          />
+          <Canvas
+            allowsEditing
+            width={currentDocument.pages[0].width}
+            height={currentDocument.pages[0].height}
+            dpi={96}
+            zoom={zoom}
+            thumbnail={false}
+            selectedShape={selectedObject}
+            sortedShapes={currentDocument.pages[0].shapes}
+            backgroundGridLineRanges={gridLineRanges}
+            updateSelectedObject={actions.updateSelectedObject}
+          />
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
                   @page {
                     size: auto;
                     margin: 0mm;
@@ -167,32 +142,10 @@ export class EditorView extends React.Component<Props, State> {
                     html, body { margin: 0; }
                   }
                 `,
-              }}
-            />
-          </>
-        ) : null}
-      </Container>
-    );
-  }
+            }}
+          />
+        </>
+      ) : null}
+    </Container>
+  );
 }
-
-const ConnectedCanvas: React.FunctionComponent<{}> = () => (
-  <StateContext.Consumer>
-    {({
-      zoom,
-      currentDocument,
-      selectedObject,
-      actions: { updateSelectedObject, deleteObject },
-    }) => (
-      <EditorView
-        currentDocument={currentDocument}
-        zoom={zoom}
-        selectedObject={selectedObject}
-        updateSelectedObject={updateSelectedObject}
-        deleteObject={deleteObject}
-      />
-    )}
-  </StateContext.Consumer>
-);
-
-export default ConnectedCanvas;

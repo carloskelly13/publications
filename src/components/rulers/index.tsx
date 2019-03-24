@@ -6,11 +6,11 @@ import styled from "styled-components";
 import { PubDocument } from "../../types/pub-objects";
 
 const RulerContent = styled.div`
-  background: ${Colors.Rulers.Background};
-  position: absolute;
+  background: transparent;
+  position: fixed;
   left: 25px;
   height: 25px;
-  z-index: 1;
+  overflow: hidden;
 
   path {
     fill: none;
@@ -22,6 +22,18 @@ const RulerContent = styled.div`
   @media print {
     display: none;
   }
+`;
+
+const HorizontalRulerContent = styled(RulerContent)`
+  width: calc(100vw - 250px);
+  left: 0;
+  top: 25px;
+`;
+
+const VerticalRulerContent = styled(RulerContent)`
+  padding-top: 25px;
+  height: 100vh;
+  left: 0;
 `;
 
 const isMajor = (index: number) => index % 4 === 0 && index > 0;
@@ -83,47 +95,54 @@ export function RulerMarks({ rulerRange, direction }: RulerMarksProps) {
 }
 
 export function Ruler(props: Props) {
+  const horizontalRulerRef = React.useRef<HTMLDivElement>(null);
+  const verticalRulerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    horizontalRulerRef.current.scrollLeft = props.scrollOffset.scrollLeft;
+  }, [props.scrollOffset.scrollLeft]);
+
+  React.useEffect(() => {
+    verticalRulerRef.current.scrollTop = props.scrollOffset.scrollTop;
+  }, [props.scrollOffset.scrollTop]);
+
   const { doc, dpi, zoom, showDetail } = props;
   const xRange = range(0, doc.pages[0].width * dpi * zoom, 0.25 * dpi * zoom);
   const yRange = range(0, doc.pages[0].height * dpi * zoom, 0.25 * dpi * zoom);
   return (
     <>
-      <RulerContent
-        style={{
-          width: `${doc.pages[0].width * zoom * dpi + 25}px`,
-          left: `${-props.scrollOffset.scrollLeft}px`,
-          top: 25,
-        }}
-      >
+      <HorizontalRulerContent innerRef={horizontalRulerRef}>
         <svg
-          width={doc.pages[0].width * dpi * zoom + 26}
+          width={doc.pages[0].width * dpi * zoom + 52}
           height="25"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
         >
+          <rect
+            height={25}
+            width={doc.pages[0].width * dpi * zoom + 25}
+            fill={Colors.Rulers.Background}
+          />
           {showDetail && <RulerMarks rulerRange={xRange} direction="V" />}
         </svg>
-      </RulerContent>
-      <RulerContent
-        style={{
-          top: `${51 - props.scrollOffset.scrollTop}px`,
-          height: `${doc.pages[0].height * zoom * dpi + 1}px`,
-          zIndex: 0,
-          left: 0,
-        }}
-      >
+      </HorizontalRulerContent>
+      <VerticalRulerContent innerRef={verticalRulerRef}>
         <svg
           width="24"
-          height={doc.pages[0].height * dpi * zoom}
+          height={doc.pages[0].height * dpi * zoom + 77}
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
         >
+          <rect
+            width={25}
+            height={doc.pages[0].height * dpi * zoom + 1}
+            fill={Colors.Rulers.Background}
+          />
           {showDetail && <RulerMarks rulerRange={yRange} direction="H" />}
         </svg>
-      </RulerContent>
+      </VerticalRulerContent>
     </>
   );
 }
 
-Ruler.defaultProps = { dpi: 96 };
 export default React.memo(Ruler);

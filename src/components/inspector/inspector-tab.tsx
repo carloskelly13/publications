@@ -10,7 +10,6 @@ import { StateContext } from "../../contexts";
 import ControlInput, { ControlInputLabel } from "../ui/control-input";
 import get from "lodash/fp/get";
 import { css } from "styled-components";
-import Button from "../ui/framed-button";
 import downloadPdfAction from "../../util/download-pdf";
 import {
   getPropertyOrNull,
