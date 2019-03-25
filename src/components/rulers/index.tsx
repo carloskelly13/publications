@@ -24,15 +24,15 @@ const RulerContent = styled.div`
   }
 `;
 
-const HorizontalRulerContent = styled(RulerContent)`
-  width: calc(100vw - 250px);
+const HorizontalRulerContent = styled(RulerContent)<{ width: number }>`
+  width: ${({ width }) => width}px;
   left: 0;
   top: 25px;
 `;
 
-const VerticalRulerContent = styled(RulerContent)`
+const VerticalRulerContent = styled(RulerContent)<{ height: number }>`
   padding-top: 25px;
-  height: 100vh;
+  height: ${({ height }) => height}px;
   left: 0;
 `;
 
@@ -44,6 +44,7 @@ interface Props {
   dpi: number;
   zoom: number;
   showDetail: boolean;
+  viewportRect: { width: number; height: number };
   scrollOffset: { scrollLeft: number; scrollTop: number };
 }
 
@@ -111,7 +112,10 @@ export function Ruler(props: Props) {
   const yRange = range(0, doc.pages[0].height * dpi * zoom, 0.25 * dpi * zoom);
   return (
     <>
-      <HorizontalRulerContent innerRef={horizontalRulerRef}>
+      <HorizontalRulerContent
+        innerRef={horizontalRulerRef}
+        width={props.viewportRect.width}
+      >
         <svg
           width={doc.pages[0].width * dpi * zoom + 52}
           height="25"
@@ -126,7 +130,10 @@ export function Ruler(props: Props) {
           {showDetail && <RulerMarks rulerRange={xRange} direction="V" />}
         </svg>
       </HorizontalRulerContent>
-      <VerticalRulerContent innerRef={verticalRulerRef}>
+      <VerticalRulerContent
+        innerRef={verticalRulerRef}
+        height={props.viewportRect.height}
+      >
         <svg
           width="24"
           height={doc.pages[0].height * dpi * zoom + 77}

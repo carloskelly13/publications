@@ -5,7 +5,7 @@
   "main": "index.tsx",
   "scripts": {
     "compile-check": "tsc --noEmit --skipLibCheck",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint": "eslint ./src/**/*.{ts,tsx}",
     "build:client": "webpack --mode production --config webpack.config.production.js",
     "build:server": "tsc --project tsconfig.server.json",
     "db:migrate": "tsc --project tsconfig.migration.json",

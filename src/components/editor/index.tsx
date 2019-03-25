@@ -21,6 +21,7 @@ const Container = styled.div`
   }
 `;
 
+const viewportRectZero = { width: 0, height: 0 };
 const gridRangesZero = { x: [], y: [] };
 const scrollOffsetZero = {
   scrollLeft: 0,
@@ -36,6 +37,7 @@ export default function Editor() {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [scrollOffset, setScrollOffset] = React.useState(scrollOffsetZero);
   const [gridLineRanges, setGridLineRanges] = React.useState(gridRangesZero);
+  const [viewportRect, setViewportRect] = React.useState(viewportRectZero);
 
   const handleViewScrollEvent = React.useCallback(
     (event: UIEvent<HTMLDivElement>) => {
@@ -93,14 +95,32 @@ export default function Editor() {
   React.useEffect(() => {
     if (!currentDocument) {
       setGridLineRanges(gridRangesZero);
+      setViewportRect(viewportRectZero);
       return;
     }
+    setViewportRect({
+      width: containerRef.current.clientWidth,
+      height: containerRef.current.clientHeight,
+    });
     const { width, height } = currentDocument.pages[0];
     setGridLineRanges({
       x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
       y: range(0, height * 96 * zoom, 0.25 * 96 * zoom),
     });
-  }, [currentDocument, zoom]);
+  }, [currentDocument, zoom, containerRef]);
+
+  React.useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+    const listener = () =>
+      setViewportRect({
+        width: containerRef.current.clientWidth,
+        height: containerRef.current.clientHeight,
+      });
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, [containerRef]);
 
   return (
     <Container
@@ -117,6 +137,7 @@ export default function Editor() {
             scrollOffset={scrollOffset}
             doc={currentDocument}
             zoom={zoom}
+            viewportRect={viewportRect}
           />
           <Canvas
             allowsEditing
