@@ -3,7 +3,8 @@ import styled from "styled-components";
 // import { StateContext } from "../../contexts";
 import { Colors } from "../../util/constants";
 import PublicationsIcon from "../icons/publications";
-import { StateContext } from "../../contexts";
+import VectorShapeIcon from "../ui/icons/vector-shape";
+import FloppyDiskIcon from "../ui/icons/floppy-disk";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
@@ -15,14 +16,17 @@ const Container = styled.header`
   z-index: 1;
 `;
 
-const Title = styled.div`
-  padding: 0 0.25em;
+const ControlGroup = styled.div`
+  padding: 0 0.5em;
   display: flex;
   align-items: center;
-  font-size: 13px;
-  font-weight: bold;
   justify-content: flex-start;
+  font-size: 13px;
   color: ${Colors.TitleBar.Text};
+`;
+
+const LeftControlGroup = styled(ControlGroup)`
+  font-weight: bold;
   svg {
     margin-right: 0.25em;
   }
@@ -31,10 +35,14 @@ const Title = styled.div`
 export default function TitleBar() {
   return (
     <Container>
-      <Title>
+      <LeftControlGroup>
         <PublicationsIcon size={20} />
         Publications
-      </Title>
+      </LeftControlGroup>
+      <ControlGroup>
+        <VectorShapeIcon size={18} />
+        <FloppyDiskIcon size={18} />
+      </ControlGroup>
     </Container>
   );
 }
