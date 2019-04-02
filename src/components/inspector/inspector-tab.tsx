@@ -10,7 +10,6 @@ import { StateContext } from "../../contexts";
 import ControlInput, { ControlInputLabel } from "../ui/control-input";
 import get from "lodash/fp/get";
 import { css } from "styled-components";
-import downloadPdfAction from "../../util/download-pdf";
 import {
   getPropertyOrNull,
   isText,
@@ -50,20 +49,10 @@ const FontStyleGrid = styled.div`
 `;
 
 export default function DocumentTab() {
-  const {
-    user,
-    currentDocument,
-    actions,
-    selectedObject: shape,
-  } = React.useContext(StateContext);
-  const { updateSelectedObject } = actions;
-  const saveDocument = React.useCallback(() => actions.saveDocument(), [
-    actions,
-  ]);
-  const downloadPdf = React.useCallback(
-    () => actions.saveDocument().then(downloadPdfAction),
-    [actions]
+  const { currentDocument, actions, selectedObject: shape } = React.useContext(
+    StateContext
   );
+  const { updateSelectedObject } = actions;
   let currentStyle = null;
   if (isText(shape)) {
     currentStyle = shape.editorState.getCurrentInlineStyle();
@@ -98,18 +87,6 @@ export default function DocumentTab() {
 
   return (
     <>
-      {/*<SectionTitle marginTop>{user ? user.name : "Account"}</SectionTitle>*/}
-      {/*<ControlGrid>*/}
-      {/*<Button onClick={() => actions.setNewDocumentModalVisible(true)}>*/}
-      {/*New…*/}
-      {/*</Button>*/}
-      {/*<Button onClick={() => actions.setOpenDocumentModalVisible(true)}>*/}
-      {/*Open…*/}
-      {/*</Button>*/}
-      {/*<Button onClick={saveDocument}>Save</Button>*/}
-      {/*<Button onClick={downloadPdf}>PDF</Button>*/}
-      {/*</ControlGrid>*/}
-      {/*<Separator />*/}
       <SectionTitle marginTop>Document</SectionTitle>
       <VerticalControlGrid>
         <ControlInput

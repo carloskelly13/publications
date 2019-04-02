@@ -4,7 +4,7 @@ interface Props {
   size: number;
   color: string;
 }
-export default function VectorShapeIcon(props: Props) {
+export default function CutIcon(props: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,17 +19,16 @@ export default function VectorShapeIcon(props: Props) {
         strokeMiterlimit="10"
         fill="none"
       >
-        <path d="M21.5 6v12M6.5 2.5h11M2.5 18v-12M17.5 21.5h-11" />
-        <circle cx="21.5" cy="2.5" r="2" />
-        <circle cx="2.5" cy="2.5" r="2" />
-        <circle cx="21.5" cy="21.5" r="2" />
-        <circle cx="2.5" cy="21.5" r="2" />
+        <circle cx="4.145" cy="18" r="3.5" />
+        <path d="M13.145 12l10.242-6.088c-.561-.951-1.953-1.311-2.905-.75l-15.91 9.364" />
+        <circle cx="4.145" cy="6" r="3.5" />
+        <path d="M11.035 10.731l12.352 7.355c-.561.951-1.953 1.312-2.905.75l-15.837-9.336" />
       </g>
     </svg>
   );
 }
 
-VectorShapeIcon.defaultProps = {
+CutIcon.defaultProps = {
   size: 18,
   color: "#fff",
 };

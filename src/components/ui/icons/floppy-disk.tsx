@@ -24,6 +24,6 @@ export default function FloppyDiskIcon(props: Props) {
 }
 
 FloppyDiskIcon.defaultProps = {
-  size: 24,
+  size: 18,
   color: "#fff",
 };

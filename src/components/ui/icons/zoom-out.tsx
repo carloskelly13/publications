@@ -4,7 +4,7 @@ interface Props {
   size: number;
   color: string;
 }
-export default function VectorShapeIcon(props: Props) {
+export default function ZoomOutIcon(props: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,22 +14,18 @@ export default function VectorShapeIcon(props: Props) {
     >
       <g
         stroke={props.color}
-        strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit="10"
         fill="none"
       >
-        <path d="M21.5 6v12M6.5 2.5h11M2.5 18v-12M17.5 21.5h-11" />
-        <circle cx="21.5" cy="2.5" r="2" />
-        <circle cx="2.5" cy="2.5" r="2" />
-        <circle cx="21.5" cy="21.5" r="2" />
-        <circle cx="2.5" cy="21.5" r="2" />
+        <circle cx="8.5" cy="8.5" r="8" />
+        <path strokeLinecap="round" d="M14.156 14.156l9.344 9.344M5 8.5h7" />
       </g>
     </svg>
   );
 }
 
-VectorShapeIcon.defaultProps = {
+ZoomOutIcon.defaultProps = {
   size: 18,
   color: "#fff",
 };

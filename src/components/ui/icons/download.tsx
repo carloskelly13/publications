@@ -4,7 +4,7 @@ interface Props {
   size: number;
   color: string;
 }
-export default function VectorShapeIcon(props: Props) {
+export default function DownloadIcon(props: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,22 +14,23 @@ export default function VectorShapeIcon(props: Props) {
     >
       <g
         stroke={props.color}
-        strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit="10"
         fill="none"
       >
-        <path d="M21.5 6v12M6.5 2.5h11M2.5 18v-12M17.5 21.5h-11" />
-        <circle cx="21.5" cy="2.5" r="2" />
-        <circle cx="2.5" cy="2.5" r="2" />
-        <circle cx="21.5" cy="21.5" r="2" />
-        <circle cx="2.5" cy="21.5" r="2" />
+        <path d="M10.5 21.5h-10v-21h11l5 5.002v3.998" />
+        <path strokeLinecap="round" d="M11.5.5v5h5" />
+        <circle cx="17.5" cy="17.5" r="6" />
+        <path
+          strokeLinecap="round"
+          d="M17.5 20.226v-5.455M15.318 18.046l2.182 2.182 2.182-2.182"
+        />
       </g>
     </svg>
   );
 }
 
-VectorShapeIcon.defaultProps = {
+DownloadIcon.defaultProps = {
   size: 18,
   color: "#fff",
 };

@@ -4,7 +4,7 @@ interface Props {
   size: number;
   color: string;
 }
-export default function VectorShapeIcon(props: Props) {
+export default function PasteIcon(props: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,17 +19,14 @@ export default function VectorShapeIcon(props: Props) {
         strokeMiterlimit="10"
         fill="none"
       >
-        <path d="M21.5 6v12M6.5 2.5h11M2.5 18v-12M17.5 21.5h-11" />
-        <circle cx="21.5" cy="2.5" r="2" />
-        <circle cx="2.5" cy="2.5" r="2" />
-        <circle cx="21.5" cy="21.5" r="2" />
-        <circle cx="2.5" cy="21.5" r="2" />
+        <path d="M12.513 13.5h9l2 2v8h-11zM9.513 23.5h-9v-20h4M12.513 3.5h4v7" />
+        <path d="M10.513 2.5c0-1.104-.895-2-2-2-1.104 0-2 .896-2 2h-2v4h8v-4h-2zM14.513 10.5v-5h-2M4.513 5.5h-2v15h7M14.513 21.5h7M14.513 19.5h7M14.513 17.5h7M14.513 15.5h5" />
       </g>
     </svg>
   );
 }
 
-VectorShapeIcon.defaultProps = {
+PasteIcon.defaultProps = {
   size: 18,
   color: "#fff",
 };
