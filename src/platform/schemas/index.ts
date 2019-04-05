@@ -4,7 +4,6 @@ import {
   GraphQLID,
   GraphQLString,
   GraphQLList,
-  GraphQLInt,
 } from "graphql";
 import { DocumentType, DocumentInputType } from "./document";
 import { UserType } from "./user";
@@ -43,7 +42,7 @@ const QueryType = new GraphQLObjectType({
   },
 });
 
-const MutationType = new GraphQLObjectType({
+const MutationType = new GraphQLObjectType<{}, {}>({
   name: "Mutation",
   fields: {
     login: {

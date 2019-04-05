@@ -8,15 +8,15 @@ export const { styles, customStyleFn, exporter } = createStyles(
   "PUB_"
 );
 
-interface IProps {
+interface Props {
   shape: PubShape;
   zoom: number;
   dpi: number;
   activeDraftJSEditor: string;
-  updateSelectedObject(sender?: Object | null): void;
+  updateSelectedObject(sender?: Record<string, any> | null): void;
 }
 
-const TextBox: React.StatelessComponent<IProps> = ({
+const TextBox: React.FunctionComponent<Props> = ({
   shape,
   zoom,
   dpi,
@@ -30,7 +30,16 @@ const TextBox: React.StatelessComponent<IProps> = ({
     width: dpi * shape.width,
     height: dpi * shape.height,
   };
+  const ref = React.useRef(null);
   const transform = `scale(${zoom})`;
+  React.useEffect(
+    () => {
+      if (ref.current && activeDraftJSEditor === shape.id) {
+        ref.current.focus();
+      }
+    },
+    [activeDraftJSEditor, shape.id]
+  );
   return (
     <g>
       {readOnly ? null : (
@@ -45,6 +54,7 @@ const TextBox: React.StatelessComponent<IProps> = ({
       <foreignObject {...metrics} style={{ transform }}>
         {typeof window !== "undefined" ? (
           <Editor
+            ref={ref}
             customStyleFn={customStyleFn}
             editorState={shape.editorState!}
             onChange={state => updateSelectedObject({ editorState: state })}

@@ -7,14 +7,14 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 10px;
+  margin: 6px 10px;
 `;
 
 const IconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 0.95em;
+  font-size: 12px;
 `;
 
 const BaseIcon = styled.div`

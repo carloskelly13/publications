@@ -14,7 +14,7 @@ interface Props {
   selectedShape: PubShape | null;
   activeDraftJSEditor: string | null;
   setActiveDraftJSEditor(id: string | null): void;
-  updateSelectedObject(sender: Object | null): void;
+  updateSelectedObject(sender: Record<string, any> | null): void;
 }
 
 interface ShapeProps {
@@ -22,10 +22,10 @@ interface ShapeProps {
   zoom: number;
   dpi: number;
   activeDraftJSEditor?: string | null;
-  updateSelectedObject?(sender?: Object | null): void;
+  updateSelectedObject?(sender?: Record<string, any> | null): void;
 }
 
-const Shapes: React.StatelessComponent<Props> = props => {
+export default function Shapes(props: Props) {
   const {
     sortedShapes,
     dpi,
@@ -67,6 +67,4 @@ const Shapes: React.StatelessComponent<Props> = props => {
       })}
     </>
   );
-};
-
-export default Shapes;
+}

@@ -1,10 +1,11 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
 const ButtonWrapper = styled.button<{
   marginRight?: boolean;
   marginLeft?: boolean;
+  fullWidth?: boolean;
   active?: boolean;
   destructive?: boolean;
 }>`
@@ -17,7 +18,7 @@ const ButtonWrapper = styled.button<{
   font-family: ${appFont};
   font-size: 0.95em;
   font-weight: 500;
-  padding: 3px 18px;
+  padding: 2px 18px;
   outline: none;
   margin: ${props =>
     `${0} ${props.marginRight ? "0.5em" : 0} ${0} ${
@@ -35,6 +36,12 @@ const ButtonWrapper = styled.button<{
   &:disabled {
     opacity: 0.5;
   }
+
+  ${({ fullWidth }) =>
+    fullWidth &&
+    css`
+      width: 100%;
+    `};
 `;
 
 const ButtonContainerWrapper = styled.div`
@@ -49,6 +56,7 @@ interface Props {
   disabled?: boolean;
   marginLeft?: boolean;
   marginRight?: boolean;
+  fullWidth?: boolean;
   style?: React.CSSProperties;
   active?: boolean;
   type?: string;
@@ -62,6 +70,7 @@ const Button: React.SFC<Props> = ({
   onClick,
   marginRight,
   marginLeft,
+  fullWidth,
   style = {},
   active = false,
   type = "button",
@@ -72,6 +81,7 @@ const Button: React.SFC<Props> = ({
     marginLeft={marginLeft}
     onClick={onClick}
     disabled={disabled}
+    fullWidth={fullWidth}
     style={style}
     active={active}
     type={type}

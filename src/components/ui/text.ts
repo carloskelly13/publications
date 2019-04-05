@@ -95,7 +95,7 @@ interface InputLabelTextProps {
 }
 export const InputLabelText = styled.label<InputLabelTextProps>`
   border-left: none;
-  padding: 1px 0.25em 1px;
+  padding: 1px 0 1px 0.25em;
   color: ${({ disabled }) =>
     disabled ? AppColors.DisabledGray : AppColors.LightGray};
   font-size: ${({ size }) => size || "1em"};

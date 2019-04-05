@@ -1,14 +1,6 @@
 import React from "react";
 import { documentsWithEditorState } from "../../util/documents";
 import {
-  updatedDocumentStateForObjectChanges,
-  updatedDocumentStateForLayerChanges,
-  updatedDocumentStateForClipboardAction,
-  updatedDocumentStateForDeleteAction,
-  ClipboardAction,
-  LayerMutationDelta,
-} from "./editor-actions";
-import {
   currentUserQuery,
   documentsQuery,
   loginMutation,

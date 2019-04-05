@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { InterpolationValue } from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
   large?: boolean;
   alignRight?: boolean;
   alignCenter?: boolean;
+  css?: InterpolationValue[];
 }
 
 export const TextInput = styled.input<Props>`
@@ -19,7 +20,7 @@ export const TextInput = styled.input<Props>`
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {
-      return "11px";
+      return "12px";
     } else if (props.large) {
       return "16px";
     }
@@ -34,14 +35,6 @@ export const TextInput = styled.input<Props>`
     }
     return "left";
   }};
-  width: ${props => {
-    if (props.mini) {
-      return "20px";
-    } else if (props.small) {
-      return "35px";
-    }
-    return "auto";
-  }};
 
   &:disabled {
     cursor: default;
@@ -50,4 +43,5 @@ export const TextInput = styled.input<Props>`
     border-radius: 1px;
     box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
   }
+  ${({ css }) => css};
 `;

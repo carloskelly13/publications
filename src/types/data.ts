@@ -25,3 +25,14 @@ export type DeleteDocumentMutation = (
 ) => number;
 
 export type RefetchCurrentUser = (options: any) => void;
+
+export enum ClipboardAction {
+  Copy = "copy",
+  Paste = "paste",
+  Cut = "cut",
+}
+
+export interface LayerMutationDelta {
+  source?: { index: number };
+  destination?: { index: number };
+}

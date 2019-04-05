@@ -7,6 +7,5 @@
     "NODE_ENV": "development"
   },
   "ext": "js json ts tsx",
-  "exec":
-    "node ./node_modules/.bin/ts-node -O '{\"esModuleInterop\": true, \"module\": \"commonjs\"}' index.ts"
+  "exec": "ts-node --project tsconfig.server.json index.ts"
 }

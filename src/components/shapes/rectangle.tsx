@@ -1,13 +1,13 @@
 import React from "react";
 import { PubShape } from "../../types/pub-objects";
 
-interface IProps {
+interface Props {
   shape: PubShape;
   zoom: number;
   dpi: number;
 }
 
-const Rectangle: React.StatelessComponent<IProps> = ({
+const Rectangle: React.StatelessComponent<Props> = ({
   shape: {
     x,
     y,

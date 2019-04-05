@@ -5,12 +5,13 @@
     "lib": ["es6", "es2017.object", "dom", "esnext.asynciterable"],
     "jsx": "react",
     "module": "commonjs",
+    "jsx": "react",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "outDir": "dist/",
     "sourceMap": true,
     "target": "esnext",
-    "typeRoots": ["node_modules/@types/"]
+    "typeRoots": ["./typings/", "node_modules/@types/"]
   },
   "include": ["./index.ts"],
   "exclude": ["node_modules"]

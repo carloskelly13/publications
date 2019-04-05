@@ -1,42 +1,39 @@
 import * as React from "react";
-import Toolbar from "../toolbar";
 import EditorView from "../editor";
-import MetricsBar from "../metrics-bar";
-import LayersSidebar from "../layers-sidebar";
+import LayersSidebar from "../inspector";
 import produce from "immer";
 import Modals from "./modals";
 import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
 import cloneDeep from "clone-deep";
-import { DocumentView, ViewContainer } from "./components";
+import { DocumentView, ViewContainer, ViewContent } from "./components";
 import {
   addEditorStateToObject,
   convertObjStylesToHTML,
+  duplicateShape,
   omitTransientData,
 } from "../../util/documents";
-import {
-  ClipboardAction,
-  duplicateObj,
-  LayerMutationDelta,
-} from "./editor-actions";
 import shortid from "shortid";
 import { StateContext } from "../../contexts";
 import {
   PubDocument,
+  PubPage,
   PubShape,
   PubShapeChanges,
   PubShapeType,
   PubUser,
 } from "../../types/pub-objects";
 import {
+  ClipboardAction,
   CreateUserMutation,
   DeleteDocumentMutation,
+  LayerMutationDelta,
   LoginMutation,
   RefetchCurrentUser,
   SaveDocumentMutation,
 } from "../../types/data";
 import { PubAppState } from "../../contexts/app-state";
-import { EditorState } from "draft-js";
+import TitleBar from "../title-bar";
 
 interface Props {
   user: PubUser | null;
@@ -111,7 +108,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       });
       return props.saveDocument({ document: documentToSave });
     },
-    [props.saveDocument, currentDocument]
+    [currentDocument, props]
   );
 
   const updateSelectedObject = React.useCallback(
@@ -121,14 +118,6 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         return;
       }
       const updatedSelectedObj: PubShape = { ...selectedObject, ...sender };
-      if (
-        updatedSelectedObj.type === PubShapeType.Text &&
-        sender.id === get("id")(selectedObject)
-      ) {
-        updatedSelectedObj.editorState = EditorState.moveSelectionToEnd(
-          updatedSelectedObj.editorState
-        );
-      }
       const updatedDocument = produce(currentDocument, draftDocument => {
         const idx = currentDocument.pages[0].shapes.findIndex(
           shape => updatedSelectedObj.id === shape.id
@@ -138,28 +127,41 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       setSelectedObject(updatedSelectedObj);
       setCurrentDocument(updatedDocument);
     },
-    [currentDocument, setSelectedObject, setCurrentDocument]
+    [selectedObject, currentDocument]
   );
 
-  const logout = React.useCallback(
-    async () => {
-      await saveDocument();
-      window.localStorage.removeItem("authorization_token");
-      setCurrentDocument(null);
-      setSelectedObject(null);
-      setLayersPanelVisible(false);
-      setZoom(1);
-      return await props.refetchCurrentUser({ skipCache: true });
+  const updateCurrentPage = React.useCallback(
+    (sender: Partial<PubPage>) => {
+      if (sender === null || !currentDocument) {
+        return;
+      }
+      const updatedDocument = produce(currentDocument, draftDocument => {
+        draftDocument.pages[0] = { ...draftDocument.pages[0], ...sender };
+      });
+      setCurrentDocument(updatedDocument);
     },
-    [
-      saveDocument,
-      props.refetchCurrentUser,
-      setCurrentDocument,
-      setSelectedObject,
-      setLayersPanelVisible,
-      setZoom,
-    ]
+    [currentDocument]
   );
+
+  const updateCurrentDocument = React.useCallback(
+    (sender: Partial<PubDocument>) => {
+      if (sender === null || !currentDocument) {
+        return;
+      }
+      setCurrentDocument({ ...currentDocument, ...sender });
+    },
+    [currentDocument]
+  );
+
+  const logout = React.useCallback(async () => {
+    await saveDocument();
+    window.localStorage.removeItem("authorization_token");
+    setCurrentDocument(null);
+    setSelectedObject(null);
+    setLayersPanelVisible(false);
+    setZoom(1);
+    return await props.refetchCurrentUser({ skipCache: true });
+  }, [props, saveDocument]);
 
   const addObject = React.useCallback(
     (sender: PubShape) => {
@@ -203,27 +205,23 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     [currentDocument, setCurrentDocument, setSelectedObject]
   );
 
-  const deleteObject = React.useCallback(
-    () => {
-      if (!selectedObject || !currentDocument) {
-        return;
-      }
-      const doc = produce(currentDocument, draftState => {
-        const shapes = currentDocument.pages[0].shapes
-          .filter(shape => shape.id !== selectedObject.id)
-          .map(shape => {
-            if (shape.z > selectedObject.z) {
-              shape.z -= 1;
-            }
-            return shape;
-          });
-        draftState.pages[0].shapes = shapes;
-      });
-      setSelectedObject(null);
-      setCurrentDocument(doc);
-    },
-    [setSelectedObject, setCurrentDocument, currentDocument, selectedObject]
-  );
+  const deleteObject = React.useCallback(() => {
+    if (!selectedObject || !currentDocument) {
+      return;
+    }
+    const doc = produce(currentDocument, draftState => {
+      draftState.pages[0].shapes = currentDocument.pages[0].shapes
+        .filter(shape => shape.id !== selectedObject.id)
+        .map(shape => {
+          if (shape.z > selectedObject.z) {
+            shape.z -= 1;
+          }
+          return shape;
+        });
+    });
+    setSelectedObject(null);
+    setCurrentDocument(doc);
+  }, [setSelectedObject, setCurrentDocument, currentDocument, selectedObject]);
 
   const handleCreateNewDocument = React.useCallback(
     async (sender: { name: string; width: number; height: number }) => {
@@ -254,13 +252,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       }
       setCurrentDocument(payload as PubDocument);
     },
-    [
-      currentDocument,
-      saveDocument,
-      setCurrentDocument,
-      props.saveDocument,
-      props.user,
-    ]
+    [props, currentDocument, saveDocument]
   );
 
   const deleteDocument = React.useCallback(
@@ -271,12 +263,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       }
       return await props.deleteDocument({ id });
     },
-    [
-      props.deleteDocument,
-      currentDocument,
-      setCurrentDocument,
-      setSelectedObject,
-    ]
+    [currentDocument, props]
   );
 
   const handleClipboardAction = React.useCallback(
@@ -285,10 +272,10 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         return;
       }
       if (action === ClipboardAction.Copy && selectedObject) {
-        const copiedObj = duplicateObj(selectedObject);
+        const copiedObj = duplicateShape(selectedObject);
         setClipboardContents(copiedObj);
       } else if (action === ClipboardAction.Cut && selectedObject) {
-        const cutObj = duplicateObj(selectedObject);
+        const cutObj = duplicateShape(selectedObject);
         setClipboardContents(cutObj);
         deleteObject();
       } else if (action === ClipboardAction.Paste && clipboardContents) {
@@ -307,14 +294,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         setCurrentDocument(updatedDocument);
       }
     },
-    [
-      selectedObject,
-      currentDocument,
-      setCurrentDocument,
-      setSelectedObject,
-      clipboardContents,
-      setClipboardContents,
-    ]
+    [currentDocument, selectedObject, clipboardContents, deleteObject]
   );
 
   const appState: PubAppState = {
@@ -333,6 +313,8 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       addObject,
       deleteObject,
       updateSelectedObject,
+      updateCurrentPage,
+      updateCurrentDocument,
       adjustObjectLayer,
       handleCreateNewDocument,
       handleClipboardAction,
@@ -357,28 +339,26 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     layersPanelVisible,
   };
 
-  React.useEffect(
-    () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const documentId = urlParams.get("docId");
-      if (documentId === null || currentDocument) {
-        return;
-      }
-      getDocument(documentId)
-        .then(() => setStartModalVisible(false))
-        .catch(() => setStartModalVisible(true));
-    },
-    [props.documents.length]
-  );
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get("docId");
+    if (documentId === null || currentDocument) {
+      return;
+    }
+    getDocument(documentId)
+      .then(() => setStartModalVisible(false))
+      .catch(() => setStartModalVisible(true));
+  }, [currentDocument, getDocument, props.documents.length]);
 
   return (
     <StateContext.Provider value={appState}>
       <ViewContainer>
-        <Toolbar />
-        <MetricsBar />
         <DocumentView>
-          <EditorView />
-          <LayersSidebar />
+          <TitleBar />
+          <ViewContent>
+            <EditorView />
+            <LayersSidebar />
+          </ViewContent>
         </DocumentView>
       </ViewContainer>
       <Modals />
