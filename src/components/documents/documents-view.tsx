@@ -23,17 +23,16 @@ import {
   PubShapeType,
   PubUser,
 } from "../../types/pub-objects";
-import {
-  ClipboardAction,
-  LayerMutationDelta,
-} from "../../types/data";
+import { ClipboardAction, LayerMutationDelta } from "../../types/data";
 import { PubAppState } from "../../contexts/app-state";
 import TitleBar from "../title-bar";
 import { useQuery, useMutation } from "urql";
 import { documentsQuery } from "../../queries";
 
 export default function DocumentsView() {
-  const [{ data: documents }] = useQuery<PubDocument[]>({ query: documentsQuery });
+  const [{ data: documents }] = useQuery<PubDocument[]>({
+    query: documentsQuery,
+  });
   const user = null;
   const login = () => {};
   const createUser = () => {};
@@ -359,20 +358,3 @@ export default function DocumentsView() {
     </StateContext.Provider>
   );
 }
-
-der>
-  );
-};
-
-export default DocumentsView;
-ntsView;
-;
-ViewContent>
-        </DocumentView>
-      </ViewContainer>
-      <Modals />
-    </StateContext.Provider>
-  );
-};
-
-export default DocumentsView;

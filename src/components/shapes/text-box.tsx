@@ -32,14 +32,11 @@ const TextBox: React.FunctionComponent<Props> = ({
   };
   const ref = React.useRef(null);
   const transform = `scale(${zoom})`;
-  React.useEffect(
-    () => {
-      if (ref.current && activeDraftJSEditor === shape.id) {
-        ref.current.focus();
-      }
-    },
-    [activeDraftJSEditor, shape.id]
-  );
+  React.useEffect(() => {
+    if (ref.current && activeDraftJSEditor === shape.id) {
+      ref.current.focus();
+    }
+  }, [activeDraftJSEditor, shape.id]);
   return (
     <g>
       {readOnly ? null : (
