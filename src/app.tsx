@@ -1,7 +1,7 @@
 import React from "react";
 import AppContainer from "./components/base";
-import DocumentView from "./components/documents";
-import { Provider, Client } from "urql";
+import DocumentView from "./components/documents/documents-view";
+import { Provider, createClient } from "urql";
 import ReactDOM from "react-dom";
 
 interface Headers {
@@ -9,10 +9,10 @@ interface Headers {
   Authorization?: string;
 }
 
-const client = new Client({
+const client = createClient({
   url: "/graphql",
   fetchOptions: () => {
-    const headers: Headers = { "Content-Type": "application/json" };
+    const headers: HeadersInit = { "Content-Type": "application/json" };
     const authorizationToken = localStorage.getItem("authorization_token");
     if (authorizationToken) {
       headers.Authorization = `Bearer ${authorizationToken}`;
@@ -21,8 +21,8 @@ const client = new Client({
   },
 });
 
-const App: React.SFC = () => (
-  <Provider client={client}>
+const App: React.FunctionComponent = () => (
+  <Provider value={client}>
     <AppContainer>
       <DocumentView />
     </AppContainer>

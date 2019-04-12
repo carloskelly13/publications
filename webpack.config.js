@@ -28,6 +28,11 @@ module.exports = {
         exclude: path.join(__dirname, "/src/server/*"),
       },
       {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: "javascript/auto",
+      },
+      {
         test: /\.(eot|woff|woff2|ttf|svg|png|otf)$/,
         use: "url-loader?limit=64",
       },
@@ -38,7 +43,7 @@ module.exports = {
   devtool: "inline-source-map",
 
   resolve: {
-    extensions: [".js", ".ts", ".tsx"],
+    extensions: [".mjs", ".js", ".ts", ".tsx"],
     modules: [path.join(__dirname, "node_modules")],
   },
 
