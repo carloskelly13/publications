@@ -7,7 +7,7 @@ import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { Formik, FormikProps } from "formik";
 import { PubNewDocument } from "../../types/pub-objects";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -19,13 +19,11 @@ const Form = styled.form`
 
 interface Props {
   onDismiss: () => void;
-  didCreateDocument: (
-    sender: {
-      name: string;
-      width: number;
-      height: number;
-    }
-  ) => Promise<void>;
+  didCreateDocument: (sender: {
+    name: string;
+    width: number;
+    height: number;
+  }) => Promise<void>;
 }
 
 interface State {

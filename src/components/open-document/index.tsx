@@ -8,7 +8,7 @@ import {
   FileBrowserContentContainer,
 } from "./components";
 import { PubDocument } from "../../types/pub-objects";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 import { FileItem } from "./file-item";
 
 export default function OpenDocumentDialog() {

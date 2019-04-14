@@ -1,35 +1,62 @@
 import React from "react";
 import AppContainer from "./components/base";
-import DocumentView from "./components/documents/documents-view";
+import DocumentsProvider from "./contexts/documents-provider";
 import { Provider, createClient } from "urql";
 import ReactDOM from "react-dom";
-
-interface Headers {
-  "Content-Type": string;
-  Authorization?: string;
-}
+import {
+  DocumentView,
+  ViewContainer,
+  ViewContent,
+} from "./components/documents/components";
+import Modals from "./components/documents/modals";
+import TitleBar from "./components/title-bar";
+import EditorView from "./components/editor";
+import LayersSidebar from "./components/inspector";
+import { adopt } from "react-adopt";
 
 const client = createClient({
   url: "/graphql",
   fetchOptions: () => {
-    const headers: HeadersInit = { "Content-Type": "application/json" };
     const authorizationToken = localStorage.getItem("authorization_token");
-    if (authorizationToken) {
-      headers.Authorization = `Bearer ${authorizationToken}`;
-    }
-    return { headers };
+    return {
+      headers: {
+        ...(authorizationToken && {
+          Authorization: `Bearer ${authorizationToken}`,
+        }),
+      },
+    };
   },
 });
 
-const App: React.FunctionComponent = () => (
-  <Provider value={client}>
-    <AppContainer>
-      <DocumentView />
-    </AppContainer>
-  </Provider>
-);
+const AppProviders = adopt({
+  urqlProvider: ({ render }) => <Provider value={client}>{render()}</Provider>,
+  documentsProvider: ({ render }) => (
+    <DocumentsProvider>{render()}</DocumentsProvider>
+  ),
+});
 
-ReactDOM.render(<App />, document.getElementById("pub-app"));
+function PublicationsApp() {
+  return (
+    <AppProviders>
+      {() => (
+        <AppContainer>
+          <ViewContainer>
+            <DocumentView>
+              <TitleBar />
+              <ViewContent>
+                <EditorView />
+                <LayersSidebar />
+              </ViewContent>
+            </DocumentView>
+          </ViewContainer>
+          <Modals />
+        </AppContainer>
+      )}
+    </AppProviders>
+  );
+}
+
+ReactDOM.render(<PublicationsApp />, document.getElementById("pub-app"));
 
 if (module.hot) {
   module.hot.accept();

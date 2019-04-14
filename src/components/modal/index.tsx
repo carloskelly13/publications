@@ -7,24 +7,23 @@ import "./styles";
 const modalRoot = document.getElementById("modal-root");
 
 interface Props {
-  renderContent: React.ReactNode;
+  children: React.ReactNode;
   visible: boolean;
 }
-export default ({ renderContent, visible }: Props) => (
+export default ({ children, visible }: Props) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
     transitionEnterTimeout={250}
     transitionLeaveTimeout={250}
   >
-    {visible &&
-      modalRoot && (
-        <>
-          {ReactDOM.createPortal(
-            <ModalContainer>{renderContent}</ModalContainer>,
-            modalRoot
-          )}
-        </>
-      )}
+    {visible && modalRoot && (
+      <>
+        {ReactDOM.createPortal(
+          <ModalContainer>{children}</ModalContainer>,
+          modalRoot
+        )}
+      </>
+    )}
   </ReactCSSTransitionGroup>
 );
 

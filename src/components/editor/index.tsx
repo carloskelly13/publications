@@ -5,7 +5,7 @@ import range from "lodash/range";
 import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 import { PubShape } from "../../types/pub-objects";
 
 const Container = styled.div`

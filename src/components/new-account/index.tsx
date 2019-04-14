@@ -8,8 +8,15 @@ import { ModalButtonContainer } from "../ui/button-container";
 import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
-import { CreateUserMutation, RefetchCurrentUser } from "../../types/data";
-import { StateContext } from "../../contexts";
+import {
+  CreateUserMutation,
+  CreateUserMutationResponse,
+  LoginMutation,
+  LoginMutationResponse,
+  RefetchCurrentUser,
+} from "../../types/data";
+import { StateContext } from "../../contexts/app-state";
+import { OperationResult } from "urql";
 
 export interface NewAccount {
   name: string;
@@ -21,8 +28,10 @@ interface NewAccountFormValues extends NewAccount {
 }
 
 interface Props {
-  onCreateAccount: CreateUserMutation;
   refetchCurrentUser: RefetchCurrentUser;
+  onCreateAccount(
+    opts: CreateUserMutation
+  ): Promise<OperationResult<CreateUserMutationResponse>>;
   onDismiss(): void;
 }
 
@@ -59,7 +68,9 @@ class NewAccountForm extends React.Component<Props> {
     formikProps: FormikProps<NewAccountFormValues>
   ) => {
     try {
-      const { createUser } = await this.props.onCreateAccount({
+      const {
+        data: { createUser },
+      } = await this.props.onCreateAccount({
         name: values.name,
         password: values.password,
       });

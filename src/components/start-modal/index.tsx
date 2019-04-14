@@ -20,7 +20,7 @@ import {
 import LogoBadge from "../ui/icons/logo-badge";
 import { Colors } from "../../util/constants";
 import { PubUser } from "../../types/pub-objects";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 
 interface Props {
   loaded: boolean;
