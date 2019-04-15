@@ -6,12 +6,17 @@ import {
   CreateUserMutation,
   LayerMutationDelta,
   ClipboardAction,
+  LoginMutationResponse,
+  CreateUserMutationResponse,
 } from "../types/data";
+import { OperationResult } from "urql";
 
 export interface PubActions {
-  login: LoginMutation;
-  createUser: CreateUserMutation;
   refetchCurrentUser: RefetchCurrentUser;
+  login(opts: LoginMutation): Promise<OperationResult<LoginMutationResponse>>;
+  createUser(
+    opts: CreateUserMutation
+  ): Promise<OperationResult<CreateUserMutationResponse>>;
   addObject(object: PubShape): void;
   deleteObject(): void;
   deleteDocument(id: string | number): Promise<number>;
@@ -56,22 +61,6 @@ export interface PubAppState {
   newDocumentModalVisible: boolean;
 }
 
-const defaultState: PubAppState = {
-  actions: {} as any,
-  currentDocument: null,
-  clipboardContents: null,
-  dataLoaded: false,
-  documents: [],
-  layersPanelVisible: false,
-  selectedObject: null,
-  user: null,
-  zoom: 1,
-  startModalVisible: false,
-  loginModalVisible: false,
-  newAccountModalVisible: false,
-  openDocumentModalVisible: false,
-  aboutModalVisible: false,
-  newDocumentModalVisible: false,
-};
-
-export const StateContext = React.createContext<PubAppState>(defaultState);
+export const StateContext = React.createContext<PubAppState>(
+  null as PubAppState
+);

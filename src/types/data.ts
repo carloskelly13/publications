@@ -8,21 +8,37 @@ export interface DocumentsQuery {
   documents: Array<PubDocument>;
 }
 
-export type LoginMutation = (
-  options: { name: string; password: string }
-) => { login: PubUser };
+export interface LoginMutation {
+  name: string;
+  password: string;
+}
 
-export type CreateUserMutation = (
-  options: { name: string; password: string }
-) => { createUser: PubUser };
+export interface LoginMutationResponse {
+  login: PubUser;
+}
 
-export type SaveDocumentMutation = (
-  options: { document: PubDocument }
-) => { saveDocument: PubDocument };
+export interface CreateUserMutation {
+  name: string;
+  password: string;
+}
 
-export type DeleteDocumentMutation = (
-  options: { id: string | number }
-) => number;
+export interface CreateUserMutationResponse {
+  createUser: PubUser;
+}
+
+export interface SaveDocumentMutation {
+  document: PubDocument;
+}
+
+export interface SaveDocumentMutationResponse {
+  saveDocument: PubDocument;
+}
+
+export interface DeleteDocumentMutation {
+  id: string | number;
+}
+
+export type DeleteDocumentMutationResponse = number;
 
 export type RefetchCurrentUser = (options: any) => void;
 

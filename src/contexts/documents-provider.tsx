@@ -1,20 +1,19 @@
 import * as React from "react";
-import EditorView from "../editor";
-import LayersSidebar from "../inspector";
+
 import produce from "immer";
-import Modals from "./modals";
 import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
 import cloneDeep from "clone-deep";
-import { DocumentView, ViewContainer, ViewContent } from "./components";
+
 import {
   addEditorStateToObject,
   convertObjStylesToHTML,
+  documentsWithEditorState,
   duplicateShape,
   omitTransientData,
-} from "../../util/documents";
+} from "../util/documents";
 import shortid from "shortid";
-import { StateContext } from "../../contexts";
+import { StateContext, PubAppState } from "./app-state";
 import {
   PubDocument,
   PubPage,
@@ -22,32 +21,66 @@ import {
   PubShapeChanges,
   PubShapeType,
   PubUser,
-} from "../../types/pub-objects";
+} from "../types/pub-objects";
 import {
   ClipboardAction,
-  CreateUserMutation,
-  DeleteDocumentMutation,
   LayerMutationDelta,
-  LoginMutation,
-  RefetchCurrentUser,
+  SaveDocumentMutationResponse,
+  DocumentsQuery,
+  CurrentUserQuery,
+  DeleteDocumentMutationResponse,
   SaveDocumentMutation,
-} from "../../types/data";
-import { PubAppState } from "../../contexts/app-state";
-import TitleBar from "../title-bar";
+  DeleteDocumentMutation,
+  LoginMutationResponse,
+  LoginMutation,
+  CreateUserMutationResponse,
+  CreateUserMutation,
+} from "../types/data";
+import { useQuery, useMutation } from "urql";
+import {
+  currentUserQuery,
+  documentsQuery,
+  saveDocumentMutation,
+  deleteDocumentMutation,
+  loginMutation,
+  createUserMutation,
+} from "../queries";
+
+export { StateContext } from "./app-state";
 
 interface Props {
-  user: PubUser | null;
-  documents: Array<PubDocument>;
-  login: LoginMutation;
-  createUser: CreateUserMutation;
-  refetchCurrentUser: RefetchCurrentUser;
-  saveDocument: SaveDocumentMutation;
-  deleteDocument: DeleteDocumentMutation;
-  dataFetching: boolean;
-  dataLoaded: boolean;
+  children?: React.ReactNode;
 }
+export default function DocumentsProvider(props: Props) {
+  const [{ data: currentUserData }, refetchCurrentUser] = useQuery<
+    CurrentUserQuery
+  >({ query: currentUserQuery });
+  const [{ data: docData }] = useQuery<DocumentsQuery>({
+    query: documentsQuery,
+  });
+  const [, saveDocumentAction] = useMutation<
+    SaveDocumentMutationResponse,
+    SaveDocumentMutation
+  >(saveDocumentMutation);
+  const [, deleteDocumentAction] = useMutation<
+    DeleteDocumentMutationResponse,
+    DeleteDocumentMutation
+  >(deleteDocumentMutation);
+  const [, login] = useMutation<LoginMutationResponse, LoginMutation>(
+    loginMutation
+  );
+  const [, createUser] = useMutation<
+    CreateUserMutationResponse,
+    CreateUserMutation
+  >(createUserMutation);
 
-const DocumentsView: React.FunctionComponent<Props> = props => {
+  const documents: PubDocument[] = documentsWithEditorState(
+    get("documents")(docData) || []
+  );
+  const user: PubUser | null = get("currentUser")(currentUserData) || null;
+
+  const dataLoaded = !documents;
+
   const [
     currentDocument,
     setCurrentDocument,
@@ -67,7 +100,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     openDocumentModalVisible,
     setOpenDocumentModalVisible,
   ] = React.useState(false);
-  const [startModalVisible, setStartModalVisible] = React.useState(true);
+  const [startModalVisible, setStartModalVisible] = React.useState(false);
   const [newAccountModalVisible, setNewAccountModalVisible] = React.useState(
     false
   );
@@ -77,11 +110,11 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
 
   const getDocument = React.useCallback(
     async (id: string) => {
-      const doc = props.documents.filter(d => d.id === id)[0];
+      const doc = documents.filter(d => d.id === id)[0];
       setCurrentDocument(doc);
       window.history.pushState({}, null, `?docId=${doc.id}`);
     },
-    [setCurrentDocument, props.documents]
+    [setCurrentDocument, documents]
   );
 
   const saveDocument = React.useCallback(
@@ -106,9 +139,9 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         draftDocument.id = get("id")(documentToSave);
         delete draftDocument.__typename;
       });
-      return props.saveDocument({ document: documentToSave });
+      return saveDocumentAction({ document: documentToSave });
     },
-    [currentDocument, props]
+    [currentDocument, saveDocumentAction]
   );
 
   const updateSelectedObject = React.useCallback(
@@ -160,8 +193,8 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     setSelectedObject(null);
     setLayersPanelVisible(false);
     setZoom(1);
-    return await props.refetchCurrentUser({ skipCache: true });
-  }, [props, saveDocument]);
+    return await refetchCurrentUser({ skipCache: true });
+  }, [refetchCurrentUser, saveDocument]);
 
   const addObject = React.useCallback(
     (sender: PubShape) => {
@@ -236,15 +269,15 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
           },
         ],
       };
-      if (props.user) {
+      if (user) {
         try {
-          const response = await props.saveDocument({
+          const response = await saveDocumentAction({
             document: payload,
           } as any);
           if (currentDocument) {
             await saveDocument();
           }
-          setCurrentDocument(response.saveDocument);
+          setCurrentDocument(response.data.saveDocument);
           return;
         } catch (e) {
           return;
@@ -252,7 +285,7 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       }
       setCurrentDocument(payload as PubDocument);
     },
-    [props, currentDocument, saveDocument]
+    [currentDocument, saveDocument, saveDocumentAction, user]
   );
 
   const deleteDocument = React.useCallback(
@@ -261,9 +294,10 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
         setCurrentDocument(null);
         setSelectedObject(null);
       }
-      return await props.deleteDocument({ id });
+      const response = await deleteDocumentAction({ id });
+      return response.data;
     },
-    [currentDocument, props]
+    [currentDocument, deleteDocumentAction]
   );
 
   const handleClipboardAction = React.useCallback(
@@ -318,19 +352,19 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
       adjustObjectLayer,
       handleCreateNewDocument,
       handleClipboardAction,
-      login: props.login,
-      createUser: props.createUser,
-      refetchCurrentUser: props.refetchCurrentUser,
+      login,
+      createUser,
+      refetchCurrentUser,
       logout,
     },
     aboutModalVisible,
     clipboardContents,
     currentDocument,
-    documents: props.documents,
-    dataLoaded: props.dataLoaded,
+    documents,
+    dataLoaded,
     selectedObject,
     zoom,
-    user: props.user,
+    user,
     newDocumentModalVisible,
     openDocumentModalVisible,
     loginModalVisible,
@@ -347,23 +381,12 @@ const DocumentsView: React.FunctionComponent<Props> = props => {
     }
     getDocument(documentId)
       .then(() => setStartModalVisible(false))
-      .catch(() => setStartModalVisible(true));
-  }, [currentDocument, getDocument, props.documents.length]);
+      .catch(() => setStartModalVisible(false));
+  }, [currentDocument, getDocument, documents.length]);
 
   return (
     <StateContext.Provider value={appState}>
-      <ViewContainer>
-        <DocumentView>
-          <TitleBar />
-          <ViewContent>
-            <EditorView />
-            <LayersSidebar />
-          </ViewContent>
-        </DocumentView>
-      </ViewContainer>
-      <Modals />
+      {props.children}
     </StateContext.Provider>
   );
-};
-
-export default DocumentsView;
+}

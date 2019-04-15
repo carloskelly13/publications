@@ -2,7 +2,7 @@ import * as React from "react";
 import get from "lodash/get";
 import { LayerItem } from "./layer-item";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 
 export default function LayersTab() {
   const {

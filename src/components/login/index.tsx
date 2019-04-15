@@ -6,8 +6,13 @@ import FormInput from "../ui/form-input";
 import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { ModalButtonContainer } from "../ui/button-container";
-import { LoginMutation, RefetchCurrentUser } from "../../types/data";
-import { StateContext } from "../../contexts";
+import {
+  LoginMutation,
+  LoginMutationResponse,
+  RefetchCurrentUser,
+} from "../../types/data";
+import { StateContext } from "../../contexts/app-state";
+import { OperationResult } from "urql";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;
@@ -18,8 +23,8 @@ const Form = styled.form`
 `;
 
 interface Props {
-  login: LoginMutation;
   refetchCurrentUser: RefetchCurrentUser;
+  login(opts: LoginMutation): Promise<OperationResult<LoginMutationResponse>>;
   onDismiss(): void;
 }
 
@@ -39,7 +44,9 @@ export class LoginDialog extends React.Component<Props> {
   };
 
   login = async (payload: LoginFormValues) => {
-    const { login } = await this.props.login(payload);
+    const {
+      data: { login },
+    } = await this.props.login(payload);
     if (login && login.token) {
       window.localStorage.setItem("authorization_token", login.token);
     } else {

@@ -17,7 +17,6 @@
     "react-hooks/exhaustive-deps": "warn",
     "prettier/prettier": "off",
     "indent": "off",
-    "no-unused-vars": "off",
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/array-type": "off",
@@ -25,6 +24,14 @@
     "@typescript-eslint/explicit-member-accessibility": "off",
     "no-unexpected-multiline": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/camelcase": "off"
+    "@typescript-eslint/camelcase": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "vars": "all",
+      "args": "after-used",
+      "ignoreRestSiblings": false,
+      "argsIgnorePattern": "^_"
+    }]
+
   }
 }

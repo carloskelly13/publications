@@ -1,6 +1,6 @@
 import * as React from "react";
 import { InspectorContainer } from "./components";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 import DocumentTab from "./inspector-tab";
 import LayersTab from "./layers-tab";
 import InspectorTabs from "./tabs";

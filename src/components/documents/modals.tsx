@@ -6,39 +6,37 @@ import NewDocumentDialog from "../new-document";
 import StartModal from "../start-modal";
 import Modal from "../modal";
 import AboutPanel from "../about";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/app-state";
 
-function Modals() {
+export default function Modals() {
+  const {
+    startModalVisible,
+    loginModalVisible,
+    newAccountModalVisible,
+    newDocumentModalVisible,
+    aboutModalVisible,
+    openDocumentModalVisible,
+  } = React.useContext(StateContext);
   return (
-    <StateContext.Consumer>
-      {({
-        startModalVisible,
-        loginModalVisible,
-        newAccountModalVisible,
-        newDocumentModalVisible,
-        aboutModalVisible,
-        openDocumentModalVisible,
-      }) => (
-        <>
-          <Modal renderContent={<StartModal />} visible={startModalVisible} />
-          <Modal renderContent={<LoginDialog />} visible={loginModalVisible} />
-          <Modal
-            renderContent={<NewAccountDialog />}
-            visible={newAccountModalVisible}
-          />
-          <Modal
-            renderContent={<OpenDocumentDialog />}
-            visible={openDocumentModalVisible}
-          />
-          <Modal renderContent={<AboutPanel />} visible={aboutModalVisible} />
-          <Modal
-            renderContent={<NewDocumentDialog />}
-            visible={newDocumentModalVisible}
-          />
-        </>
-      )}
-    </StateContext.Consumer>
+    <>
+      <Modal visible={startModalVisible}>
+        <StartModal />
+      </Modal>
+      <Modal visible={loginModalVisible}>
+        <LoginDialog />
+      </Modal>
+      <Modal visible={newAccountModalVisible}>
+        <NewAccountDialog />
+      </Modal>
+      <Modal visible={openDocumentModalVisible}>
+        <OpenDocumentDialog />
+      </Modal>
+      <Modal visible={aboutModalVisible}>
+        <AboutPanel />
+      </Modal>
+      <Modal visible={newDocumentModalVisible}>
+        <NewDocumentDialog />
+      </Modal>
+    </>
   );
 }
-
-export default Modals;

@@ -1,6 +1,5 @@
 import * as React from "react";
 import styled from "styled-components";
-// import { StateContext } from "../../contexts";
 import { Colors } from "../../util/constants";
 import PublicationsIcon from "../icons/publications";
 import VectorShapeIcon from "../ui/icons/vector-shape";
@@ -13,7 +12,7 @@ import ZoomInIcon from "../ui/icons/zoom-in";
 import ZoomOutIcon from "../ui/icons/zoom-out";
 import Spacer from "../ui/spacer";
 import TitleBarButton from "./title-bar-button";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/app-state";
 import downloadPdfAction from "../../util/download-pdf";
 import { ClipboardAction } from "../../types/data";
 import Menu, { MenuItem } from "../ui/menu";
@@ -60,7 +59,6 @@ export default function TitleBar() {
     clipboardContents,
     selectedObject,
     zoom,
-    user,
   } = React.useContext(StateContext);
   const saveDocument = React.useCallback(() => actions.saveDocument(), [
     actions,
@@ -139,31 +137,13 @@ export default function TitleBar() {
           Paste
         </TitleBarButton>
         <Spacer width="1em" />
-        <TitleBarButton noLabel onPress={zoomIn}>
+        <TitleBarButton disabled={!currentDocument} noLabel onPress={zoomIn}>
           <ZoomInIcon />
         </TitleBarButton>
         <ZoomLabel>{zoom * 100}%</ZoomLabel>
-        <TitleBarButton noLabel onPress={zoomOut}>
+        <TitleBarButton disabled={!currentDocument} noLabel onPress={zoomOut}>
           <ZoomOutIcon />
         </TitleBarButton>
-        <Spacer width="1em" />
-        {user && "name" in user && (
-          <Menu
-            alignRight
-            renderButton={setMenuActive => (
-              <TitleBarButton
-                onPress={() => setMenuActive(prevState => !prevState)}
-              >
-                {user.name}
-              </TitleBarButton>
-            )}
-            renderMenu={
-              <>
-                <MenuItem>Log Out…</MenuItem>
-              </>
-            }
-          />
-        )}
       </ControlGroup>
     </Container>
   );

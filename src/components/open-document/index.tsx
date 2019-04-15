@@ -8,7 +8,7 @@ import {
   FileBrowserContentContainer,
 } from "./components";
 import { PubDocument } from "../../types/pub-objects";
-import { StateContext } from "../../contexts";
+import { StateContext } from "../../contexts/documents-provider";
 import { FileItem } from "./file-item";
 
 export default function OpenDocumentDialog() {
@@ -18,13 +18,10 @@ export default function OpenDocumentDialog() {
     selectedDocument,
     setSelectedDocument,
   ] = React.useState<PubDocument | null>(null);
-  const handleOpenButtonClicked = React.useCallback(
-    () => {
-      actions.getDocument(selectedDocument.id);
-      actions.setOpenDocumentModalVisible(false);
-    },
-    [actions, selectedDocument]
-  );
+  const handleOpenButtonClicked = React.useCallback(() => {
+    actions.getDocument(selectedDocument.id);
+    actions.setOpenDocumentModalVisible(false);
+  }, [actions, selectedDocument]);
   const filterDocuments = React.useCallback(
     (doc: PubDocument) => {
       if (searchKeyword.trim().length === 0) {
@@ -58,16 +55,14 @@ export default function OpenDocumentDialog() {
           </Button>
         </SearchInputContainer>
         <FileBrowserContentContainer disabled={false}>
-          {documents
-            .filter(filterDocuments)
-            .map((doc: PubDocument) => (
-              <FileItem
-                selected={selectedDocument && selectedDocument.id === doc.id}
-                handleClick={() => setSelectedDocument(doc)}
-                key={doc.id}
-                doc={doc}
-              />
-            ))}
+          {documents.filter(filterDocuments).map((doc: PubDocument) => (
+            <FileItem
+              selected={selectedDocument && selectedDocument.id === doc.id}
+              handleClick={() => setSelectedDocument(doc)}
+              key={doc.id}
+              doc={doc}
+            />
+          ))}
         </FileBrowserContentContainer>
       </FileBrowserContainer>
     </OpenDocumentContainer>
