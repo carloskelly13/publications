@@ -37,12 +37,14 @@ const ControlGroup = styled.div`
   color: ${Colors.TitleBar.Text};
 `;
 
-const ZoomLabel = styled.span`
+const ZoomLabel = styled.span<{ disabled: boolean }>`
   font-size: 10px;
   font-weight: 600;
   line-height: 25px;
   width: 35px;
   text-align: center;
+  color: ${({ disabled }) =>
+    disabled ? Colors.TitleBar.DisabledText : Colors.TitleBar.Text};
 `;
 
 const LeftControlGroup = styled(ControlGroup)`
@@ -81,70 +83,86 @@ export default function TitleBar() {
         <PublicationsIcon size={20} />
         Publications
       </LeftControlGroup>
-      <ControlGroup>
-        <TitleBarButton disabled={!currentDocument} onPress={saveDocument}>
-          <FloppyDiskIcon />
-          Save
-        </TitleBarButton>
-        <TitleBarButton disabled={!currentDocument} onPress={downloadPdf}>
-          <DownloadIcon />
-          PDF
-        </TitleBarButton>
-        <Menu
-          renderButton={setMenuActive => (
+      {currentDocument && (
+        <>
+          <ControlGroup>
+            <TitleBarButton disabled={!currentDocument} onPress={saveDocument}>
+              <FloppyDiskIcon />
+              Save
+            </TitleBarButton>
+            <TitleBarButton disabled={!currentDocument} onPress={downloadPdf}>
+              <DownloadIcon />
+              PDF
+            </TitleBarButton>
+            <Menu
+              renderButton={setMenuActive => (
+                <TitleBarButton
+                  disabled={!currentDocument}
+                  onPress={() => setMenuActive(prevState => !prevState)}
+                >
+                  <VectorShapeIcon />
+                  Objects
+                </TitleBarButton>
+              )}
+              renderMenu={
+                <>
+                  <MenuItem onClick={() => actions.addObject(Shapes.Rectangle)}>
+                    Rectangle
+                  </MenuItem>
+                  <MenuItem onClick={() => actions.addObject(Shapes.Ellipse)}>
+                    Ellipse
+                  </MenuItem>
+                  <MenuItem onClick={() => actions.addObject(Shapes.Text)}>
+                    Text Box
+                  </MenuItem>
+                </>
+              }
+            />
+            <Spacer width="1em" />
+            <TitleBarButton
+              disabled={!currentDocument || !selectedObject}
+              onPress={() => actions.handleClipboardAction(ClipboardAction.Cut)}
+            >
+              <CutIcon />
+              Cut
+            </TitleBarButton>
+            <TitleBarButton
+              disabled={!currentDocument || !selectedObject}
+              onPress={() =>
+                actions.handleClipboardAction(ClipboardAction.Copy)
+              }
+            >
+              <CopyIcon />
+              Copy
+            </TitleBarButton>
+            <TitleBarButton
+              disabled={!currentDocument || !clipboardContents}
+              onPress={() =>
+                actions.handleClipboardAction(ClipboardAction.Paste)
+              }
+            >
+              <PasteIcon />
+              Paste
+            </TitleBarButton>
+            <Spacer width="1em" />
             <TitleBarButton
               disabled={!currentDocument}
-              onPress={() => setMenuActive(prevState => !prevState)}
+              noLabel
+              onPress={zoomIn}
             >
-              <VectorShapeIcon />
-              Objects
+              <ZoomInIcon />
             </TitleBarButton>
-          )}
-          renderMenu={
-            <>
-              <MenuItem onClick={() => actions.addObject(Shapes.Rectangle)}>
-                Rectangle
-              </MenuItem>
-              <MenuItem onClick={() => actions.addObject(Shapes.Ellipse)}>
-                Ellipse
-              </MenuItem>
-              <MenuItem onClick={() => actions.addObject(Shapes.Text)}>
-                Text Box
-              </MenuItem>
-            </>
-          }
-        />
-        <Spacer width="1em" />
-        <TitleBarButton
-          disabled={!currentDocument || !selectedObject}
-          onPress={() => actions.handleClipboardAction(ClipboardAction.Cut)}
-        >
-          <CutIcon />
-          Cut
-        </TitleBarButton>
-        <TitleBarButton
-          disabled={!currentDocument || !selectedObject}
-          onPress={() => actions.handleClipboardAction(ClipboardAction.Copy)}
-        >
-          <CopyIcon />
-          Copy
-        </TitleBarButton>
-        <TitleBarButton
-          disabled={!currentDocument || !clipboardContents}
-          onPress={() => actions.handleClipboardAction(ClipboardAction.Paste)}
-        >
-          <PasteIcon />
-          Paste
-        </TitleBarButton>
-        <Spacer width="1em" />
-        <TitleBarButton disabled={!currentDocument} noLabel onPress={zoomIn}>
-          <ZoomInIcon />
-        </TitleBarButton>
-        <ZoomLabel>{zoom * 100}%</ZoomLabel>
-        <TitleBarButton disabled={!currentDocument} noLabel onPress={zoomOut}>
-          <ZoomOutIcon />
-        </TitleBarButton>
-      </ControlGroup>
+            <ZoomLabel disabled={!currentDocument}>{zoom * 100}%</ZoomLabel>
+            <TitleBarButton
+              disabled={!currentDocument}
+              noLabel
+              onPress={zoomOut}
+            >
+              <ZoomOutIcon />
+            </TitleBarButton>
+          </ControlGroup>
+        </>
+      )}
     </Container>
   );
 }

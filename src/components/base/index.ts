@@ -35,12 +35,18 @@ export default styled.div`
   color: ${AppColors.DarkGray};
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
   position: absolute;
   overflow: hidden;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
+  @media print {
+    height: 100vh;
+  }
 `;

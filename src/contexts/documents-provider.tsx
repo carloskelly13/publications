@@ -112,7 +112,6 @@ export default function DocumentsProvider(props: Props) {
     async (id: string) => {
       const doc = documents.filter(d => d.id === id)[0];
       setCurrentDocument(doc);
-      window.history.pushState({}, null, `?docId=${doc.id}`);
     },
     [setCurrentDocument, documents]
   );
@@ -337,6 +336,7 @@ export default function DocumentsProvider(props: Props) {
       setLoginModalVisible,
       setLayersPanelVisible,
       setStartModalVisible,
+      setCurrentDocument,
       setNewAccountModalVisible,
       setNewDocumentModalVisible,
       setOpenDocumentModalVisible,
@@ -372,17 +372,6 @@ export default function DocumentsProvider(props: Props) {
     newAccountModalVisible,
     layersPanelVisible,
   };
-
-  React.useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const documentId = urlParams.get("docId");
-    if (documentId === null || currentDocument) {
-      return;
-    }
-    getDocument(documentId)
-      .then(() => setStartModalVisible(false))
-      .catch(() => setStartModalVisible(false));
-  }, [currentDocument, getDocument, documents.length]);
 
   return (
     <StateContext.Provider value={appState}>

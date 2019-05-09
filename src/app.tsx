@@ -1,18 +1,9 @@
 import React from "react";
-import AppContainer from "./components/base";
 import DocumentsProvider from "./contexts/documents-provider";
 import { Provider, createClient } from "urql";
 import ReactDOM from "react-dom";
-import {
-  DocumentView,
-  ViewContainer,
-  ViewContent,
-} from "./components/documents/components";
-import Modals from "./components/documents/modals";
-import TitleBar from "./components/title-bar";
-import EditorView from "./components/editor";
-import LayersSidebar from "./components/inspector";
 import { adopt } from "react-adopt";
+import AppView from "./views/app-view";
 
 const client = createClient({
   url: "/graphql",
@@ -36,24 +27,7 @@ const AppProviders = adopt({
 });
 
 function PublicationsApp() {
-  return (
-    <AppProviders>
-      {() => (
-        <AppContainer>
-          <ViewContainer>
-            <DocumentView>
-              <TitleBar />
-              <ViewContent>
-                <EditorView />
-                <LayersSidebar />
-              </ViewContent>
-            </DocumentView>
-          </ViewContainer>
-          <Modals />
-        </AppContainer>
-      )}
-    </AppProviders>
-  );
+  return <AppProviders>{() => <AppView />}</AppProviders>;
 }
 
 ReactDOM.render(<PublicationsApp />, document.getElementById("pub-app"));

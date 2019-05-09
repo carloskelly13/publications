@@ -23,8 +23,8 @@ const createTables = async function() {
       table.increments();
       table.bigInteger("user_id").unsigned();
       table.foreign("user_id").references("users.id");
+      table.timestamps(true, true);
       table.string("name");
-      table.timestamps();
     });
     await pg.schema.createTable("pages", table => {
       table.increments();

@@ -41,6 +41,7 @@ export interface PubActions {
   setNewAccountModalVisible(visible: boolean): void;
   setLoginModalVisible(visible: boolean): void;
   setAboutModalVisible(visible: boolean): void;
+  setCurrentDocument: React.Dispatch<PubDocument | null>;
 }
 
 export interface PubAppState {

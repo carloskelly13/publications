@@ -52,7 +52,9 @@ export const Colors = {
   },
   TitleBar: {
     Background: "#232323",
+    Border: "#191919",
     Text: "#e5e5e5",
+    DisabledText: "#777",
     ActiveText: "#9b82f3",
   },
   Button: {
@@ -152,5 +154,11 @@ export const Colors = {
     Thumb: "#9b82f3",
     ThumbHover: "#785ef0",
     Corner: "transparent",
+  },
+  DocumentsView: {
+    Text: "#fff",
+    ActiveBackground: "#9b82f3",
+    ItemLine: "#444",
+    DisabledText: "#777",
   },
 };

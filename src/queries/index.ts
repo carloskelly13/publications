@@ -1,6 +1,8 @@
 export const documentFields = `
   id
   name
+  createdAt
+  updatedAt
   pages {
     id
     pageNumber

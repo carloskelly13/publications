@@ -6,14 +6,14 @@ import { PubShape } from "../../types/pub-objects";
 
 const zoomForDocumentSize = ({ width, height }) => {
   if (width >= 32 || height >= 32) {
-    return 0.075;
+    return 0.05;
   }
   if (width >= 15 || height >= 15) {
-    return 0.1;
+    return 0.075;
   } else if (width >= 10 || height >= 10) {
-    return 0.15;
+    return 0.1;
   }
-  return 0.2;
+  return 0.15;
 };
 
 interface Props {

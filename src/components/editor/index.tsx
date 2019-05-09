@@ -129,31 +129,29 @@ export default function Editor() {
       onKeyDown={handleKeyPress}
       tabIndex={0}
     >
-      {currentDocument ? (
-        <>
-          <Ruler
-            dpi={96}
-            showDetail
-            scrollOffset={scrollOffset}
-            doc={currentDocument}
-            zoom={zoom}
-            viewportRect={viewportRect}
-          />
-          <Canvas
-            allowsEditing
-            width={currentDocument.pages[0].width}
-            height={currentDocument.pages[0].height}
-            dpi={96}
-            zoom={zoom}
-            thumbnail={false}
-            selectedShape={selectedObject}
-            sortedShapes={currentDocument.pages[0].shapes}
-            backgroundGridLineRanges={gridLineRanges}
-            updateSelectedObject={actions.updateSelectedObject}
-          />
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
+      <Ruler
+        dpi={96}
+        showDetail
+        scrollOffset={scrollOffset}
+        doc={currentDocument}
+        zoom={zoom}
+        viewportRect={viewportRect}
+      />
+      <Canvas
+        allowsEditing
+        width={currentDocument.pages[0].width}
+        height={currentDocument.pages[0].height}
+        dpi={96}
+        zoom={zoom}
+        thumbnail={false}
+        selectedShape={selectedObject}
+        sortedShapes={currentDocument.pages[0].shapes}
+        backgroundGridLineRanges={gridLineRanges}
+        updateSelectedObject={actions.updateSelectedObject}
+      />
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
                   @page {
                     size: auto;
                     margin: 0mm;
@@ -163,10 +161,8 @@ export default function Editor() {
                     html, body { margin: 0; }
                   }
                 `,
-            }}
-          />
-        </>
-      ) : null}
+        }}
+      />
     </Container>
   );
 }

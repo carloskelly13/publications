@@ -7,7 +7,7 @@ const Button = styled.button<{ noLabel?: boolean }>`
   background: transparent;
   border: none;
   font-family: ${appFont};
-  font-weight: bold;
+  font-weight: 500;
   font-size: 12px;
   margin: 0;
   color: ${Colors.Button.Text};
