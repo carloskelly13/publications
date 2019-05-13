@@ -1,100 +1,23 @@
 import * as React from "react";
-import styled from "styled-components";
 import { StateContext } from "../contexts/app-state";
 import { PubDocument } from "../types/pub-objects";
-import { appFont, Colors } from "../util/constants";
+import { Keys } from "../util/constants";
 import Canvas from "../components/canvas";
 import { RouteComponentProps, navigate } from "@reach/router";
+import { TextInput } from "../components/ui/inputs";
+import { documentNameSort } from "../util/documents";
+import {
+  ActionButton,
+  Content,
+  ListItem,
+  DocumentsListPanel,
+  EmptyDocument,
+  PreviewPane,
+  inputCSS,
+} from "../components/documents/documents-view";
 
-const Content = styled.div`
-  flex: 1;
-  color: ${Colors.DocumentsView.Text};
-  overflow: scroll;
-`;
-
-const PreviewPane = styled.div`
-  width: 100px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: hidden;
-`;
-
-const EmptyDocument = styled.figure`
-  border: 1px dotted ${Colors.DocumentsView.DisabledText};
-  color: ${Colors.DocumentsView.DisabledText};
-  font-size: 3em;
-  font-weight: lighter;
-  text-align: center;
-  line-height: 45px;
-  border-radius: 4px;
-  width: 100px;
-  height: 50px;
-  margin: 0;
-`;
-
-export const DocumentsListPanel = styled.div`
-  padding: 1em 4em 2em;
-
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      padding: 1em;
-      cursor: default;
-      display: grid;
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    li.new-document-item {
-      border-bottom: 1px dotted ${Colors.DocumentsView.ItemLine};
-
-      &:hover {
-        background: hsla(0, 0%, 100%, 0.075);
-      }
-    }
-
-    li.document-item {
-      border-bottom: 1px solid ${Colors.DocumentsView.ItemLine};
-
-      span.action-column {
-        display: grid;
-        grid-template-columns: repeat(3, auto);
-        align-items: center;
-        justify-content: flex-end;
-      }
-    }
-  }
-`;
-
-const DocumentListItem = styled.li<{ selected?: boolean }>`
-  background: ${({ selected }) =>
-    selected ? Colors.DocumentsView.ActiveBackground : "transparent"};
-  &:hover {
-    background: ${({ selected }) =>
-      selected
-        ? Colors.DocumentsView.ActiveBackground
-        : "hsla(0, 0%, 100%, 0.075)"};
-  }
-`;
-
-const ActionButton = styled.button`
-  font-family: ${appFont};
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: ${Colors.DocumentsView.Text};
-  text-decoration: underline;
-  font-weight: 600;
-  font-size: 13px;
-  margin: 0 0 0 2em;
-`;
+const validatePositiveFloat = (candidate: string) =>
+  /^\d*\.?\d*$/.test(candidate);
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const { documents, actions } = React.useContext(StateContext);
@@ -102,59 +25,217 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     selectedDocument,
     setSelectedDocument,
   ] = React.useState<PubDocument | null>(null);
+  const [isCreatingNewDocument, setIsCreatingNewDocument] = React.useState(
+    false
+  );
+  const [renamingDocumentId, setRenamingDocumentId] = React.useState<
+    string | null
+  >(null);
+  const [newDocumentName, setNewDocumentName] = React.useState("");
+  const [newDocumentHeight, setNewDocumentHeight] = React.useState<
+    string | number
+  >(11);
+  const [newDocumentWidth, setNewDocumentWidth] = React.useState<
+    string | number
+  >(8.5);
 
   const handleDocumentItemSelected = React.useCallback(
     (event: React.MouseEvent, doc: PubDocument) => {
+      setIsCreatingNewDocument(false);
       event.stopPropagation();
+      if (selectedDocument && selectedDocument.id === doc.id) {
+        return;
+      }
       setSelectedDocument(doc);
+    },
+    [selectedDocument]
+  );
+
+  const handleCreateNewDocument = React.useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setSelectedDocument(null);
+      if (isCreatingNewDocument) {
+        return;
+      }
+      setNewDocumentName("New Document");
+      setNewDocumentHeight(11);
+      setNewDocumentWidth(8.5);
+      setIsCreatingNewDocument(true);
+    },
+    [isCreatingNewDocument]
+  );
+
+  React.useEffect(() => {
+    if (!selectedDocument || selectedDocument.id !== renamingDocumentId) {
+      setRenamingDocumentId(null);
+    }
+  }, [renamingDocumentId, selectedDocument]);
+  React.useEffect(() => actions.setCurrentDocument(null));
+
+  const handleDocumentsPanelClick = React.useCallback(() => {
+    setIsCreatingNewDocument(false);
+    setSelectedDocument(null);
+  }, []);
+
+  const handleDocumentRename = React.useCallback(({ target }) => {
+    setSelectedDocument(prevDoc => ({
+      ...prevDoc,
+      name: target.value,
+    }));
+  }, []);
+
+  const handleUpdateDocumentName = React.useCallback(async () => {
+    try {
+      await actions.saveDocument(selectedDocument);
+      setRenamingDocumentId(null);
+    } catch (e) {
+      console.error("Cannot rename document.", e);
+    }
+  }, [actions, selectedDocument]);
+
+  const handleDocumentNameKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.keyCode === Keys.Esc) {
+        setRenamingDocumentId(null);
+      } else if (event.keyCode === Keys.Enter) {
+        handleUpdateDocumentName().then(void 0);
+      }
+    },
+    [handleUpdateDocumentName]
+  );
+
+  const handleUpdateNewDocumentName = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const possibleName = event.target.value;
+      setNewDocumentName(possibleName);
     },
     []
   );
 
-  React.useEffect(() => actions.setCurrentDocument(null));
+  const handleUpdateNewDocumentWidth = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const possibleNumber = event.target.value;
+      if (validatePositiveFloat(possibleNumber)) {
+        setNewDocumentWidth(possibleNumber);
+      }
+    },
+    []
+  );
+
+  const handleUpdateNewDocumentHeight = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const possibleNumber = event.target.value;
+      if (validatePositiveFloat(possibleNumber)) {
+        setNewDocumentHeight(possibleNumber);
+      }
+    },
+    []
+  );
+
   return (
     <Content>
-      <DocumentsListPanel onClick={() => setSelectedDocument(null)}>
+      <DocumentsListPanel onClick={handleDocumentsPanelClick}>
         <ul>
-          <li className="new-document-item">
-            <EmptyDocument>+</EmptyDocument>
-            <span>Create New Document</span>
-          </li>
-          {documents.map(d => (
-            <DocumentListItem
-              className="document-item"
-              onClick={e => handleDocumentItemSelected(e, d)}
-              key={d.id}
-              selected={selectedDocument && selectedDocument.id === d.id}
-            >
-              <PreviewPane>
-                <Canvas
-                  thumbnail
-                  dpi={96}
-                  zoom={0}
-                  allowsEditing={false}
-                  width={d.pages[0].width}
-                  height={d.pages[0].height}
-                  sortedShapes={d.pages[0].shapes}
-                  selectedShape={null}
-                  updateSelectedObject={() => void 0}
-                />
-              </PreviewPane>
-              <span>
-                <strong>{d.name}</strong>
-              </span>
-              <span>
-                {d.pages[0].width}” &times; {d.pages[0].height}”
-              </span>
-              <span className="action-column">
-                <ActionButton onClick={() => navigate(`edit/${d.id}`)}>
-                  Edit
-                </ActionButton>
-                <ActionButton>Rename</ActionButton>
-                <ActionButton>Delete</ActionButton>
-              </span>
-            </DocumentListItem>
-          ))}
+          <ListItem
+            className="new-document-item"
+            onClick={handleCreateNewDocument}
+            selected={isCreatingNewDocument}
+          >
+            {isCreatingNewDocument ? (
+              <>
+                <EmptyDocument>+</EmptyDocument>
+                <span>
+                  <TextInput
+                    value={newDocumentName}
+                    onChange={handleUpdateNewDocumentName}
+                    css={inputCSS}
+                  />
+                </span>
+                <span>
+                  <TextInput
+                    value={newDocumentHeight}
+                    onChange={handleUpdateNewDocumentHeight}
+                  />
+                  <TextInput
+                    value={newDocumentWidth}
+                    onChange={handleUpdateNewDocumentWidth}
+                  />
+                </span>
+              </>
+            ) : (
+              <>
+                <EmptyDocument>+</EmptyDocument>
+                <span>
+                  <strong>Create New Document</strong>
+                </span>
+              </>
+            )}
+          </ListItem>
+          {documents.sort(documentNameSort).map(d => {
+            const isSelected = selectedDocument && selectedDocument.id === d.id;
+            const isRenaming = renamingDocumentId === d.id;
+            return (
+              <ListItem
+                className="document-item"
+                onClick={e => handleDocumentItemSelected(e, d)}
+                key={d.id}
+                selected={isSelected}
+              >
+                <PreviewPane>
+                  <Canvas
+                    thumbnail
+                    dpi={96}
+                    zoom={0}
+                    allowsEditing={false}
+                    width={d.pages[0].width}
+                    height={d.pages[0].height}
+                    sortedShapes={d.pages[0].shapes}
+                    selectedShape={null}
+                    updateSelectedObject={() => void 0}
+                  />
+                </PreviewPane>
+                <span>
+                  {isSelected && isRenaming ? (
+                    <TextInput
+                      value={selectedDocument.name}
+                      onChange={handleDocumentRename}
+                      css={inputCSS}
+                      onKeyDown={handleDocumentNameKeyDown}
+                    />
+                  ) : (
+                    <strong>{d.name}</strong>
+                  )}
+                </span>
+                <span>
+                  {d.pages[0].width}” &times; {d.pages[0].height}”
+                </span>
+                <span className="action-column">
+                  {isSelected && !isRenaming && (
+                    <>
+                      <ActionButton onClick={() => navigate(`edit/${d.id}`)}>
+                        Edit
+                      </ActionButton>
+                      <ActionButton onClick={() => setRenamingDocumentId(d.id)}>
+                        Rename
+                      </ActionButton>
+                      <ActionButton>Delete</ActionButton>
+                    </>
+                  )}
+                  {isSelected && isRenaming && (
+                    <>
+                      <ActionButton onClick={handleUpdateDocumentName}>
+                        Update
+                      </ActionButton>
+                      <ActionButton onClick={() => setRenamingDocumentId(null)}>
+                        Cancel
+                      </ActionButton>
+                    </>
+                  )}
+                </span>
+              </ListItem>
+            );
+          })}
         </ul>
       </DocumentsListPanel>
     </Content>

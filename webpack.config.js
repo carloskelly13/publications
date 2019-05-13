@@ -49,6 +49,7 @@ module.exports = {
 
   devServer: {
     contentBase: __dirname,
+    historyApiFallback: true,
   },
 
   plugins: [

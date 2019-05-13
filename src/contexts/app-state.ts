@@ -28,7 +28,7 @@ export interface PubActions {
   }): Promise<void>;
   logout(): Promise<void>;
   getDocument(id: string): void;
-  saveDocument(): Promise<any>;
+  saveDocument(sender?: PubDocument): Promise<any>;
   setZoom(zoom: number): void;
   setNewDocumentModalVisible(visible: boolean): void;
   setOpenDocumentModalVisible(visible: boolean): void;

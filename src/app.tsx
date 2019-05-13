@@ -26,9 +26,9 @@ const AppProviders = adopt({
   ),
 });
 
-function PublicationsApp() {
-  return <AppProviders>{() => <AppView />}</AppProviders>;
-}
+const PublicationsApp: React.FC = () => (
+  <AppProviders>{() => <AppView />}</AppProviders>
+);
 
 ReactDOM.render(<PublicationsApp />, document.getElementById("pub-app"));
 

@@ -11,7 +11,6 @@ interface Props {
 }
 
 export const TextInput = styled.input<Props>`
-  border: none;
   border-radius: 2px;
   padding: 0 4px;
   color: ${Colors.FormInput.Text};
@@ -40,7 +39,7 @@ export const TextInput = styled.input<Props>`
     cursor: default;
   }
   &:focus {
-    border-radius: 1px;
+    border-radius: 2px;
     box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
   }
   ${({ css }) => css};

@@ -113,7 +113,7 @@ export default function DocumentsProvider(props: Props) {
       const doc = documents.filter(d => d.id === id)[0];
       setCurrentDocument(doc);
     },
-    [setCurrentDocument, documents]
+    [documents]
   );
 
   const saveDocument = React.useCallback(
@@ -137,6 +137,8 @@ export default function DocumentsProvider(props: Props) {
         };
         draftDocument.id = get("id")(documentToSave);
         delete draftDocument.__typename;
+        delete draftDocument.createdAt;
+        delete draftDocument.updatedAt;
       });
       return saveDocumentAction({ document: documentToSave });
     },

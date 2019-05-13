@@ -11,13 +11,17 @@ const Content = styled.div`
   flex-direction: row;
 `;
 
-const EditorView: React.FC<
-  RouteComponentProps<{ documentId: string }>
-> = props => {
-  const { actions, currentDocument } = React.useContext(StateContext);
+type EditorView = React.FC<
+  RouteComponentProps<{
+    documentId: string;
+  }>
+>;
+const EditorView: EditorView = props => {
+  const { currentDocument, actions } = React.useContext(StateContext);
+  const getDocument = React.useRef(actions.getDocument);
   React.useEffect(() => {
-    actions.getDocument(props.documentId);
-  }, [actions, props.documentId]);
+    getDocument.current(props.documentId);
+  }, [props.documentId]);
   return (
     <Content>
       {currentDocument && (

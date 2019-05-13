@@ -3,7 +3,6 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["es6", "es2017.object", "dom", "esnext.asynciterable"],
-    "jsx": "react",
     "module": "commonjs",
     "jsx": "react",
     "moduleResolution": "node",
@@ -11,7 +10,7 @@
     "outDir": "dist/",
     "sourceMap": true,
     "target": "esnext",
-    "typeRoots": ["./typings/", "node_modules/@types/"]
+    "typeRoots": ["./typings/"]
   },
   "include": ["./index.ts"],
   "exclude": ["node_modules"]

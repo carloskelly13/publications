@@ -1,7 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -24,6 +23,11 @@ module.exports = {
         exclude: path.join(__dirname, "/src/server/*"),
       },
       {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: "javascript/auto",
+      },
+      {
         test: /\.(eot|woff|ttf|svg|png|otf)$/,
         use: "url-loader?limit=64",
       },
@@ -32,17 +36,13 @@ module.exports = {
   },
 
   resolve: {
-    extensions: [".js", ".ts", ".tsx"],
+    extensions: [".mjs", ".js", ".ts", ".tsx"],
     modules: [path.join(__dirname, "node_modules")],
   },
 
   devtool: "source-map",
 
   plugins: [
-    new ForkTsCheckerWebpackPlugin({
-      tslint: true,
-      checkSyntacticErrors: true,
-    }),
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": "'production'",
     }),

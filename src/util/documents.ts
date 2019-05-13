@@ -69,3 +69,6 @@ export const duplicateShape: (shape: PubShape) => PubShape = flowRight(
   omitTransientData,
   convertObjStylesToHTML
 );
+
+export const documentNameSort = (lhs: PubDocument, rhs: PubDocument) =>
+  lhs.name.localeCompare(rhs.name);

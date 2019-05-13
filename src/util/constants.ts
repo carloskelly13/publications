@@ -9,6 +9,7 @@ export const Keys = {
   Down: 40,
   Esc: 27,
   Delete: 8,
+  Enter: 13,
 };
 
 export const AppColors = {
@@ -157,7 +158,7 @@ export const Colors = {
   },
   DocumentsView: {
     Text: "#fff",
-    ActiveBackground: "#9b82f3",
+    ActiveBackground: "hsla(0, 0%, 100%, 0.1)",
     ItemLine: "#444",
     DisabledText: "#777",
   },
