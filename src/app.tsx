@@ -4,6 +4,7 @@ import { Provider, createClient } from "urql";
 import ReactDOM from "react-dom";
 import { adopt } from "react-adopt";
 import AppView from "./views/app-view";
+import "./assets/font/inter.css";
 
 const client = createClient({
   url: "/graphql",

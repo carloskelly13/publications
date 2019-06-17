@@ -1,6 +1,6 @@
 export const appFont =
   // eslint-disable-next-line quotes
-  `-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif`;
+  `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Helvetica, sans-serif`;
 
 export const Keys = {
   Left: 37,

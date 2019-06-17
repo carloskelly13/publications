@@ -28,6 +28,10 @@ module.exports = {
         type: "javascript/auto",
       },
       {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
         test: /\.(eot|woff|ttf|svg|png|otf)$/,
         use: "url-loader?limit=64",
       },

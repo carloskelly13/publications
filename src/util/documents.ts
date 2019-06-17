@@ -72,3 +72,6 @@ export const duplicateShape: (shape: PubShape) => PubShape = flowRight(
 
 export const documentNameSort = (lhs: PubDocument, rhs: PubDocument) =>
   lhs.name.localeCompare(rhs.name);
+
+export const validatePositiveFloat = (candidate: string) =>
+  /^\d*\.?\d*$/.test(candidate);

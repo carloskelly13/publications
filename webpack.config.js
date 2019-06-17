@@ -28,6 +28,10 @@ module.exports = {
         exclude: path.join(__dirname, "/src/server/*"),
       },
       {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
         test: /\.mjs$/,
         include: /node_modules/,
         type: "javascript/auto",

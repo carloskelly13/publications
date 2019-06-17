@@ -5,7 +5,7 @@ import { Keys } from "../util/constants";
 import Canvas from "../components/canvas";
 import { RouteComponentProps, navigate } from "@reach/router";
 import { TextInput } from "../components/ui/inputs";
-import { documentNameSort } from "../util/documents";
+import { documentNameSort, validatePositiveFloat } from "../util/documents";
 import {
   ActionButton,
   Content,
@@ -15,9 +15,6 @@ import {
   PreviewPane,
   inputCSS,
 } from "../components/documents/documents-view";
-
-const validatePositiveFloat = (candidate: string) =>
-  /^\d*\.?\d*$/.test(candidate);
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const { documents, actions } = React.useContext(StateContext);

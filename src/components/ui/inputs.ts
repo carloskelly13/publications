@@ -19,7 +19,7 @@ export const TextInput = styled.input<Props>`
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {
-      return "12px";
+      return "11px";
     } else if (props.large) {
       return "16px";
     }
