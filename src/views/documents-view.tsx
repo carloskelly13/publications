@@ -14,10 +14,13 @@ import {
   EmptyDocument,
   PreviewPane,
   inputCSS,
+  newDocumentMetricInputCSS,
+  NewDocumentMetricContainer,
 } from "../components/documents/documents-view";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const { documents, actions } = React.useContext(StateContext);
+  const newDocumentNameInputRef = React.useRef<HTMLInputElement>(null);
   const [
     selectedDocument,
     setSelectedDocument,
@@ -62,6 +65,14 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     },
     [isCreatingNewDocument]
   );
+
+  React.useEffect(() => {
+    if (isCreatingNewDocument && newDocumentNameInputRef.current) {
+      const input = newDocumentNameInputRef.current;
+      input.focus();
+      input.setSelectionRange(0, input.value.length);
+    }
+  }, [isCreatingNewDocument]);
 
   React.useEffect(() => {
     if (!selectedDocument || selectedDocument.id !== renamingDocumentId) {
@@ -130,6 +141,15 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     []
   );
 
+  const handleCreateNewDocumentSubmit = React.useCallback(async () => {
+    await actions.handleCreateNewDocument({
+      height: parseFloat(newDocumentHeight.toString()),
+      name: newDocumentName,
+      width: parseFloat(newDocumentWidth.toString()),
+    });
+    setIsCreatingNewDocument(false);
+  }, [actions, newDocumentHeight, newDocumentName, newDocumentWidth]);
+
   return (
     <Content>
       <DocumentsListPanel onClick={handleDocumentsPanelClick}>
@@ -144,27 +164,37 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
                 <EmptyDocument>+</EmptyDocument>
                 <span>
                   <TextInput
+                    innerRef={newDocumentNameInputRef}
                     value={newDocumentName}
                     onChange={handleUpdateNewDocumentName}
                     css={inputCSS}
                   />
                 </span>
-                <span>
-                  <TextInput
-                    value={newDocumentHeight}
-                    onChange={handleUpdateNewDocumentHeight}
-                  />
+                <NewDocumentMetricContainer>
                   <TextInput
                     value={newDocumentWidth}
                     onChange={handleUpdateNewDocumentWidth}
+                    css={newDocumentMetricInputCSS}
                   />
+                  ”&nbsp;&times;&nbsp;
+                  <TextInput
+                    value={newDocumentHeight}
+                    onChange={handleUpdateNewDocumentHeight}
+                    css={newDocumentMetricInputCSS}
+                  />
+                  ”
+                </NewDocumentMetricContainer>
+                <span className="action-column">
+                  <ActionButton onClick={handleCreateNewDocumentSubmit}>
+                    Create
+                  </ActionButton>
                 </span>
               </>
             ) : (
               <>
                 <EmptyDocument>+</EmptyDocument>
                 <span>
-                  <strong>Create New Document</strong>
+                  <strong>New Document</strong>
                 </span>
               </>
             )}

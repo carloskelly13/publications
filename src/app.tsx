@@ -23,7 +23,7 @@ const client = createClient({
 const AppProviders = adopt({
   urqlProvider: ({ render }) => <Provider value={client}>{render()}</Provider>,
   documentsProvider: ({ render }) => (
-    <DocumentsProvider>{render()}</DocumentsProvider>
+    <DocumentsProvider client={client}>{render()}</DocumentsProvider>
   ),
 });
 

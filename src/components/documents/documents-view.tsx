@@ -45,13 +45,6 @@ export const DocumentsListPanel = styled.div`
       grid-template-columns: 1fr 2fr 1fr 2fr;
       align-items: center;
       justify-content: flex-start;
-    }
-
-    li.new-document-item {
-      border-bottom: 1px dotted ${Colors.DocumentsView.ItemLine};
-    }
-
-    li.document-item {
       border-bottom: 1px solid ${Colors.DocumentsView.ItemLine};
 
       span.action-column {
@@ -62,12 +55,26 @@ export const DocumentsListPanel = styled.div`
         margin-right: 1em;
       }
     }
+
+    li.new-document-item {
+      border-bottom: 1px dotted ${Colors.DocumentsView.ItemLine};
+    }
   }
 `;
 
 export const inputCSS = css`
   font-weight: bold;
   margin-left: -5px;
+`;
+
+export const newDocumentMetricInputCSS = css`
+  width: 30px;
+  text-align: right;
+  margin-right: 3px;
+`;
+
+export const NewDocumentMetricContainer = styled.span`
+  font-size: 0.9em;
 `;
 
 export const ListItem = styled.li<{ selected?: boolean }>`
@@ -100,4 +107,8 @@ export const ActionButton = styled.button`
   font-weight: 600;
   font-size: 13px;
   margin: 0 0 0 2em;
+  &:focus {
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
+  }
 `;

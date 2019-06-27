@@ -60,7 +60,10 @@ export function convertObjStylesToHTML(shape: PubShape) {
   return shape;
 }
 
-export function documentsWithEditorState(documents: PubDocument[]) {
+export function documentsWithEditorState(documents: PubDocument[] | null) {
+  if (documents === null) {
+    return null;
+  }
   return documents.map(document => addEditorStateToDocument(document));
 }
 

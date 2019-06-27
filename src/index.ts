@@ -1,8 +1,4 @@
 import express, { ErrorRequestHandler } from "express";
-import webpack from "webpack";
-import webpackConfig from "../webpack.config";
-import webpackDevMiddleware from "webpack-dev-middleware";
-import webpackHotMiddleware from "webpack-hot-middleware";
 import graphqlHttp from "express-graphql";
 import schema from "./platform/schemas";
 import jwt from "express-jwt";
@@ -11,7 +7,7 @@ import path from "path";
 import documentPdfHandler from "./platform/handlers/pdf";
 import appConfig from "../app-config";
 
-const PORT = 4000;
+const PORT = 4004;
 const jwtConfig = {
   secret: appConfig.jwtSecret,
   credentialsRequired: false,
@@ -28,13 +24,6 @@ export function startPublications() {
   const app = express();
 
   if (mode.toUpperCase() === "DEVELOPMENT") {
-    const compiler = webpack(webpackConfig as webpack.Configuration);
-    app.use(
-      webpackDevMiddleware(compiler, {
-        publicPath: webpackConfig.output.publicPath,
-      })
-    );
-    app.use(webpackHotMiddleware(compiler));
     app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
   } else {
     const publicPath = path.resolve(__dirname, "../public");
@@ -55,6 +44,6 @@ export function startPublications() {
   app.use(onAuthError);
   app.get("/documents/:id/pdf", documentPdfHandler);
   app.listen(PORT, () => {
-    console.log(`Publications started on port ${PORT}.`);
+    console.log(`Publications API started on port ${PORT}.`);
   });
 }

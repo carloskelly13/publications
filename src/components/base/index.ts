@@ -6,7 +6,7 @@ injectGlobal`
   html, body {
     font-family: ${appFont};
     text-rendering: optimizeLegibility;
-    font-feature-settings: "kern" 1, "dlig" 1, "tnum" 1, "ss01" 1, "ss02" 1;
+    font-feature-settings: "kern" 1, "dlig" 1, "tnum" 0, "ss01" 1, "ss02" 1;
     -moz-font-feature-settings: "kern" 1, "dlig" 1;
     font-size: 14px;
   }

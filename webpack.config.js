@@ -1,18 +1,18 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: "development",
 
   entry: {
-    app: ["webpack-hot-middleware/client", "./src/app.tsx"],
+    app: ["./src/app.tsx"],
   },
 
   output: {
     filename: "app.js",
-    path: path.resolve(__dirname, "dist/public"),
-    pathinfo: true,
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "/",
   },
 
   module: {
@@ -52,13 +52,16 @@ module.exports = {
   },
 
   devServer: {
-    contentBase: __dirname,
     historyApiFallback: true,
+    host: "localhost",
+    inline: true,
+    port: 4000,
+    proxy: {
+      "/graphql": "http://localhost:4004",
+    },
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       inject: "body",

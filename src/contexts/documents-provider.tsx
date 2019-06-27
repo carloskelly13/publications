@@ -4,6 +4,7 @@ import produce from "immer";
 import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
 import cloneDeep from "clone-deep";
+import { pipe, subscribe } from "wonka";
 
 import {
   addEditorStateToObject,
@@ -36,7 +37,7 @@ import {
   CreateUserMutationResponse,
   CreateUserMutation,
 } from "../types/data";
-import { useQuery, useMutation } from "urql";
+import { useQuery, useMutation, Client } from "urql";
 import {
   currentUserQuery,
   documentsQuery,
@@ -44,18 +45,20 @@ import {
   deleteDocumentMutation,
   loginMutation,
   createUserMutation,
+  documentQuery,
 } from "../queries";
 
 export { StateContext } from "./app-state";
 
 interface Props {
+  client: Client;
   children?: React.ReactNode;
 }
 export default function DocumentsProvider(props: Props) {
   const [{ data: currentUserData }, refetchCurrentUser] = useQuery<
     CurrentUserQuery
   >({ query: currentUserQuery });
-  const [{ data: docData }] = useQuery<DocumentsQuery>({
+  const [{ data: docsData }] = useQuery<DocumentsQuery>({
     query: documentsQuery,
   });
   const [, saveDocumentAction] = useMutation<
@@ -74,12 +77,11 @@ export default function DocumentsProvider(props: Props) {
     CreateUserMutation
   >(createUserMutation);
 
-  const documents: PubDocument[] = documentsWithEditorState(
-    get("documents")(docData) || []
+  const documents: PubDocument[] | null = documentsWithEditorState(
+    get("documents")(docsData) || null
   );
   const user: PubUser | null = get("currentUser")(currentUserData) || null;
-
-  const dataLoaded = !documents;
+  const dataLoaded = documents !== null;
 
   const [
     currentDocument,
@@ -110,10 +112,30 @@ export default function DocumentsProvider(props: Props) {
 
   const getDocument = React.useCallback(
     async (id: string) => {
+      if (documents === null) {
+        try {
+          pipe(
+            props.client.executeQuery({
+              query: documentQuery,
+              variables: { id },
+              key: 0,
+            }),
+            subscribe(({ data, error }) => {
+              if (error) {
+                throw error;
+              }
+              setCurrentDocument(data.document);
+            })
+          );
+        } catch (e) {
+          console.log(e);
+        }
+        return;
+      }
       const doc = documents.filter(d => d.id === id)[0];
       setCurrentDocument(doc);
     },
-    [documents]
+    [documents, props.client]
   );
 
   const saveDocument = React.useCallback(

@@ -8,6 +8,10 @@ export interface DocumentsQuery {
   documents: Array<PubDocument>;
 }
 
+export interface DocumentQuery {
+  document: PubDocument;
+}
+
 export interface LoginMutation {
   name: string;
   password: string;

@@ -17,11 +17,17 @@ type EditorView = React.FC<
   }>
 >;
 const EditorView: EditorView = props => {
-  const { currentDocument, actions } = React.useContext(StateContext);
+  const { currentDocument, actions, dataLoaded } = React.useContext(
+    StateContext
+  );
   const getDocument = React.useRef(actions.getDocument);
+  const documentId = React.useRef(props.documentId);
   React.useEffect(() => {
-    getDocument.current(props.documentId);
-  }, [props.documentId]);
+    if (!dataLoaded) {
+      return;
+    }
+    getDocument.current(documentId.current);
+  }, [dataLoaded]);
   return (
     <Content>
       {currentDocument && (

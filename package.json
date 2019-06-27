@@ -9,7 +9,8 @@
     "build:client": "webpack --mode production --config webpack.config.production.js",
     "build:server": "tsc --project tsconfig.server.json",
     "db:migrate": "tsc --project tsconfig.migration.json",
-    "start": "nodemon --config ./nodemon.json -L",
+    "start-server": "nodemon --config ./nodemon.json -L",
+    "start-client": "webpack-dev-server",
     "test": "",
     "precommit": "npm run lint && npm run compile-check"
   },
@@ -77,6 +78,7 @@
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "@typescript-eslint/parser": "^1.6.0",
     "babel-eslint": "^10.0.1",
+    "connect-history-api-fallback": "^1.6.0",
     "css-loader": "^2.1.1",
     "eslint": "^5.15.0",
     "eslint-config-react-app": "^3.0.7",

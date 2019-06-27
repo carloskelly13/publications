@@ -6,7 +6,7 @@ import {
   ControlGrid,
   VerticalControlGrid,
 } from "./components";
-import { StateContext } from "../../contexts/documents-provider";
+import { StateContext } from "../../contexts/app-state";
 import ControlInput, { ControlInputLabel } from "../ui/control-input";
 import get from "lodash/fp/get";
 import { css } from "styled-components";
