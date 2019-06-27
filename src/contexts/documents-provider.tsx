@@ -78,10 +78,10 @@ export default function DocumentsProvider(props: Props) {
   >(createUserMutation);
 
   const documents: PubDocument[] | null = documentsWithEditorState(
-    get("documents")(docsData) || null
+    get("documents")(docsData) || []
   );
   const user: PubUser | null = get("currentUser")(currentUserData) || null;
-  const dataLoaded = documents !== null;
+  const dataLoaded = docsData !== null;
 
   const [
     currentDocument,

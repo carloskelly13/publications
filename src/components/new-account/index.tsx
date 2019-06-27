@@ -11,8 +11,6 @@ import { Colors } from "../../util/constants";
 import {
   CreateUserMutation,
   CreateUserMutationResponse,
-  LoginMutation,
-  LoginMutationResponse,
   RefetchCurrentUser,
 } from "../../types/data";
 import { StateContext } from "../../contexts/app-state";
