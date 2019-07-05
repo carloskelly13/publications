@@ -17,9 +17,10 @@ type EditorView = React.FC<
   }>
 >;
 const EditorView: EditorView = props => {
-  const { currentDocument, actions, dataLoaded } = React.useContext(
+  const { currentDocument, actions, dataLoaded, documents } = React.useContext(
     StateContext
   );
+  console.log(documents, dataLoaded);
   const getDocument = React.useRef(actions.getDocument);
   const documentId = React.useRef(props.documentId);
   React.useEffect(() => {

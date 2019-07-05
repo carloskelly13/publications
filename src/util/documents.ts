@@ -61,7 +61,7 @@ export function convertObjStylesToHTML(shape: PubShape) {
 }
 
 export function documentsWithEditorState(documents: PubDocument[] | null) {
-  if (documents === null) {
+  if (!documents) {
     return null;
   }
   return documents.map(document => addEditorStateToDocument(document));
