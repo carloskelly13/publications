@@ -36,7 +36,7 @@ export interface PubShape {
 }
 
 export interface PubPage {
-  id: string;
+  id?: string;
   width: number;
   height: number;
   pageNumber: number;

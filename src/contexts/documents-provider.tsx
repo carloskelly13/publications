@@ -5,6 +5,7 @@ import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
 import cloneDeep from "clone-deep";
 import { pipe, subscribe } from "wonka";
+import gql from "graphql-tag";
 
 import {
   addEditorStateToObject,
@@ -58,8 +59,9 @@ export default function DocumentsProvider(props: Props) {
   const [{ data: currentUserData }, refetchCurrentUser] = useQuery<
     CurrentUserQuery
   >({ query: currentUserQuery });
-  const [{ data: docsData }] = useQuery<DocumentsQuery>({
+  const [{ data: docsData }, refreshDocsData] = useQuery<DocumentsQuery>({
     query: documentsQuery,
+    requestPolicy: "network-only",
   });
   const [, saveDocumentAction] = useMutation<
     SaveDocumentMutationResponse,
@@ -116,7 +118,7 @@ export default function DocumentsProvider(props: Props) {
         try {
           pipe(
             props.client.executeQuery({
-              query: documentQuery,
+              query: gql(documentQuery),
               variables: { id },
               key: 0,
             }),
@@ -294,21 +296,15 @@ export default function DocumentsProvider(props: Props) {
       };
       if (user) {
         try {
-          const response = await saveDocumentAction({
-            document: payload,
-          } as any);
-          if (currentDocument) {
-            await saveDocument();
-          }
-          setCurrentDocument(response.data.saveDocument);
+          await saveDocumentAction({ document: payload });
+          await refreshDocsData();
           return;
         } catch (e) {
           return;
         }
       }
-      setCurrentDocument(payload as PubDocument);
     },
-    [currentDocument, saveDocument, saveDocumentAction, user]
+    [saveDocumentAction, user]
   );
 
   const deleteDocument = React.useCallback(

@@ -4,7 +4,7 @@ import appConfig from "../../../../app-config";
 
 export const pg = knex({
   client: "pg",
-  version: "9.6",
+  version: "11.3",
   connection: {
     host: appConfig.databaseHost,
     database: appConfig.databaseName,

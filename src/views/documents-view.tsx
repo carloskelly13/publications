@@ -150,6 +150,13 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     setIsCreatingNewDocument(false);
   }, [actions, newDocumentHeight, newDocumentName, newDocumentWidth]);
 
+  const handleDocumentDelete = React.useCallback(
+    async (id: string | number) => {
+      await actions.deleteDocument(id);
+    },
+    [actions]
+  );
+
   return (
     <Content>
       <DocumentsListPanel onClick={handleDocumentsPanelClick}>
@@ -199,70 +206,80 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
               </>
             )}
           </ListItem>
-          {documents.sort(documentNameSort).map(d => {
-            const isSelected = selectedDocument && selectedDocument.id === d.id;
-            const isRenaming = renamingDocumentId === d.id;
-            return (
-              <ListItem
-                className="document-item"
-                onClick={e => handleDocumentItemSelected(e, d)}
-                key={d.id}
-                selected={isSelected}
-              >
-                <PreviewPane>
-                  <Canvas
-                    thumbnail
-                    dpi={96}
-                    zoom={0}
-                    allowsEditing={false}
-                    width={d.pages[0].width}
-                    height={d.pages[0].height}
-                    sortedShapes={d.pages[0].shapes}
-                    selectedShape={null}
-                    updateSelectedObject={() => void 0}
-                  />
-                </PreviewPane>
-                <span>
-                  {isSelected && isRenaming ? (
-                    <TextInput
-                      value={selectedDocument.name}
-                      onChange={handleDocumentRename}
-                      css={inputCSS}
-                      onKeyDown={handleDocumentNameKeyDown}
+          {!!documents &&
+            documents.sort(documentNameSort).map(d => {
+              const isSelected =
+                selectedDocument && selectedDocument.id === d.id;
+              const isRenaming = renamingDocumentId === d.id;
+              return (
+                <ListItem
+                  className="document-item"
+                  onClick={e => handleDocumentItemSelected(e, d)}
+                  key={d.id}
+                  selected={isSelected}
+                >
+                  <PreviewPane>
+                    <Canvas
+                      thumbnail
+                      dpi={96}
+                      zoom={0}
+                      allowsEditing={false}
+                      width={d.pages[0].width}
+                      height={d.pages[0].height}
+                      sortedShapes={d.pages[0].shapes}
+                      selectedShape={null}
+                      updateSelectedObject={() => void 0}
                     />
-                  ) : (
-                    <strong>{d.name}</strong>
-                  )}
-                </span>
-                <span>
-                  {d.pages[0].width}” &times; {d.pages[0].height}”
-                </span>
-                <span className="action-column">
-                  {isSelected && !isRenaming && (
-                    <>
-                      <ActionButton onClick={() => navigate(`edit/${d.id}`)}>
-                        Edit
-                      </ActionButton>
-                      <ActionButton onClick={() => setRenamingDocumentId(d.id)}>
-                        Rename
-                      </ActionButton>
-                      <ActionButton>Delete</ActionButton>
-                    </>
-                  )}
-                  {isSelected && isRenaming && (
-                    <>
-                      <ActionButton onClick={handleUpdateDocumentName}>
-                        Update
-                      </ActionButton>
-                      <ActionButton onClick={() => setRenamingDocumentId(null)}>
-                        Cancel
-                      </ActionButton>
-                    </>
-                  )}
-                </span>
-              </ListItem>
-            );
-          })}
+                  </PreviewPane>
+                  <span>
+                    {isSelected && isRenaming ? (
+                      <TextInput
+                        value={selectedDocument.name}
+                        onChange={handleDocumentRename}
+                        css={inputCSS}
+                        onKeyDown={handleDocumentNameKeyDown}
+                      />
+                    ) : (
+                      <strong>{d.name}</strong>
+                    )}
+                  </span>
+                  <span>
+                    {d.pages[0].width}” &times; {d.pages[0].height}”
+                  </span>
+                  <span className="action-column">
+                    {isSelected && !isRenaming && (
+                      <>
+                        <ActionButton onClick={() => navigate(`edit/${d.id}`)}>
+                          Edit
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => setRenamingDocumentId(d.id)}
+                        >
+                          Rename
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => handleDocumentDelete(d.id)}
+                        >
+                          Delete
+                        </ActionButton>
+                      </>
+                    )}
+                    {isSelected && isRenaming && (
+                      <>
+                        <ActionButton onClick={handleUpdateDocumentName}>
+                          Update
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => setRenamingDocumentId(null)}
+                        >
+                          Cancel
+                        </ActionButton>
+                      </>
+                    )}
+                  </span>
+                </ListItem>
+              );
+            })}
         </ul>
       </DocumentsListPanel>
     </Content>
