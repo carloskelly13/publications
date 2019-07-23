@@ -304,7 +304,7 @@ export default function DocumentsProvider(props: Props) {
         }
       }
     },
-    [saveDocumentAction, user]
+    [refreshDocsData, saveDocumentAction, user]
   );
 
   const deleteDocument = React.useCallback(

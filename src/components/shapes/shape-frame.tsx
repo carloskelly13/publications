@@ -1,13 +1,9 @@
 import * as React from "react";
 import { PubShape } from "../../types/pub-objects";
 import styled from "styled-components";
-import Draggable, {
-  DraggableData,
-  DraggableEvent,
-  DraggableEventHandler,
-} from "react-draggable";
+import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
-const FrameRect = styled.rect`
+const StyledFrameRect = styled.rect`
   @media print {
     display: none;
   }
@@ -17,6 +13,18 @@ const FrameRect = styled.rect`
     fill: #9b82f3;
   }
 `;
+
+function FrameRect(props: React.SVGProps<SVGRectElement>) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { transform: _, ...rest } = props;
+  return React.createElement(StyledFrameRect, rest);
+}
+
+function AnchorSink(props: React.SVGProps<SVGGElement>) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { transform: _, ...rest } = props;
+  return React.createElement("g", rest);
+}
 
 const frameAnchors = {
   size: 10,
@@ -43,6 +51,50 @@ interface Props {
 const ShapeFrame: React.FC<Props> = props => {
   const { shape, dpi, zoom, updateSelectedObject } = props;
 
+  const handleOnDragShape = React.useCallback(
+    (e: DraggableEvent, data: DraggableData) => {
+      const x = shape.x + data.deltaX;
+      const y = shape.y + data.deltaY;
+      updateSelectedObject({
+        x: parseFloat(x.toFixed(2)),
+        y: parseFloat(y.toFixed(2)),
+      });
+    },
+    [shape.x, shape.y, updateSelectedObject]
+  );
+
+  const handleAnchorElementDrag = React.useCallback(
+    (data: DraggableData, coordinate: string) => {
+      const updatedMetrics: { [key: string]: number } = {};
+
+      if (coordinate.includes("n")) {
+        updatedMetrics.height = Math.max(shape.height - data.deltaY, 0);
+        if (shape.height > 0) {
+          updatedMetrics.y = shape.y + data.deltaY;
+        }
+      } else if (coordinate.includes("s")) {
+        updatedMetrics.height = Math.max(shape.height + data.deltaY, 0);
+      }
+
+      if (coordinate.includes("w")) {
+        updatedMetrics.width = Math.max(shape.width - data.deltaX, 0);
+        if (shape.width > 0) {
+          updatedMetrics.x = shape.x + data.deltaX;
+        }
+      } else if (coordinate.includes("e")) {
+        updatedMetrics.width = Math.max(shape.width + data.deltaX, 0);
+      }
+
+      const updatedProperties = Object.getOwnPropertyNames(updatedMetrics);
+      for (let idx = updatedProperties.length - 1; idx >= 0; idx--) {
+        const value = updatedMetrics[updatedProperties[idx]];
+        updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2));
+      }
+      updateSelectedObject(updatedMetrics);
+    },
+    [shape.height, shape.width, shape.x, shape.y, updateSelectedObject]
+  );
+
   const anchorElements = React.useMemo(
     () =>
       frameAnchors.points.map((anchor, index) => {
@@ -57,53 +109,58 @@ const ShapeFrame: React.FC<Props> = props => {
           frameAnchors.size / 2.0 +
           (shape.height * dpi + lineWidth) * zoom * anchor.y;
         return (
-          <g key={`shape-anchor-${index}`}>
-            <FrameRect
-              x={xAnchor}
-              y={yAnchor}
-              rx={frameAnchors.size / 2}
-              ry={frameAnchors.size / 2}
-              width={frameAnchors.size}
-              height={frameAnchors.size}
-              stroke="hsla(0, 0%, 0%, 0.5)"
-              strokeWidth="1"
-              fill="#785ef0"
-              fillOpacity="1"
-              strokeOpacity="1"
-            />
-            <FrameRect
-              x={xAnchor + 1}
-              y={yAnchor + 1}
-              rx={frameAnchors.size - 2 / 2}
-              ry={frameAnchors.size - 2 / 2}
-              width={frameAnchors.size - 2}
-              height={frameAnchors.size - 2}
-              strokeWidth="1"
-              fill="transparent"
-              stroke="#71cddd"
-              data-coordinate={anchor.coordinate}
-              style={style}
-            />
-          </g>
+          <Draggable
+            key={`shape-anchor-${index}`}
+            scale={zoom * dpi}
+            onDrag={(_, data) =>
+              handleAnchorElementDrag(data, anchor.coordinate)
+            }
+          >
+            <AnchorSink>
+              <FrameRect
+                x={xAnchor}
+                y={yAnchor}
+                rx={frameAnchors.size / 2}
+                ry={frameAnchors.size / 2}
+                width={frameAnchors.size}
+                height={frameAnchors.size}
+                stroke="hsla(0, 0%, 0%, 0.5)"
+                strokeWidth="1"
+                fill="#785ef0"
+                fillOpacity="1"
+                strokeOpacity="1"
+              />
+              <FrameRect
+                x={xAnchor + 1}
+                y={yAnchor + 1}
+                rx={frameAnchors.size - 2 / 2}
+                ry={frameAnchors.size - 2 / 2}
+                width={frameAnchors.size - 2}
+                height={frameAnchors.size - 2}
+                strokeWidth="1"
+                fill="transparent"
+                stroke="#71cddd"
+                data-coordinate={anchor.coordinate}
+                style={style}
+              />
+            </AnchorSink>
+          </Draggable>
         );
       }),
-    [dpi, shape.height, shape.strokeWidth, shape.width, shape.x, shape.y, zoom]
+    [
+      dpi,
+      handleAnchorElementDrag,
+      shape.height,
+      shape.strokeWidth,
+      shape.width,
+      shape.x,
+      shape.y,
+      zoom,
+    ]
   );
 
-  const handleOnDragShape = React.useCallback(
-    (e: DraggableEvent, data: DraggableData) => {
-      const x = shape.x + data.deltaX;
-      const y = shape.y + data.deltaY;
-      updateSelectedObject({
-        x: parseFloat(x.toFixed(2)),
-        y: parseFloat(y.toFixed(2)),
-      });
-    },
-    [shape.x, shape.y, dpi, updateSelectedObject, zoom]
-  );
-
-  const x = shape.x * dpi * zoom;
-  const y = shape.y * dpi * zoom;
+  const x = shape.x * dpi * zoom - shape.strokeWidth / 2.0;
+  const y = shape.y * dpi * zoom - shape.strokeWidth / 2.0;
   const width = shape.width * dpi * zoom + shape.strokeWidth;
   const height = shape.height * dpi * zoom + shape.strokeWidth;
 
