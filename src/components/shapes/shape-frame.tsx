@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PubShape } from "../../types/pub-objects";
+import { PubShape, PubShapeType } from "../../types/pub-objects";
 import styled from "styled-components";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
@@ -45,11 +45,19 @@ interface Props {
   selectedShapeId?: string;
   zoom: number;
   dpi: number;
+  activeDraftJSEditor: string | null;
   updateSelectedObject: (sender: Record<string, any> | null) => void;
-  children?: React.ReactNode;
+  setActiveDraftJSEditor(id: string | null): void;
 }
 const ShapeFrame: React.FC<Props> = props => {
-  const { shape, dpi, zoom, updateSelectedObject } = props;
+  const {
+    shape,
+    dpi,
+    zoom,
+    updateSelectedObject,
+    setActiveDraftJSEditor,
+    activeDraftJSEditor,
+  } = props;
 
   const handleOnDragShape = React.useCallback(
     (e: DraggableEvent, data: DraggableData) => {
@@ -85,10 +93,9 @@ const ShapeFrame: React.FC<Props> = props => {
         updatedMetrics.width = Math.max(shape.width + data.deltaX, 0);
       }
 
-      const updatedProperties = Object.getOwnPropertyNames(updatedMetrics);
-      for (let idx = updatedProperties.length - 1; idx >= 0; idx--) {
-        const value = updatedMetrics[updatedProperties[idx]];
-        updatedMetrics[updatedProperties[idx]] = parseFloat(value.toFixed(2));
+      for (const property in updatedMetrics) {
+        const value = updatedMetrics[property];
+        updatedMetrics[property] = parseFloat(value.toFixed(2));
       }
       updateSelectedObject(updatedMetrics);
     },
@@ -159,13 +166,31 @@ const ShapeFrame: React.FC<Props> = props => {
     ]
   );
 
+  const handleOnDoubleClick = React.useCallback(() => {
+    if (shape.type !== PubShapeType.Text) {
+      return;
+    }
+    setActiveDraftJSEditor(shape.id);
+  }, [setActiveDraftJSEditor, shape.id, shape.type]);
+
+  React.useEffect(() => {
+    return () => {
+      setActiveDraftJSEditor(null);
+    };
+  }, [setActiveDraftJSEditor]);
+
   const x = shape.x * dpi * zoom - shape.strokeWidth / 2.0;
   const y = shape.y * dpi * zoom - shape.strokeWidth / 2.0;
   const width = shape.width * dpi * zoom + shape.strokeWidth;
   const height = shape.height * dpi * zoom + shape.strokeWidth;
+  const isEditingText = shape && activeDraftJSEditor === shape.id;
+
+  if (isEditingText) {
+    return null;
+  }
 
   return (
-    <g>
+    <g onDoubleClick={handleOnDoubleClick}>
       <Draggable onDrag={handleOnDragShape} scale={zoom * dpi}>
         <FrameRect
           x={x - 0.5}

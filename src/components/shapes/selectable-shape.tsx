@@ -10,11 +10,12 @@ interface SelectableShapeProps {
   selectable: boolean;
   zoom: number;
   dpi: number;
+  activeDraftJSEditor: string | null;
   updateSelectedObject(sender: PubShape | null): void;
   setActiveDraftJSEditor(id: string | null): void;
 }
 
-const SelectableShape: React.SFC<SelectableShapeProps> = props => {
+const SelectableShape: React.FC<SelectableShapeProps> = props => {
   const {
     selectable,
     shape,
@@ -34,6 +35,8 @@ const SelectableShape: React.SFC<SelectableShapeProps> = props => {
           <ShapeFrame
             dpi={dpi}
             zoom={zoom}
+            activeDraftJSEditor={props.activeDraftJSEditor}
+            setActiveDraftJSEditor={setActiveDraftJSEditor}
             updateSelectedObject={updateSelectedObject}
             shape={shape}
           />

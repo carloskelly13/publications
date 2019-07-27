@@ -25,13 +25,12 @@ const TextBox: React.FunctionComponent<Props> = ({
 }) => {
   const readOnly = activeDraftJSEditor !== shape.id;
   const metrics = {
-    x: dpi * shape.x,
-    y: dpi * shape.y,
-    width: dpi * shape.width,
-    height: dpi * shape.height,
+    x: dpi * shape.x * zoom,
+    y: dpi * shape.y * zoom,
+    width: dpi * shape.width * zoom,
+    height: dpi * shape.height * zoom,
   };
-  const ref = React.useRef(null);
-  const transform = `scale(${zoom})`;
+  const ref = React.useRef<Editor>(null);
   React.useEffect(() => {
     if (ref.current && activeDraftJSEditor === shape.id) {
       ref.current.focus();
@@ -45,10 +44,9 @@ const TextBox: React.FunctionComponent<Props> = ({
           strokeWidth={1}
           stroke="hsla(0, 0%, 0%, 0.5)"
           fill="transparent"
-          style={{ transform }}
         />
       )}
-      <foreignObject {...metrics} style={{ transform }}>
+      <foreignObject {...metrics}>
         {typeof window !== "undefined" ? (
           <Editor
             ref={ref}

@@ -62,6 +62,7 @@ export default function Shapes(props: Props) {
             renderShape={shapeNode}
             setActiveDraftJSEditor={setActiveDraftJSEditor}
             updateSelectedObject={updateSelectedObject}
+            activeDraftJSEditor={activeDraftJSEditor}
           />
         );
       })}
