@@ -3,11 +3,13 @@ import * as React from "react";
 import produce from "immer";
 import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
+import flowRight from "lodash/fp/flowRight";
 import cloneDeep from "clone-deep";
 import { pipe, subscribe } from "wonka";
 import gql from "graphql-tag";
 
 import {
+  addEditorStateToDocument,
   addEditorStateToObject,
   convertObjStylesToHTML,
   documentsWithEditorState,
@@ -126,7 +128,10 @@ export default function DocumentsProvider(props: Props) {
               if (error) {
                 throw error;
               }
-              setCurrentDocument(data.document);
+              flowRight(
+                setCurrentDocument,
+                addEditorStateToDocument
+              )(data.document);
             })
           );
         } catch (e) {
@@ -304,7 +309,7 @@ export default function DocumentsProvider(props: Props) {
         }
       }
     },
-    [saveDocumentAction, user]
+    [refreshDocsData, saveDocumentAction, user]
   );
 
   const deleteDocument = React.useCallback(

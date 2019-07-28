@@ -1,6 +1,7 @@
 import React from "react";
-import ResizeMoveFrame from "./frame";
+// import ResizeMoveFrame from "./frame";
 import { PubShape } from "../../types/pub-objects";
+import ShapeFrame from "./shape-frame";
 
 interface SelectableShapeProps {
   renderShape: React.ReactNode;
@@ -9,11 +10,12 @@ interface SelectableShapeProps {
   selectable: boolean;
   zoom: number;
   dpi: number;
+  activeDraftJSEditor: string | null;
   updateSelectedObject(sender: PubShape | null): void;
   setActiveDraftJSEditor(id: string | null): void;
 }
 
-const SelectableShape: React.SFC<SelectableShapeProps> = props => {
+const SelectableShape: React.FC<SelectableShapeProps> = props => {
   const {
     selectable,
     shape,
@@ -29,19 +31,16 @@ const SelectableShape: React.SFC<SelectableShapeProps> = props => {
     <g onClick={selectable ? () => updateSelectedObject(shape) : undefined}>
       <>
         {renderShape}
-        {isSelected &&
-          shape && (
-            <ResizeMoveFrame
-              dpi={dpi}
-              zoom={zoom}
-              renderShape={renderShape}
-              selectable={selectable}
-              selectedShapeId={selectedShapeId}
-              setActiveDraftJSEditor={setActiveDraftJSEditor}
-              updateSelectedObject={updateSelectedObject}
-              shape={shape}
-            />
-          )}
+        {isSelected && shape && (
+          <ShapeFrame
+            dpi={dpi}
+            zoom={zoom}
+            activeDraftJSEditor={props.activeDraftJSEditor}
+            setActiveDraftJSEditor={setActiveDraftJSEditor}
+            updateSelectedObject={updateSelectedObject}
+            shape={shape}
+          />
+        )}
       </>
     </g>
   );
