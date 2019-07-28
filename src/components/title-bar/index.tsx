@@ -61,6 +61,7 @@ export default function TitleBar() {
     clipboardContents,
     selectedObject,
     zoom,
+    user,
   } = React.useContext(StateContext);
   const saveDocument = React.useCallback(() => actions.saveDocument(), [
     actions,
@@ -83,6 +84,15 @@ export default function TitleBar() {
         <PublicationsIcon size={20} />
         Publications
       </LeftControlGroup>
+      {user ? (
+        <ControlGroup>{user.name}</ControlGroup>
+      ) : (
+        <ControlGroup>
+          <TitleBarButton onPress={() => actions.setLoginModalVisible(true)}>
+            Log In
+          </TitleBarButton>
+        </ControlGroup>
+      )}
       {currentDocument && (
         <>
           <ControlGroup>

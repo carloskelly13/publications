@@ -10,7 +10,8 @@ interface Props {
   children: React.ReactNode;
   visible: boolean;
 }
-export default ({ children, visible }: Props) => (
+
+const Modal: React.FC<Props> = ({ children, visible }) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
     transitionEnterTimeout={250}
@@ -26,5 +27,7 @@ export default ({ children, visible }: Props) => (
     )}
   </ReactCSSTransitionGroup>
 );
+
+export default Modal;
 
 export { ModalContent };
