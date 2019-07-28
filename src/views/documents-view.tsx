@@ -24,7 +24,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
   const { documents, actions, loginModalVisible } = React.useContext(
     StateContext
   );
-  console.log(loginModalVisible);
   const newDocumentNameInputRef = React.useRef<HTMLInputElement>(null);
   const [
     selectedDocument,
