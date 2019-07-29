@@ -60,7 +60,7 @@ interface Props {
 export default function DocumentsProvider(props: Props) {
   const [{ data: currentUserData }, refetchCurrentUser] = useQuery<
     CurrentUserQuery
-  >({ query: currentUserQuery });
+  >({ query: currentUserQuery, requestPolicy: "network-only" });
   const [{ data: docsData }, refreshDocsData] = useQuery<DocumentsQuery>({
     query: documentsQuery,
     requestPolicy: "network-only",
@@ -223,7 +223,7 @@ export default function DocumentsProvider(props: Props) {
     setSelectedObject(null);
     setLayersPanelVisible(false);
     setZoom(1);
-    return await refetchCurrentUser({ skipCache: true });
+    return refetchCurrentUser({ skipCache: true });
   }, [refetchCurrentUser, saveDocument]);
 
   const addObject = React.useCallback(

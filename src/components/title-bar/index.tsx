@@ -84,13 +84,12 @@ export default function TitleBar() {
         <PublicationsIcon size={20} />
         Publications
       </LeftControlGroup>
-      {user ? (
-        <ControlGroup>{user.name}</ControlGroup>
-      ) : (
+      {!user && (
         <ControlGroup>
           <TitleBarButton onPress={() => actions.setLoginModalVisible(true)}>
             Log In
           </TitleBarButton>
+          <TitleBarButton onPress={() => {}}>Create Account</TitleBarButton>
         </ControlGroup>
       )}
       {currentDocument && (
