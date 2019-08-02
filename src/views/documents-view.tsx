@@ -17,8 +17,8 @@ import {
   newDocumentMetricInputCSS,
   NewDocumentMetricContainer,
 } from "../components/documents/documents-view";
-import Modal from "../components/modal";
-import { LoginDialog } from "../components/login";
+import DialogWrapper from "../components/modal";
+import LoginForm from "../components/login";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const { documents, actions, loginModalVisible } = React.useContext(
@@ -290,13 +290,9 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
           </ul>
         </DocumentsListPanel>
       </Content>
-      <Modal visible={loginModalVisible}>
-        <LoginDialog
-          refetchCurrentUser={actions.refetchCurrentUser}
-          login={actions.login}
-          onDismiss={() => actions.setLoginModalVisible(false)}
-        />
-      </Modal>
+      <DialogWrapper visible={loginModalVisible}>
+        <LoginForm />
+      </DialogWrapper>
     </>
   );
 };

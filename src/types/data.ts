@@ -46,6 +46,8 @@ export type DeleteDocumentMutationResponse = number;
 
 export type RefetchCurrentUser = (options: any) => void;
 
+export type RefetchDocuments = (options: any) => void;
+
 export enum ClipboardAction {
   Copy = "copy",
   Paste = "paste",

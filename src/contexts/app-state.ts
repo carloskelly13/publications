@@ -8,11 +8,13 @@ import {
   ClipboardAction,
   LoginMutationResponse,
   CreateUserMutationResponse,
+  RefetchDocuments,
 } from "../types/data";
 import { OperationResult } from "urql";
 
 export interface PubActions {
   refetchCurrentUser: RefetchCurrentUser;
+  refreshDocsData: RefetchDocuments;
   login(opts: LoginMutation): Promise<OperationResult<LoginMutationResponse>>;
   createUser(
     opts: CreateUserMutation

@@ -11,7 +11,7 @@ interface Props {
   visible: boolean;
 }
 
-const Modal: React.FC<Props> = ({ children, visible }) => (
+const DialogWrapper: React.FC<Props> = ({ children, visible }) => (
   <ReactCSSTransitionGroup
     transitionName="modal-transition"
     transitionEnterTimeout={250}
@@ -28,6 +28,6 @@ const Modal: React.FC<Props> = ({ children, visible }) => (
   </ReactCSSTransitionGroup>
 );
 
-export default Modal;
+export default DialogWrapper;
 
 export { ModalContent };

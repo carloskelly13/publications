@@ -377,6 +377,7 @@ export default function DocumentsProvider(props: Props) {
       adjustObjectLayer,
       handleCreateNewDocument,
       handleClipboardAction,
+      refreshDocsData,
       login,
       createUser,
       refetchCurrentUser,

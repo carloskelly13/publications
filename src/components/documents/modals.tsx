@@ -4,7 +4,7 @@
 // import NewAccountDialog from "../new-account";
 // import NewDocumentDialog from "../new-document";
 // import StartModal from "../start-modal";
-// import Modal from "../modal";
+// import DialogWrapper from "../modal";
 // import AboutPanel from "../about";
 // import { StateContext } from "../../contexts/app-state";
 
@@ -19,24 +19,24 @@
 //   } = React.useContext(StateContext);
 //   return (
 //     <>
-//       <Modal visible={startModalVisible}>
+//       <DialogWrapper visible={startModalVisible}>
 //         <StartModal />
-//       </Modal>
-//       <Modal visible={loginModalVisible}>
+//       </DialogWrapper>
+//       <DialogWrapper visible={loginModalVisible}>
 //         <LoginDialog />
-//       </Modal>
-//       <Modal visible={newAccountModalVisible}>
+//       </DialogWrapper>
+//       <DialogWrapper visible={newAccountModalVisible}>
 //         <NewAccountDialog />
-//       </Modal>
-//       <Modal visible={openDocumentModalVisible}>
+//       </DialogWrapper>
+//       <DialogWrapper visible={openDocumentModalVisible}>
 //         <OpenDocumentDialog />
-//       </Modal>
-//       <Modal visible={aboutModalVisible}>
+//       </DialogWrapper>
+//       <DialogWrapper visible={aboutModalVisible}>
 //         <AboutPanel />
-//       </Modal>
-//       <Modal visible={newDocumentModalVisible}>
+//       </DialogWrapper>
+//       <DialogWrapper visible={newDocumentModalVisible}>
 //         <NewDocumentDialog />
-//       </Modal>
+//       </DialogWrapper>
 //     </>
 //   );
 // }
