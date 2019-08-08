@@ -1,11 +1,16 @@
 import * as React from "react";
+import flowRight from "lodash/fp/flowRight";
 import { StateContext } from "../contexts/app-state";
 import { PubDocument } from "../types/pub-objects";
 import { Keys } from "../util/constants";
 import Canvas from "../components/canvas";
 import { RouteComponentProps, navigate } from "@reach/router";
 import { TextInput } from "../components/ui/inputs";
-import { documentNameSort, validatePositiveFloat } from "../util/documents";
+import {
+  addEditorStateToDocument,
+  documentNameSort,
+  validatePositiveFloat,
+} from "../util/documents";
 import {
   ActionButton,
   Content,
@@ -17,11 +22,9 @@ import {
   newDocumentMetricInputCSS,
   NewDocumentMetricContainer,
 } from "../components/documents/documents-view";
-import DialogWrapper from "../components/modal";
-import LoginForm from "../components/login";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
-  const { documents, actions, loginModalVisible } = React.useContext(
+  const { documents, actions, userFetching, user } = React.useContext(
     StateContext
   );
   const newDocumentNameInputRef = React.useRef<HTMLInputElement>(null);
@@ -55,6 +58,7 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     [selectedDocument]
   );
 
+  const hasValidUserAuthenticated = !userFetching && !!user;
   const handleCreateNewDocument = React.useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation();
@@ -83,7 +87,7 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
       setRenamingDocumentId(null);
     }
   }, [renamingDocumentId, selectedDocument]);
-  React.useEffect(() => actions.setCurrentDocument(null));
+  // React.useEffect(() => actions.setCurrentDocument(null));
 
   const handleDocumentsPanelClick = React.useCallback(() => {
     setIsCreatingNewDocument(false);
@@ -146,13 +150,41 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
   );
 
   const handleCreateNewDocumentSubmit = React.useCallback(async () => {
-    await actions.handleCreateNewDocument({
+    const newDocumentBase = {
       height: parseFloat(newDocumentHeight.toString()),
       name: newDocumentName,
       width: parseFloat(newDocumentWidth.toString()),
-    });
+    };
+    if (hasValidUserAuthenticated) {
+      await actions.handleCreateNewDocument(newDocumentBase);
+    } else {
+      const constructedDocument = {
+        name: newDocumentBase.name,
+        pages: [
+          {
+            shapes: [],
+            height: newDocumentBase.height,
+            width: newDocumentBase.width,
+            pageNumber: 1,
+          },
+        ],
+      };
+
+      flowRight(
+        actions.setCurrentDocument,
+        addEditorStateToDocument
+      )(constructedDocument);
+
+      navigate("/edit/0");
+    }
     setIsCreatingNewDocument(false);
-  }, [actions, newDocumentHeight, newDocumentName, newDocumentWidth]);
+  }, [
+    hasValidUserAuthenticated,
+    actions,
+    newDocumentHeight,
+    newDocumentName,
+    newDocumentWidth,
+  ]);
 
   const handleDocumentDelete = React.useCallback(
     async (id: string | number) => {
@@ -162,138 +194,131 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
   );
 
   return (
-    <>
-      <Content>
-        <DocumentsListPanel onClick={handleDocumentsPanelClick}>
-          <ul>
-            <ListItem
-              className="new-document-item"
-              onClick={handleCreateNewDocument}
-              selected={isCreatingNewDocument}
-            >
-              {isCreatingNewDocument ? (
-                <>
-                  <EmptyDocument>+</EmptyDocument>
+    <Content>
+      <DocumentsListPanel onClick={handleDocumentsPanelClick}>
+        <ul>
+          <ListItem
+            className="new-document-item"
+            onClick={handleCreateNewDocument}
+            selected={isCreatingNewDocument}
+          >
+            {isCreatingNewDocument ? (
+              <>
+                <EmptyDocument>+</EmptyDocument>
+                <span>
+                  <TextInput
+                    innerRef={newDocumentNameInputRef}
+                    value={newDocumentName}
+                    onChange={handleUpdateNewDocumentName}
+                    css={inputCSS}
+                  />
+                </span>
+                <NewDocumentMetricContainer>
+                  <TextInput
+                    value={newDocumentWidth}
+                    onChange={handleUpdateNewDocumentWidth}
+                    css={newDocumentMetricInputCSS}
+                  />
+                  ”&nbsp;&times;&nbsp;
+                  <TextInput
+                    value={newDocumentHeight}
+                    onChange={handleUpdateNewDocumentHeight}
+                    css={newDocumentMetricInputCSS}
+                  />
+                  ”
+                </NewDocumentMetricContainer>
+                <span className="action-column">
+                  <ActionButton onClick={handleCreateNewDocumentSubmit}>
+                    Create
+                  </ActionButton>
+                </span>
+              </>
+            ) : (
+              <>
+                <EmptyDocument>+</EmptyDocument>
+                <span>
+                  <strong>New Document</strong>
+                </span>
+              </>
+            )}
+          </ListItem>
+          {!!documents &&
+            documents.sort(documentNameSort).map(d => {
+              const isSelected =
+                selectedDocument && selectedDocument.id === d.id;
+              const isRenaming = renamingDocumentId === d.id;
+              return (
+                <ListItem
+                  className="document-item"
+                  onClick={e => handleDocumentItemSelected(e, d)}
+                  key={d.id}
+                  selected={isSelected}
+                >
+                  <PreviewPane>
+                    <Canvas
+                      thumbnail
+                      dpi={96}
+                      zoom={0}
+                      allowsEditing={false}
+                      width={d.pages[0].width}
+                      height={d.pages[0].height}
+                      sortedShapes={d.pages[0].shapes}
+                      selectedShape={null}
+                      updateSelectedObject={() => void 0}
+                    />
+                  </PreviewPane>
                   <span>
-                    <TextInput
-                      innerRef={newDocumentNameInputRef}
-                      value={newDocumentName}
-                      onChange={handleUpdateNewDocumentName}
-                      css={inputCSS}
-                    />
-                  </span>
-                  <NewDocumentMetricContainer>
-                    <TextInput
-                      value={newDocumentWidth}
-                      onChange={handleUpdateNewDocumentWidth}
-                      css={newDocumentMetricInputCSS}
-                    />
-                    ”&nbsp;&times;&nbsp;
-                    <TextInput
-                      value={newDocumentHeight}
-                      onChange={handleUpdateNewDocumentHeight}
-                      css={newDocumentMetricInputCSS}
-                    />
-                    ”
-                  </NewDocumentMetricContainer>
-                  <span className="action-column">
-                    <ActionButton onClick={handleCreateNewDocumentSubmit}>
-                      Create
-                    </ActionButton>
-                  </span>
-                </>
-              ) : (
-                <>
-                  <EmptyDocument>+</EmptyDocument>
-                  <span>
-                    <strong>New Document</strong>
-                  </span>
-                </>
-              )}
-            </ListItem>
-            {!!documents &&
-              documents.sort(documentNameSort).map(d => {
-                const isSelected =
-                  selectedDocument && selectedDocument.id === d.id;
-                const isRenaming = renamingDocumentId === d.id;
-                return (
-                  <ListItem
-                    className="document-item"
-                    onClick={e => handleDocumentItemSelected(e, d)}
-                    key={d.id}
-                    selected={isSelected}
-                  >
-                    <PreviewPane>
-                      <Canvas
-                        thumbnail
-                        dpi={96}
-                        zoom={0}
-                        allowsEditing={false}
-                        width={d.pages[0].width}
-                        height={d.pages[0].height}
-                        sortedShapes={d.pages[0].shapes}
-                        selectedShape={null}
-                        updateSelectedObject={() => void 0}
+                    {isSelected && isRenaming ? (
+                      <TextInput
+                        value={selectedDocument.name}
+                        onChange={handleDocumentRename}
+                        css={inputCSS}
+                        onKeyDown={handleDocumentNameKeyDown}
                       />
-                    </PreviewPane>
-                    <span>
-                      {isSelected && isRenaming ? (
-                        <TextInput
-                          value={selectedDocument.name}
-                          onChange={handleDocumentRename}
-                          css={inputCSS}
-                          onKeyDown={handleDocumentNameKeyDown}
-                        />
-                      ) : (
-                        <strong>{d.name}</strong>
-                      )}
-                    </span>
-                    <span>
-                      {d.pages[0].width}” &times; {d.pages[0].height}”
-                    </span>
-                    <span className="action-column">
-                      {isSelected && !isRenaming && (
-                        <>
-                          <ActionButton
-                            onClick={() => navigate(`edit/${d.id}`)}
-                          >
-                            Edit
-                          </ActionButton>
-                          <ActionButton
-                            onClick={() => setRenamingDocumentId(d.id)}
-                          >
-                            Rename
-                          </ActionButton>
-                          <ActionButton
-                            onClick={() => handleDocumentDelete(d.id)}
-                          >
-                            Delete
-                          </ActionButton>
-                        </>
-                      )}
-                      {isSelected && isRenaming && (
-                        <>
-                          <ActionButton onClick={handleUpdateDocumentName}>
-                            Update
-                          </ActionButton>
-                          <ActionButton
-                            onClick={() => setRenamingDocumentId(null)}
-                          >
-                            Cancel
-                          </ActionButton>
-                        </>
-                      )}
-                    </span>
-                  </ListItem>
-                );
-              })}
-          </ul>
-        </DocumentsListPanel>
-      </Content>
-      <DialogWrapper visible={loginModalVisible}>
-        <LoginForm />
-      </DialogWrapper>
-    </>
+                    ) : (
+                      <strong>{d.name}</strong>
+                    )}
+                  </span>
+                  <span>
+                    {d.pages[0].width}” &times; {d.pages[0].height}”
+                  </span>
+                  <span className="action-column">
+                    {isSelected && !isRenaming && (
+                      <>
+                        <ActionButton onClick={() => navigate(`edit/${d.id}`)}>
+                          Edit
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => setRenamingDocumentId(d.id)}
+                        >
+                          Rename
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => handleDocumentDelete(d.id)}
+                        >
+                          Delete
+                        </ActionButton>
+                      </>
+                    )}
+                    {isSelected && isRenaming && (
+                      <>
+                        <ActionButton onClick={handleUpdateDocumentName}>
+                          Update
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => setRenamingDocumentId(null)}
+                        >
+                          Cancel
+                        </ActionButton>
+                      </>
+                    )}
+                  </span>
+                </ListItem>
+              );
+            })}
+        </ul>
+      </DocumentsListPanel>
+    </Content>
   );
 };
 

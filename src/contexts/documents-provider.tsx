@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import produce from "immer";
 import get from "lodash/fp/get";
 import pick from "lodash/fp/pick";
@@ -58,9 +57,13 @@ interface Props {
   children?: React.ReactNode;
 }
 export default function DocumentsProvider(props: Props) {
-  const [{ data: currentUserData }, refetchCurrentUser] = useQuery<
-    CurrentUserQuery
-  >({ query: currentUserQuery, requestPolicy: "network-only" });
+  const [
+    { data: currentUserData, fetching: userFetching },
+    refetchCurrentUser,
+  ] = useQuery<CurrentUserQuery>({
+    query: currentUserQuery,
+    requestPolicy: "network-only",
+  });
   const [{ data: docsData }, refreshDocsData] = useQuery<DocumentsQuery>({
     query: documentsQuery,
     requestPolicy: "network-only",
@@ -91,6 +94,7 @@ export default function DocumentsProvider(props: Props) {
     currentDocument,
     setCurrentDocument,
   ] = React.useState<PubDocument | null>(null);
+
   const [selectedObject, setSelectedObject] = React.useState<PubShape | null>(
     null
   );
@@ -113,6 +117,7 @@ export default function DocumentsProvider(props: Props) {
   const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
   const [layersPanelVisible, setLayersPanelVisible] = React.useState(false);
+  const [saveDialogVisible, setSaveDialogVisible] = React.useState(false);
 
   const getDocument = React.useCallback(
     async (id: string) => {
@@ -135,7 +140,7 @@ export default function DocumentsProvider(props: Props) {
             })
           );
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
         return;
       }
@@ -222,9 +227,10 @@ export default function DocumentsProvider(props: Props) {
     setCurrentDocument(null);
     setSelectedObject(null);
     setLayersPanelVisible(false);
+    await refreshDocsData();
     setZoom(1);
     return refetchCurrentUser({ skipCache: true });
-  }, [refetchCurrentUser, saveDocument]);
+  }, [refetchCurrentUser, refreshDocsData, saveDocument]);
 
   const addObject = React.useCallback(
     (sender: PubShape) => {
@@ -365,6 +371,7 @@ export default function DocumentsProvider(props: Props) {
       setNewAccountModalVisible,
       setNewDocumentModalVisible,
       setOpenDocumentModalVisible,
+      setSaveDialogVisible,
       setZoom,
       getDocument,
       saveDocument,
@@ -396,7 +403,9 @@ export default function DocumentsProvider(props: Props) {
     loginModalVisible,
     startModalVisible,
     newAccountModalVisible,
+    saveDialogVisible,
     layersPanelVisible,
+    userFetching,
   };
 
   return (

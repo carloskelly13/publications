@@ -63,7 +63,7 @@ interface Props {
   onClick?(): void;
 }
 
-const Button: React.SFC<Props> = ({
+const Button: React.FC<Props> = ({
   children,
   disabled,
   destructive,

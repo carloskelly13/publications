@@ -2,12 +2,14 @@ import * as React from "react";
 import styled, { css } from "styled-components";
 import { appFont, Colors } from "../../util/constants";
 
-const Button = styled.button<{ noLabel?: boolean }>`
+const Button = styled.button<{ noLabel?: boolean; active?: boolean }>`
   display: flex;
   background: transparent;
   border: none;
   font-family: ${appFont};
   font-weight: 500;
+  padding: 0 8px;
+  height: 24px;
   font-size: 12px;
   margin: 0;
   color: ${Colors.Button.Text};
@@ -23,9 +25,11 @@ const Button = styled.button<{ noLabel?: boolean }>`
       `};
   }
 
-  &:active:not(:disabled) {
-    transform: scale(0.95);
-  }
+  ${({ active }) =>
+    active &&
+    css`
+      background-color: ${Colors.Button.ActiveBackground};
+    `};
 
   &:disabled {
     cursor: not-allowed;
@@ -37,6 +41,7 @@ interface Props {
   disabled?: boolean;
   noLabel?: boolean;
   children?: React.ReactNode;
+  active?: boolean;
   onPress?(): void;
 }
 export default function TitleBarButton(props: Props) {
@@ -45,6 +50,7 @@ export default function TitleBarButton(props: Props) {
       disabled={props.disabled}
       noLabel={props.noLabel}
       onClick={props.onPress}
+      active={props.active}
     >
       {props.children}
     </Button>

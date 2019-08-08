@@ -62,6 +62,7 @@ export const Colors = {
     Border: "hsla(0, 0%, 0%, 0.5)",
     Outline: "#9b82f3",
     Background: "#5c5e65",
+    ActiveBackground: "#9b82f3",
     DestructiveBackground: "#e62325",
     Text: "#fff",
   },
@@ -69,6 +70,9 @@ export const Colors = {
     Background: "#9b82f3",
     Border: "#7165b2",
     Text: "#fff",
+  },
+  Dialog: {
+    TextColor: "#fff",
   },
   Menu: {
     Background: "rgba(41, 41, 44, 0.95)",
@@ -136,11 +140,11 @@ export const Colors = {
     LayerItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
     LayerItemBorder: "hsla(0, 0%, 0%, 0.33)",
     TabInactiveBackground: "#38393d",
-    TabActiveBackground: "#9753e1",
+    TabActiveBackground: "#9b82f3",
     TabIconBorderInactive: "#232323",
     TabIconBorderActive: "#232323",
     TabIconFillInactive: "#38393d",
-    TabIconFillActive: "#9753e1",
+    TabIconFillActive: "#9b82f3",
     SectionTitleText: "#bbb",
   },
   Rulers: {
