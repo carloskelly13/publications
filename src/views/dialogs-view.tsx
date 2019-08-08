@@ -4,12 +4,14 @@ import DialogWrapper from "../components/modal";
 import LoginForm from "../components/login";
 import AboutPanel from "../components/about";
 import SaveDialog from "../components/save-dialog";
+import NewAccountForm from "../components/new-account";
 
 const DialogsView: React.FC = () => {
   const {
     loginModalVisible,
     aboutModalVisible,
     saveDialogVisible,
+    newAccountModalVisible,
   } = React.useContext(StateContext);
   return (
     <>
@@ -21,6 +23,9 @@ const DialogsView: React.FC = () => {
       </DialogWrapper>
       <DialogWrapper visible={saveDialogVisible}>
         <SaveDialog />
+      </DialogWrapper>
+      <DialogWrapper visible={newAccountModalVisible}>
+        <NewAccountForm />
       </DialogWrapper>
     </>
   );
