@@ -21,7 +21,7 @@ export const ModalContent = styled.div`
   background: ${Colors.Modal.ModalBackground};
   box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, 0.05),
     0 1px 35px hsla(0, 0%, 0%, 0.35);
-  border-radius: 8px;
+  border-radius: 2px;
   margin: auto;
   padding: 0 0 calc(1.5em + 50px);
   position: relative;

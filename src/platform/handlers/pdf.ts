@@ -40,9 +40,8 @@ function generateHtmlFromDocument(document: PubDocument) {
 }
 
 export default async function documentPdfHandler(req: Request, res: Response) {
-  const { id } = req.params;
+  const { document } = req.body;
   try {
-    const [document] = await db.getDocument({ id, userId: req.user.id });
     const documentHtml = generateHtmlFromDocument(document as any);
     const { width, height } = document.pages[0] as PubPage;
     const isLandscape = width > height;

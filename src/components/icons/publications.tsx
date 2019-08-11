@@ -3,6 +3,7 @@ import { Colors } from "../../util/constants";
 
 interface Props {
   size: number;
+  stroke?: string;
 }
 export default function PublicationsIcon(props: Props) {
   return (
@@ -15,12 +16,12 @@ export default function PublicationsIcon(props: Props) {
         />
         <path
           d="M0.5,3.5 L0.5,6.5 L14.5,6.5 L14.5,20.5 L17.5,20.5 L17.5,3.5 L0.5,3.5 Z"
-          stroke={Colors.TitleBar.Background}
+          stroke={props.stroke || Colors.TitleBar.Background}
           fill="#fff"
         />
         <path
           d="M19.5,15.5 L5.5,15.5 L5.5,1.5 L2.5,1.5 L2.5,18.5 L19.5,18.5 L19.5,15.5 Z"
-          stroke={Colors.TitleBar.Background}
+          stroke={props.stroke || Colors.TitleBar.Background}
           fill="#fff"
         />
       </g>

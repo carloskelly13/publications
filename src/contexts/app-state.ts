@@ -8,11 +8,13 @@ import {
   ClipboardAction,
   LoginMutationResponse,
   CreateUserMutationResponse,
+  RefetchDocuments,
 } from "../types/data";
 import { OperationResult } from "urql";
 
 export interface PubActions {
   refetchCurrentUser: RefetchCurrentUser;
+  refreshDocsData: RefetchDocuments;
   login(opts: LoginMutation): Promise<OperationResult<LoginMutationResponse>>;
   createUser(
     opts: CreateUserMutation
@@ -41,6 +43,7 @@ export interface PubActions {
   setNewAccountModalVisible(visible: boolean): void;
   setLoginModalVisible(visible: boolean): void;
   setAboutModalVisible(visible: boolean): void;
+  setSaveDialogVisible(visible: boolean): void;
   setCurrentDocument: React.Dispatch<PubDocument | null>;
 }
 
@@ -60,6 +63,8 @@ export interface PubAppState {
   openDocumentModalVisible: boolean;
   aboutModalVisible: boolean;
   newDocumentModalVisible: boolean;
+  saveDialogVisible: boolean;
+  userFetching: boolean;
 }
 
 export const StateContext = React.createContext<PubAppState>(

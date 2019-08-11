@@ -8,13 +8,7 @@ import { ModalButtonContainer } from "../ui/button-container";
 import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
-import {
-  CreateUserMutation,
-  CreateUserMutationResponse,
-  RefetchCurrentUser,
-} from "../../types/data";
 import { StateContext } from "../../contexts/app-state";
-import { OperationResult } from "urql";
 
 export interface NewAccount {
   name: string;
@@ -23,14 +17,6 @@ export interface NewAccount {
 
 interface NewAccountFormValues extends NewAccount {
   confirmPassword: string;
-}
-
-interface Props {
-  refetchCurrentUser: RefetchCurrentUser;
-  onCreateAccount(
-    opts: CreateUserMutation
-  ): Promise<OperationResult<CreateUserMutationResponse>>;
-  onDismiss(): void;
 }
 
 const NewAccountModalContent = styled(ModalContent)`
@@ -60,100 +46,93 @@ const validationSchema = yup.object().shape({
     .required("Password confirmation is required."),
 });
 
-class NewAccountForm extends React.Component<Props> {
-  handleOnSubmit = async (
-    values: NewAccountFormValues,
-    formikProps: FormikProps<NewAccountFormValues>
-  ) => {
-    try {
-      const {
-        data: { createUser },
-      } = await this.props.onCreateAccount({
-        name: values.name,
-        password: values.password,
-      });
-      window.localStorage.setItem("authorization_token", createUser.token);
-      formikProps.setSubmitting(false);
-      this.props.onDismiss();
-      return this.props.refetchCurrentUser({ skipCache: true });
-    } catch (e) {
-      formikProps.setErrors({ name: e });
-      return;
-    }
-  };
+const NewAccountForm: React.FC = () => {
+  const { actions } = React.useContext(StateContext);
+  const handleOnSubmit = React.useCallback(
+    async (
+      values: NewAccountFormValues,
+      formikProps: FormikProps<NewAccountFormValues>
+    ) => {
+      try {
+        const {
+          data: { createUser },
+        } = await actions.createUser({
+          name: values.name,
+          password: values.password,
+        });
+        window.localStorage.setItem("authorization_token", createUser.token);
+        formikProps.setSubmitting(false);
+        actions.setNewAccountModalVisible(false);
+        return actions.refetchCurrentUser({ skipCache: true });
+      } catch (e) {
+        formikProps.setErrors({ name: e });
+        return;
+      }
+    },
+    [actions]
+  );
 
-  render() {
-    return (
-      <Formik
-        initialValues={{
-          name: "",
-          password: "",
-          confirmPassword: "",
-        }}
-        isInitialValid={false}
-        onSubmit={this.handleOnSubmit}
-        validationSchema={validationSchema}
-        render={({
-          handleSubmit,
-          handleChange,
-          errors,
-          values,
-          isSubmitting,
-        }: FormikProps<NewAccountFormValues>) => (
-          <NewAccountModalContent>
-            <ModalHeader>Create a new account</ModalHeader>
-            <Form onSubmit={handleSubmit}>
-              {errors.name && <Error>{errors.name}</Error>}
-              <FormInput
-                placeholder="Email Address"
-                type="email"
-                name="name"
-                autoComplete="email"
-                onChange={handleChange}
-                value={values.name}
-              />
-              {errors.password && <Error>{errors.password}</Error>}
-              <FormInput
-                placeholder="Password"
-                type="password"
-                name="password"
-                onChange={handleChange}
-                value={values.password}
-              />
-              {errors.confirmPassword && (
-                <Error>{errors.confirmPassword}</Error>
-              )}
-              <FormInput
-                placeholder="Confirm Password"
-                type="password"
-                name="confirmPassword"
-                onChange={handleChange}
-                value={values.confirmPassword}
-              />
-              <ModalButtonContainer>
-                <Button type="submit" marginRight disabled={isSubmitting}>
-                  Create Account
-                </Button>
-                <Button type="button" onClick={this.props.onDismiss}>
-                  Close
-                </Button>
-              </ModalButtonContainer>
-            </Form>
-          </NewAccountModalContent>
-        )}
-      />
-    );
-  }
-}
+  return (
+    <Formik
+      initialValues={{
+        name: "",
+        password: "",
+        confirmPassword: "",
+      }}
+      isInitialValid={false}
+      onSubmit={handleOnSubmit}
+      validationSchema={validationSchema}
+      render={({
+        handleSubmit,
+        handleChange,
+        errors,
+        values,
+        isSubmitting,
+      }: FormikProps<NewAccountFormValues>) => (
+        <NewAccountModalContent>
+          <ModalHeader>Create a new account</ModalHeader>
+          <Form onSubmit={handleSubmit}>
+            {errors.name && <Error>{errors.name}</Error>}
+            <FormInput
+              placeholder="Email Address"
+              type="email"
+              name="name"
+              autoComplete="email"
+              onChange={handleChange}
+              value={values.name}
+            />
+            {errors.password && <Error>{errors.password}</Error>}
+            <FormInput
+              placeholder="Password"
+              type="password"
+              name="password"
+              onChange={handleChange}
+              value={values.password}
+            />
+            {errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
+            <FormInput
+              placeholder="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              onChange={handleChange}
+              value={values.confirmPassword}
+            />
+            <ModalButtonContainer>
+              <Button type="submit" marginRight disabled={isSubmitting}>
+                Create Account
+              </Button>
+              <Button
+                type="button"
+                onClick={() => actions.setNewAccountModalVisible(false)}
+              >
+                Close
+              </Button>
+            </ModalButtonContainer>
+          </Form>
+        </NewAccountModalContent>
+      )}
+    />
+  );
+};
 
-export default () => (
-  <StateContext.Consumer>
-    {({ actions }) => (
-      <NewAccountForm
-        onCreateAccount={actions.createUser}
-        refetchCurrentUser={actions.refetchCurrentUser}
-        onDismiss={() => actions.setNewAccountModalVisible(false)}
-      />
-    )}
-  </StateContext.Consumer>
-);
+export default NewAccountForm;

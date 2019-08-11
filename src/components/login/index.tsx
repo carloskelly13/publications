@@ -38,25 +38,31 @@ interface LoginFormErrors {
   password?: boolean;
 }
 
-export class LoginDialog extends React.Component<Props> {
-  state = {
-    errorLoggingIn: false,
-  };
+const LoginForm: React.FC = () => {
+  const [errorLoggingIn, setErrorLoggingIn] = React.useState(false);
+  const { actions } = React.useContext(StateContext);
 
-  login = async (payload: LoginFormValues) => {
-    const {
-      data: { login },
-    } = await this.props.login(payload);
-    if (login && login.token) {
-      window.localStorage.setItem("authorization_token", login.token);
-    } else {
-      this.setState({ errorLoggingIn: false });
-    }
-    this.props.onDismiss();
-    return this.props.refetchCurrentUser({ skipCache: true });
-  };
+  const login = React.useCallback(
+    async (payload: LoginFormValues) => {
+      const {
+        data: { login },
+      } = await actions.login(payload);
+      if (login && login.token) {
+        setErrorLoggingIn(false);
+        window.localStorage.setItem("authorization_token", login.token);
+      } else {
+        setErrorLoggingIn(true);
+      }
+      actions.setLoginModalVisible(false);
+      return Promise.all([
+        actions.refetchCurrentUser({ skipCache: true }),
+        actions.refreshDocsData({ skipCache: true }),
+      ]);
+    },
+    [actions]
+  );
 
-  validateForm = values => {
+  const validateForm = React.useCallback(values => {
     const errors: LoginFormErrors = {};
     if (!values.name) {
       errors.name = true;
@@ -65,69 +71,61 @@ export class LoginDialog extends React.Component<Props> {
       errors.password = true;
     }
     return errors;
-  };
+  }, []);
 
-  render() {
-    return (
-      <Formik
-        initialValues={{
-          name: "",
-          password: "",
-        }}
-        validate={this.validateForm}
-        onSubmit={(values: LoginFormValues, { setSubmitting }) => {
-          this.login(values);
-          setSubmitting(false);
-        }}
-        render={({
-          values,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-        }: FormikProps<LoginFormValues>) => (
-          <LoginModalContent>
-            <ModalHeader>Log In</ModalHeader>
-            <Form onSubmit={handleSubmit}>
-              <FormInput
-                placeholder="Email Address"
-                type="email"
-                name="name"
-                autoComplete="email"
-                onChange={handleChange}
-                value={values.name}
-              />
-              <FormInput
-                placeholder="Password"
-                type="password"
-                name="password"
-                autoComplete="current-password"
-                onChange={handleChange}
-                value={values.password}
-              />
-              <ModalButtonContainer>
-                <Button type="submit" marginRight disabled={isSubmitting}>
-                  Log In
-                </Button>
-                <Button type="button" onClick={this.props.onDismiss}>
-                  Close
-                </Button>
-              </ModalButtonContainer>
-            </Form>
-          </LoginModalContent>
-        )}
-      />
-    );
-  }
-}
+  return (
+    <Formik
+      initialValues={{
+        name: "",
+        password: "",
+      }}
+      validate={validateForm}
+      onSubmit={(values: LoginFormValues, { setSubmitting }) => {
+        login(values);
+        setSubmitting(false);
+      }}
+      render={({
+        values,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+      }: FormikProps<LoginFormValues>) => (
+        <LoginModalContent>
+          <ModalHeader>Log In</ModalHeader>
+          {errorLoggingIn && <div>oops!</div>}
+          <Form onSubmit={handleSubmit}>
+            <FormInput
+              placeholder="Email Address"
+              type="email"
+              name="name"
+              autoComplete="email"
+              onChange={handleChange}
+              value={values.name}
+            />
+            <FormInput
+              placeholder="Password"
+              type="password"
+              name="password"
+              autoComplete="current-password"
+              onChange={handleChange}
+              value={values.password}
+            />
+            <ModalButtonContainer>
+              <Button type="submit" marginRight disabled={isSubmitting}>
+                Log In
+              </Button>
+              <Button
+                type="button"
+                onClick={() => actions.setLoginModalVisible(false)}
+              >
+                Close
+              </Button>
+            </ModalButtonContainer>
+          </Form>
+        </LoginModalContent>
+      )}
+    />
+  );
+};
 
-export default () => (
-  <StateContext.Consumer>
-    {({ actions }) => (
-      <LoginDialog
-        login={actions.login}
-        refetchCurrentUser={actions.refetchCurrentUser}
-        onDismiss={() => actions.setLoginModalVisible(false)}
-      />
-    )}
-  </StateContext.Consumer>
-);
+export default LoginForm;

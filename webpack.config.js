@@ -58,6 +58,7 @@ module.exports = {
     port: 4000,
     proxy: {
       "/graphql": "http://localhost:4004",
+      "/documents/*/pdf": "http://localhost:4004",
     },
   },
 

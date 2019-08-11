@@ -8,7 +8,7 @@ export const MenuList = styled.ul<{ alignRight?: boolean }>`
   list-style: none;
   color: ${AppColors.White};
   padding: 4px 0;
-  margin: 0 0 0 3px;
+  margin: 0 0 0 -1px;
   min-width: 125px;
   border-radius: 0 0 4px 4px;
   position: absolute;
@@ -40,7 +40,7 @@ export const MenuDivider = styled.div`
   height: 1px;
   margin: 2px 0;
   display: block;
-  background: hsla(0, 0%, 0%, 0.15);
+  background: hsla(0, 0%, 100%, 0.15);
 `;
 
 export const MenuItem = styled.button<{ noExtraRightPadding?: boolean }>`
@@ -84,7 +84,8 @@ interface MenuProps {
   renderMenu: React.ReactNode;
   disabled?: boolean;
   renderButton(
-    setMenuActive: Dispatch<SetStateAction<boolean>>
+    setMenuActive: Dispatch<SetStateAction<boolean>>,
+    menuActive: boolean
   ): React.ReactNode;
 }
 
@@ -94,7 +95,7 @@ export default function Menu(props: MenuProps) {
   useOnClickOutside(ref, () => setMenuActive(false));
   return (
     <MenuContainer innerRef={ref}>
-      {props.renderButton(setMenuActive)}
+      {props.renderButton(setMenuActive, menuActive)}
       {menuActive && (
         <MenuList
           alignRight={props.alignRight}

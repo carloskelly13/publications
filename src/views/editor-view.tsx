@@ -2,13 +2,14 @@ import * as React from "react";
 import styled from "styled-components";
 import LayersSidebar from "../components/inspector";
 import Editor from "../components/editor";
-import { RouteComponentProps } from "@reach/router";
+import { navigate, RouteComponentProps } from "@reach/router";
 import { StateContext } from "../contexts/app-state";
 
 const Content = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
+  width: 100%;
 `;
 
 type EditorView = React.FC<
@@ -17,17 +18,27 @@ type EditorView = React.FC<
   }>
 >;
 const EditorView: EditorView = props => {
-  const { currentDocument, actions, dataLoaded } = React.useContext(
-    StateContext
-  );
+  const {
+    currentDocument,
+    actions,
+    dataLoaded,
+    userFetching,
+    user,
+  } = React.useContext(StateContext);
   const getDocument = React.useRef(actions.getDocument);
   const documentId = React.useRef(props.documentId);
   React.useEffect(() => {
-    if (!dataLoaded) {
+    if (userFetching || !dataLoaded || currentDocument) {
       return;
     }
-    getDocument.current(documentId.current);
-  }, [dataLoaded]);
+    if (!userFetching && !user && !currentDocument) {
+      navigate("/");
+      return;
+    }
+    if (user && !currentDocument) {
+      getDocument.current(documentId.current);
+    }
+  }, [currentDocument, dataLoaded, userFetching, user]);
   return (
     <Content>
       {currentDocument && (

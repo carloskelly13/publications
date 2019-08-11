@@ -1,11 +1,16 @@
 import * as React from "react";
+import flowRight from "lodash/fp/flowRight";
 import { StateContext } from "../contexts/app-state";
 import { PubDocument } from "../types/pub-objects";
 import { Keys } from "../util/constants";
 import Canvas from "../components/canvas";
 import { RouteComponentProps, navigate } from "@reach/router";
 import { TextInput } from "../components/ui/inputs";
-import { documentNameSort, validatePositiveFloat } from "../util/documents";
+import {
+  addEditorStateToDocument,
+  documentNameSort,
+  validatePositiveFloat,
+} from "../util/documents";
 import {
   ActionButton,
   Content,
@@ -19,7 +24,9 @@ import {
 } from "../components/documents/documents-view";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
-  const { documents, actions } = React.useContext(StateContext);
+  const { documents, actions, userFetching, user } = React.useContext(
+    StateContext
+  );
   const newDocumentNameInputRef = React.useRef<HTMLInputElement>(null);
   const [
     selectedDocument,
@@ -51,6 +58,7 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     [selectedDocument]
   );
 
+  const hasValidUserAuthenticated = !userFetching && !!user;
   const handleCreateNewDocument = React.useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation();
@@ -79,7 +87,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
       setRenamingDocumentId(null);
     }
   }, [renamingDocumentId, selectedDocument]);
-  React.useEffect(() => actions.setCurrentDocument(null));
 
   const handleDocumentsPanelClick = React.useCallback(() => {
     setIsCreatingNewDocument(false);
@@ -142,13 +149,41 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
   );
 
   const handleCreateNewDocumentSubmit = React.useCallback(async () => {
-    await actions.handleCreateNewDocument({
+    const newDocumentBase = {
       height: parseFloat(newDocumentHeight.toString()),
       name: newDocumentName,
       width: parseFloat(newDocumentWidth.toString()),
-    });
+    };
+    if (hasValidUserAuthenticated) {
+      await actions.handleCreateNewDocument(newDocumentBase);
+    } else {
+      const constructedDocument = {
+        name: newDocumentBase.name,
+        pages: [
+          {
+            shapes: [],
+            height: newDocumentBase.height,
+            width: newDocumentBase.width,
+            pageNumber: 1,
+          },
+        ],
+      };
+
+      flowRight(
+        actions.setCurrentDocument,
+        addEditorStateToDocument
+      )(constructedDocument);
+
+      navigate("/edit/0");
+    }
     setIsCreatingNewDocument(false);
-  }, [actions, newDocumentHeight, newDocumentName, newDocumentWidth]);
+  }, [
+    hasValidUserAuthenticated,
+    actions,
+    newDocumentHeight,
+    newDocumentName,
+    newDocumentWidth,
+  ]);
 
   const handleDocumentDelete = React.useCallback(
     async (id: string | number) => {

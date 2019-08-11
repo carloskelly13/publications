@@ -15,7 +15,7 @@ import TitleBarButton from "./title-bar-button";
 import { StateContext } from "../../contexts/app-state";
 import downloadPdfAction from "../../util/download-pdf";
 import { ClipboardAction } from "../../types/data";
-import Menu, { MenuItem } from "../ui/menu";
+import Menu, { MenuDivider, MenuItem } from "../ui/menu";
 import { Shapes } from "../../util/new-shapes";
 
 const Container = styled.header`
@@ -61,13 +61,18 @@ export default function TitleBar() {
     clipboardContents,
     selectedObject,
     zoom,
+    user,
+    userFetching,
   } = React.useContext(StateContext);
+  const hasValidUserAuthenticated = !userFetching && !!user;
+  const hasNoUserAuthenticated = !userFetching && !user;
+
   const saveDocument = React.useCallback(() => actions.saveDocument(), [
     actions,
   ]);
   const downloadPdf = React.useCallback(
-    () => actions.saveDocument().then(downloadPdfAction),
-    [actions]
+    () => downloadPdfAction(currentDocument),
+    [currentDocument]
   );
   const zoomIn = React.useCallback(
     () => actions.setZoom(Math.min(4.0, zoom + 0.25)),
@@ -80,8 +85,56 @@ export default function TitleBar() {
   return (
     <Container>
       <LeftControlGroup>
-        <PublicationsIcon size={20} />
-        Publications
+        <Menu
+          renderButton={(setMenuActive, menuActive) => (
+            <TitleBarButton
+              active={menuActive}
+              onPress={() => setMenuActive(prevState => !prevState)}
+            >
+              <PublicationsIcon
+                stroke={
+                  menuActive
+                    ? Colors.Button.ActiveBackground
+                    : Colors.TitleBar.Background
+                }
+                size={20}
+              />
+              Publications
+            </TitleBarButton>
+          )}
+          renderMenu={
+            <>
+              {currentDocument && hasValidUserAuthenticated && (
+                <>
+                  <MenuItem onClick={() => actions.setSaveDialogVisible(true)}>
+                    View All Documents
+                  </MenuItem>
+                  <MenuDivider />
+                </>
+              )}
+              {hasValidUserAuthenticated && (
+                <MenuItem onClick={actions.logout}>Log Out</MenuItem>
+              )}
+              {hasNoUserAuthenticated && (
+                <>
+                  <MenuItem onClick={() => actions.setLoginModalVisible(true)}>
+                    Log In…
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => actions.setNewAccountModalVisible(true)}
+                  >
+                    Create Account…
+                  </MenuItem>
+                </>
+              )}
+              <MenuDivider />
+
+              <MenuItem onClick={() => actions.setAboutModalVisible(true)}>
+                About Publications…
+              </MenuItem>
+            </>
+          }
+        />
       </LeftControlGroup>
       {currentDocument && (
         <>
@@ -95,9 +148,10 @@ export default function TitleBar() {
               PDF
             </TitleBarButton>
             <Menu
-              renderButton={setMenuActive => (
+              renderButton={(setMenuActive, active) => (
                 <TitleBarButton
                   disabled={!currentDocument}
+                  active={active}
                   onPress={() => setMenuActive(prevState => !prevState)}
                 >
                   <VectorShapeIcon />

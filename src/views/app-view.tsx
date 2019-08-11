@@ -5,6 +5,7 @@ import EditorView from "./editor-view";
 import DocumentsView from "./documents-view";
 import { Router } from "@reach/router";
 import styled from "styled-components";
+import DialogsView from "./dialogs-view";
 
 const StyledRouter = styled(Router)`
   flex: 1;
@@ -12,13 +13,16 @@ const StyledRouter = styled(Router)`
 `;
 
 const AppView: React.FC = () => (
-  <AppContainer>
-    <TitleBar />
-    <StyledRouter>
-      <DocumentsView path="/" default />
-      <EditorView path="edit/:documentId" />
-    </StyledRouter>
-  </AppContainer>
+  <>
+    <AppContainer>
+      <TitleBar />
+      <StyledRouter>
+        <DocumentsView path="/" default />
+        <EditorView path="edit/:documentId" />
+      </StyledRouter>
+    </AppContainer>
+    <DialogsView />
+  </>
 );
 
 export default AppView;

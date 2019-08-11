@@ -44,10 +44,8 @@ const Link = styled.a`
   color: #fff;
 `;
 
-interface Props {
-  onDismiss(): void;
-}
-function AboutPanel(props: Props) {
+const AboutPanel: React.FC = () => {
+  const { actions } = React.useContext(StateContext);
   return (
     <PanelContainer>
       <Content>
@@ -58,28 +56,26 @@ function AboutPanel(props: Props) {
           <MoreInfo>
             Publications is an{" "}
             <Link
-              href="https://github.com/carlospaelinck/publications"
+              href="https://github.com/carlos-kelly/publications"
               target="_blank"
             >
               open-source
             </Link>{" "}
-            application built using Express, React, and GraphQL.
+            application built using Express, React, and GraphQL developed by
+            Carlos Kelly and Michael Kelly.
           </MoreInfo>
         </RightContent>
       </Content>
       <ModalButtonContainer>
-        <Button type="button" onClick={props.onDismiss}>
+        <Button
+          type="button"
+          onClick={() => actions.setAboutModalVisible(false)}
+        >
           Close
         </Button>
       </ModalButtonContainer>
     </PanelContainer>
   );
-}
+};
 
-export default () => (
-  <StateContext.Consumer>
-    {({ actions }) => (
-      <AboutPanel onDismiss={() => actions.setAboutModalVisible(false)} />
-    )}
-  </StateContext.Consumer>
-);
+export default AboutPanel;

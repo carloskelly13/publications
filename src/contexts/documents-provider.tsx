@@ -1,8 +1,6 @@
 import * as React from "react";
-
 import produce from "immer";
 import get from "lodash/fp/get";
-import pick from "lodash/fp/pick";
 import flowRight from "lodash/fp/flowRight";
 import cloneDeep from "clone-deep";
 import { pipe, subscribe } from "wonka";
@@ -11,10 +9,8 @@ import gql from "graphql-tag";
 import {
   addEditorStateToDocument,
   addEditorStateToObject,
-  convertObjStylesToHTML,
   documentsWithEditorState,
   duplicateShape,
-  omitTransientData,
 } from "../util/documents";
 import shortid from "shortid";
 import { StateContext, PubAppState } from "./app-state";
@@ -50,6 +46,8 @@ import {
   createUserMutation,
   documentQuery,
 } from "../queries";
+import { packageDocument } from "../util/package-document";
+import { navigate } from "@reach/router";
 
 export { StateContext } from "./app-state";
 
@@ -58,9 +56,13 @@ interface Props {
   children?: React.ReactNode;
 }
 export default function DocumentsProvider(props: Props) {
-  const [{ data: currentUserData }, refetchCurrentUser] = useQuery<
-    CurrentUserQuery
-  >({ query: currentUserQuery });
+  const [
+    { data: currentUserData, fetching: userFetching },
+    refetchCurrentUser,
+  ] = useQuery<CurrentUserQuery>({
+    query: currentUserQuery,
+    requestPolicy: "network-only",
+  });
   const [{ data: docsData }, refreshDocsData] = useQuery<DocumentsQuery>({
     query: documentsQuery,
     requestPolicy: "network-only",
@@ -80,17 +82,16 @@ export default function DocumentsProvider(props: Props) {
     CreateUserMutationResponse,
     CreateUserMutation
   >(createUserMutation);
-
   const documents: PubDocument[] | null = documentsWithEditorState(
     get("documents")(docsData)
   );
   const user: PubUser | null = get("currentUser")(currentUserData) || null;
   const dataLoaded = !!documents;
-
   const [
     currentDocument,
     setCurrentDocument,
   ] = React.useState<PubDocument | null>(null);
+
   const [selectedObject, setSelectedObject] = React.useState<PubShape | null>(
     null
   );
@@ -113,6 +114,7 @@ export default function DocumentsProvider(props: Props) {
   const [aboutModalVisible, setAboutModalVisible] = React.useState(false);
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
   const [layersPanelVisible, setLayersPanelVisible] = React.useState(false);
+  const [saveDialogVisible, setSaveDialogVisible] = React.useState(false);
 
   const getDocument = React.useCallback(
     async (id: string) => {
@@ -135,7 +137,7 @@ export default function DocumentsProvider(props: Props) {
             })
           );
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
         return;
       }
@@ -150,25 +152,7 @@ export default function DocumentsProvider(props: Props) {
       if (!currentDocument && !sender) {
         return;
       }
-      let documentToSave = sender || currentDocument;
-      documentToSave = produce(documentToSave, (draftDocument: any) => {
-        if (sender && currentDocument) {
-          draftDocument.name = sender.name;
-        }
-        draftDocument.pages[0] = {
-          ...pick(
-            ["id", "width", "height", "pageNumber"],
-            draftDocument.pages[0]
-          ),
-          shapes: documentToSave.pages[0].shapes.map(shape =>
-            omitTransientData(convertObjStylesToHTML(shape))
-          ),
-        };
-        draftDocument.id = get("id")(documentToSave);
-        delete draftDocument.__typename;
-        delete draftDocument.createdAt;
-        delete draftDocument.updatedAt;
-      });
+      const documentToSave = packageDocument(sender || currentDocument);
       return saveDocumentAction({ document: documentToSave });
     },
     [currentDocument, saveDocumentAction]
@@ -219,12 +203,14 @@ export default function DocumentsProvider(props: Props) {
   const logout = React.useCallback(async () => {
     await saveDocument();
     window.localStorage.removeItem("authorization_token");
-    setCurrentDocument(null);
     setSelectedObject(null);
     setLayersPanelVisible(false);
     setZoom(1);
-    return await refetchCurrentUser({ skipCache: true });
-  }, [refetchCurrentUser, saveDocument]);
+    await refetchCurrentUser({ skipCache: true });
+    await refreshDocsData();
+    await navigate("/");
+    setCurrentDocument(null);
+  }, [refetchCurrentUser, refreshDocsData, saveDocument]);
 
   const addObject = React.useCallback(
     (sender: PubShape) => {
@@ -365,6 +351,7 @@ export default function DocumentsProvider(props: Props) {
       setNewAccountModalVisible,
       setNewDocumentModalVisible,
       setOpenDocumentModalVisible,
+      setSaveDialogVisible,
       setZoom,
       getDocument,
       saveDocument,
@@ -377,6 +364,7 @@ export default function DocumentsProvider(props: Props) {
       adjustObjectLayer,
       handleCreateNewDocument,
       handleClipboardAction,
+      refreshDocsData,
       login,
       createUser,
       refetchCurrentUser,
@@ -395,7 +383,9 @@ export default function DocumentsProvider(props: Props) {
     loginModalVisible,
     startModalVisible,
     newAccountModalVisible,
+    saveDialogVisible,
     layersPanelVisible,
+    userFetching,
   };
 
   return (

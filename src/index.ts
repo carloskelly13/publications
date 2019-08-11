@@ -1,6 +1,7 @@
 import express, { ErrorRequestHandler } from "express";
 import graphqlHttp from "express-graphql";
 import schema from "./platform/schemas";
+import bodyParser from "body-parser";
 import jwt from "express-jwt";
 import graphqlPlayground from "graphql-playground-middleware-express";
 import path from "path";
@@ -22,6 +23,8 @@ const onAuthError: ErrorRequestHandler = (err, req, res) => {
 export function startPublications() {
   const mode = process.env.NODE_ENV || "DEVELOPMENT";
   const app = express();
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
 
   if (mode.toUpperCase() === "DEVELOPMENT") {
     app.use("/playground", graphqlPlayground({ endpoint: "/graphql" }));
@@ -34,6 +37,7 @@ export function startPublications() {
   }
 
   app.use(jwt(jwtConfig));
+  app.post("/documents/:id/pdf", documentPdfHandler);
   app.use(
     "/graphql",
     graphqlHttp(request => ({
@@ -42,7 +46,6 @@ export function startPublications() {
     }))
   );
   app.use(onAuthError);
-  app.get("/documents/:id/pdf", documentPdfHandler);
   app.listen(PORT, () => {
     console.log(`Publications API started on port ${PORT}.`);
   });

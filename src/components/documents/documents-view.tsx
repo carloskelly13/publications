@@ -5,6 +5,7 @@ export const Content = styled.div`
   flex: 1;
   color: ${Colors.DocumentsView.Text};
   overflow: scroll;
+  display: flex;
 `;
 
 export const PreviewPane = styled.div`
@@ -32,6 +33,7 @@ export const EmptyDocument = styled.figure`
 
 export const DocumentsListPanel = styled.div`
   padding: 1em 4em 2em;
+  flex: 1;
 
   ul {
     list-style-type: none;
