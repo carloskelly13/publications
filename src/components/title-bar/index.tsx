@@ -71,7 +71,10 @@ export default function TitleBar() {
     actions,
   ]);
   const downloadPdf = React.useCallback(
-    () => actions.saveDocument().then(downloadPdfAction),
+    () =>
+      actions
+        .saveDocument()
+        .then(({ data }) => downloadPdfAction(data.saveDocument)),
     [actions]
   );
   const zoomIn = React.useCallback(

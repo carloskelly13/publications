@@ -1,3 +1,3 @@
-import { startPublications } from "./src/index";
+import { startPublications } from "./src";
 
 startPublications();

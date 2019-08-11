@@ -87,7 +87,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
       setRenamingDocumentId(null);
     }
   }, [renamingDocumentId, selectedDocument]);
-  // React.useEffect(() => actions.setCurrentDocument(null));
 
   const handleDocumentsPanelClick = React.useCallback(() => {
     setIsCreatingNewDocument(false);

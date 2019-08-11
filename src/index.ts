@@ -34,6 +34,7 @@ export function startPublications() {
   }
 
   app.use(jwt(jwtConfig));
+  app.get("/documents/:id/pdf", documentPdfHandler);
   app.use(
     "/graphql",
     graphqlHttp(request => ({
@@ -42,7 +43,6 @@ export function startPublications() {
     }))
   );
   app.use(onAuthError);
-  app.get("/documents/:id/pdf", documentPdfHandler);
   app.listen(PORT, () => {
     console.log(`Publications API started on port ${PORT}.`);
   });
