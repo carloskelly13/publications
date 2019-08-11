@@ -47,6 +47,7 @@ import {
   documentQuery,
 } from "../queries";
 import { packageDocument } from "../util/package-document";
+import { navigate } from "@reach/router";
 
 export { StateContext } from "./app-state";
 
@@ -81,13 +82,11 @@ export default function DocumentsProvider(props: Props) {
     CreateUserMutationResponse,
     CreateUserMutation
   >(createUserMutation);
-
   const documents: PubDocument[] | null = documentsWithEditorState(
     get("documents")(docsData)
   );
   const user: PubUser | null = get("currentUser")(currentUserData) || null;
   const dataLoaded = !!documents;
-
   const [
     currentDocument,
     setCurrentDocument,
@@ -204,12 +203,13 @@ export default function DocumentsProvider(props: Props) {
   const logout = React.useCallback(async () => {
     await saveDocument();
     window.localStorage.removeItem("authorization_token");
-    setCurrentDocument(null);
     setSelectedObject(null);
     setLayersPanelVisible(false);
-    await refreshDocsData();
     setZoom(1);
-    return refetchCurrentUser({ skipCache: true });
+    await refetchCurrentUser({ skipCache: true });
+    await refreshDocsData();
+    await navigate("/");
+    setCurrentDocument(null);
   }, [refetchCurrentUser, refreshDocsData, saveDocument]);
 
   const addObject = React.useCallback(
