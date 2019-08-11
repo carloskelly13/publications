@@ -1,7 +1,6 @@
 import * as React from "react";
 import produce from "immer";
 import get from "lodash/fp/get";
-import pick from "lodash/fp/pick";
 import flowRight from "lodash/fp/flowRight";
 import cloneDeep from "clone-deep";
 import { pipe, subscribe } from "wonka";
@@ -10,10 +9,8 @@ import gql from "graphql-tag";
 import {
   addEditorStateToDocument,
   addEditorStateToObject,
-  convertObjStylesToHTML,
   documentsWithEditorState,
   duplicateShape,
-  omitTransientData,
 } from "../util/documents";
 import shortid from "shortid";
 import { StateContext, PubAppState } from "./app-state";
@@ -49,6 +46,7 @@ import {
   createUserMutation,
   documentQuery,
 } from "../queries";
+import { packageDocument } from "../util/package-document";
 
 export { StateContext } from "./app-state";
 
@@ -155,25 +153,7 @@ export default function DocumentsProvider(props: Props) {
       if (!currentDocument && !sender) {
         return;
       }
-      let documentToSave = sender || currentDocument;
-      documentToSave = produce(documentToSave, (draftDocument: any) => {
-        if (sender && currentDocument) {
-          draftDocument.name = sender.name;
-        }
-        draftDocument.pages[0] = {
-          ...pick(
-            ["id", "width", "height", "pageNumber"],
-            draftDocument.pages[0]
-          ),
-          shapes: documentToSave.pages[0].shapes.map(shape =>
-            omitTransientData(convertObjStylesToHTML(shape))
-          ),
-        };
-        draftDocument.id = get("id")(documentToSave);
-        delete draftDocument.__typename;
-        delete draftDocument.createdAt;
-        delete draftDocument.updatedAt;
-      });
+      const documentToSave = packageDocument(sender || currentDocument);
       return saveDocumentAction({ document: documentToSave });
     },
     [currentDocument, saveDocumentAction]

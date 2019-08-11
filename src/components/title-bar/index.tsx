@@ -71,11 +71,8 @@ export default function TitleBar() {
     actions,
   ]);
   const downloadPdf = React.useCallback(
-    () =>
-      actions
-        .saveDocument()
-        .then(({ data }) => downloadPdfAction(data.saveDocument)),
-    [actions]
+    () => downloadPdfAction(currentDocument),
+    [currentDocument]
   );
   const zoomIn = React.useCallback(
     () => actions.setZoom(Math.min(4.0, zoom + 0.25)),
@@ -123,7 +120,9 @@ export default function TitleBar() {
                   <MenuItem onClick={() => actions.setLoginModalVisible(true)}>
                     Log In…
                   </MenuItem>
-                  <MenuItem onClick={() => actions.setLoginModalVisible(true)}>
+                  <MenuItem
+                    onClick={() => actions.setNewAccountModalVisible(true)}
+                  >
                     Create Account…
                   </MenuItem>
                 </>
