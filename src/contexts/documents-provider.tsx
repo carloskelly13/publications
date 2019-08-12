@@ -3,7 +3,7 @@ import produce from "immer";
 import get from "lodash/fp/get";
 import flowRight from "lodash/fp/flowRight";
 import cloneDeep from "clone-deep";
-import { pipe, subscribe } from "wonka";
+import { pipe, take, subscribe } from "wonka";
 import gql from "graphql-tag";
 
 import {
@@ -82,9 +82,12 @@ export default function DocumentsProvider(props: Props) {
     CreateUserMutationResponse,
     CreateUserMutation
   >(createUserMutation);
-  const documents: PubDocument[] | null = documentsWithEditorState(
-    get("documents")(docsData)
+
+  const documents: PubDocument[] | null = React.useMemo(
+    () => documentsWithEditorState(get("documents")(docsData)),
+    [docsData]
   );
+
   const user: PubUser | null = get("currentUser")(currentUserData) || null;
   const dataLoaded = !!documents;
   const [
@@ -126,6 +129,7 @@ export default function DocumentsProvider(props: Props) {
               variables: { id },
               key: 0,
             }),
+            take(1),
             subscribe(({ data, error }) => {
               if (error) {
                 throw error;
@@ -287,11 +291,11 @@ export default function DocumentsProvider(props: Props) {
       };
       if (user) {
         try {
-          await saveDocumentAction({ document: payload });
-          await refreshDocsData();
-          return;
+          const { data } = await saveDocumentAction({ document: payload });
+          await refreshDocsData({ requestPolicy: "network-only" });
+          return data.saveDocument;
         } catch (e) {
-          return;
+          return null;
         }
       }
     },

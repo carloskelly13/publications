@@ -1,16 +1,11 @@
 import * as React from "react";
-import flowRight from "lodash/fp/flowRight";
 import { StateContext } from "../contexts/app-state";
 import { PubDocument } from "../types/pub-objects";
 import { Keys } from "../util/constants";
 import Canvas from "../components/canvas";
 import { RouteComponentProps, navigate } from "@reach/router";
 import { TextInput } from "../components/ui/inputs";
-import {
-  addEditorStateToDocument,
-  documentNameSort,
-  validatePositiveFloat,
-} from "../util/documents";
+import { documentNameSort } from "../util/documents";
 import {
   ActionButton,
   Content,
@@ -19,36 +14,20 @@ import {
   EmptyDocument,
   PreviewPane,
   inputCSS,
-  newDocumentMetricInputCSS,
-  NewDocumentMetricContainer,
 } from "../components/documents/documents-view";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
-  const { documents, actions, userFetching, user } = React.useContext(
-    StateContext
-  );
-  const newDocumentNameInputRef = React.useRef<HTMLInputElement>(null);
+  const { documents, actions } = React.useContext(StateContext);
   const [
     selectedDocument,
     setSelectedDocument,
   ] = React.useState<PubDocument | null>(null);
-  const [isCreatingNewDocument, setIsCreatingNewDocument] = React.useState(
-    false
-  );
   const [renamingDocumentId, setRenamingDocumentId] = React.useState<
     string | null
   >(null);
-  const [newDocumentName, setNewDocumentName] = React.useState("");
-  const [newDocumentHeight, setNewDocumentHeight] = React.useState<
-    string | number
-  >(11);
-  const [newDocumentWidth, setNewDocumentWidth] = React.useState<
-    string | number
-  >(8.5);
 
   const handleDocumentItemSelected = React.useCallback(
     (event: React.MouseEvent, doc: PubDocument) => {
-      setIsCreatingNewDocument(false);
       event.stopPropagation();
       if (selectedDocument && selectedDocument.id === doc.id) {
         return;
@@ -58,30 +37,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     [selectedDocument]
   );
 
-  const hasValidUserAuthenticated = !userFetching && !!user;
-  const handleCreateNewDocument = React.useCallback(
-    (event: React.MouseEvent) => {
-      event.stopPropagation();
-      setSelectedDocument(null);
-      if (isCreatingNewDocument) {
-        return;
-      }
-      setNewDocumentName("New Document");
-      setNewDocumentHeight(11);
-      setNewDocumentWidth(8.5);
-      setIsCreatingNewDocument(true);
-    },
-    [isCreatingNewDocument]
-  );
-
-  React.useEffect(() => {
-    if (isCreatingNewDocument && newDocumentNameInputRef.current) {
-      const input = newDocumentNameInputRef.current;
-      input.focus();
-      input.setSelectionRange(0, input.value.length);
-    }
-  }, [isCreatingNewDocument]);
-
   React.useEffect(() => {
     if (!selectedDocument || selectedDocument.id !== renamingDocumentId) {
       setRenamingDocumentId(null);
@@ -89,7 +44,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
   }, [renamingDocumentId, selectedDocument]);
 
   const handleDocumentsPanelClick = React.useCallback(() => {
-    setIsCreatingNewDocument(false);
     setSelectedDocument(null);
   }, []);
 
@@ -120,71 +74,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     [handleUpdateDocumentName]
   );
 
-  const handleUpdateNewDocumentName = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const possibleName = event.target.value;
-      setNewDocumentName(possibleName);
-    },
-    []
-  );
-
-  const handleUpdateNewDocumentWidth = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const possibleNumber = event.target.value;
-      if (validatePositiveFloat(possibleNumber)) {
-        setNewDocumentWidth(possibleNumber);
-      }
-    },
-    []
-  );
-
-  const handleUpdateNewDocumentHeight = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const possibleNumber = event.target.value;
-      if (validatePositiveFloat(possibleNumber)) {
-        setNewDocumentHeight(possibleNumber);
-      }
-    },
-    []
-  );
-
-  const handleCreateNewDocumentSubmit = React.useCallback(async () => {
-    const newDocumentBase = {
-      height: parseFloat(newDocumentHeight.toString()),
-      name: newDocumentName,
-      width: parseFloat(newDocumentWidth.toString()),
-    };
-    if (hasValidUserAuthenticated) {
-      await actions.handleCreateNewDocument(newDocumentBase);
-    } else {
-      const constructedDocument = {
-        name: newDocumentBase.name,
-        pages: [
-          {
-            shapes: [],
-            height: newDocumentBase.height,
-            width: newDocumentBase.width,
-            pageNumber: 1,
-          },
-        ],
-      };
-
-      flowRight(
-        actions.setCurrentDocument,
-        addEditorStateToDocument
-      )(constructedDocument);
-
-      navigate("/edit/0");
-    }
-    setIsCreatingNewDocument(false);
-  }, [
-    hasValidUserAuthenticated,
-    actions,
-    newDocumentHeight,
-    newDocumentName,
-    newDocumentWidth,
-  ]);
-
   const handleDocumentDelete = React.useCallback(
     async (id: string | number) => {
       await actions.deleteDocument(id);
@@ -198,48 +87,12 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
         <ul>
           <ListItem
             className="new-document-item"
-            onClick={handleCreateNewDocument}
-            selected={isCreatingNewDocument}
+            onClick={() => actions.setNewDocumentModalVisible(true)}
           >
-            {isCreatingNewDocument ? (
-              <>
-                <EmptyDocument>+</EmptyDocument>
-                <span>
-                  <TextInput
-                    innerRef={newDocumentNameInputRef}
-                    value={newDocumentName}
-                    onChange={handleUpdateNewDocumentName}
-                    css={inputCSS}
-                  />
-                </span>
-                <NewDocumentMetricContainer>
-                  <TextInput
-                    value={newDocumentWidth}
-                    onChange={handleUpdateNewDocumentWidth}
-                    css={newDocumentMetricInputCSS}
-                  />
-                  ”&nbsp;&times;&nbsp;
-                  <TextInput
-                    value={newDocumentHeight}
-                    onChange={handleUpdateNewDocumentHeight}
-                    css={newDocumentMetricInputCSS}
-                  />
-                  ”
-                </NewDocumentMetricContainer>
-                <span className="action-column">
-                  <ActionButton onClick={handleCreateNewDocumentSubmit}>
-                    Create
-                  </ActionButton>
-                </span>
-              </>
-            ) : (
-              <>
-                <EmptyDocument>+</EmptyDocument>
-                <span>
-                  <strong>New Document</strong>
-                </span>
-              </>
-            )}
+            <EmptyDocument>+</EmptyDocument>
+            <span>
+              <strong>New Document</strong>
+            </span>
           </ListItem>
           {!!documents &&
             documents.sort(documentNameSort).map(d => {

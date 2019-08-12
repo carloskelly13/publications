@@ -27,7 +27,7 @@ export interface PubActions {
     name: string;
     width: number;
     height: number;
-  }): Promise<void>;
+  }): Promise<PubDocument>;
   logout(): Promise<void>;
   getDocument(id: string): void;
   saveDocument(sender?: PubDocument): Promise<any>;
