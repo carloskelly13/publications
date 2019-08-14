@@ -3,7 +3,7 @@ import produce from "immer";
 import get from "lodash/fp/get";
 import flowRight from "lodash/fp/flowRight";
 import cloneDeep from "clone-deep";
-import { pipe, take, subscribe } from "wonka";
+import { pipe, take, toPromise } from "wonka";
 import gql from "graphql-tag";
 
 import {
@@ -123,23 +123,19 @@ export default function DocumentsProvider(props: Props) {
     async (id: string) => {
       if (documents === null) {
         try {
-          pipe(
+          const { data } = await pipe(
             props.client.executeQuery({
               query: gql(documentQuery),
               variables: { id },
               key: 0,
             }),
             take(1),
-            subscribe(({ data, error }) => {
-              if (error) {
-                throw error;
-              }
-              flowRight(
-                setCurrentDocument,
-                addEditorStateToDocument
-              )(data.document);
-            })
+            toPromise
           );
+          flowRight(
+            setCurrentDocument,
+            addEditorStateToDocument
+          )(data.document);
         } catch (e) {
           console.error(e);
         }

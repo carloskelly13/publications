@@ -12,7 +12,7 @@
     "start:server": "nodemon --config ./nodemon.json -L",
     "start:client": "webpack-dev-server",
     "start:headless-chrome": "chrome --headless --disable-gpu --remote-debugging-port=9922",
-    "start": "concurrently --kill-others \"npm run start:client\" \"npm run start:server\" \"npm run start:headless-chrome\"",
+    "start": "concurrently --kill-others \"npm run start:client\" \"npm run start:server\"",
     "test": "",
     "precommit": "npm run lint && npm run compile-check"
   },
