@@ -121,30 +121,26 @@ export default function DocumentsProvider(props: Props) {
 
   const getDocument = React.useCallback(
     async (id: string) => {
-      if (documents === null) {
-        try {
-          const { data } = await pipe(
-            props.client.executeQuery({
-              query: gql(documentQuery),
-              variables: { id },
-              key: 0,
-            }),
-            take(1),
-            toPromise
-          );
-          flowRight(
-            setCurrentDocument,
-            addEditorStateToDocument
-          )(data.document);
-        } catch (e) {
-          console.error(e);
-        }
-        return;
+      try {
+        const { data } = await pipe(
+          props.client.executeQuery({
+            query: gql(documentQuery),
+            variables: { id },
+            key: 0,
+          }),
+          take(1),
+          toPromise
+        );
+        flowRight(
+          setCurrentDocument,
+          addEditorStateToDocument
+        )(data.document);
+      } catch (e) {
+        console.error(e);
       }
-      const doc = documents.filter(d => d.id === id)[0];
-      setCurrentDocument(doc);
+      return;
     },
-    [documents, props.client]
+    [props.client]
   );
 
   const saveDocument = React.useCallback(

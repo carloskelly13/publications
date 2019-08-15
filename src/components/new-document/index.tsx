@@ -8,7 +8,7 @@ import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { Formik, FormikProps } from "formik";
 import { PubNewDocument } from "../../types/pub-objects";
-import { StateContext } from "../../contexts/documents-provider";
+import { StateContext } from "../../contexts/app-state";
 import { navigate } from "@reach/router";
 import { addEditorStateToDocument } from "../../util/documents";
 
@@ -41,6 +41,7 @@ const NewDocumentForm: React.FC = () => {
       };
       if (hasValidUserAuthenticated) {
         actions.setNewDocumentModalVisible(false);
+        actions.setCurrentDocument(null);
         try {
           const doc = await actions.handleCreateNewDocument(newDocumentBase);
           return navigate(`/edit/${doc.id}`);

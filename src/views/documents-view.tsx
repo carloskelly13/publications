@@ -18,13 +18,12 @@ import {
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const { documents, actions } = React.useContext(StateContext);
-  const [
-    selectedDocument,
-    setSelectedDocument,
-  ] = React.useState<PubDocument | null>(null);
-  const [renamingDocumentId, setRenamingDocumentId] = React.useState<
-    string | null
-  >(null);
+  const [selectedDocument, setSelectedDocument] = React.useState<PubDocument>(
+    null
+  );
+  const [renamingDocumentId, setRenamingDocumentId] = React.useState<string>(
+    null
+  );
 
   const handleDocumentItemSelected = React.useCallback(
     (event: React.MouseEvent, doc: PubDocument) => {
