@@ -4,17 +4,17 @@ import { Text, InputLabelText } from "./text";
 import { ContentContainer } from "./containers";
 import { AppColors } from "../../util/constants";
 import { PubShape } from "../../types/pub-objects";
-import styled, { css, InterpolationValue } from "styled-components";
+import styled, { css, FlattenSimpleInterpolation } from "styled-components";
 import tinycolor from "tinycolor2";
 
-export const InputLabel = styled(Text)<{ css?: InterpolationValue[] }>`
+export const InputLabel = styled(Text)<{ css?: FlattenSimpleInterpolation }>`
   width: 35%;
   text-align: right;
   ${({ css }) => css};
 `;
 
 const InputContent = styled(ContentContainer).attrs({ verticalAlign: true })<{
-  css?: InterpolationValue[];
+  css?: FlattenSimpleInterpolation;
 }>`
   width: 65%;
   ${({ css }) => css};
@@ -23,7 +23,7 @@ const InputContent = styled(ContentContainer).attrs({ verticalAlign: true })<{
 interface LabelProps {
   label: string;
   disabled?: boolean;
-  css?: InterpolationValue[];
+  css?: FlattenSimpleInterpolation;
 }
 export function ControlInputLabel(props: LabelProps) {
   return (
@@ -50,9 +50,9 @@ interface Props {
   disabled?: boolean;
   isHEX?: boolean;
   isString?: boolean;
-  labelCSS?: InterpolationValue[];
-  inputCSS?: InterpolationValue[];
-  inputContainerCSS?: InterpolationValue[];
+  labelCSS?: FlattenSimpleInterpolation;
+  inputCSS?: FlattenSimpleInterpolation;
+  inputContainerCSS?: FlattenSimpleInterpolation;
   onChange(changes: InspectorChanges): void;
 }
 export default function ControlInput(props: Props) {

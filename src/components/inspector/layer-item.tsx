@@ -46,7 +46,7 @@ export const LayerItem = ({ shape, handleOnClick, selected }) => (
     {(provided, snapshot) => (
       <LayerItemContainer onClick={handleOnClick}>
         <LayerItemInnerContainer
-          innerRef={provided.innerRef}
+          ref={provided.innerRef}
           style={getItemStyle(provided.draggableStyle)}
           {...provided.dragHandleProps}
         >

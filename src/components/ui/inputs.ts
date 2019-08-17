@@ -1,4 +1,4 @@
-import styled, { InterpolationValue } from "styled-components";
+import styled, { FlattenSimpleInterpolation } from "styled-components";
 import { Colors, appFont } from "../../util/constants";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   large?: boolean;
   alignRight?: boolean;
   alignCenter?: boolean;
-  css?: InterpolationValue[];
+  css?: FlattenSimpleInterpolation;
 }
 
 export const TextInput = styled.input<Props>`

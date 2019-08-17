@@ -89,7 +89,7 @@ export default function TitleBar() {
           renderButton={(setMenuActive, menuActive) => (
             <TitleBarButton
               active={menuActive}
-              onPress={() => setMenuActive(prevState => !prevState)}
+              onClick={() => setMenuActive(prevState => !prevState)}
             >
               <PublicationsIcon
                 stroke={
@@ -104,14 +104,17 @@ export default function TitleBar() {
           )}
           renderMenu={
             <>
-              {currentDocument && hasValidUserAuthenticated && (
-                <>
-                  <MenuItem onClick={() => actions.setSaveDialogVisible(true)}>
-                    View All Documents
-                  </MenuItem>
-                  <MenuDivider />
-                </>
-              )}
+              {currentDocument &&
+                hasValidUserAuthenticated && (
+                  <>
+                    <MenuItem
+                      onClick={() => actions.setSaveDialogVisible(true)}
+                    >
+                      View All Documents
+                    </MenuItem>
+                    <MenuDivider />
+                  </>
+                )}
               {hasValidUserAuthenticated && (
                 <MenuItem onClick={actions.logout}>Log Out</MenuItem>
               )}
@@ -139,11 +142,11 @@ export default function TitleBar() {
       {currentDocument && (
         <>
           <ControlGroup>
-            <TitleBarButton disabled={!currentDocument} onPress={saveDocument}>
+            <TitleBarButton disabled={!currentDocument} onClick={saveDocument}>
               <FloppyDiskIcon />
               Save
             </TitleBarButton>
-            <TitleBarButton disabled={!currentDocument} onPress={downloadPdf}>
+            <TitleBarButton disabled={!currentDocument} onClick={downloadPdf}>
               <DownloadIcon />
               PDF
             </TitleBarButton>
@@ -152,7 +155,7 @@ export default function TitleBar() {
                 <TitleBarButton
                   disabled={!currentDocument}
                   active={active}
-                  onPress={() => setMenuActive(prevState => !prevState)}
+                  onClick={() => setMenuActive(prevState => !prevState)}
                 >
                   <VectorShapeIcon />
                   Objects
@@ -175,14 +178,14 @@ export default function TitleBar() {
             <Spacer width="1em" />
             <TitleBarButton
               disabled={!currentDocument || !selectedObject}
-              onPress={() => actions.handleClipboardAction(ClipboardAction.Cut)}
+              onClick={() => actions.handleClipboardAction(ClipboardAction.Cut)}
             >
               <CutIcon />
               Cut
             </TitleBarButton>
             <TitleBarButton
               disabled={!currentDocument || !selectedObject}
-              onPress={() =>
+              onClick={() =>
                 actions.handleClipboardAction(ClipboardAction.Copy)
               }
             >
@@ -191,7 +194,7 @@ export default function TitleBar() {
             </TitleBarButton>
             <TitleBarButton
               disabled={!currentDocument || !clipboardContents}
-              onPress={() =>
+              onClick={() =>
                 actions.handleClipboardAction(ClipboardAction.Paste)
               }
             >
@@ -202,7 +205,7 @@ export default function TitleBar() {
             <TitleBarButton
               disabled={!currentDocument}
               noLabel
-              onPress={zoomIn}
+              onClick={zoomIn}
             >
               <ZoomInIcon />
             </TitleBarButton>
@@ -210,7 +213,7 @@ export default function TitleBar() {
             <TitleBarButton
               disabled={!currentDocument}
               noLabel
-              onPress={zoomOut}
+              onClick={zoomOut}
             >
               <ZoomOutIcon />
             </TitleBarButton>

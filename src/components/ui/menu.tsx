@@ -94,7 +94,7 @@ export default function Menu(props: MenuProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => setMenuActive(false));
   return (
-    <MenuContainer innerRef={ref}>
+    <MenuContainer ref={ref}>
       {props.renderButton(setMenuActive, menuActive)}
       {menuActive && (
         <MenuList

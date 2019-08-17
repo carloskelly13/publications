@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import { adopt } from "react-adopt";
 import AppView from "./views/app-view";
 import "./assets/font/inter.css";
+import "focus-visible";
 
 const client = createClient({
   url: "/graphql",

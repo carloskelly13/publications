@@ -2,7 +2,7 @@ import * as React from "react";
 import styled, { css } from "styled-components";
 import { appFont, Colors } from "../../util/constants";
 
-const Button = styled.button<{ noLabel?: boolean; active?: boolean }>`
+const TitleBarButton = styled.button<{ noLabel?: boolean; active?: boolean }>`
   display: flex;
   background: transparent;
   border: none;
@@ -12,6 +12,7 @@ const Button = styled.button<{ noLabel?: boolean; active?: boolean }>`
   height: 24px;
   font-size: 12px;
   margin: 0;
+  outline: none;
   color: ${Colors.Button.Text};
   align-items: center;
   justify-content: flex-start;
@@ -35,6 +36,10 @@ const Button = styled.button<{ noLabel?: boolean; active?: boolean }>`
     cursor: not-allowed;
     opacity: 0.5;
   }
+
+  &.focus-visible:focus {
+    box-shadow: inset 0 0 0 2px ${Colors.Button.Outline};
+  }
 `;
 
 interface Props {
@@ -42,17 +47,7 @@ interface Props {
   noLabel?: boolean;
   children?: React.ReactNode;
   active?: boolean;
-  onPress?(): void;
+  onClick?(): void;
 }
-export default function TitleBarButton(props: Props) {
-  return (
-    <Button
-      disabled={props.disabled}
-      noLabel={props.noLabel}
-      onClick={props.onPress}
-      active={props.active}
-    >
-      {props.children}
-    </Button>
-  );
-}
+
+export default TitleBarButton;
