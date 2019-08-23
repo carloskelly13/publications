@@ -17,6 +17,7 @@ import downloadPdfAction from "../../util/download-pdf";
 import { ClipboardAction } from "../../types/data";
 import Menu, { MenuDivider, MenuItem } from "../ui/menu";
 import { Shapes } from "../../util/new-shapes";
+import ArrowDownIcon from "../ui/icons/arrow-down";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
@@ -99,22 +100,20 @@ export default function TitleBar() {
                 }
                 size={20}
               />
-              Publications
+              Publications&nbsp;
+              <ArrowDownIcon />
             </TitleBarButton>
           )}
           renderMenu={
             <>
-              {currentDocument &&
-                hasValidUserAuthenticated && (
-                  <>
-                    <MenuItem
-                      onClick={() => actions.setSaveDialogVisible(true)}
-                    >
-                      View All Documents
-                    </MenuItem>
-                    <MenuDivider />
-                  </>
-                )}
+              {currentDocument && hasValidUserAuthenticated && (
+                <>
+                  <MenuItem onClick={() => actions.setSaveDialogVisible(true)}>
+                    View All Documents
+                  </MenuItem>
+                  <MenuDivider />
+                </>
+              )}
               {hasValidUserAuthenticated && (
                 <MenuItem onClick={actions.logout}>Log Out</MenuItem>
               )}
@@ -158,7 +157,8 @@ export default function TitleBar() {
                   onClick={() => setMenuActive(prevState => !prevState)}
                 >
                   <VectorShapeIcon />
-                  Objects
+                  Objects&nbsp;
+                  <ArrowDownIcon />
                 </TitleBarButton>
               )}
               renderMenu={

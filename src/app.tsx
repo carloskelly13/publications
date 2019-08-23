@@ -2,7 +2,6 @@ import React from "react";
 import DocumentsProvider from "./contexts/documents-provider";
 import { Provider, createClient } from "urql";
 import ReactDOM from "react-dom";
-import { adopt } from "react-adopt";
 import AppView from "./views/app-view";
 import "./assets/font/inter.css";
 import "focus-visible";
@@ -21,19 +20,12 @@ const client = createClient({
   },
 });
 
-const AppProviders = adopt({
-  urqlProvider: ({ render }) => <Provider value={client}>{render()}</Provider>,
-  documentsProvider: ({ render }) => (
-    <DocumentsProvider client={client}>{render()}</DocumentsProvider>
-  ),
-});
-
 const PublicationsApp: React.FC = () => (
-  <AppProviders>{() => <AppView />}</AppProviders>
+  <Provider value={client}>
+    <DocumentsProvider client={client}>
+      <AppView />
+    </DocumentsProvider>
+  </Provider>
 );
 
 ReactDOM.render(<PublicationsApp />, document.getElementById("pub-app"));
-
-if (module.hot) {
-  module.hot.accept();
-}

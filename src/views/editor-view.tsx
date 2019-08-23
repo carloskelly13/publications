@@ -27,21 +27,18 @@ const EditorView: EditorView = props => {
   } = React.useContext(StateContext);
   const getDocument = React.useRef(actions.getDocument);
   const documentId = React.useRef(props.documentId);
-  React.useEffect(
-    () => {
-      if (userFetching || !dataLoaded || currentDocument) {
-        return;
-      }
-      if (!userFetching && !user && !currentDocument) {
-        navigate("/");
-        return;
-      }
-      if (user && !currentDocument) {
-        getDocument.current(documentId.current);
-      }
-    },
-    [currentDocument, dataLoaded, userFetching, user]
-  );
+  React.useEffect(() => {
+    if (userFetching || !dataLoaded || currentDocument) {
+      return;
+    }
+    if (!userFetching && !user && !currentDocument) {
+      navigate("/");
+      return;
+    }
+    if (user && !currentDocument) {
+      getDocument.current(documentId.current);
+    }
+  }, [currentDocument, dataLoaded, userFetching, user]);
   return (
     <Content>
       {currentDocument && (

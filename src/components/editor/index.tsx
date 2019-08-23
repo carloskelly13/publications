@@ -92,41 +92,35 @@ export default function Editor() {
     [actions, selectedObject]
   );
 
-  React.useEffect(
-    () => {
-      if (!currentDocument) {
-        setGridLineRanges(gridRangesZero);
-        setViewportRect(viewportRectZero);
-        return;
-      }
+  React.useEffect(() => {
+    if (!currentDocument) {
+      setGridLineRanges(gridRangesZero);
+      setViewportRect(viewportRectZero);
+      return;
+    }
+    setViewportRect({
+      width: containerRef.current.clientWidth,
+      height: containerRef.current.clientHeight,
+    });
+    const { width, height } = currentDocument.pages[0];
+    setGridLineRanges({
+      x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
+      y: range(0, height * 96 * zoom, 0.25 * 96 * zoom),
+    });
+  }, [currentDocument, zoom, containerRef]);
+
+  React.useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+    const listener = () =>
       setViewportRect({
         width: containerRef.current.clientWidth,
         height: containerRef.current.clientHeight,
       });
-      const { width, height } = currentDocument.pages[0];
-      setGridLineRanges({
-        x: range(0, width * 96 * zoom, 0.25 * 96 * zoom),
-        y: range(0, height * 96 * zoom, 0.25 * 96 * zoom),
-      });
-    },
-    [currentDocument, zoom, containerRef]
-  );
-
-  React.useEffect(
-    () => {
-      if (!containerRef.current) {
-        return;
-      }
-      const listener = () =>
-        setViewportRect({
-          width: containerRef.current.clientWidth,
-          height: containerRef.current.clientHeight,
-        });
-      window.addEventListener("resize", listener);
-      return () => window.removeEventListener("resize", listener);
-    },
-    [containerRef]
-  );
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, [containerRef]);
 
   return (
     <Container

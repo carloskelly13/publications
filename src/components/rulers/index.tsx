@@ -99,19 +99,13 @@ export function Ruler(props: Props) {
   const horizontalRulerRef = React.useRef<HTMLDivElement>(null);
   const verticalRulerRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(
-    () => {
-      horizontalRulerRef.current.scrollLeft = props.scrollOffset.scrollLeft;
-    },
-    [props.scrollOffset.scrollLeft]
-  );
+  React.useEffect(() => {
+    horizontalRulerRef.current.scrollLeft = props.scrollOffset.scrollLeft;
+  }, [props.scrollOffset.scrollLeft]);
 
-  React.useEffect(
-    () => {
-      verticalRulerRef.current.scrollTop = props.scrollOffset.scrollTop;
-    },
-    [props.scrollOffset.scrollTop]
-  );
+  React.useEffect(() => {
+    verticalRulerRef.current.scrollTop = props.scrollOffset.scrollTop;
+  }, [props.scrollOffset.scrollTop]);
 
   const { doc, dpi, zoom, showDetail } = props;
   const xRange = range(0, doc.pages[0].width * dpi * zoom, 0.25 * dpi * zoom);
