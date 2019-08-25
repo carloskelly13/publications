@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { appFont, Colors } from "../../util/constants";
+import { Colors } from "../../util/constants";
 
 export const Content = styled.div`
   flex: 1;
@@ -8,27 +8,50 @@ export const Content = styled.div`
   display: flex;
 `;
 
-export const PreviewPane = styled.div`
-  width: 100px;
-  height: 80px;
+export const PreviewPane = styled.div<{ selected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   overflow: hidden;
+  margin: 0 0 10px;
+  border-radius: 1px;
+  padding: 0;
+  width: auto;
+
+  ${props =>
+    props.selected &&
+    css`
+      box-shadow: 0 0 0 2px ${Colors.App.Background},
+        0 0 0 4px ${Colors.DocumentThumbnail.SelectedOutline};
+    `};
+`;
+
+export const DocumentLabel = styled.div`
+  text-align: center;
 `;
 
 export const EmptyDocument = styled.figure`
-  border: 1px dotted ${Colors.DocumentsView.DisabledText};
+  border: 1px dashed ${Colors.DocumentsView.DisabledText};
   color: ${Colors.DocumentsView.DisabledText};
-  font-size: 3em;
-  font-weight: lighter;
+  font-size: 1em;
+  font-weight: 600;
   text-align: center;
-  line-height: 45px;
   border-radius: 4px;
-  width: 100px;
-  height: 50px;
+  width: 75px;
+  height: 100px;
   margin: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  &:hover,
+  &:active {
+    border-color: ${Colors.DocumentsView.Text};
+    color: ${Colors.DocumentsView.Text};
+  }
 `;
 
 export const DocumentsListPanel = styled.div`
@@ -39,78 +62,33 @@ export const DocumentsListPanel = styled.div`
     list-style-type: none;
     margin: 0;
     padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 180px;
+    grid-gap: 1em;
+    align-items: center;
+    justify-content: flex-start;
 
-    li {
-      padding: 1em;
-      cursor: default;
-      display: grid;
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-      align-items: center;
-      justify-content: flex-start;
-      border-bottom: 1px solid ${Colors.DocumentsView.ItemLine};
-
-      span.action-column {
-        display: grid;
-        grid-template-columns: repeat(3, auto);
-        align-items: center;
-        justify-content: flex-end;
-        margin-right: 1em;
-      }
+    @media only screen and (min-width: 768px) {
+      grid-template-columns: 1fr 1fr 1fr;
     }
 
-    li.new-document-item {
-      border-bottom: 1px dotted ${Colors.DocumentsView.ItemLine};
+    @media only screen and (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    @media only screen and (min-width: 1440px) {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     }
   }
 `;
 
-export const inputCSS = css`
-  font-weight: bold;
-  margin-left: -5px;
-`;
-
-export const newDocumentMetricInputCSS = css`
-  width: 30px;
-  text-align: right;
-  margin-right: 3px;
-`;
-
-export const NewDocumentMetricContainer = styled.span`
-  font-size: 0.9em;
-`;
-
-export const ListItem = styled.li<{ selected?: boolean }>`
-  background: ${({ selected }) =>
-    selected ? Colors.DocumentsView.ActiveBackground : "transparent"};
-  &:hover {
-    background: ${({ selected }) =>
-      selected
-        ? Colors.DocumentsView.ActiveBackground
-        : "hsla(0, 0%, 100%, 0.075)"};
-  }
-
-  ${({ selected }) =>
-    selected &&
-    css`
-      figure {
-        border-color: white;
-        color: white;
-      }
-    `};
-`;
-
-export const ActionButton = styled.button`
-  font-family: ${appFont};
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: ${Colors.DocumentsView.Text};
-  text-decoration: underline;
-  font-weight: 600;
-  font-size: 13px;
-  margin: 0 0 0 2em;
-  &:focus {
-    border-radius: 2px;
-    box-shadow: 0 0 0 2px ${Colors.FormInput.FocusOutline};
-  }
+export const ListItem = styled.li`
+  padding: 1em;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 2em);
 `;
