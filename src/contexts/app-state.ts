@@ -44,6 +44,7 @@ export interface PubActions {
   setLoginModalVisible(visible: boolean): void;
   setAboutModalVisible(visible: boolean): void;
   setSaveDialogVisible(visible: boolean): void;
+  setDeleteDocumentDialogVisible(visible: boolean): void;
   setCurrentDocument: React.Dispatch<PubDocument | null>;
 }
 
@@ -63,6 +64,7 @@ export interface PubAppState {
   openDocumentModalVisible: boolean;
   aboutModalVisible: boolean;
   newDocumentModalVisible: boolean;
+  deleteDocumentDialogVisible: boolean;
   saveDialogVisible: boolean;
   userFetching: boolean;
 }

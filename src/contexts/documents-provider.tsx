@@ -118,6 +118,10 @@ export default function DocumentsProvider(props: Props) {
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
   const [layersPanelVisible, setLayersPanelVisible] = React.useState(false);
   const [saveDialogVisible, setSaveDialogVisible] = React.useState(false);
+  const [
+    deleteDocumentDialogVisible,
+    setDeleteDocumentDialogVisible,
+  ] = React.useState(false);
 
   const getDocument = React.useCallback(
     async (id: string) => {
@@ -348,6 +352,7 @@ export default function DocumentsProvider(props: Props) {
       setNewDocumentModalVisible,
       setOpenDocumentModalVisible,
       setSaveDialogVisible,
+      setDeleteDocumentDialogVisible,
       setZoom,
       getDocument,
       saveDocument,
@@ -380,6 +385,7 @@ export default function DocumentsProvider(props: Props) {
     startModalVisible,
     newAccountModalVisible,
     saveDialogVisible,
+    deleteDocumentDialogVisible,
     layersPanelVisible,
     userFetching,
   };
