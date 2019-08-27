@@ -91,4 +91,5 @@ export const ListItem = styled.li`
   align-items: center;
   justify-content: center;
   height: calc(100% - 2em);
+  user-select: none;
 `;
