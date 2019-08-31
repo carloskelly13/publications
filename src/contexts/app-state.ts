@@ -35,6 +35,7 @@ export interface PubActions {
   setNewDocumentModalVisible(visible: boolean): void;
   setOpenDocumentModalVisible(visible: boolean): void;
   setLayersPanelVisible(visible: boolean): void;
+  setSelectedDocumentItem(sender: PubDocument | null): void;
   updateSelectedObject(sender?: Record<string, any> | null): void;
   updateCurrentPage(sender?: Partial<PubPage>): void;
   updateCurrentDocument(sender?: Partial<PubDocument>): void;
@@ -64,6 +65,7 @@ export interface PubAppState {
   openDocumentModalVisible: boolean;
   aboutModalVisible: boolean;
   newDocumentModalVisible: boolean;
+  selectedDocumentItem: PubDocument | null;
   deleteDocumentDialogVisible: boolean;
   saveDialogVisible: boolean;
   userFetching: boolean;

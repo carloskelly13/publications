@@ -18,6 +18,7 @@ import { ClipboardAction } from "../../types/data";
 import Menu, { MenuDivider, MenuItem } from "../ui/menu";
 import { Shapes } from "../../util/new-shapes";
 import ArrowDownIcon from "../ui/icons/arrow-down";
+import { navigate } from "@reach/router";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
@@ -64,6 +65,7 @@ export default function TitleBar() {
     zoom,
     user,
     userFetching,
+    selectedDocumentItem,
   } = React.useContext(StateContext);
   const hasValidUserAuthenticated = !userFetching && !!user;
   const hasNoUserAuthenticated = !userFetching && !user;
@@ -83,6 +85,10 @@ export default function TitleBar() {
     () => actions.setZoom(Math.max(0.25, zoom - 0.25)),
     [actions, zoom]
   );
+  const handleDocumentItemDoubleClick = React.useCallback(() => {
+    navigate(`edit/${selectedDocumentItem.id}`);
+    actions.setSelectedDocumentItem(null);
+  }, [selectedDocumentItem, actions]);
   return (
     <Container>
       <LeftControlGroup>
@@ -138,6 +144,24 @@ export default function TitleBar() {
           }
         />
       </LeftControlGroup>
+      {!currentDocument && (
+        <>
+          <ControlGroup>
+            <TitleBarButton
+              disabled={!selectedDocumentItem}
+              onClick={handleDocumentItemDoubleClick}
+            >
+              Edit
+            </TitleBarButton>
+            <TitleBarButton
+              disabled={!selectedDocumentItem}
+              onClick={() => actions.setDeleteDocumentDialogVisible(true)}
+            >
+              Delete
+            </TitleBarButton>
+          </ControlGroup>
+        </>
+      )}
       {currentDocument && (
         <>
           <ControlGroup>

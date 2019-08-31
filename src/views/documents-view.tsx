@@ -16,27 +16,42 @@ import DeleteDocumentDialog from "../components/delete-document-dialog";
 import DialogWrapper from "../components/modal";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
-  const { documents, actions, deleteDocumentDialogVisible } = React.useContext(
-    StateContext
-  );
-  const [selectedDocument, setSelectedDocument] = React.useState<PubDocument>(
-    null
-  );
+  const {
+    documents,
+    actions,
+    deleteDocumentDialogVisible,
+    selectedDocumentItem,
+  } = React.useContext(StateContext);
+  const {
+    setCurrentDocument,
+    updateSelectedObject,
+    setSelectedDocumentItem,
+  } = actions;
 
   const handleDocumentItemSelected = React.useCallback(
     (event: React.MouseEvent, doc: PubDocument) => {
       event.stopPropagation();
-      if (selectedDocument && selectedDocument.id === doc.id) {
+      if (selectedDocumentItem && selectedDocumentItem.id === doc.id) {
         return;
       }
-      setSelectedDocument(doc);
+      setSelectedDocumentItem(doc);
     },
-    [selectedDocument]
+    [selectedDocumentItem, setSelectedDocumentItem]
   );
 
+  React.useEffect(() => {
+    setCurrentDocument(null);
+    updateSelectedObject(null);
+  }, [setCurrentDocument, updateSelectedObject]);
+
   const handleDocumentsPanelClick = React.useCallback(() => {
-    setSelectedDocument(null);
-  }, []);
+    setSelectedDocumentItem(null);
+  }, [setSelectedDocumentItem]);
+
+  const handleDocumentItemDoubleClick = React.useCallback(() => {
+    navigate(`edit/${selectedDocumentItem.id}`);
+    setSelectedDocumentItem(null);
+  }, [selectedDocumentItem, setSelectedDocumentItem]);
 
   return (
     <>
@@ -53,13 +68,13 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
             {!!documents &&
               documents.sort(documentNameSort).map(d => {
                 const isSelected =
-                  selectedDocument && selectedDocument.id === d.id;
+                  selectedDocumentItem && selectedDocumentItem.id === d.id;
                 return (
                   <ListItem key={d.id}>
                     <PreviewPane
                       selected={isSelected}
                       onClick={e => handleDocumentItemSelected(e, d)}
-                      onDoubleClick={() => navigate(`edit/${d.id}`)}
+                      onDoubleClick={handleDocumentItemDoubleClick}
                     >
                       <Canvas
                         thumbnail
@@ -110,8 +125,8 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
       </Content>
       <DialogWrapper visible={deleteDocumentDialogVisible}>
         <DeleteDocumentDialog
-          doc={selectedDocument}
-          onDocumentDelete={() => setSelectedDocument(null)}
+          doc={selectedDocumentItem}
+          onDocumentDelete={() => setSelectedDocumentItem(null)}
         />
       </DialogWrapper>
     </>

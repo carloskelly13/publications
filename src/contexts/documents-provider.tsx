@@ -94,6 +94,10 @@ export default function DocumentsProvider(props: Props) {
     currentDocument,
     setCurrentDocument,
   ] = React.useState<PubDocument | null>(null);
+  const [
+    selectedDocumentItem,
+    setSelectedDocumentItem,
+  ] = React.useState<PubDocument | null>(null);
 
   const [selectedObject, setSelectedObject] = React.useState<PubShape | null>(
     null
@@ -353,6 +357,7 @@ export default function DocumentsProvider(props: Props) {
       setOpenDocumentModalVisible,
       setSaveDialogVisible,
       setDeleteDocumentDialogVisible,
+      setSelectedDocumentItem,
       setZoom,
       getDocument,
       saveDocument,
@@ -377,6 +382,7 @@ export default function DocumentsProvider(props: Props) {
     documents,
     dataLoaded,
     selectedObject,
+    selectedDocumentItem,
     zoom,
     user,
     newDocumentModalVisible,
