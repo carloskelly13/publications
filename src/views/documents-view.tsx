@@ -24,7 +24,7 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
   } = React.useContext(StateContext);
   const {
     setCurrentDocument,
-    updateSelectedObject,
+    setSelectedObject,
     setSelectedDocumentItem,
   } = actions;
 
@@ -41,8 +41,8 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
 
   React.useEffect(() => {
     setCurrentDocument(null);
-    updateSelectedObject(null);
-  }, [setCurrentDocument, updateSelectedObject]);
+    setSelectedObject(null);
+  }, [setCurrentDocument, setSelectedObject]);
 
   const handleDocumentsPanelClick = React.useCallback(() => {
     setSelectedDocumentItem(null);

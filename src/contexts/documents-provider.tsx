@@ -358,6 +358,7 @@ export default function DocumentsProvider(props: Props) {
       setSaveDialogVisible,
       setDeleteDocumentDialogVisible,
       setSelectedDocumentItem,
+      setSelectedObject,
       setZoom,
       getDocument,
       saveDocument,

@@ -37,6 +37,7 @@ export interface PubActions {
   setLayersPanelVisible(visible: boolean): void;
   setSelectedDocumentItem(sender: PubDocument | null): void;
   updateSelectedObject(sender?: Record<string, any> | null): void;
+  setSelectedObject(sender: PubShape | null): void;
   updateCurrentPage(sender?: Partial<PubPage>): void;
   updateCurrentDocument(sender?: Partial<PubDocument>): void;
   adjustObjectLayer(sender: LayerMutationDelta): void;
