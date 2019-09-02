@@ -14,6 +14,7 @@ import {
 } from "../components/documents/documents-view";
 import DeleteDocumentDialog from "../components/delete-document-dialog";
 import DialogWrapper from "../components/modal";
+import NewDocumentForm from "../components/new-document";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const {
@@ -21,6 +22,7 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     actions,
     deleteDocumentDialogVisible,
     selectedDocumentItem,
+    newDocumentModalVisible,
   } = React.useContext(StateContext);
   const {
     setCurrentDocument,
@@ -99,24 +101,6 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
                         {d.pages[0].width}” &times; {d.pages[0].height}”
                       </div>
                     </DocumentLabel>
-                    {/*<span className="action-column">
-                      {isSelected && (
-                        <>
-                          <ActionButton
-                            onClick={() => navigate(`edit/${d.id}`)}
-                          >
-                            Edit
-                          </ActionButton>
-                          <ActionButton
-                            onClick={() =>
-                              actions.setDeleteDocumentDialogVisible(true)
-                            }
-                          >
-                            Delete
-                          </ActionButton>
-                        </>
-                      )}
-                    </span>*/}
                   </ListItem>
                 );
               })}
@@ -128,6 +112,9 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
           doc={selectedDocumentItem}
           onDocumentDelete={() => setSelectedDocumentItem(null)}
         />
+      </DialogWrapper>
+      <DialogWrapper visible={newDocumentModalVisible}>
+        <NewDocumentForm />
       </DialogWrapper>
     </>
   );

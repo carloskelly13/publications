@@ -12,21 +12,13 @@ export const ModalHeader = styled(Header)`
   font-size: 1.25em;
   font-weight: 700;
   margin: 1em 1em 1.1em;
-`;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 
-export const PaddedHeader = styled(Header)`
-  margin: 0;
-  padding: 15px;
-  position: absolute;
-  width: 100%;
-  top: 0;
-  background: hsla(0, 0%, 100%, 0.85);
-  border-bottom: 1px solid ${AppColors.Gray};
-`;
-
-export const Message = styled.p`
-  font-size: 1em;
-  margin: 0 0 2em;
+  span {
+    margin-left: 0.5em;
+  }
 `;
 
 interface MarginTextProps {
@@ -75,18 +67,6 @@ export const Text = styled(MarginText)<TextProps>`
     }
     return "none";
   }};
-`;
-
-export const StrongText = styled(Text)`
-  font-weight: 600;
-`;
-
-export const MediumText = styled(Text)`
-  font-weight: 500;
-`;
-
-export const LightText = styled(Text)`
-  font-weight: 300;
 `;
 
 interface InputLabelTextProps {

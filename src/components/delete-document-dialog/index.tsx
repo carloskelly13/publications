@@ -6,14 +6,22 @@ import Button from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Colors } from "../../util/constants";
 import { PubDocument } from "../../types/pub-objects";
+import GarbageIcon from "../ui/icons/garbage";
 
 export const DeleteDocumentDialogContent = styled(ModalContent)`
   width: 400px;
 `;
 
 const Content = styled.div`
-  padding: 1.25em 1.25em 0.5em;
+  padding: 1.25em 1.75em 0.5em;
   color: ${Colors.Dialog.TextColor};
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  span {
+    margin-left: 1.25em;
+  }
 `;
 
 interface DeleteDocumentDialogProps {
@@ -39,8 +47,11 @@ const DeleteDocumentDialog: React.FC<DeleteDocumentDialogProps> = props => {
   return (
     <DeleteDocumentDialogContent>
       <Content>
-        Are you sure you want to delete “{props.doc.name}”? This action cannot
-        be undone.
+        <GarbageIcon size={48} />
+        <span>
+          Are you sure you want to delete “{props.doc.name}”? This action cannot
+          be undone.
+        </span>
       </Content>
       <ModalButtonContainer>
         <Button marginRight onClick={handleDeleteButtonSelected}>

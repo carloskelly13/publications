@@ -13,6 +13,7 @@ import {
 } from "../../types/data";
 import { StateContext } from "../../contexts/app-state";
 import { OperationResult } from "urql";
+import UserBadgeIcon from "../ui/icons/user-badge";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;
@@ -91,7 +92,10 @@ const LoginForm: React.FC = () => {
         isSubmitting,
       }: FormikProps<LoginFormValues>) => (
         <LoginModalContent>
-          <ModalHeader>Log In</ModalHeader>
+          <ModalHeader>
+            <UserBadgeIcon size={24} />
+            <span>Log In</span>
+          </ModalHeader>
           {errorLoggingIn && <div>oops!</div>}
           <Form onSubmit={handleSubmit}>
             <FormInput

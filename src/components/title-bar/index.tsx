@@ -19,6 +19,8 @@ import Menu, { MenuDivider, MenuItem } from "../ui/menu";
 import { Shapes } from "../../util/new-shapes";
 import ArrowDownIcon from "../ui/icons/arrow-down";
 import { navigate } from "@reach/router";
+import PencilRulerIcon from "../ui/icons/pencil-ruler";
+import GarbageIcon from "../ui/icons/garbage";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
@@ -151,12 +153,14 @@ export default function TitleBar() {
               disabled={!selectedDocumentItem}
               onClick={handleDocumentItemDoubleClick}
             >
+              <PencilRulerIcon />
               Edit
             </TitleBarButton>
             <TitleBarButton
               disabled={!selectedDocumentItem}
               onClick={() => actions.setDeleteDocumentDialogVisible(true)}
             >
+              <GarbageIcon />
               Delete
             </TitleBarButton>
           </ControlGroup>

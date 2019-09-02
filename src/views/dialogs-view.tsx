@@ -5,7 +5,6 @@ import LoginForm from "../components/login";
 import AboutPanel from "../components/about";
 import SaveDialog from "../components/save-dialog";
 import NewAccountForm from "../components/new-account";
-import NewDocumentForm from "../components/new-document";
 
 const DialogsView: React.FC = () => {
   const {
@@ -13,7 +12,6 @@ const DialogsView: React.FC = () => {
     aboutModalVisible,
     saveDialogVisible,
     newAccountModalVisible,
-    newDocumentModalVisible,
   } = React.useContext(StateContext);
   return (
     <>
@@ -28,9 +26,6 @@ const DialogsView: React.FC = () => {
       </DialogWrapper>
       <DialogWrapper visible={newAccountModalVisible}>
         <NewAccountForm />
-      </DialogWrapper>
-      <DialogWrapper visible={newDocumentModalVisible}>
-        <NewDocumentForm />
       </DialogWrapper>
     </>
   );

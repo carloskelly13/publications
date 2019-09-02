@@ -11,6 +11,8 @@ import { PubNewDocument } from "../../types/pub-objects";
 import { StateContext } from "../../contexts/app-state";
 import { navigate } from "@reach/router";
 import { addEditorStateToDocument } from "../../util/documents";
+import OpenDocumentIcon from "../ui/icons/open-document";
+import PageIcon from "../ui/icons/page";
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -73,7 +75,10 @@ const NewDocumentForm: React.FC = () => {
 
   return (
     <NewDocumentContainer>
-      <ModalHeader>Create New Document</ModalHeader>
+      <ModalHeader>
+        <PageIcon size={24} />
+        <span>Create New Document</span>
+      </ModalHeader>
       <Formik
         initialValues={{
           name: "",

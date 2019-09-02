@@ -6,14 +6,22 @@ import Button from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Colors } from "../../util/constants";
 import { navigate } from "@reach/router";
+import FloppyDiskIcon from "../ui/icons/floppy-disk";
 
 export const SaveDialogContent = styled(ModalContent)`
   width: 400px;
 `;
 
 const Content = styled.div`
-  padding: 1.25em 1.25em 0.5em;
+  padding: 1.25em 1.75em 0.5em;
   color: ${Colors.Dialog.TextColor};
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  span {
+    margin-left: 1.25em;
+  }
 `;
 
 const SaveDialog: React.FC = () => {
@@ -33,8 +41,11 @@ const SaveDialog: React.FC = () => {
   return (
     <SaveDialogContent>
       <Content>
-        Before closing “{currentDocument.name}”, do you wish to save any changes
-        you’ve made?
+        <FloppyDiskIcon size={48} />
+        <span>
+          Before closing “{currentDocument.name}”, do you wish to save any
+          changes you’ve made?
+        </span>
       </Content>
       <ModalButtonContainer>
         <Button marginRight onClick={handleSaveChangesButtonSelected}>
