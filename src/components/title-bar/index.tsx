@@ -91,6 +91,14 @@ export default function TitleBar() {
     navigate(`edit/${selectedDocumentItem.id}`);
     actions.setSelectedDocumentItem(null);
   }, [selectedDocumentItem, actions]);
+
+  const handleSaveChangesButtonSelected = React.useCallback(async () => {
+    await actions.saveDocument();
+    actions.setSaveDialogVisible(false);
+    await navigate("/");
+    actions.setCurrentDocument(null);
+  }, [actions]);
+
   return (
     <Container>
       <LeftControlGroup>
@@ -116,7 +124,7 @@ export default function TitleBar() {
             <>
               {currentDocument && hasValidUserAuthenticated && (
                 <>
-                  <MenuItem onClick={() => actions.setSaveDialogVisible(true)}>
+                  <MenuItem onClick={handleSaveChangesButtonSelected}>
                     View All Documents
                   </MenuItem>
                   <MenuDivider />

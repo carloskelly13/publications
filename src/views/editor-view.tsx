@@ -39,6 +39,23 @@ const EditorView: EditorView = props => {
       getDocument.current(documentId.current);
     }
   }, [currentDocument, dataLoaded, userFetching, user]);
+
+  const handleUnloadEvent = React.useCallback(
+    (event: Event) => {
+      event.preventDefault();
+      if (user && currentDocument) {
+        actions.saveDocument().then(void 0);
+      }
+    },
+    [actions, currentDocument, user]
+  );
+
+  React.useEffect(() => {
+    window.addEventListener("beforeunload", handleUnloadEvent);
+    return () => {
+      window.removeEventListener("beforeunload", handleUnloadEvent);
+    };
+  }, [handleUnloadEvent]);
   return (
     <Content>
       {currentDocument && (
