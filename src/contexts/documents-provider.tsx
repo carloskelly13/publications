@@ -210,9 +210,9 @@ export default function DocumentsProvider(props: Props) {
     setSelectedObject(null);
     setLayersPanelVisible(false);
     setZoom(1);
-    await refetchCurrentUser({ skipCache: true });
-    await refreshDocsData();
-    await navigate("/");
+    refetchCurrentUser({ skipCache: true });
+    refreshDocsData();
+    navigate("/");
     setCurrentDocument(null);
   }, [refetchCurrentUser, refreshDocsData, saveDocument]);
 

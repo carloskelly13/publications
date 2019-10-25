@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 import * as htmlPdf from "html-pdf-chrome";
 import { Request, Response } from "express";
-import db from "../database/";
 import { PubDocument, PubPage } from "../../types/pub-objects";
 import Canvas from "../../components/canvas";
 

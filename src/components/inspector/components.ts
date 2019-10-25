@@ -68,7 +68,6 @@ export const Text = styled.p<{ bold?: boolean }>`
 
 export const Tabs = styled.nav`
   background: ${Colors.Inspector.Border};
-  border-bottom: 1px solid ${Colors.Inspector.Border};
   display: grid;
   grid-gap: 1px;
   grid-template-columns: repeat(2, 50%);

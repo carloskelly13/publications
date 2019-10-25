@@ -15,7 +15,8 @@ export const TextInput = styled.input<Props>`
   padding: 0 4px;
   color: ${Colors.FormInput.Text};
   background: ${Colors.FormInput.MetricBackground};
-  border: 1px solid hsla(0, 0%, 100%, 0.25);
+  border: 1px solid ${Colors.FormInput.Border};
+  box-shadow: inset 0 1px 0 hsla(0, 0%, 0%, 0.1), 0 1px 0 hsla(0, 0%, 100%, 0.1);
   font-family: ${appFont};
   font-size: ${props => {
     if (props.small || props.mini) {

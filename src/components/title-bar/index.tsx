@@ -58,7 +58,7 @@ const LeftControlGroup = styled(ControlGroup)`
   }
 `;
 
-export default function TitleBar() {
+const TitleBar: React.FC = () => {
   const {
     actions,
     currentDocument,
@@ -177,7 +177,10 @@ export default function TitleBar() {
       {currentDocument && (
         <>
           <ControlGroup>
-            <TitleBarButton disabled={!currentDocument} onClick={saveDocument}>
+            <TitleBarButton
+              disabled={!currentDocument || !user}
+              onClick={saveDocument}
+            >
               <FloppyDiskIcon />
               Save
             </TitleBarButton>
@@ -258,4 +261,6 @@ export default function TitleBar() {
       )}
     </Container>
   );
-}
+};
+
+export default TitleBar;

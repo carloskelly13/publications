@@ -97,9 +97,9 @@ export const Colors = {
   },
   FormInput: {
     Background: "#38393d",
-    MetricBackground: "#4a4b50",
+    MetricBackground: "#2f2f2f",
     Text: "#fff",
-    Border: "hsla(0, 0%, 100%, 0.01)",
+    Border: "#262626",
     FocusBorder: "#785ef0",
     FocusOutline: "#9b82f3",
     Placeholder: "#6a6c71",
