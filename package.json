@@ -44,7 +44,7 @@
     "knex": "^0.15.2",
     "lodash": "^4.17.13",
     "objection": "^1.2.6",
-    "office-ui-fabric-react": "^6.162.1",
+    "office-ui-fabric-react": "^7.55.1",
     "pg": "^7.4.3",
     "react": "16.9.0",
     "react-addons-css-transition-group": "^15.6.0",
