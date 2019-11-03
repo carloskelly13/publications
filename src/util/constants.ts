@@ -139,7 +139,7 @@ export const Colors = {
     Border: "#2a2a2a",
     LayerItemSelectedBackground: "hsla(0, 0%, 100%, 0.25)",
     LayerItemBorder: "hsla(0, 0%, 0%, 0.33)",
-    TabInactiveBackground: "#28292d",
+    TabInactiveBackground: "#2b2c2f",
     TabActiveBackground: "#38393d",
     TabIconBorderInactive: "#232323",
     TabIconBorderActive: "#232323",

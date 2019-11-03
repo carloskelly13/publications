@@ -3,7 +3,6 @@ import { Colors } from "../../util/constants";
 
 export const InspectorContainer = styled.div<{ visible?: boolean }>`
   background: ${Colors.Inspector.Background};
-  border-left: 1px solid ${Colors.Inspector.Border};
   box-shadow: inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.1);
   display: ${({ visible }) => (visible ? "flex" : "none")};
   flex-direction: column;
@@ -68,7 +67,7 @@ export const Text = styled.p<{ bold?: boolean }>`
 `;
 
 export const Tabs = styled.nav`
-  background: ${Colors.Inspector.Border};
+  background: ${Colors.App.Background};
   display: grid;
   grid-template-columns: repeat(2, 50%);
 `;
