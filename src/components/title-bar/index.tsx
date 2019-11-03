@@ -24,11 +24,13 @@ import GarbageIcon from "../ui/icons/garbage";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
+  box-shadow: inset 0 -1px 2px hsla(0, 0%, 0%, 0.5);
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.15);
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100vw;
-  height: 25px;
+  height: 24px;
   z-index: 1;
 `;
 

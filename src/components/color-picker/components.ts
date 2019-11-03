@@ -8,9 +8,10 @@ export const ColorPickerButton = styled.button<{
   width: 100%;
   height: 17px;
   border-radius: 2px;
-  border: 1px solid
-    hsla(0, 0%, 100%, ${({ disabled }) => (disabled ? 0.2 : 0.5)});
   background: ${({ color }) => color || Colors.FormInput.MetricBackground};
+  border: 1px solid ${Colors.FormInput.Border};
+  box-shadow: inset 1px 1px 0 hsla(0, 0%, 0%, 0.1),
+    0 1px 0 hsla(0, 0%, 100%, 0.1);
   outline: none;
   margin: 0;
 `;

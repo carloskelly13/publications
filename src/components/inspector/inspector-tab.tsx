@@ -77,6 +77,7 @@ export default function DocumentTab() {
     sender => {
       if (!isText(shape)) {
         updateSelectedObject(sender);
+        return;
       }
       updateSelectedObject({
         editorState: textStyles.color.add(shape!.editorState, sender.color),
@@ -175,6 +176,7 @@ export default function DocumentTab() {
         <ColorPicker
           property={isText(shape) ? "color" : "fill"}
           onChange={setFill}
+          alpha={getStringPropertyOrNull(shape, "fillOpacity")}
           hex={
             isText(shape)
               ? colorFromStyles(currentStyle)
@@ -199,6 +201,7 @@ export default function DocumentTab() {
           property="stroke"
           onChange={updateSelectedObject}
           hex={getStringPropertyOrNull(shape, "stroke")}
+          alpha={getStringPropertyOrNull(shape, "strokeOpacity")}
           disabled={!shape || isText(shape)}
         />
         <ControlInput

@@ -3,7 +3,7 @@ import { Colors } from "../../util/constants";
 
 export const InspectorContainer = styled.div<{ visible?: boolean }>`
   background: ${Colors.Inspector.Background};
-  border-left: 1px solid ${Colors.Inspector.Border};
+  box-shadow: inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.1);
   display: ${({ visible }) => (visible ? "flex" : "none")};
   flex-direction: column;
   height: 100%;
@@ -67,9 +67,8 @@ export const Text = styled.p<{ bold?: boolean }>`
 `;
 
 export const Tabs = styled.nav`
-  background: ${Colors.Inspector.Border};
+  background: ${Colors.App.Background};
   display: grid;
-  grid-gap: 1px;
   grid-template-columns: repeat(2, 50%);
 `;
 
@@ -79,11 +78,19 @@ export const Tab = styled.div<{ active: boolean }>`
     active
       ? Colors.Inspector.TabActiveBackground
       : Colors.Inspector.TabInactiveBackground};
+  box-shadow: inset 0 -1px 0 hsla(0, 0%, 100%, 0.2);
   color: ${Colors.Inspector.Text};
   cursor: default;
   display: flex;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: bold;
+  margin-top: 2px;
   justify-content: center;
-  height: 25px;
+  height: 23px;
+  ${({ active }) =>
+    active &&
+    css`
+      border-radius: 4px 4px 0 0;
+      box-shadow: inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.1);
+    `};
 `;
