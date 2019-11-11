@@ -45,20 +45,25 @@ const LoginForm: React.FC = () => {
 
   const login = React.useCallback(
     async (payload: LoginFormValues) => {
-      const {
-        data: { login },
-      } = await actions.login(payload);
-      if (login && login.token) {
-        setErrorLoggingIn(false);
-        window.localStorage.setItem("authorization_token", login.token);
-      } else {
+      try {
+        const {
+          data: { login },
+        } = await actions.login(payload, { fetchOptions: undefined });
+        if (login && login.token) {
+          setErrorLoggingIn(false);
+          window.localStorage.setItem("authorization_token", login.token);
+        } else {
+          setErrorLoggingIn(true);
+        }
+        actions.setLoginModalVisible(false);
+        return await Promise.all([
+          actions.refetchCurrentUser({ skipCache: true }),
+          actions.refreshDocsData({ skipCache: true }),
+        ]);
+      } catch (e) {
+        console.error(e);
         setErrorLoggingIn(true);
       }
-      actions.setLoginModalVisible(false);
-      return Promise.all([
-        actions.refetchCurrentUser({ skipCache: true }),
-        actions.refreshDocsData({ skipCache: true }),
-      ]);
     },
     [actions]
   );
@@ -96,7 +101,7 @@ const LoginForm: React.FC = () => {
             <UserBadgeIcon size={24} />
             <span>Log In</span>
           </ModalHeader>
-          {errorLoggingIn && <div>oops!</div>}
+          {errorLoggingIn && <div>Error Logging In!</div>}
           <Form onSubmit={handleSubmit}>
             <FormInput
               placeholder="Email Address"

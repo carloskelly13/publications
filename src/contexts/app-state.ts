@@ -10,12 +10,15 @@ import {
   CreateUserMutationResponse,
   RefetchDocuments,
 } from "../types/data";
-import { OperationResult } from "urql";
+import { OperationContext, OperationResult } from "urql";
 
 export interface PubActions {
   refetchCurrentUser: RefetchCurrentUser;
   refreshDocsData: RefetchDocuments;
-  login(opts: LoginMutation): Promise<OperationResult<LoginMutationResponse>>;
+  login(
+    variables?: LoginMutation,
+    context?: Partial<OperationContext>
+  ): Promise<OperationResult<LoginMutationResponse>>;
   createUser(
     opts: CreateUserMutation
   ): Promise<OperationResult<CreateUserMutationResponse>>;

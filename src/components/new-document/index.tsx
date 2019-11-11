@@ -11,7 +11,6 @@ import { PubNewDocument } from "../../types/pub-objects";
 import { StateContext } from "../../contexts/app-state";
 import { navigate } from "@reach/router";
 import { addEditorStateToDocument } from "../../util/documents";
-import OpenDocumentIcon from "../ui/icons/open-document";
 import PageIcon from "../ui/icons/page";
 
 const NewDocumentContainer = styled(ModalContent)`
