@@ -39,7 +39,7 @@ const NewDocumentForm: React.FC = () => {
       const newDocumentBase = {
         height: parseFloat(sender.height.toString()),
         name: sender.name,
-        width: parseFloat(sender.width.toString()),
+        width: parseFloat(sender.width.toString())
       };
       if (hasValidUserAuthenticated) {
         actions.setNewDocumentModalVisible(false);
@@ -58,9 +58,9 @@ const NewDocumentForm: React.FC = () => {
               shapes: [],
               height: newDocumentBase.height,
               width: newDocumentBase.width,
-              pageNumber: 1,
-            },
-          ],
+              pageNumber: 1
+            }
+          ]
         };
         flowRight(
           actions.setCurrentDocument,
@@ -83,14 +83,14 @@ const NewDocumentForm: React.FC = () => {
         initialValues={{
           name: "",
           width: 8.5,
-          height: 11,
+          height: 11
         }}
         validate={validateForm}
         onSubmit={handleCreateNewDocumentSubmit}
         render={({
           values,
           handleChange,
-          handleSubmit,
+          handleSubmit
         }: FormikProps<PubNewDocument>) => (
           <Form onSubmit={handleSubmit}>
             <FormInput

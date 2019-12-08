@@ -10,7 +10,7 @@ import {
   DocumentsListPanel,
   EmptyDocument,
   PreviewPane,
-  DocumentLabel,
+  DocumentLabel
 } from "../components/documents/documents-view";
 import DeleteDocumentDialog from "../components/delete-document-dialog";
 import DialogWrapper from "../components/modal";
@@ -22,12 +22,12 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     actions,
     deleteDocumentDialogVisible,
     selectedDocumentItem,
-    newDocumentModalVisible,
+    newDocumentModalVisible
   } = React.useContext(StateContext);
   const {
     setCurrentDocument,
     setSelectedObject,
-    setSelectedDocumentItem,
+    setSelectedDocumentItem
   } = actions;
 
   const handleDocumentItemSelected = React.useCallback(

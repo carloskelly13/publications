@@ -9,6 +9,14 @@ export const AppStyle = createGlobalStyle`
     -moz-font-feature-settings: "kern" 1, "dlig" 1;
     font-size: 14px;
   }
+  html {
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    height: 100%;
+    overflow: auto;
+  }
 `;
 
 export const AppContainer = styled.div`
@@ -16,17 +24,15 @@ export const AppContainer = styled.div`
   color: ${AppColors.DarkGray};
   margin: 0;
   padding: 0;
-  position: absolute;
-  overflow: hidden;
-  width: 100vw;
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100vw;
+  position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-
   @media print {
     height: 100vh;
   }

@@ -11,7 +11,7 @@ import appConfig from "../app-config";
 const PORT = 4004;
 const jwtConfig = {
   secret: appConfig.jwtSecret,
-  credentialsRequired: false,
+  credentialsRequired: false
 };
 
 const onAuthError: ErrorRequestHandler = (err, req, res) => {
@@ -42,7 +42,7 @@ export function startPublications() {
     "/graphql",
     graphqlHttp(request => ({
       schema,
-      context: { user: request.user },
+      context: { user: request.user }
     }))
   );
   app.use(onAuthError);

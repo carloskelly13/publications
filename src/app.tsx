@@ -13,11 +13,11 @@ const client = createClient({
     return {
       headers: {
         ...(authorizationToken && {
-          Authorization: `Bearer ${authorizationToken}`,
-        }),
-      },
+          Authorization: `Bearer ${authorizationToken}`
+        })
+      }
     };
-  },
+  }
 });
 
 const PublicationsApp: React.FC = () => (
