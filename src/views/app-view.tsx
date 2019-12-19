@@ -8,7 +8,6 @@ import styled from "styled-components";
 import DialogsView from "./dialogs-view";
 
 const StyledRouter = styled(Router)`
-  flex: 1;
   display: flex;
   height: calc(100% - 25px);
 `;

@@ -50,6 +50,8 @@ export const Colors = {
     Toolbar: "#38393d",
     ToolbarBorder: "#1e1f21",
     Tint: "#9b82f3",
+    ScrollBarBackground: "#f0f0f0",
+    ScrollBarThumb: "#efe9e9",
   },
   TitleBar: {
     Background: "#232323",
