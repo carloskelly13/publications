@@ -40,7 +40,7 @@
     "immer": "^1.8.0",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^2.2.0",
-    "knex": "^0.15.2",
+    "knex": "^0.19.5",
     "lodash": "^4.17.13",
     "objection": "^1.2.6",
     "office-ui-fabric-react": "^7.55.1",
