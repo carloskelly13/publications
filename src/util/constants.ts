@@ -155,7 +155,7 @@ export const Colors = {
     ThumbBackground: "#5c5e65",
   },
   Rulers: {
-    Background: "#38393d",
+    Background: "transparent",
     Text: "#fff",
   },
   Forms: {

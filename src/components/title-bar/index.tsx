@@ -24,8 +24,7 @@ import GarbageIcon from "../ui/icons/garbage";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
-  box-shadow: inset 0 -1px 2px hsla(0, 0%, 0%, 0.5);
-  border-bottom: 1px solid hsla(0, 0%, 100%, 0.15);
+  border-bottom: 1px solid hsla(0, 0%, 0%, 0.15);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -89,17 +88,23 @@ const TitleBar: React.FC = () => {
     () => actions.setZoom(Math.max(0.25, zoom - 0.25)),
     [actions, zoom]
   );
-  const handleDocumentItemDoubleClick = React.useCallback(() => {
-    navigate(`edit/${selectedDocumentItem.id}`);
-    actions.setSelectedDocumentItem(null);
-  }, [selectedDocumentItem, actions]);
+  const handleDocumentItemDoubleClick = React.useCallback(
+    () => {
+      navigate(`edit/${selectedDocumentItem.id}`);
+      actions.setSelectedDocumentItem(null);
+    },
+    [selectedDocumentItem, actions]
+  );
 
-  const handleSaveChangesButtonSelected = React.useCallback(async () => {
-    await actions.saveDocument();
-    actions.setSaveDialogVisible(false);
-    await navigate("/");
-    actions.setCurrentDocument(null);
-  }, [actions]);
+  const handleSaveChangesButtonSelected = React.useCallback(
+    async () => {
+      await actions.saveDocument();
+      actions.setSaveDialogVisible(false);
+      navigate("/");
+      actions.setCurrentDocument(null);
+    },
+    [actions]
+  );
 
   return (
     <Container>
@@ -124,14 +129,15 @@ const TitleBar: React.FC = () => {
           )}
           renderMenu={
             <>
-              {currentDocument && hasValidUserAuthenticated && (
-                <>
-                  <MenuItem onClick={handleSaveChangesButtonSelected}>
-                    View All Documents
-                  </MenuItem>
-                  <MenuDivider />
-                </>
-              )}
+              {currentDocument &&
+                hasValidUserAuthenticated && (
+                  <>
+                    <MenuItem onClick={handleSaveChangesButtonSelected}>
+                      View All Documents
+                    </MenuItem>
+                    <MenuDivider />
+                  </>
+                )}
               {hasValidUserAuthenticated && (
                 <MenuItem onClick={actions.logout}>Log Out</MenuItem>
               )}

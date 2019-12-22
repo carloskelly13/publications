@@ -6,6 +6,16 @@ import DocumentsView from "./documents-view";
 import { Router } from "@reach/router";
 import styled from "styled-components";
 import DialogsView from "./dialogs-view";
+import WebFont from "webfontloader";
+
+WebFont.load({
+  google: {
+    families: [
+      "IBM Plex Serif:400,400i,700,700i",
+      "IBM Plex Sans:400,400i,700,700i",
+    ],
+  },
+});
 
 const StyledRouter = styled(Router)`
   display: flex;

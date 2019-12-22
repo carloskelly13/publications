@@ -31,11 +31,14 @@ const TextBox: React.FunctionComponent<Props> = ({
     height: dpi * shape.height * zoom,
   };
   const ref = React.useRef<Editor>(null);
-  React.useEffect(() => {
-    if (ref.current && activeDraftJSEditor === shape.id) {
-      ref.current.focus();
-    }
-  }, [activeDraftJSEditor, shape.id]);
+  React.useEffect(
+    () => {
+      if (ref.current && activeDraftJSEditor === shape.id) {
+        ref.current.focus();
+      }
+    },
+    [activeDraftJSEditor, shape.id]
+  );
   return (
     <g>
       {readOnly ? null : (

@@ -24,6 +24,7 @@ const basePrintOptions = {
 
 const baseHtml = `
   <style>
+    @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,700,700i|IBM+Plex+Serif:400,400i,700,700i&display=swap');
     p { font-size: 14px; font-family: sans-serif; margin: 0; padding: 0; line-height: 1; }
   </style>
 `;
@@ -41,6 +42,7 @@ function generateHtmlFromDocument(document: PubDocument) {
 export default async function documentPdfHandler(req: Request, res: Response) {
   const { document } = req.body;
   try {
+    const completionTrigger = new htmlPdf.CompletionTrigger.Timer(2000);
     const documentHtml = generateHtmlFromDocument(document as any);
     const { width, height } = document.pages[0] as PubPage;
     const isLandscape = width > height;
@@ -55,6 +57,7 @@ export default async function documentPdfHandler(req: Request, res: Response) {
     `,
       {
         port: 9922,
+        completionTrigger,
         printOptions: {
           ...basePrintOptions,
           landscape: isLandscape,

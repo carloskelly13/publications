@@ -27,6 +27,7 @@ import { styles as textStyles } from "../shapes/text-box";
 import IconButton from "../ui/icon-button";
 import { RichUtils } from "draft-js";
 import { AppColors } from "../../util/constants";
+import { ContentContainer } from "../ui/containers";
 
 const nameInputProps = {
   labelCSS: css`
@@ -48,6 +49,11 @@ const FontStyleGrid = styled.div`
   justify-content: space-between;
 `;
 
+const fontOptions = [
+  { value: "IBM Plex Sans", label: "IBM Plex Sans" },
+  { value: "IBM Plex Serif", label: "IBM Plex Serif" },
+];
+
 export default function DocumentTab() {
   const { currentDocument, actions, selectedObject: shape } = React.useContext(
     StateContext
@@ -57,6 +63,18 @@ export default function DocumentTab() {
   if (isText(shape)) {
     currentStyle = shape.editorState.getCurrentInlineStyle();
   }
+
+  const setFont = React.useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      updateSelectedObject({
+        editorState: textStyles.fontFamily.add(
+          shape!.editorState,
+          event.target.value
+        ),
+      });
+    },
+    [updateSelectedObject, shape]
+  );
 
   const setFontSize = React.useCallback(
     ({ fontSize }: { fontSize: string }) => {
@@ -216,6 +234,17 @@ export default function DocumentTab() {
       </ControlGrid>
       <Separator />
       <SectionTitle marginTop>Text</SectionTitle>
+      <ControlGrid>
+        <ContentContainer verticalAlign>
+          <select onChange={setFont}>
+            {fontOptions.map(font => (
+              <option key={font.value} value={font.value}>
+                {font.label}
+              </option>
+            ))}
+          </select>
+        </ContentContainer>
+      </ControlGrid>
       <ControlGrid>
         <ControlInput
           property="fontSize"
