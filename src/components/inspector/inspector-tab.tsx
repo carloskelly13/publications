@@ -27,7 +27,7 @@ import { styles as textStyles } from "../shapes/text-box";
 import IconButton from "../ui/icon-button";
 import { RichUtils } from "draft-js";
 import { AppColors } from "../../util/constants";
-import { ContentContainer } from "../ui/containers";
+import ControlSelect from "../ui/control-select";
 
 const nameInputProps = {
   labelCSS: css`
@@ -50,8 +50,8 @@ const FontStyleGrid = styled.div`
 `;
 
 const fontOptions = [
-  { value: "IBM Plex Sans", label: "IBM Plex Sans" },
-  { value: "IBM Plex Serif", label: "IBM Plex Serif" },
+  { value: "IBM Plex Sans", label: "Sans" },
+  { value: "IBM Plex Serif", label: "Serif" },
 ];
 
 export default function DocumentTab() {
@@ -234,17 +234,14 @@ export default function DocumentTab() {
       </ControlGrid>
       <Separator />
       <SectionTitle marginTop>Text</SectionTitle>
-      <ControlGrid>
-        <ContentContainer verticalAlign>
-          <select onChange={setFont}>
-            {fontOptions.map(font => (
-              <option key={font.value} value={font.value}>
-                {font.label}
-              </option>
-            ))}
-          </select>
-        </ContentContainer>
-      </ControlGrid>
+      <VerticalControlGrid>
+        <ControlSelect
+          label="Font"
+          disabled={!isText(shape)}
+          onChange={setFont}
+          options={fontOptions}
+        />
+      </VerticalControlGrid>
       <ControlGrid>
         <ControlInput
           property="fontSize"

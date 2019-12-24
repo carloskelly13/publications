@@ -101,6 +101,7 @@ export const Colors = {
     Background: "#38393d",
     MetricBackground: "#2f2f2f",
     Text: "#fff",
+    DisabledText: "#555",
     Border: "#262626",
     FocusBorder: "#785ef0",
     FocusOutline: "#9b82f3",
