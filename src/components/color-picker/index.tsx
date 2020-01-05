@@ -9,11 +9,9 @@ import {
   Callout,
   ColorPicker,
   getColorFromString,
-  IColorPickerStyles,
   IColor,
   ICalloutContentStyles,
 } from "office-ui-fabric-react";
-import { IColorPickerStyleProps } from "office-ui-fabric-react/src/components/ColorPicker/ColorPicker.types";
 
 const ColorLabel = styled(Text)`
   width: 35%;

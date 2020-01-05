@@ -3,7 +3,7 @@ import styled from "styled-components";
 import LayersSidebar from "../components/inspector";
 import Editor from "../components/editor";
 import { navigate, RouteComponentProps } from "@reach/router";
-import { StateContext } from "../contexts/app-state";
+import { useAppStateContext } from "../contexts/app-state-provider";
 
 const Content = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ const EditorView: EditorView = props => {
     dataLoaded,
     userFetching,
     user,
-  } = React.useContext(StateContext);
+  } = useAppStateContext();
   const getDocument = React.useRef(actions.getDocument);
   const documentId = React.useRef(props.documentId);
   React.useEffect(() => {

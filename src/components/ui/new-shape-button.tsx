@@ -4,8 +4,8 @@ import { Colors } from "../../util/constants";
 import PlusCloseIcon from "./icons/plus-close";
 import posed, { PoseGroup } from "react-pose";
 import { Shapes } from "../../util/new-shapes";
-import { StateContext } from "../../contexts/documents-provider";
 import { PubShape } from "../../types/pub-objects";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const NewShapeContainer = posed(styled.div`
   background: ${Colors.NewShapeButton.Background};
@@ -92,7 +92,7 @@ const Button = posed(styled.button`
 
 export default function NewShapeButton() {
   const [open, setOpen] = React.useState(false);
-  const { actions } = React.useContext(StateContext);
+  const { actions } = useAppStateContext();
   const addObject = React.useCallback(
     (shape: PubShape) => {
       actions.addObject(shape);

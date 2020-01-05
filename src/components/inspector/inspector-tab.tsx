@@ -6,7 +6,6 @@ import {
   ControlGrid,
   VerticalControlGrid,
 } from "./components";
-import { StateContext } from "../../contexts/app-state";
 import ControlInput, { ControlInputLabel } from "../ui/control-input";
 import get from "lodash/fp/get";
 import { css } from "styled-components";
@@ -28,6 +27,7 @@ import IconButton from "../ui/icon-button";
 import { RichUtils } from "draft-js";
 import { AppColors } from "../../util/constants";
 import ControlSelect from "../ui/control-select";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const nameInputProps = {
   labelCSS: css`
@@ -55,9 +55,11 @@ const fontOptions = [
 ];
 
 export default function DocumentTab() {
-  const { currentDocument, actions, selectedObject: shape } = React.useContext(
-    StateContext
-  );
+  const {
+    currentDocument,
+    actions,
+    selectedObject: shape,
+  } = useAppStateContext();
   const { updateSelectedObject } = actions;
   let currentStyle = null;
   if (isText(shape)) {

@@ -1,10 +1,10 @@
 import * as React from "react";
-import { StateContext } from "../contexts/app-state";
 import DialogWrapper from "../components/modal";
 import LoginForm from "../components/login";
 import AboutPanel from "../components/about";
 import SaveDialog from "../components/save-dialog";
 import NewAccountForm from "../components/new-account";
+import { useAppStateContext } from "../contexts/app-state-provider";
 
 const DialogsView: React.FC = () => {
   const {
@@ -12,7 +12,7 @@ const DialogsView: React.FC = () => {
     aboutModalVisible,
     saveDialogVisible,
     newAccountModalVisible,
-  } = React.useContext(StateContext);
+  } = useAppStateContext();
   return (
     <>
       <DialogWrapper visible={loginModalVisible}>

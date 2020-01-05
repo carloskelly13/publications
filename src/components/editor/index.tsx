@@ -1,12 +1,11 @@
 import React, { KeyboardEvent, UIEvent } from "react";
 import styled from "styled-components";
-// import get from "lodash/fp/get";
 import range from "lodash/range";
 import { Keys } from "../../util/constants";
 import Canvas from "../canvas";
 import Ruler from "../rulers";
-import { StateContext } from "../../contexts/documents-provider";
 import { PubShape } from "../../types/pub-objects";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const Container = styled.div`
   overflow: scroll;
@@ -31,9 +30,12 @@ const scrollOffsetZero = {
 const ALLOWED_KEYS = [Keys.Up, Keys.Down, Keys.Left, Keys.Right];
 
 export default function Editor() {
-  const { currentDocument, zoom, selectedObject, actions } = React.useContext(
-    StateContext
-  );
+  const {
+    currentDocument,
+    zoom,
+    selectedObject,
+    actions,
+  } = useAppStateContext();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [scrollOffset, setScrollOffset] = React.useState(scrollOffsetZero);
   const [gridLineRanges, setGridLineRanges] = React.useState(gridRangesZero);

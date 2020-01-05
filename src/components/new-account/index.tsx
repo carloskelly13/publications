@@ -8,7 +8,7 @@ import { ModalButtonContainer } from "../ui/button-container";
 import Button from "../ui/framed-button";
 import * as yup from "yup";
 import { Colors } from "../../util/constants";
-import { StateContext } from "../../contexts/app-state";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 export interface NewAccount {
   name: string;
@@ -47,7 +47,7 @@ const validationSchema = yup.object().shape({
 });
 
 const NewAccountForm: React.FC = () => {
-  const { actions } = React.useContext(StateContext);
+  const { actions } = useAppStateContext();
   const handleOnSubmit = React.useCallback(
     async (
       values: NewAccountFormValues,

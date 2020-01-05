@@ -2,14 +2,14 @@ import * as React from "react";
 import get from "lodash/get";
 import { LayerItem } from "./layer-item";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { StateContext } from "../../contexts/documents-provider";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 export default function LayersTab() {
   const {
     actions: { adjustObjectLayer, updateSelectedObject },
     currentDocument,
     selectedObject,
-  } = React.useContext(StateContext);
+  } = useAppStateContext();
   return (
     <DragDropContext onDragEnd={adjustObjectLayer}>
       <Droppable droppableId="droppable">

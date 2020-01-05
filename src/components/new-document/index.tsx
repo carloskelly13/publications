@@ -8,10 +8,10 @@ import { ModalHeader } from "../ui/text";
 import { ModalContent } from "../modal";
 import { Formik, FormikProps } from "formik";
 import { PubNewDocument } from "../../types/pub-objects";
-import { StateContext } from "../../contexts/app-state";
 import { navigate } from "@reach/router";
 import { addEditorStateToDocument } from "../../util/documents";
 import PageIcon from "../ui/icons/page";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const NewDocumentContainer = styled(ModalContent)`
   width: 400px;
@@ -28,7 +28,7 @@ interface NewDocument {
 }
 
 const NewDocumentForm: React.FC = () => {
-  const { actions, user, userFetching } = React.useContext(StateContext);
+  const { actions, user, userFetching } = useAppStateContext();
 
   const validateForm = React.useCallback(() => {}, []);
   const hasValidUserAuthenticated = !userFetching && !!user;

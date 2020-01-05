@@ -12,7 +12,6 @@ import ZoomInIcon from "../ui/icons/zoom-in";
 import ZoomOutIcon from "../ui/icons/zoom-out";
 import Spacer from "../ui/spacer";
 import TitleBarButton from "./title-bar-button";
-import { StateContext } from "../../contexts/app-state";
 import downloadPdfAction from "../../util/download-pdf";
 import { ClipboardAction } from "../../types/data";
 import Menu, { MenuDivider, MenuItem } from "../ui/menu";
@@ -21,6 +20,7 @@ import ArrowDownIcon from "../ui/icons/arrow-down";
 import { navigate } from "@reach/router";
 import PencilRulerIcon from "../ui/icons/pencil-ruler";
 import GarbageIcon from "../ui/icons/garbage";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const Container = styled.header`
   background: ${Colors.TitleBar.Background};
@@ -69,7 +69,7 @@ const TitleBar: React.FC = () => {
     user,
     userFetching,
     selectedDocumentItem,
-  } = React.useContext(StateContext);
+  } = useAppStateContext();
   const hasValidUserAuthenticated = !userFetching && !!user;
   const hasNoUserAuthenticated = !userFetching && !user;
 
@@ -88,23 +88,17 @@ const TitleBar: React.FC = () => {
     () => actions.setZoom(Math.max(0.25, zoom - 0.25)),
     [actions, zoom]
   );
-  const handleDocumentItemDoubleClick = React.useCallback(
-    () => {
-      navigate(`edit/${selectedDocumentItem.id}`);
-      actions.setSelectedDocumentItem(null);
-    },
-    [selectedDocumentItem, actions]
-  );
+  const handleDocumentItemDoubleClick = React.useCallback(() => {
+    navigate(`edit/${selectedDocumentItem.id}`);
+    actions.setSelectedDocumentItem(null);
+  }, [selectedDocumentItem, actions]);
 
-  const handleSaveChangesButtonSelected = React.useCallback(
-    async () => {
-      await actions.saveDocument();
-      actions.setSaveDialogVisible(false);
-      navigate("/");
-      actions.setCurrentDocument(null);
-    },
-    [actions]
-  );
+  const handleSaveChangesButtonSelected = React.useCallback(async () => {
+    await actions.saveDocument();
+    actions.setSaveDialogVisible(false);
+    navigate("/");
+    actions.setCurrentDocument(null);
+  }, [actions]);
 
   return (
     <Container>
@@ -129,15 +123,14 @@ const TitleBar: React.FC = () => {
           )}
           renderMenu={
             <>
-              {currentDocument &&
-                hasValidUserAuthenticated && (
-                  <>
-                    <MenuItem onClick={handleSaveChangesButtonSelected}>
-                      View All Documents
-                    </MenuItem>
-                    <MenuDivider />
-                  </>
-                )}
+              {currentDocument && hasValidUserAuthenticated && (
+                <>
+                  <MenuItem onClick={handleSaveChangesButtonSelected}>
+                    View All Documents
+                  </MenuItem>
+                  <MenuDivider />
+                </>
+              )}
               {hasValidUserAuthenticated && (
                 <MenuItem onClick={actions.logout}>Log Out</MenuItem>
               )}

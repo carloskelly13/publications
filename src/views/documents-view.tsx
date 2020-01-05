@@ -1,5 +1,4 @@
 import * as React from "react";
-import { StateContext } from "../contexts/app-state";
 import { PubDocument } from "../types/pub-objects";
 import Canvas from "../components/canvas";
 import { RouteComponentProps, navigate } from "@reach/router";
@@ -15,6 +14,7 @@ import {
 import DeleteDocumentDialog from "../components/delete-document-dialog";
 import DialogWrapper from "../components/modal";
 import NewDocumentForm from "../components/new-document";
+import { useAppStateContext } from "../contexts/app-state-provider";
 
 const DocumentsView: React.FC<RouteComponentProps> = () => {
   const {
@@ -23,7 +23,7 @@ const DocumentsView: React.FC<RouteComponentProps> = () => {
     deleteDocumentDialogVisible,
     selectedDocumentItem,
     newDocumentModalVisible,
-  } = React.useContext(StateContext);
+  } = useAppStateContext();
   const {
     setCurrentDocument,
     setSelectedObject,

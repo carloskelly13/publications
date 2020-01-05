@@ -1,9 +1,9 @@
 import * as React from "react";
 import { InspectorContainer } from "./components";
-import { StateContext } from "../../contexts/app-state";
 import DocumentTab from "./inspector-tab";
 import LayersTab from "./layers-tab";
 import InspectorTabs from "./tabs";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 export enum TabKey {
   Inspector,
@@ -11,7 +11,7 @@ export enum TabKey {
 }
 
 export default function Inspector() {
-  const { currentDocument } = React.useContext(StateContext);
+  const { currentDocument } = useAppStateContext();
   const [activeTab, setActiveTab] = React.useState<TabKey>(TabKey.Inspector);
   return (
     <InspectorContainer visible={!!currentDocument}>

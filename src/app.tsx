@@ -1,5 +1,5 @@
 import React from "react";
-import DocumentsProvider from "./contexts/documents-provider";
+import { AppStateProvider } from "./contexts/app-state-provider";
 import { Provider, createClient } from "urql";
 import ReactDOM from "react-dom";
 import AppView from "./views/app-view";
@@ -22,9 +22,9 @@ const client = createClient({
 
 const PublicationsApp: React.FC = () => (
   <Provider value={client}>
-    <DocumentsProvider client={client}>
+    <AppStateProvider client={client}>
       <AppView />
-    </DocumentsProvider>
+    </AppStateProvider>
   </Provider>
 );
 

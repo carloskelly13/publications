@@ -1,12 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
 import { ModalContent } from "../modal";
-import { StateContext } from "../../contexts/app-state";
 import Button from "../ui/framed-button";
 import { ModalButtonContainer } from "../ui/button-container";
 import { Colors } from "../../util/constants";
 import { PubDocument } from "../../types/pub-objects";
 import GarbageIcon from "../ui/icons/garbage";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 export const DeleteDocumentDialogContent = styled(ModalContent)`
   width: 400px;
@@ -30,7 +30,7 @@ interface DeleteDocumentDialogProps {
 }
 
 const DeleteDocumentDialog: React.FC<DeleteDocumentDialogProps> = props => {
-  const { actions } = React.useContext(StateContext);
+  const { actions } = useAppStateContext();
   const handleDeleteButtonSelected = React.useCallback(async () => {
     await actions.deleteDocument(props.doc.id);
     actions.setDeleteDocumentDialogVisible(false);

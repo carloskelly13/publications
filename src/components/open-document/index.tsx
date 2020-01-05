@@ -8,11 +8,11 @@ import {
   FileBrowserContentContainer,
 } from "./components";
 import { PubDocument } from "../../types/pub-objects";
-import { StateContext } from "../../contexts/documents-provider";
 import { FileItem } from "./file-item";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 export default function OpenDocumentDialog() {
-  const { documents, actions } = React.useContext(StateContext);
+  const { documents, actions } = useAppStateContext();
   const [searchKeyword, setSearchKeyword] = React.useState("");
   const [
     selectedDocument,

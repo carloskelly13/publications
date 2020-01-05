@@ -5,6 +5,7 @@ import flowRight from "lodash/fp/flowRight";
 import cloneDeep from "clone-deep";
 import { pipe, take, toPromise } from "wonka";
 import gql from "graphql-tag";
+import constate from "constate";
 
 import {
   addEditorStateToDocument,
@@ -13,7 +14,7 @@ import {
   duplicateShape,
 } from "../util/documents";
 import shortid from "shortid";
-import { StateContext, PubAppState } from "./app-state";
+import { PubAppState } from "./app-state";
 import {
   PubDocument,
   PubPage,
@@ -49,13 +50,9 @@ import {
 import { packageDocument } from "../util/package-document";
 import { navigate } from "@reach/router";
 
-export { StateContext } from "./app-state";
+type useAppStateFn = (options: { client: Client }) => PubAppState;
 
-interface Props {
-  client: Client;
-  children?: React.ReactNode;
-}
-export default function DocumentsProvider(props: Props) {
+const useAppState: useAppStateFn = ({ client }) => {
   const [
     { data: currentUserData, fetching: userFetching },
     refetchCurrentUser,
@@ -131,7 +128,7 @@ export default function DocumentsProvider(props: Props) {
     async (id: string) => {
       try {
         const { data } = await pipe(
-          props.client.executeQuery({
+          client.executeQuery({
             query: gql(documentQuery),
             variables: { id },
             key: 0,
@@ -148,7 +145,7 @@ export default function DocumentsProvider(props: Props) {
       }
       return;
     },
-    [props.client]
+    [client]
   );
 
   const saveDocument = React.useCallback(
@@ -345,38 +342,39 @@ export default function DocumentsProvider(props: Props) {
     [currentDocument, selectedObject, clipboardContents, deleteObject]
   );
 
-  const appState: PubAppState = {
-    actions: {
-      setAboutModalVisible,
-      setLoginModalVisible,
-      setLayersPanelVisible,
-      setStartModalVisible,
-      setCurrentDocument,
-      setNewAccountModalVisible,
-      setNewDocumentModalVisible,
-      setOpenDocumentModalVisible,
-      setSaveDialogVisible,
-      setDeleteDocumentDialogVisible,
-      setSelectedDocumentItem,
-      setSelectedObject,
-      setZoom,
-      getDocument,
-      saveDocument,
-      deleteDocument,
-      addObject,
-      deleteObject,
-      updateSelectedObject,
-      updateCurrentPage,
-      updateCurrentDocument,
-      adjustObjectLayer,
-      handleCreateNewDocument,
-      handleClipboardAction,
-      refreshDocsData,
-      login,
-      createUser,
-      refetchCurrentUser,
-      logout,
-    },
+  const actions = {
+    setAboutModalVisible,
+    setLoginModalVisible,
+    setLayersPanelVisible,
+    setStartModalVisible,
+    setCurrentDocument,
+    setNewAccountModalVisible,
+    setNewDocumentModalVisible,
+    setOpenDocumentModalVisible,
+    setSaveDialogVisible,
+    setDeleteDocumentDialogVisible,
+    setSelectedDocumentItem,
+    setSelectedObject,
+    setZoom,
+    getDocument,
+    saveDocument,
+    deleteDocument,
+    addObject,
+    deleteObject,
+    updateSelectedObject,
+    updateCurrentPage,
+    updateCurrentDocument,
+    adjustObjectLayer,
+    handleCreateNewDocument,
+    handleClipboardAction,
+    refreshDocsData,
+    login,
+    createUser,
+    refetchCurrentUser,
+    logout,
+  };
+
+  const state = {
     aboutModalVisible,
     clipboardContents,
     currentDocument,
@@ -397,9 +395,11 @@ export default function DocumentsProvider(props: Props) {
     userFetching,
   };
 
-  return (
-    <StateContext.Provider value={appState}>
-      {props.children}
-    </StateContext.Provider>
-  );
-}
+  return {
+    actions,
+    ...state,
+  };
+};
+
+const [AppStateProvider, useAppStateContext] = constate(useAppState);
+export { AppStateProvider, useAppStateContext };

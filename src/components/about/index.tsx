@@ -4,7 +4,7 @@ import Button from "../ui/framed-button";
 import { ModalContent } from "../modal";
 import styled from "styled-components";
 import LogoBadge from "../ui/icons/logo-badge";
-import { StateContext } from "../../contexts/documents-provider";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const PanelContainer = styled(ModalContent)`
   width: 550px;
@@ -45,7 +45,7 @@ const Link = styled.a`
 `;
 
 const AboutPanel: React.FC = () => {
-  const { actions } = React.useContext(StateContext);
+  const { actions } = useAppStateContext();
   return (
     <PanelContainer>
       <Content>

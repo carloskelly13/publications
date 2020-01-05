@@ -74,7 +74,3 @@ export interface PubAppState {
   saveDialogVisible: boolean;
   userFetching: boolean;
 }
-
-export const StateContext = React.createContext<PubAppState>(
-  null as PubAppState
-);

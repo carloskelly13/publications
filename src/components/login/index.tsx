@@ -11,9 +11,9 @@ import {
   LoginMutationResponse,
   RefetchCurrentUser,
 } from "../../types/data";
-import { StateContext } from "../../contexts/app-state";
 import { OperationResult } from "urql";
 import UserBadgeIcon from "../ui/icons/user-badge";
+import { useAppStateContext } from "../../contexts/app-state-provider";
 
 const LoginModalContent = styled(ModalContent)`
   width: 400px;
@@ -41,7 +41,7 @@ interface LoginFormErrors {
 
 const LoginForm: React.FC = () => {
   const [errorLoggingIn, setErrorLoggingIn] = React.useState(false);
-  const { actions } = React.useContext(StateContext);
+  const { actions } = useAppStateContext();
 
   const login = React.useCallback(
     async (payload: LoginFormValues) => {
