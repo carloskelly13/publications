@@ -11,7 +11,7 @@ import {
   getColorFromString,
   IColor,
   ICalloutContentStyles,
-} from "office-ui-fabric-react";
+} from "@fluentui/react";
 
 const ColorLabel = styled(Text)`
   width: 35%;
