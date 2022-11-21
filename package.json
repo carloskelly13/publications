@@ -110,7 +110,7 @@
     "graphql-playground-middleware-express": "^1.7.3",
     "hoist-non-react-statics": "^3.3.0",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "3.2.0",
+    "html-webpack-plugin": "5.5.0",
     "json-loader": "^0.5.7",
     "nodemon": "^1.18.3",
     "onchange": "^5.1.0",
@@ -122,7 +122,7 @@
     "typescript": "3.7.2",
     "url-loader": "^1.1.1",
     "webpack": "4.17.1",
-    "webpack-cli": "^3.1.0",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-middleware": "^3.2.0",
     "webpack-dev-server": "^3.1.14",
     "webpack-hot-middleware": "^2.23.0"
