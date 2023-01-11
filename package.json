@@ -44,7 +44,7 @@
     "immer": "^1.8.0",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^2.2.0",
-    "knex": "^0.19.5",
+    "knex": "^2.4.0",
     "lodash": "^4.17.13",
     "objection": "^1.2.6",
     "pg": "^7.4.3",
