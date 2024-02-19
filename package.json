@@ -46,7 +46,7 @@
     "jwt-decode": "^2.2.0",
     "knex": "^0.19.5",
     "lodash": "^4.17.13",
-    "objection": "^1.2.6",
+    "objection": "^2.2.16",
     "pg": "^7.4.3",
     "react": "17.0.2",
     "react-addons-css-transition-group": "^15.6.0",
