@@ -1,0 +1,35 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "web": {
+      "root": "web/",
+      "framework": "vite"
+    },
+    "core": {
+      "root": "core/",
+      "framework": "fastify"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": { "service": "core" }
+    },
+    {
+      "source": "/oauth2/(.*)",
+      "destination": { "service": "core" }
+    },
+    {
+      "source": "/login/(.*)",
+      "destination": { "service": "core" }
+    },
+    {
+      "source": "/actuator/health",
+      "destination": { "service": "core" }
+    },
+    {
+      "source": "/(.*)",
+      "destination": { "service": "web" }
+    }
+  ]
+}

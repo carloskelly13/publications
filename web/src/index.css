@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.rich-text-content {
+  overflow: hidden;
+  color: #111827;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.rich-text-content .tiptap,
+.rich-text-content.tiptap {
+  min-height: 100%;
+  outline: none;
+}
+
+.rich-text-content p {
+  margin: 0;
+  min-height: 1.25em;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  margin: 0;
+  padding-left: 1.5em;
+}
+
+.rich-text-content ul { list-style: disc; }
+.rich-text-content ol { list-style: decimal; }

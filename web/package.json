@@ -1,0 +1,38 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "8.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "generate:api": "openapi-typescript http://localhost:4004/v3/api-docs -o src/generated/api.ts",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint --deny-warnings",
+    "typecheck": "tsc -b --pretty false",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.29.2",
+    "@tiptap/extension-text-align": "^3.29.2",
+    "@tiptap/extension-text-style": "^3.29.2",
+    "@tiptap/pm": "^3.29.2",
+    "@tiptap/react": "^3.29.2",
+    "@tiptap/starter-kit": "^3.29.2",
+    "lucide-react": "^1.28.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router": "^8.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "openapi-typescript": "^7.13.0",
+    "oxlint": "^1.75.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.0"
+  }
+}
