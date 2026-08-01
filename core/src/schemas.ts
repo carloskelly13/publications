@@ -5,12 +5,30 @@ const OptionalString = Type.Optional(Type.String())
 
 export const RichTextContent = Type.Record(Type.String(), Type.Unknown(), { $id: 'RichTextContent' })
 
+export const PathCommand = Type.Union([
+  Type.Object({ type: Type.Literal('move'), x: Type.Number(), y: Type.Number() }),
+  Type.Object({ type: Type.Literal('line'), x: Type.Number(), y: Type.Number() }),
+  Type.Object({
+    type: Type.Literal('quadratic'),
+    controlX: Type.Number(),
+    controlY: Type.Number(),
+    x: Type.Number(),
+    y: Type.Number(),
+  }),
+], { $id: 'PathCommand' })
+
+export const PathGeometry = Type.Object({
+  version: Type.Literal(1),
+  commands: Type.Array(PathCommand, { minItems: 2 }),
+}, { $id: 'PathGeometry' })
+
 export const ShapeInput = Type.Object({
   type: OptionalString,
   width: OptionalNumber,
   height: OptionalNumber,
   x: OptionalNumber,
   y: OptionalNumber,
+  pathGeometry: Type.Optional(PathGeometry),
   z: Type.Optional(Type.Integer()),
   radiusTopLeft: OptionalNumber,
   radiusTopRight: OptionalNumber,

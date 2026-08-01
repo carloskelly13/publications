@@ -11,6 +11,10 @@ import {
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core'
+import type { Static } from '@sinclair/typebox'
+import { PathGeometry } from './schemas.js'
+
+type PathGeometryType = Static<typeof PathGeometry>
 
 export const users = pgTable('users', {
   id: bigserial('id', { mode: 'bigint' }).primaryKey(),
@@ -45,6 +49,7 @@ export const shapes = pgTable('shapes', {
   height: doublePrecision('height'),
   x: doublePrecision('x'),
   y: doublePrecision('y'),
+  pathGeometry: jsonb('path_geometry').$type<PathGeometryType>(),
   z: integer('z'),
   legacyRadius: doublePrecision('r'),
   radiusTopLeft: doublePrecision('radius_top_left').notNull().default(0),

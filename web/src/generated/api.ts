@@ -425,6 +425,28 @@ export interface components {
             height?: number;
             x?: number;
             y?: number;
+            pathGeometry?: {
+                /** @enum {number} */
+                version: 1;
+                commands: ({
+                    /** @enum {string} */
+                    type: "move";
+                    x: number;
+                    y: number;
+                } | {
+                    /** @enum {string} */
+                    type: "line";
+                    x: number;
+                    y: number;
+                } | {
+                    /** @enum {string} */
+                    type: "quadratic";
+                    controlX: number;
+                    controlY: number;
+                    x: number;
+                    y: number;
+                })[];
+            };
             z?: number;
             radiusTopLeft?: number;
             radiusTopRight?: number;
@@ -442,6 +464,46 @@ export interface components {
             };
             contentVersion?: number;
         };
+        PathGeometry: {
+            /** @enum {number} */
+            version: 1;
+            commands: ({
+                /** @enum {string} */
+                type: "move";
+                x: number;
+                y: number;
+            } | {
+                /** @enum {string} */
+                type: "line";
+                x: number;
+                y: number;
+            } | {
+                /** @enum {string} */
+                type: "quadratic";
+                controlX: number;
+                controlY: number;
+                x: number;
+                y: number;
+            })[];
+        };
+        PathCommand: {
+            /** @enum {string} */
+            type: "move";
+            x: number;
+            y: number;
+        } | {
+            /** @enum {string} */
+            type: "line";
+            x: number;
+            y: number;
+        } | {
+            /** @enum {string} */
+            type: "quadratic";
+            controlX: number;
+            controlY: number;
+            x: number;
+            y: number;
+        };
         ShapeResponse: {
             id: string;
         } & {
@@ -450,6 +512,28 @@ export interface components {
             height?: number;
             x?: number;
             y?: number;
+            pathGeometry?: {
+                /** @enum {number} */
+                version: 1;
+                commands: ({
+                    /** @enum {string} */
+                    type: "move";
+                    x: number;
+                    y: number;
+                } | {
+                    /** @enum {string} */
+                    type: "line";
+                    x: number;
+                    y: number;
+                } | {
+                    /** @enum {string} */
+                    type: "quadratic";
+                    controlX: number;
+                    controlY: number;
+                    x: number;
+                    y: number;
+                })[];
+            };
             z?: number;
             radiusTopLeft?: number;
             radiusTopRight?: number;
@@ -478,6 +562,28 @@ export interface components {
                 height?: number;
                 x?: number;
                 y?: number;
+                pathGeometry?: {
+                    /** @enum {number} */
+                    version: 1;
+                    commands: ({
+                        /** @enum {string} */
+                        type: "move";
+                        x: number;
+                        y: number;
+                    } | {
+                        /** @enum {string} */
+                        type: "line";
+                        x: number;
+                        y: number;
+                    } | {
+                        /** @enum {string} */
+                        type: "quadratic";
+                        controlX: number;
+                        controlY: number;
+                        x: number;
+                        y: number;
+                    })[];
+                };
                 z?: number;
                 radiusTopLeft?: number;
                 radiusTopRight?: number;
@@ -509,6 +615,28 @@ export interface components {
                 height?: number;
                 x?: number;
                 y?: number;
+                pathGeometry?: {
+                    /** @enum {number} */
+                    version: 1;
+                    commands: ({
+                        /** @enum {string} */
+                        type: "move";
+                        x: number;
+                        y: number;
+                    } | {
+                        /** @enum {string} */
+                        type: "line";
+                        x: number;
+                        y: number;
+                    } | {
+                        /** @enum {string} */
+                        type: "quadratic";
+                        controlX: number;
+                        controlY: number;
+                        x: number;
+                        y: number;
+                    })[];
+                };
                 z?: number;
                 radiusTopLeft?: number;
                 radiusTopRight?: number;
@@ -540,6 +668,28 @@ export interface components {
                     height?: number;
                     x?: number;
                     y?: number;
+                    pathGeometry?: {
+                        /** @enum {number} */
+                        version: 1;
+                        commands: ({
+                            /** @enum {string} */
+                            type: "move";
+                            x: number;
+                            y: number;
+                        } | {
+                            /** @enum {string} */
+                            type: "line";
+                            x: number;
+                            y: number;
+                        } | {
+                            /** @enum {string} */
+                            type: "quadratic";
+                            controlX: number;
+                            controlY: number;
+                            x: number;
+                            y: number;
+                        })[];
+                    };
                     z?: number;
                     radiusTopLeft?: number;
                     radiusTopRight?: number;
@@ -579,6 +729,28 @@ export interface components {
                     height?: number;
                     x?: number;
                     y?: number;
+                    pathGeometry?: {
+                        /** @enum {number} */
+                        version: 1;
+                        commands: ({
+                            /** @enum {string} */
+                            type: "move";
+                            x: number;
+                            y: number;
+                        } | {
+                            /** @enum {string} */
+                            type: "line";
+                            x: number;
+                            y: number;
+                        } | {
+                            /** @enum {string} */
+                            type: "quadratic";
+                            controlX: number;
+                            controlY: number;
+                            x: number;
+                            y: number;
+                        })[];
+                    };
                     z?: number;
                     radiusTopLeft?: number;
                     radiusTopRight?: number;
@@ -619,6 +791,28 @@ export interface components {
                         height?: number;
                         x?: number;
                         y?: number;
+                        pathGeometry?: {
+                            /** @enum {number} */
+                            version: 1;
+                            commands: ({
+                                /** @enum {string} */
+                                type: "move";
+                                x: number;
+                                y: number;
+                            } | {
+                                /** @enum {string} */
+                                type: "line";
+                                x: number;
+                                y: number;
+                            } | {
+                                /** @enum {string} */
+                                type: "quadratic";
+                                controlX: number;
+                                controlY: number;
+                                x: number;
+                                y: number;
+                            })[];
+                        };
                         z?: number;
                         radiusTopLeft?: number;
                         radiusTopRight?: number;

@@ -9,17 +9,20 @@ type Props = {
   title: string
   zoom?: number
   selectedShapeId: string | null
-  onSelectShape: (shapeId: string | null) => void
+  selectedShapeIds: string[]
+  onSelectShape: ({ shapeId, additive, preserveGroup }: { shapeId: string | null; additive?: boolean; preserveGroup?: boolean }) => void
+  onSelectShapes: ({ shapeIds }: { shapeIds: string[] }) => void
   onShapeChange: (shapeId: string, changes: Partial<ShapeInput>) => void
   editingShapeId: string | null
   onStartTextEditing: (shapeId: string) => void
   onFinishTextEditing: () => void
   onTextEditorChange: (editor: Editor | null) => void
+  snapToGrid: boolean
 }
 
 const BASE_PIXELS_PER_INCH = 96
 
-export function EditorWorkspace({ page, title, zoom = 1, selectedShapeId, onSelectShape, onShapeChange, editingShapeId, onStartTextEditing, onFinishTextEditing, onTextEditorChange }: Props) {
+export function EditorWorkspace({ page, title, zoom = 1, selectedShapeId, selectedShapeIds, onSelectShape, onSelectShapes, onShapeChange, editingShapeId, onStartTextEditing, onFinishTextEditing, onTextEditorChange, snapToGrid }: Props) {
   const pixelsPerInch = BASE_PIXELS_PER_INCH * zoom
   const canvasWidth = (page.width ?? 8.5) * pixelsPerInch
   const canvasHeight = (page.height ?? 11) * pixelsPerInch
@@ -49,10 +52,13 @@ export function EditorWorkspace({ page, title, zoom = 1, selectedShapeId, onSele
             pixelsPerInch={pixelsPerInch}
             showGrid
             selectedShapeId={selectedShapeId}
+            selectedShapeIds={selectedShapeIds}
             onSelectShape={onSelectShape}
+            onSelectShapes={onSelectShapes}
             onShapeChange={onShapeChange}
             editingShapeId={editingShapeId}
             onStartTextEditing={onStartTextEditing}
+            snapToGrid={snapToGrid}
             className="block bg-white"
           />
           {editingShape?.type === 'text' && editingShapeId && (

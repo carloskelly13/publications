@@ -1,7 +1,8 @@
 import type { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
-import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Circle, FileDown, Italic, List, ListOrdered, Minus, PaintBucket, PenLine, Plus, RotateCw, Save, Shapes, Square, SquareRoundCorner, Strikethrough, Type, Underline, type LucideIcon } from 'lucide-react'
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Bold, Circle, FileDown, Italic, Layers3, List, ListOrdered, Magnet, Minus, PaintBucket, PenLine, Plus, RotateCw, Save, Shapes, Spline, Square, SquareRoundCorner, Strikethrough, Type, Underline, type LucideIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { cn } from '../lib/cn'
 import type { ShapeInput, ShapeResponse } from '../types'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
@@ -14,10 +15,14 @@ type Props = {
   saveStatus: SaveStatus
   selectedShape: ShapeResponse | null
   onShapeChange: (changes: Partial<ShapeInput>) => void
-  onAddShape: (type: 'rect' | 'circle' | 'text') => void
+  onAddShape: (type: 'rect' | 'circle' | 'text' | 'line') => void
   onExportPdf: () => void
   exportStatus: ExportStatus
   textEditor: Editor | null
+  layersOpen: boolean
+  onToggleLayers: () => void
+  snapToGrid: boolean
+  onToggleSnapToGrid: () => void
 }
 
 const zoomOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4]
@@ -89,7 +94,12 @@ function ColorControl({ label, icon: Icon, color, disabled, onChange }: ColorCon
             {palette.map((swatch) => (
               <button
                 key={swatch}
-                className={`aspect-square rounded-md border shadow-sm transition hover:scale-105 ${color?.toLowerCase() === swatch ? 'ring-2 ring-violet-500 ring-offset-1 dark:ring-offset-gray-900' : 'border-black/15'}`}
+                className={cn(
+                  'aspect-square rounded-md border shadow-sm transition hover:scale-105',
+                  color?.toLowerCase() === swatch
+                    ? 'ring-2 ring-violet-500 ring-offset-1 dark:ring-offset-gray-900'
+                    : 'border-black/15',
+                )}
                 style={{ backgroundColor: swatch }}
                 type="button"
                 aria-label={`${label} ${swatch}`}
@@ -113,7 +123,10 @@ function ColorControl({ label, icon: Icon, color, disabled, onChange }: ColorCon
           <label className="mt-3 block text-xs font-medium text-gray-500 dark:text-gray-400">
             Hex color
             <input
-              className={`mt-1 h-9 w-full rounded-md border bg-white px-2 font-mono text-sm text-gray-900 outline-none focus:ring-2 focus:ring-violet-500 dark:bg-gray-950 dark:text-gray-100 ${hex && !validHex ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'}`}
+              className={cn(
+                'mt-1 h-9 w-full rounded-md border bg-white px-2 font-mono text-sm text-gray-900 outline-none focus:ring-2 focus:ring-violet-500 dark:bg-gray-950 dark:text-gray-100',
+                hex && !validHex ? 'border-red-500' : 'border-gray-300 dark:border-gray-700',
+              )}
               value={hex}
               placeholder="#8b5cf6"
               spellCheck={false}
@@ -226,7 +239,7 @@ function CornerControl({ shape, onChange }: CornerControlProps) {
   )
 }
 
-function AddShapeControl({ onAddShape }: { onAddShape: (type: 'rect' | 'circle' | 'text') => void }) {
+function AddShapeControl({ onAddShape }: { onAddShape: (type: 'rect' | 'circle' | 'text' | 'line') => void }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -243,6 +256,7 @@ function AddShapeControl({ onAddShape }: { onAddShape: (type: 'rect' | 'circle' 
     { type: 'rect' as const, label: 'Rectangle', icon: Square },
     { type: 'circle' as const, label: 'Circle', icon: Circle },
     { type: 'text' as const, label: 'Text', icon: Type },
+    { type: 'line' as const, label: 'Line', icon: Spline },
   ]
 
   return (
@@ -289,7 +303,12 @@ function TextFormatButton({ label, icon: Icon, active = false, disabled = false,
 }) {
   return (
     <button
-      className={`grid size-8 place-items-center rounded-md disabled:opacity-35 ${active ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'}`}
+      className={cn(
+        'grid size-8 place-items-center rounded-md disabled:opacity-35',
+        active
+          ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300'
+          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+      )}
       type="button"
       aria-label={label}
       title={label}
@@ -359,7 +378,7 @@ function TextFormattingControls({ editor }: { editor: Editor | null }) {
   )
 }
 
-export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selectedShape, onShapeChange, onAddShape, onExportPdf, exportStatus, textEditor }: Props) {
+export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selectedShape, onShapeChange, onAddShape, onExportPdf, exportStatus, textEditor, layersOpen, onToggleLayers, snapToGrid, onToggleSnapToGrid }: Props) {
   const zoomBy = (amount: number) => {
     onZoomChange(Math.min(maxZoom, Math.max(minZoom, Number((zoom + amount).toFixed(2)))))
   }
@@ -367,7 +386,10 @@ export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selected
   return (
     <div className="flex h-11 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-3 dark:border-gray-700 dark:bg-gray-900" role="toolbar" aria-label="Document controls">
       <button
-        className={`grid size-8 place-items-center rounded-md transition hover:bg-gray-100 disabled:cursor-wait disabled:opacity-60 dark:hover:bg-gray-800 ${saveStatus === 'error' ? 'text-red-600 dark:text-red-400' : ''}`}
+        className={cn(
+          'grid size-8 place-items-center rounded-md transition hover:bg-gray-100 disabled:cursor-wait disabled:opacity-60 dark:hover:bg-gray-800',
+          saveStatus === 'error' && 'text-red-600 dark:text-red-400',
+        )}
         type="button"
         onClick={onSave}
         disabled={saveStatus === 'saving'}
@@ -377,7 +399,10 @@ export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selected
         <Save className="size-4" aria-hidden="true" />
       </button>
       <button
-        className={`grid size-8 place-items-center rounded-md transition hover:bg-gray-100 disabled:cursor-wait disabled:opacity-60 dark:hover:bg-gray-800 ${exportStatus === 'error' ? 'text-red-600 dark:text-red-400' : ''}`}
+        className={cn(
+          'grid size-8 place-items-center rounded-md transition hover:bg-gray-100 disabled:cursor-wait disabled:opacity-60 dark:hover:bg-gray-800',
+          exportStatus === 'error' && 'text-red-600 dark:text-red-400',
+        )}
         type="button"
         onClick={onExportPdf}
         disabled={exportStatus === 'exporting'}
@@ -394,13 +419,15 @@ export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selected
         <TextFormattingControls editor={textEditor} />
       ) : (
         <>
-          <ColorControl
-            label="Fill color"
-            icon={PaintBucket}
-            color={selectedShape?.fill}
-            disabled={!selectedShape}
-            onChange={(fill) => onShapeChange({ fill })}
-          />
+          {selectedShape?.type !== 'line' && (
+            <ColorControl
+              label="Fill color"
+              icon={PaintBucket}
+              color={selectedShape?.fill}
+              disabled={!selectedShape}
+              onChange={(fill) => onShapeChange({ fill })}
+            />
+          )}
           <ColorControl
             label="Stroke color"
             icon={PenLine}
@@ -408,8 +435,8 @@ export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selected
             disabled={!selectedShape}
             onChange={(stroke) => onShapeChange({ stroke })}
           />
-          <CornerControl shape={selectedShape} onChange={onShapeChange} />
-          <label className={`flex h-8 items-center rounded-md bg-gray-100 pl-2 text-sm dark:bg-gray-800 ${selectedShape ? '' : 'opacity-35'}`} title="Stroke thickness">
+          {selectedShape?.type !== 'line' && <CornerControl shape={selectedShape} onChange={onShapeChange} />}
+          <label className={cn('flex h-8 items-center rounded-md bg-gray-100 pl-2 text-sm dark:bg-gray-800', !selectedShape && 'opacity-35')} title="Stroke thickness">
             <input
               className="w-12 bg-transparent text-right font-medium outline-none"
               type="number"
@@ -428,7 +455,7 @@ export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selected
           </label>
         </>
       )}
-      <label className={`flex h-8 items-center rounded-md bg-gray-100 pl-2 text-sm dark:bg-gray-800 ${selectedShape ? '' : 'opacity-35'}`} title="Rotation in degrees">
+      {selectedShape?.type !== 'line' && <label className={cn('flex h-8 items-center rounded-md bg-gray-100 pl-2 text-sm dark:bg-gray-800', !selectedShape && 'opacity-35')} title="Rotation in degrees">
         <RotateCw className="size-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
         <input
           className="w-16 bg-transparent text-right font-medium outline-none"
@@ -443,9 +470,40 @@ export function EditorToolbar({ zoom, onZoomChange, onSave, saveStatus, selected
           }}
         />
         <span className="px-2 text-xs text-gray-500 dark:text-gray-400">°</span>
-      </label>
+      </label>}
 
       <div className="ml-auto flex items-center gap-1">
+        <button
+          className={cn(
+            'grid size-8 place-items-center rounded-md',
+            snapToGrid
+              ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300'
+              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+          )}
+          type="button"
+          aria-label={snapToGrid ? 'Disable snap to grid' : 'Enable snap to grid'}
+          title={`${snapToGrid ? 'Disable' : 'Enable'} snap to ¼-inch grid`}
+          aria-pressed={snapToGrid}
+          onClick={onToggleSnapToGrid}
+        >
+          <Magnet className="size-4" aria-hidden="true" />
+        </button>
+        <button
+          className={cn(
+            'grid size-8 place-items-center rounded-md',
+            layersOpen
+              ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300'
+              : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+          )}
+          type="button"
+          aria-label={layersOpen ? 'Close layers panel' : 'Open layers panel'}
+          title={layersOpen ? 'Close layers panel' : 'Open layers panel'}
+          aria-pressed={layersOpen}
+          onClick={onToggleLayers}
+        >
+          <Layers3 className="size-4" aria-hidden="true" />
+        </button>
+        <div className="mx-1 h-6 w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
         <button
           className="grid size-8 place-items-center rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
           type="button"
