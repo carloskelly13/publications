@@ -1,6 +1,7 @@
 import { useRef, type ReactNode } from 'react'
 
 type Props = {
+  open: boolean
   width: number
   onResize: ({ width }: { width: number }) => void
   layersHeight: number
@@ -14,6 +15,7 @@ const MAX_PANEL_WIDTH = 480
 const MIN_SECTION_HEIGHT = 120
 
 export function EditorSidebar({
+  open,
   width,
   onResize,
   layersHeight,
@@ -44,12 +46,19 @@ export function EditorSidebar({
   return (
     <aside
       ref={sidebarRef}
-      className="relative grid min-h-0 shrink-0 border-l border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
-      style={{ width, gridTemplateRows: `${layersHeight}px minmax(${MIN_SECTION_HEIGHT}px, 1fr)` }}
+      className="relative grid min-h-0 shrink-0 overflow-hidden border-l border-gray-200 bg-white transition-[width,transform,opacity] duration-200 ease-out motion-reduce:transition-none dark:border-gray-700 dark:bg-gray-900"
+      style={{
+        width: open ? width : 0,
+        gridTemplateRows: `${layersHeight}px minmax(${MIN_SECTION_HEIGHT}px, 1fr)`,
+        opacity: open ? 1 : 0,
+        transform: open ? 'translateX(0)' : 'translateX(1rem)',
+      }}
       aria-label="Document panels"
+      aria-hidden={!open}
+      inert={!open}
     >
       <div
-        className="absolute inset-y-0 -left-[3px] z-30 w-[6px] cursor-col-resize touch-none outline-none after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 after:-translate-x-1/2 after:bg-gray-300 hover:after:bg-violet-500 focus-visible:after:bg-violet-500 dark:after:bg-gray-600"
+        className="absolute inset-y-0 left-0 z-30 w-[6px] cursor-col-resize touch-none outline-none after:absolute after:inset-y-0 after:left-0 after:w-0.5 after:bg-gray-300 hover:after:bg-violet-500 focus-visible:after:bg-violet-500 dark:after:bg-gray-600"
         role="separator"
         aria-label="Resize sidebar"
         aria-orientation="vertical"

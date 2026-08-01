@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { api } from '../api'
 import type { DocumentDraft, PageInput, PublicationDocument } from '../types'
 import { DocumentCanvas } from './DocumentCanvas'
@@ -13,43 +13,47 @@ const letterPage: PageInput = {
   shapes: [],
 }
 
+const landscapeLetterPage: PageInput = {
+  pageNumber: 1,
+  width: 11,
+  height: 8.5,
+  shapes: [],
+}
+
+const postcardPage: PageInput = {
+  pageNumber: 1,
+  width: 6,
+  height: 4,
+  shapes: [],
+}
+
+const envelopePage: PageInput = {
+  pageNumber: 1,
+  width: 9.5,
+  height: 4.125,
+  shapes: [],
+}
+
 const templates: Array<{ id: string; label: string; document: DocumentDraft }> = [
   {
     id: 'blank-letter',
-    label: 'Blank',
+    label: 'Portrait',
     document: { name: 'Untitled', pages: [letterPage] },
   },
   {
-    id: 'blue-rectangle',
-    label: 'Blue rectangle',
-    document: {
-      name: 'Blue Rectangle',
-      pages: [
-        {
-          ...letterPage,
-          shapes: [
-            {
-              type: 'rect',
-              x: 1,
-              y: 1,
-              width: 4,
-              height: 2,
-              z: 1,
-              radiusTopLeft: 0,
-              radiusTopRight: 0,
-              radiusBottomRight: 0,
-              radiusBottomLeft: 0,
-              rotation: 0,
-              fill: '#60a5fa',
-              fillOpacity: 1,
-              stroke: '#1d4ed8',
-              strokeWidth: 2,
-              strokeOpacity: 1,
-            },
-          ],
-        },
-      ],
-    },
+    id: 'blank-landscape-letter',
+    label: 'Landscape',
+    document: { name: 'Untitled Landscape', pages: [landscapeLetterPage] },
+  },
+  {
+    id: 'blank-postcard',
+    label: 'Postcard',
+    document: { name: 'Untitled Postcard', pages: [postcardPage] },
+  },
+  {
+    id: 'blank-number-10-envelope',
+    label: 'Envelope',
+    document: { name: 'Untitled Envelope', pages: [envelopePage] },
   },
 ]
 
@@ -68,38 +72,51 @@ function DocumentCard({ document, deleting, onDelete, onRename }: DocumentCardPr
   const [validationError, setValidationError] = useState<string | null>(null)
 
   return (
-    <article className="group min-w-0">
-      <div className="relative h-64 overflow-hidden rounded-lg border border-gray-200 bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-        {document.id ? (
-          <Link
-            className="flex size-full items-center justify-center p-3 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet-600"
-            to={`/documents/${document.id}/edit`}
-            aria-label={`Open ${document.name ?? 'Untitled'}`}
-          >
-            {page ? (
-              <DocumentCanvas page={page} title={document.name ?? 'Untitled'} />
-            ) : (
-              <span className="text-sm text-gray-400 dark:text-gray-500">No pages</span>
-            )}
-          </Link>
-        ) : (
-          <div className="flex size-full items-center justify-center p-3">
-            {page ? (
-              <DocumentCanvas page={page} title={document.name ?? 'Untitled'} />
-            ) : (
-              <span className="text-sm text-gray-400 dark:text-gray-500">No pages</span>
-            )}
-          </div>
-        )}
-        <button
-          className="absolute right-2 top-2 grid size-9 place-items-center rounded-lg border border-gray-200 bg-white text-gray-500 opacity-0 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 group-hover:opacity-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-red-900 dark:hover:bg-red-950 dark:hover:text-red-400"
-          type="button"
-          aria-label={`Delete ${document.name ?? 'Untitled'}`}
-          onClick={() => onDelete(document)}
-          disabled={deleting}
+    <article className="group min-w-0" style={pageCardStyle({ page })}>
+      <div className="flex h-52 w-full items-end justify-start">
+        <div
+          className="relative overflow-hidden rounded-lg shadow-sm"
+          style={pagePreviewStyle({ page })}
         >
-          <Trash2 size={17} aria-hidden="true" />
-        </button>
+          {document.id ? (
+            <Link
+              className="flex size-full items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600"
+              to={`/documents/${document.id}/edit`}
+              aria-label={`Open ${document.name ?? 'Untitled'}`}
+            >
+              {page ? (
+                <DocumentCanvas
+                  page={page}
+                  title={document.name ?? 'Untitled'}
+                  className="block size-full bg-white"
+                />
+              ) : (
+                <span className="text-sm text-gray-400 dark:text-gray-500">No pages</span>
+              )}
+            </Link>
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              {page ? (
+                <DocumentCanvas
+                  page={page}
+                  title={document.name ?? 'Untitled'}
+                  className="block size-full bg-white"
+                />
+              ) : (
+                <span className="text-sm text-gray-400 dark:text-gray-500">No pages</span>
+              )}
+            </div>
+          )}
+          <button
+            className="absolute right-2 top-2 grid size-9 place-items-center rounded-lg border border-gray-200 bg-white text-gray-500 opacity-0 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 group-hover:opacity-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-red-900 dark:hover:bg-red-950 dark:hover:text-red-400"
+            type="button"
+            aria-label={`Delete ${document.name ?? 'Untitled'}`}
+            onClick={() => onDelete(document)}
+            disabled={deleting}
+          >
+            <Trash2 size={17} aria-hidden="true" />
+          </button>
+        </div>
       </div>
       {editing ? (
         <div className="mt-3">
@@ -138,7 +155,7 @@ function DocumentCard({ document, deleting, onDelete, onRename }: DocumentCardPr
         </div>
       ) : (
         <button
-          className="mt-3 block max-w-full truncate text-left text-sm font-medium text-gray-900 hover:text-violet-600 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 dark:text-gray-100 dark:hover:text-violet-400"
+          className="mt-3 block w-full truncate text-center text-sm font-medium text-gray-900 hover:text-violet-600 focus-visible:rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 dark:text-gray-100 dark:hover:text-violet-400"
           type="button"
           title="Rename document"
           onClick={() => setEditing(true)}
@@ -146,7 +163,7 @@ function DocumentCard({ document, deleting, onDelete, onRename }: DocumentCardPr
           {document.name ?? 'Untitled'}
         </button>
       )}
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-center text-xs text-gray-500 dark:text-gray-400">
         {document.updatedAt
           ? `Updated ${new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(new Date(document.updatedAt))}`
           : 'Recently created'}
@@ -179,6 +196,7 @@ function DocumentCard({ document, deleting, onDelete, onRename }: DocumentCardPr
 }
 
 export function DocumentHome() {
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(null)
   const [pendingDelete, setPendingDelete] = useState<PublicationDocument | null>(null)
@@ -206,31 +224,31 @@ export function DocumentHome() {
     documentsQuery.error ?? createMutation.error ?? renameMutation.error ?? deleteMutation.error
 
   return (
-    <div className="min-h-0 flex-1 overflow-auto">
+    <div className="min-h-0 flex-1 overflow-auto bg-gray-100 dark:bg-black">
       <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
         <section aria-labelledby="saved-heading">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-violet-600 dark:text-violet-400">
-                Your workspace
-              </p>
-              <h1 id="saved-heading" className="mt-1 text-3xl font-semibold tracking-tight">
+              <h1 id="saved-heading" className="text-xl font-semibold tracking-tight">
                 Saved documents
               </h1>
             </div>
           </div>
 
           {documentsQuery.isPending ? (
-            <div className="mt-6 grid grid-cols-2 gap-5 md:grid-cols-4">
+            <div className="mt-6 flex flex-wrap gap-6">
               {[0, 1, 2, 3].map((item) => (
                 <div
                   key={item}
-                  className="h-64 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800"
-                />
+                  className="flex h-52 items-end justify-start"
+                  style={pageCardStyle({ page: letterPage })}
+                >
+                  <div className="h-full aspect-[8.5/11] animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800" />
+                </div>
               ))}
             </div>
           ) : documents.length > 0 ? (
-            <div className="mt-6 grid grid-cols-2 gap-x-5 gap-y-8 md:grid-cols-4">
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-8">
               {documents.map((document, index) => (
                 <DocumentCard
                   key={document.id ?? index}
@@ -266,26 +284,36 @@ export function DocumentHome() {
           className="mt-12 border-t border-gray-200 pt-10 dark:border-gray-800"
           aria-labelledby="templates-heading"
         >
-          <p className="text-sm font-medium text-violet-600 dark:text-violet-400">
-            Start something new
-          </p>
-          <h2 id="templates-heading" className="mt-1 text-2xl font-semibold tracking-tight">
+          <h2 id="templates-heading" className="text-lg font-semibold tracking-tight">
             New from templates
           </h2>
-          <div className="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
+          <div className="mt-6 flex flex-wrap gap-6">
             {templates.map((template) => (
               <button
                 key={template.id}
-                className="group min-w-0 text-left disabled:cursor-wait disabled:opacity-60"
+                className="group min-w-0 text-center disabled:cursor-wait disabled:opacity-60"
+                style={pageCardStyle({ page: template.document.pages[0] })}
                 type="button"
                 onClick={() => createFromTemplate(template)}
                 disabled={createMutation.isPending}
               >
-                <div className="flex h-64 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-100 p-3 shadow-sm transition group-hover:border-violet-500 group-hover:ring-2 group-hover:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:group-hover:border-violet-400 dark:group-hover:ring-violet-950">
-                  <DocumentCanvas page={template.document.pages[0]!} title={template.label} />
+                <div className="flex h-52 w-full items-end justify-start">
+                  <div
+                    className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100 shadow-sm transition group-hover:border-violet-500 group-hover:ring-2 group-hover:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:group-hover:border-violet-400 dark:group-hover:ring-violet-950"
+                    style={pagePreviewStyle({ page: template.document.pages[0] })}
+                  >
+                    <DocumentCanvas
+                      page={template.document.pages[0]!}
+                      title={template.label}
+                      className="block size-full bg-white"
+                    />
+                  </div>
                 </div>
                 <span className="mt-3 block truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                   {creatingTemplateId === template.id ? 'Creating…' : template.label}
+                </span>
+                <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+                  {pageSizeLabel({ page: template.document.pages[0] })}
                 </span>
               </button>
             ))}
@@ -356,7 +384,10 @@ export function DocumentHome() {
   async function createFromTemplate(template: (typeof templates)[number]) {
     setCreatingTemplateId(template.id)
     try {
-      await createMutation.mutateAsync({ body: template.document })
+      const document = await createMutation.mutateAsync({ body: template.document })
+      if (document.id) {
+        navigate(`/documents/${document.id}/edit`)
+      }
     } catch {
       // The mutation exposes the failure through its error state
     } finally {
@@ -387,4 +418,23 @@ export function DocumentHome() {
     await deleteMutation.mutateAsync({ params: { path: { id: pendingDelete.id } } })
     setPendingDelete(null)
   }
+}
+
+function pagePreviewStyle({ page }: { page: PageInput | undefined }) {
+  const width = page?.width ?? 8.5
+  const height = page?.height ?? 11
+  return {
+    aspectRatio: `${width} / ${height}`,
+    ...(width > height ? { width: '100%' } : { height: '100%' }),
+  }
+}
+
+function pageCardStyle({ page }: { page: PageInput | undefined }) {
+  const width = page?.width ?? 8.5
+  const height = page?.height ?? 11
+  return { width: `${13 * Math.min(1, width / height)}rem` }
+}
+
+function pageSizeLabel({ page }: { page: PageInput | undefined }) {
+  return `${page?.width ?? 8.5} × ${page?.height ?? 11} in`
 }

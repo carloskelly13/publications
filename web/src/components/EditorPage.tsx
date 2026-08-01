@@ -64,7 +64,7 @@ export function EditorPage() {
   const [layersOpen, setLayersOpen] = useState(true)
   const [layersWidth, setLayersWidth] = useState(272)
   const [layersPanelHeight, setLayersPanelHeight] = useState(308)
-  const [snapToGrid, setSnapToGrid] = useState(false)
+  const [snapToGrid, setSnapToGrid] = useState(true)
   const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null)
   const exportCanvasRef = useRef<SVGSVGElement>(null)
   const saveFeedbackTimerRef = useRef<number | null>(null)
@@ -75,6 +75,7 @@ export function EditorPage() {
     { enabled: Boolean(documentId) },
   )
   const saveMutation = api.useMutation('put', '/api/documents/{id}')
+  const renameMutation = api.useMutation('patch', '/api/documents/{id}')
 
   useEffect(() => {
     setToolbarTarget(document.getElementById('editor-toolbar-slot'))
@@ -444,6 +445,8 @@ export function EditorPage() {
       {toolbarTarget &&
         createPortal(
           <EditorToolbar
+            documentTitle={state.document.name ?? 'Untitled'}
+            onRenameDocument={renameDocument}
             zoom={zoom}
             onZoomChange={setZoom}
             onSave={() => void save()}
@@ -482,38 +485,37 @@ export function EditorPage() {
             onTextEditorChange={setTextEditor}
             snapToGrid={snapToGrid}
           />
-          {layersOpen && (
-            <EditorSidebar
-              width={layersWidth}
-              onResize={({ width }) => setLayersWidth(width)}
-              layersHeight={layersPanelHeight}
-              onSplitResize={({ height }) => setLayersPanelHeight(height)}
-              layers={
-                <LayersPanel
-                  shapes={page.shapes ?? []}
-                  selectedShapeId={selectedShapeId}
-                  selectedShapeIds={selectedShapeIds}
-                  onSelect={selectShapes}
-                  onReorder={reorderLayers}
-                  onMove={moveLayer}
-                  onDuplicate={duplicateLayer}
-                  onDelete={deleteLayers}
-                  onSelectionChange={({ shapeIds }) => {
-                    setSelectedShapeIds(shapeIds)
-                    setEditingShapeId(null)
-                    setTextEditor(null)
-                  }}
-                />
-              }
-              properties={
-                <PropertiesPanel
-                  shapes={selectedShapes}
-                  textEditor={textEditor}
-                  onChange={updateMetrics}
-                />
-              }
-            />
-          )}
+          <EditorSidebar
+            open={layersOpen}
+            width={layersWidth}
+            onResize={({ width }) => setLayersWidth(width)}
+            layersHeight={layersPanelHeight}
+            onSplitResize={({ height }) => setLayersPanelHeight(height)}
+            layers={
+              <LayersPanel
+                shapes={page.shapes ?? []}
+                selectedShapeId={selectedShapeId}
+                selectedShapeIds={selectedShapeIds}
+                onSelect={selectShapes}
+                onReorder={reorderLayers}
+                onMove={moveLayer}
+                onDuplicate={duplicateLayer}
+                onDelete={deleteLayers}
+                onSelectionChange={({ shapeIds }) => {
+                  setSelectedShapeIds(shapeIds)
+                  setEditingShapeId(null)
+                  setTextEditor(null)
+                }}
+              />
+            }
+            properties={
+              <PropertiesPanel
+                shapes={selectedShapes}
+                textEditor={textEditor}
+                onChange={updateMetrics}
+              />
+            }
+          />
         </div>
         <div className="hidden" aria-hidden="true">
           <DocumentCanvas
@@ -527,6 +529,21 @@ export function EditorPage() {
       </div>
     </>
   )
+
+  async function renameDocument({ name }: { name: string }) {
+    if (!documentId) {
+      throw new Error('This document has no identifier')
+    }
+    await renameMutation.mutateAsync({
+      params: { path: { id: documentId } },
+      body: { name },
+    })
+    setState((current) =>
+      current.status === 'loaded'
+        ? { status: 'loaded', document: { ...current.document, name } }
+        : current,
+    )
+  }
 
   function updateMetrics({ changes }: { changes: Partial<ShapeInput> }) {
     if (selectedShapes.length === 0) {

@@ -26,13 +26,15 @@ import {
   Underline,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { cn } from '../lib/cn'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 export type ExportStatus = 'idle' | 'exporting' | 'error'
 
 type Props = {
+  documentTitle: string
+  onRenameDocument: ({ name }: { name: string }) => Promise<void>
   zoom: number
   onZoomChange: (zoom: number) => void
   onSave: () => void
@@ -44,6 +46,136 @@ type Props = {
   onToggleLayers: () => void
   snapToGrid: boolean
   onToggleSnapToGrid: () => void
+}
+
+type DocumentTitleControlProps = {
+  title: string
+  onRename: ({ name }: { name: string }) => Promise<void>
+}
+
+function DocumentTitleControl({ title, onRename }: DocumentTitleControlProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const titleMeasureRef = useRef<HTMLSpanElement>(null)
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(title)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [collapsedWidth, setCollapsedWidth] = useState<number | null>(null)
+
+  useLayoutEffect(() => {
+    if (titleMeasureRef.current) {
+      setCollapsedWidth(
+        Math.min(176, Math.ceil(titleMeasureRef.current.getBoundingClientRect().width)),
+      )
+    }
+  }, [title])
+
+  useEffect(() => {
+    if (!editing) {
+      setDraft(title)
+    }
+  }, [editing, title])
+
+  useEffect(() => {
+    if (!editing) {
+      return
+    }
+    const dismissOnOutsidePointer = (event: PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node) && !saving) {
+        setDraft(title)
+        setError(null)
+        setEditing(false)
+      }
+    }
+    document.addEventListener('pointerdown', dismissOnOutsidePointer, true)
+    return () => document.removeEventListener('pointerdown', dismissOnOutsidePointer, true)
+  }, [editing, saving, title])
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative shrink-0 transition-[width] duration-200 ease-out motion-reduce:transition-none"
+      style={{
+        width: editing ? '11rem' : collapsedWidth === null ? 'fit-content' : collapsedWidth,
+      }}
+    >
+      <span
+        ref={titleMeasureRef}
+        className="pointer-events-none absolute invisible whitespace-nowrap px-2 text-sm font-medium"
+        aria-hidden="true"
+      >
+        {title}
+      </span>
+      {editing ? (
+        <input
+          className={cn(
+            'h-8 w-full rounded-md border bg-white px-2 text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-violet-500 dark:bg-gray-900 dark:text-gray-100',
+            error ? 'border-red-500' : 'border-gray-300 dark:border-gray-700',
+          )}
+          value={draft}
+          aria-label="Document title"
+          aria-invalid={Boolean(error)}
+          title={error ?? 'Press Enter to save'}
+          autoFocus
+          disabled={saving}
+          onChange={(event) => {
+            setDraft(event.target.value)
+            setError(null)
+          }}
+          onBlur={cancelEditing}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              void submitTitle()
+            }
+            if (event.key === 'Escape') {
+              cancelEditing()
+            }
+          }}
+        />
+      ) : (
+        <button
+          className="h-8 w-full truncate rounded-md px-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 dark:text-gray-200 dark:hover:bg-gray-800"
+          type="button"
+          title={`Rename ${title}`}
+          onClick={() => setEditing(true)}
+        >
+          {title}
+        </button>
+      )}
+    </div>
+  )
+
+  async function submitTitle() {
+    const name = draft.trim()
+    if (name.length < 2) {
+      setError('Use at least 2 characters')
+      return
+    }
+    if (name === title) {
+      setEditing(false)
+      return
+    }
+
+    setSaving(true)
+    try {
+      await onRename({ name })
+      setEditing(false)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Unable to rename document')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function cancelEditing() {
+    if (saving) {
+      return
+    }
+    setDraft(title)
+    setError(null)
+    setEditing(false)
+  }
 }
 
 const zoomOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4]
@@ -485,6 +617,8 @@ export function TextFormattingControls({ editor }: { editor: Editor | null }) {
 }
 
 export function EditorToolbar({
+  documentTitle,
+  onRenameDocument,
   zoom,
   onZoomChange,
   onSave,
@@ -507,6 +641,8 @@ export function EditorToolbar({
       role="toolbar"
       aria-label="Document controls"
     >
+      <DocumentTitleControl title={documentTitle} onRename={onRenameDocument} />
+      <div className="mx-1 h-6 w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
       <button
         className={cn(
           'grid size-8 place-items-center rounded-md transition hover:bg-gray-100 disabled:cursor-wait disabled:opacity-60 dark:hover:bg-gray-800',
