@@ -10,7 +10,15 @@ type Props = {
   className?: string
   selectedShapeId?: string | null
   selectedShapeIds?: string[]
-  onSelectShape?: ({ shapeId, additive, preserveGroup }: { shapeId: string | null; additive?: boolean; preserveGroup?: boolean }) => void
+  onSelectShape?: ({
+    shapeId,
+    additive,
+    preserveGroup,
+  }: {
+    shapeId: string | null
+    additive?: boolean
+    preserveGroup?: boolean
+  }) => void
   onSelectShapes?: ({ shapeIds }: { shapeIds: string[] }) => void
   onShapeChange?: (shapeId: string, changes: Partial<ShapeInput>) => void
   editingShapeId?: string | null
@@ -30,21 +38,22 @@ type Point = { x: number; y: number }
 
 const pathData = ({ shape }: { shape: CanvasShape }) => {
   const origin = { x: number(shape.x), y: number(shape.y) }
-  return (shape.pathGeometry?.commands ?? []).map((command) => {
-    if (command.type === 'quadratic') {
-      return `Q ${origin.x + command.controlX} ${origin.y + command.controlY} ${origin.x + command.x} ${origin.y + command.y}`
-    }
-    return `${command.type === 'move' ? 'M' : 'L'} ${origin.x + command.x} ${origin.y + command.y}`
-  }).join(' ')
+  return (shape.pathGeometry?.commands ?? [])
+    .map((command) => {
+      if (command.type === 'quadratic') {
+        return `Q ${origin.x + command.controlX} ${origin.y + command.controlY} ${origin.x + command.x} ${origin.y + command.y}`
+      }
+      return `${command.type === 'move' ? 'M' : 'L'} ${origin.x + command.x} ${origin.y + command.y}`
+    })
+    .join(' ')
 }
 
 const editableLine = ({ shape }: { shape: CanvasShape }) => {
   const commands = shape.pathGeometry?.commands
   const startCommand = commands?.[0]
   const endCommand = commands?.[1]
-  const start = startCommand?.type === 'move'
-    ? { x: startCommand.x, y: startCommand.y }
-    : { x: 0, y: 0 }
+  const start =
+    startCommand?.type === 'move' ? { x: startCommand.x, y: startCommand.y } : { x: 0, y: 0 }
   const end = endCommand
     ? { x: endCommand.x, y: endCommand.y }
     : { x: number(shape.width), y: number(shape.height) }
@@ -58,7 +67,17 @@ const editableLine = ({ shape }: { shape: CanvasShape }) => {
   return { start, end, bend, curved }
 }
 
-const linePathGeometry = ({ start, end, bend, curved }: { start: Point; end: Point; bend: Point; curved: boolean }): PathGeometry => {
+const linePathGeometry = ({
+  start,
+  end,
+  bend,
+  curved,
+}: {
+  start: Point
+  end: Point
+  bend: Point
+  curved: boolean
+}): PathGeometry => {
   const commands: PathCommand[] = [{ type: 'move', x: rounded(start.x), y: rounded(start.y) }]
   if (curved) {
     commands.push({
@@ -92,20 +111,10 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
     node = <path d={pathData({ shape })} {...common} fill="none" strokeLinecap="round" />
   } else if (shape.type === 'ellipse') {
     node = (
-      <ellipse
-        cx={x + width / 2}
-        cy={y + height / 2}
-        rx={width / 2}
-        ry={height / 2}
-        {...common}
-      />
+      <ellipse cx={x + width / 2} cy={y + height / 2} rx={width / 2} ry={height / 2} {...common} />
     )
   } else if (shape.type === 'text') {
-    node = hideText ? null : (
-      <RichTextShape
-        shape={shape}
-      />
-    )
+    node = hideText ? null : <RichTextShape shape={shape} />
   } else {
     const maximumRadius = Math.max(0, Math.min(width, height) / 2)
     const topLeft = Math.min(number(shape.radiusTopLeft) / 72, maximumRadius)
@@ -124,9 +133,7 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
       `Q ${x} ${y} ${x + topLeft} ${y}`,
       'Z',
     ].join(' ')
-    node = (
-      <path d={path} {...common} />
-    )
+    node = <path d={path} {...common} />
   }
 
   const rotation = number(shape.rotation)
@@ -171,11 +178,14 @@ const handles: Array<{ handle: Handle; x: number; y: number }> = [
 ]
 
 const rounded = (value: number) => Number(value.toFixed(4))
-const angleAt = (point: Point, center: Point) => Math.atan2(point.y - center.y, point.x - center.x) * 180 / Math.PI
+const angleAt = (point: Point, center: Point) =>
+  (Math.atan2(point.y - center.y, point.x - center.x) * 180) / Math.PI
 
 function svgPoint(svg: SVGSVGElement, clientX: number, clientY: number): Point {
   const matrix = svg.getScreenCTM()
-  if (!matrix) return { x: 0, y: 0 }
+  if (!matrix) {
+    return { x: 0, y: 0 }
+  }
   const point = new DOMPoint(clientX, clientY).matrixTransform(matrix.inverse())
   return { x: point.x, y: point.y }
 }
@@ -184,15 +194,24 @@ const distanceToSegment = ({ point, start, end }: { point: Point; start: Point; 
   const dx = end.x - start.x
   const dy = end.y - start.y
   const lengthSquared = dx * dx + dy * dy
-  if (lengthSquared === 0) return Math.hypot(point.x - start.x, point.y - start.y)
-  const ratio = Math.min(1, Math.max(0, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared))
+  if (lengthSquared === 0) {
+    return Math.hypot(point.x - start.x, point.y - start.y)
+  }
+  const ratio = Math.min(
+    1,
+    Math.max(0, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared),
+  )
   return Math.hypot(point.x - (start.x + ratio * dx), point.y - (start.y + ratio * dy))
 }
 
 type FrameProps = {
   shape: CanvasShape
   pixelsPerInch: number
-  onStart: (event: ReactPointerEvent<SVGElement>, mode: Interaction['mode'], handle?: Handle) => void
+  onStart: (
+    event: ReactPointerEvent<SVGElement>,
+    mode: Interaction['mode'],
+    handle?: Handle,
+  ) => void
   onDoubleClick?: () => void
 }
 
@@ -236,7 +255,9 @@ function SelectionFrame({ shape, pixelsPerInch, onStart, onDoubleClick }: FrameP
           onStart(event, 'move')
         }}
         onDoubleClick={(event) => {
-          if (!onDoubleClick) return
+          if (!onDoubleClick) {
+            return
+          }
           event.preventDefault()
           event.stopPropagation()
           onDoubleClick()
@@ -274,7 +295,13 @@ function SelectionFrame({ shape, pixelsPerInch, onStart, onDoubleClick }: FrameP
 type LineSelectionFrameProps = {
   shape: CanvasShape
   pixelsPerInch: number
-  onStart: ({ event, mode }: { event: ReactPointerEvent<SVGElement>; mode: Interaction['mode'] }) => void
+  onStart: ({
+    event,
+    mode,
+  }: {
+    event: ReactPointerEvent<SVGElement>
+    mode: Interaction['mode']
+  }) => void
 }
 
 function LineSelectionFrame({ shape, pixelsPerInch, onStart }: LineSelectionFrameProps) {
@@ -340,9 +367,14 @@ const visualBounds = ({ shape }: { shape: CanvasShape }) => {
   const x = number(shape.x)
   const y = number(shape.y)
   if (shape.type === 'line' && shape.pathGeometry) {
-    const points = shape.pathGeometry.commands.flatMap((command) => command.type === 'quadratic'
-      ? [{ x: x + command.controlX, y: y + command.controlY }, { x: x + command.x, y: y + command.y }]
-      : [{ x: x + command.x, y: y + command.y }])
+    const points = shape.pathGeometry.commands.flatMap((command) =>
+      command.type === 'quadratic'
+        ? [
+            { x: x + command.controlX, y: y + command.controlY },
+            { x: x + command.x, y: y + command.y },
+          ]
+        : [{ x: x + command.x, y: y + command.y }],
+    )
     return {
       left: Math.min(...points.map((point) => point.x)),
       top: Math.min(...points.map((point) => point.y)),
@@ -376,14 +408,24 @@ const selectionCenter = ({ shape }: { shape: CanvasShape }) => {
 function SelectionOutline({ shape, pixelsPerInch }: { shape: CanvasShape; pixelsPerInch: number }) {
   const strokeWidth = 1.5 / pixelsPerInch
   if (shape.type === 'line') {
-    return <path d={pathData({ shape })} fill="none" stroke="#8b5cf6" strokeWidth={strokeWidth} pointerEvents="none" />
+    return (
+      <path
+        d={pathData({ shape })}
+        fill="none"
+        stroke="#8b5cf6"
+        strokeWidth={strokeWidth}
+        pointerEvents="none"
+      />
+    )
   }
 
   const x = number(shape.x)
   const y = number(shape.y)
   const width = number(shape.width)
   const height = number(shape.height)
-  const transform = number(shape.rotation) ? `rotate(${number(shape.rotation)} ${x + width / 2} ${y + height / 2})` : undefined
+  const transform = number(shape.rotation)
+    ? `rotate(${number(shape.rotation)} ${x + width / 2} ${y + height / 2})`
+    : undefined
   if (shape.type === 'ellipse') {
     return (
       <ellipse
@@ -436,21 +478,24 @@ function MultiSelectionFrame({ shapes, pixelsPerInch }: MultiSelectionFrameProps
   )
 }
 
-export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function DocumentCanvas({
-  page,
-  title,
-  pixelsPerInch = 72,
-  showGrid = false,
-  className = 'block max-h-full max-w-full bg-white shadow-sm',
-  selectedShapeId,
-  selectedShapeIds = selectedShapeId ? [selectedShapeId] : [],
-  onSelectShape,
-  onSelectShapes,
-  onShapeChange,
-  editingShapeId,
-  onStartTextEditing,
-  snapToGrid = false,
-}: Props, forwardedRef) {
+export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function DocumentCanvas(
+  {
+    page,
+    title,
+    pixelsPerInch = 72,
+    showGrid = false,
+    className = 'block max-h-full max-w-full bg-white shadow-sm',
+    selectedShapeId,
+    selectedShapeIds = selectedShapeId ? [selectedShapeId] : [],
+    onSelectShape,
+    onSelectShapes,
+    onShapeChange,
+    editingShapeId,
+    onStartTextEditing,
+    snapToGrid = false,
+  }: Props,
+  forwardedRef,
+) {
   const width = number(page.width, 8.5)
   const height = number(page.height, 11)
   const shapes = page.shapes ?? []
@@ -461,13 +506,17 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
   const [marquee, setMarquee] = useState<Marquee | null>(null)
   const keyedShapes = shapes.map((shape, index) => ({ shape, key: shapeKey(shape, index) }))
   const selectedShapes = keyedShapes.filter(({ key }) => selectedShapeIds.includes(key))
-  const selectedShape = selectedShapeIds.length === 1
-    ? keyedShapes.find(({ key }) => key === selectedShapeId)?.shape
-    : undefined
-  const snapCoordinate = ({ value }: { value: number }) => snapToGrid ? Math.round(value / 0.25) * 0.25 : value
+  const selectedShape =
+    selectedShapeIds.length === 1
+      ? keyedShapes.find(({ key }) => key === selectedShapeId)?.shape
+      : undefined
+  const snapCoordinate = ({ value }: { value: number }) =>
+    snapToGrid ? Math.round(value / 0.25) * 0.25 : value
 
   const startMarquee = ({ event }: { event: ReactPointerEvent<SVGRectElement> }) => {
-    if (!svgRef.current || !onSelectShapes) return
+    if (!svgRef.current || !onSelectShapes) {
+      return
+    }
     event.preventDefault()
     event.stopPropagation()
     const point = svgPoint(svgRef.current, event.clientX, event.clientY)
@@ -481,7 +530,9 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     marqueeRef.current = next
     setMarquee(next)
     svgRef.current.setPointerCapture(event.pointerId)
-    if (!next.additive) onSelectShapes({ shapeIds: [] })
+    if (!next.additive) {
+      onSelectShapes({ shapeIds: [] })
+    }
   }
 
   const startInteraction = (
@@ -491,7 +542,9 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     mode: Interaction['mode'],
     handle?: Handle,
   ) => {
-    if (!onShapeChange || !svgRef.current) return
+    if (!onShapeChange || !svgRef.current) {
+      return
+    }
     event.preventDefault()
     event.stopPropagation()
     const additive = event.shiftKey || event.metaKey || event.ctrlKey
@@ -517,11 +570,16 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
       start,
       initial,
       initialPathGeometry: shape.pathGeometry,
-      moveShapes: mode === 'move' && selectedShapeIds.length > 1 && selectedShapeIds.includes(shapeId)
-        ? keyedShapes
-            .filter(({ key }) => selectedShapeIds.includes(key))
-            .map(({ shape: selected, key }) => ({ shapeId: key, x: number(selected.x), y: number(selected.y) }))
-        : undefined,
+      moveShapes:
+        mode === 'move' && selectedShapeIds.length > 1 && selectedShapeIds.includes(shapeId)
+          ? keyedShapes
+              .filter(({ key }) => selectedShapeIds.includes(key))
+              .map(({ shape: selected, key }) => ({
+                shapeId: key,
+                x: number(selected.x),
+                y: number(selected.y),
+              }))
+          : undefined,
       startAngle: mode === 'rotate' ? angleAt(start, center) : undefined,
     }
     svg.setPointerCapture(event.pointerId)
@@ -552,13 +610,19 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
       return
     }
     const interaction = interactionRef.current
-    if (!interaction || interaction.pointerId !== event.pointerId || !onShapeChange) return
+    if (!interaction || interaction.pointerId !== event.pointerId || !onShapeChange) {
+      return
+    }
     const point = svgPoint(event.currentTarget, event.clientX, event.clientY)
     const { initial } = interaction
     const dxWorld = point.x - interaction.start.x
     const dyWorld = point.y - interaction.start.y
 
-    if (interaction.mode === 'line-start' || interaction.mode === 'line-end' || interaction.mode === 'line-bend') {
+    if (
+      interaction.mode === 'line-start' ||
+      interaction.mode === 'line-end' ||
+      interaction.mode === 'line-bend'
+    ) {
       const initialLine = editableLine({
         shape: {
           type: 'line',
@@ -569,7 +633,10 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
           pathGeometry: interaction.initialPathGeometry,
         },
       })
-      const absoluteStart = { x: initial.x + initialLine.start.x, y: initial.y + initialLine.start.y }
+      const absoluteStart = {
+        x: initial.x + initialLine.start.x,
+        y: initial.y + initialLine.start.y,
+      }
       const absoluteEnd = { x: initial.x + initialLine.end.x, y: initial.y + initialLine.end.y }
       const absoluteBend = { x: initial.x + initialLine.bend.x, y: initial.y + initialLine.bend.y }
 
@@ -585,27 +652,35 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
           y: rounded(nextStart.y),
           width: rounded(end.x),
           height: rounded(end.y),
-          pathGeometry: linePathGeometry({ start: { x: 0, y: 0 }, end, bend, curved: initialLine.curved }),
+          pathGeometry: linePathGeometry({
+            start: { x: 0, y: 0 },
+            end,
+            bend,
+            curved: initialLine.curved,
+          }),
         })
         return
       }
 
       const start = initialLine.start
-      const end = interaction.mode === 'line-end'
-        ? {
-            x: snapCoordinate({ value: initial.x + initialLine.end.x + dxWorld }) - initial.x,
-            y: snapCoordinate({ value: initial.y + initialLine.end.y + dyWorld }) - initial.y,
-          }
-        : initialLine.end
-      const bend = interaction.mode === 'line-bend'
-        ? {
-            x: snapCoordinate({ value: initial.x + initialLine.bend.x + dxWorld }) - initial.x,
-            y: snapCoordinate({ value: initial.y + initialLine.bend.y + dyWorld }) - initial.y,
-          }
-        : initialLine.bend
-      const curved = interaction.mode === 'line-bend'
-        ? distanceToSegment({ point: bend, start, end }) > 8 / pixelsPerInch
-        : initialLine.curved
+      const end =
+        interaction.mode === 'line-end'
+          ? {
+              x: snapCoordinate({ value: initial.x + initialLine.end.x + dxWorld }) - initial.x,
+              y: snapCoordinate({ value: initial.y + initialLine.end.y + dyWorld }) - initial.y,
+            }
+          : initialLine.end
+      const bend =
+        interaction.mode === 'line-bend'
+          ? {
+              x: snapCoordinate({ value: initial.x + initialLine.bend.x + dxWorld }) - initial.x,
+              y: snapCoordinate({ value: initial.y + initialLine.bend.y + dyWorld }) - initial.y,
+            }
+          : initialLine.bend
+      const curved =
+        interaction.mode === 'line-bend'
+          ? distanceToSegment({ point: bend, start, end }) > 8 / pixelsPerInch
+          : initialLine.curved
       onShapeChange(interaction.shapeId, {
         width: rounded(end.x),
         height: rounded(end.y),
@@ -633,13 +708,15 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     const center = { x: initial.x + initial.width / 2, y: initial.y + initial.height / 2 }
     if (interaction.mode === 'rotate') {
       let rotation = initial.rotation + angleAt(point, center) - (interaction.startAngle ?? 0)
-      if (event.shiftKey) rotation = Math.round(rotation / 15) * 15
+      if (event.shiftKey) {
+        rotation = Math.round(rotation / 15) * 15
+      }
       rotation = ((Math.round(rotation) % 360) + 360) % 360
       onShapeChange(interaction.shapeId, { rotation })
       return
     }
 
-    const radians = initial.rotation * Math.PI / 180
+    const radians = (initial.rotation * Math.PI) / 180
     const cos = Math.cos(radians)
     const sin = Math.sin(radians)
     const dx = cos * dxWorld + sin * dyWorld
@@ -651,10 +728,18 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     let bottom = initial.height / 2
     const handle = interaction.handle ?? 'se'
 
-    if (handle.includes('w')) left = Math.min(left + dx, right - minimumSize)
-    if (handle.includes('e')) right = Math.max(right + dx, left + minimumSize)
-    if (handle.includes('n')) top = Math.min(top + dy, bottom - minimumSize)
-    if (handle.includes('s')) bottom = Math.max(bottom + dy, top + minimumSize)
+    if (handle.includes('w')) {
+      left = Math.min(left + dx, right - minimumSize)
+    }
+    if (handle.includes('e')) {
+      right = Math.max(right + dx, left + minimumSize)
+    }
+    if (handle.includes('n')) {
+      top = Math.min(top + dy, bottom - minimumSize)
+    }
+    if (handle.includes('s')) {
+      bottom = Math.max(bottom + dy, top + minimumSize)
+    }
 
     const width = right - left
     const height = bottom - top
@@ -678,26 +763,38 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
   const endInteraction = (event: ReactPointerEvent<SVGSVGElement>) => {
     const activeMarquee = marqueeRef.current
     if (activeMarquee?.pointerId === event.pointerId) {
-      const distance = Math.hypot(activeMarquee.current.x - activeMarquee.start.x, activeMarquee.current.y - activeMarquee.start.y)
+      const distance = Math.hypot(
+        activeMarquee.current.x - activeMarquee.start.x,
+        activeMarquee.current.y - activeMarquee.start.y,
+      )
       if (distance < 3 / pixelsPerInch && onSelectShapes) {
         onSelectShapes({ shapeIds: activeMarquee.additive ? activeMarquee.initialShapeIds : [] })
       }
       marqueeRef.current = null
       setMarquee(null)
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId)
+      }
       return
     }
-    if (interactionRef.current?.pointerId !== event.pointerId) return
+    if (interactionRef.current?.pointerId !== event.pointerId) {
+      return
+    }
     interactionRef.current = null
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
   }
 
   return (
     <svg
       ref={(element) => {
         svgRef.current = element
-        if (typeof forwardedRef === 'function') forwardedRef(element)
-        else if (forwardedRef) forwardedRef.current = element
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(element)
+        } else if (forwardedRef) {
+          forwardedRef.current = element
+        }
       }}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -724,29 +821,44 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
       )}
       <rect width={width} height={height} fill="white" />
       {showGrid && <rect width={width} height={height} fill={`url(#${gridId}-major)`} />}
-      {onSelectShape && <rect width={width} height={height} fill="transparent" onPointerDown={(event) => startMarquee({ event })} />}
+      {onSelectShape && (
+        <rect
+          width={width}
+          height={height}
+          fill="transparent"
+          onPointerDown={(event) => startMarquee({ event })}
+        />
+      )}
       {[...keyedShapes]
         .sort((left, right) => number(left.shape.z) - number(right.shape.z))
         .map(({ shape, key }) => (
           <g
             key={key}
             className={onShapeChange && editingShapeId !== key ? 'cursor-move' : undefined}
-            onPointerDown={onShapeChange && editingShapeId !== key ? (event) => {
-              if (shape.type === 'text' && onStartTextEditing && event.detail === 2) {
-                event.preventDefault()
-                event.stopPropagation()
-                onSelectShape?.({ shapeId: key })
-                onStartTextEditing(key)
-                return
-              }
-              startInteraction(event, shape, key, 'move')
-            } : undefined}
-            onDoubleClick={onStartTextEditing && shape.type === 'text' ? (event) => {
-              event.preventDefault()
-              event.stopPropagation()
-              onSelectShape?.({ shapeId: key })
-              onStartTextEditing(key)
-            } : undefined}
+            onPointerDown={
+              onShapeChange && editingShapeId !== key
+                ? (event) => {
+                    if (shape.type === 'text' && onStartTextEditing && event.detail === 2) {
+                      event.preventDefault()
+                      event.stopPropagation()
+                      onSelectShape?.({ shapeId: key })
+                      onStartTextEditing(key)
+                      return
+                    }
+                    startInteraction(event, shape, key, 'move')
+                  }
+                : undefined
+            }
+            onDoubleClick={
+              onStartTextEditing && shape.type === 'text'
+                ? (event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    onSelectShape?.({ shapeId: key })
+                    onStartTextEditing(key)
+                  }
+                : undefined
+            }
           >
             <ShapeNode shape={shape} hideText={editingShapeId === key} />
             {shape.type === 'line' ? (
@@ -765,32 +877,46 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
                 height={number(shape.height)}
                 fill="transparent"
                 pointerEvents="all"
-                transform={number(shape.rotation) ? `rotate(${number(shape.rotation)} ${number(shape.x) + number(shape.width) / 2} ${number(shape.y) + number(shape.height) / 2})` : undefined}
+                transform={
+                  number(shape.rotation)
+                    ? `rotate(${number(shape.rotation)} ${number(shape.x) + number(shape.width) / 2} ${number(shape.y) + number(shape.height) / 2})`
+                    : undefined
+                }
               />
             )}
           </g>
         ))}
-      {(marquee || selectedShapes.length > 1) && selectedShapes.map(({ shape, key }) => (
-        <SelectionOutline key={`outline-${key}`} shape={shape} pixelsPerInch={pixelsPerInch} />
-      ))}
-      {selectedShape && selectedShapeId && onShapeChange && editingShapeId !== selectedShapeId && !marquee && (
-        selectedShape.type === 'line' ? (
+      {(marquee || selectedShapes.length > 1) &&
+        selectedShapes.map(({ shape, key }) => (
+          <SelectionOutline key={`outline-${key}`} shape={shape} pixelsPerInch={pixelsPerInch} />
+        ))}
+      {selectedShape &&
+        selectedShapeId &&
+        onShapeChange &&
+        editingShapeId !== selectedShapeId &&
+        !marquee &&
+        (selectedShape.type === 'line' ? (
           <LineSelectionFrame
             shape={selectedShape}
             pixelsPerInch={pixelsPerInch}
-            onStart={({ event, mode }) => startInteraction(event, selectedShape, selectedShapeId, mode)}
+            onStart={({ event, mode }) =>
+              startInteraction(event, selectedShape, selectedShapeId, mode)
+            }
           />
         ) : (
           <SelectionFrame
             shape={selectedShape}
             pixelsPerInch={pixelsPerInch}
-            onStart={(event, mode, handle) => startInteraction(event, selectedShape, selectedShapeId, mode, handle)}
-            onDoubleClick={selectedShape.type === 'text' && onStartTextEditing
-              ? () => onStartTextEditing(selectedShapeId)
-              : undefined}
+            onStart={(event, mode, handle) =>
+              startInteraction(event, selectedShape, selectedShapeId, mode, handle)
+            }
+            onDoubleClick={
+              selectedShape.type === 'text' && onStartTextEditing
+                ? () => onStartTextEditing(selectedShapeId)
+                : undefined
+            }
           />
-        )
-      )}
+        ))}
       {selectedShapes.length > 1 && selectedShapeId && onShapeChange && !marquee && (
         <MultiSelectionFrame
           shapes={selectedShapes.map(({ shape }) => shape)}

@@ -9,8 +9,9 @@ let browserPromise: Promise<Browser> | undefined
 const localChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
 const browserConfiguration = async () => {
-  const executablePath = process.env.CHROME_EXECUTABLE_PATH
-    ?? (existsSync(localChrome) ? localChrome : await chromium.executablePath())
+  const executablePath =
+    process.env.CHROME_EXECUTABLE_PATH ??
+    (existsSync(localChrome) ? localChrome : await chromium.executablePath())
   const serverlessChromium = executablePath !== localChrome && !process.env.CHROME_EXECUTABLE_PATH
   return {
     args: serverlessChromium ? chromium.args : ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -20,8 +21,7 @@ const browserConfiguration = async () => {
   }
 }
 
-const launchBrowser = async (): Promise<Browser> =>
-  puppeteer.launch(await browserConfiguration())
+const launchBrowser = async (): Promise<Browser> => puppeteer.launch(await browserConfiguration())
 
 const getBrowser = (): Promise<Browser> => {
   browserPromise ??= launchBrowser().catch((error) => {
@@ -34,7 +34,10 @@ const getBrowser = (): Promise<Browser> => {
 const validateSvg = ({ svg }: { svg: string }): void => {
   const normalized = svg.trimStart().toLowerCase()
   if (!normalized.startsWith('<svg') || normalized.includes('<script')) {
-    throw new HttpError({ statusCode: 400, message: 'The PDF payload must be a script-free SVG document.' })
+    throw new HttpError({
+      statusCode: 400,
+      message: 'The PDF payload must be a script-free SVG document.',
+    })
   }
 }
 

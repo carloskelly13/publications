@@ -1,0 +1,28 @@
+{
+  "name": "publications",
+  "private": true,
+  "version": "8.0.0",
+  "type": "module",
+  "workspaces": [
+    "core",
+    "web"
+  ],
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev:core": "npm run dev --workspace publications-core",
+    "dev:web": "npm run dev --workspace web",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run lint && npm run typecheck"
+  },
+  "devDependencies": {
+    "oxlint": "^1.76.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  }
+}

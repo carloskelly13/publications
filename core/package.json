@@ -10,7 +10,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "npm run typecheck",
-    "lint": "oxlint --deny-warnings",
+    "lint": "oxlint --config ../.oxlintrc.json --deny-warnings",
     "typecheck": "tsc --noEmit --pretty false"
   },
   "dependencies": {

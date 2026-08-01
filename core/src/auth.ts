@@ -51,16 +51,22 @@ const readSignedCookie = ({
   name: string
 }): string | undefined => {
   const cookie = request.cookies[name]
-  if (!cookie) return undefined
+  if (!cookie) {
+    return undefined
+  }
   const unsigned = request.unsignCookie(cookie)
   return unsigned.valid ? unsigned.value : undefined
 }
 
 export const authenticate = async (request: FastifyRequest): Promise<void> => {
   const token = readSignedCookie({ request, name: SESSION_COOKIE })
-  if (!token) throw new HttpError({ statusCode: 401, message: 'Authentication is required.' })
+  if (!token) {
+    throw new HttpError({ statusCode: 401, message: 'Authentication is required.' })
+  }
   const session = await findSession({ token })
-  if (!session) throw new HttpError({ statusCode: 401, message: 'The session has expired.' })
+  if (!session) {
+    throw new HttpError({ statusCode: 401, message: 'The session has expired.' })
+  }
   request.currentSession = session
 }
 
@@ -73,7 +79,10 @@ export const verifyCsrf = async (request: FastifyRequest): Promise<void> => {
   }
   const suppliedBytes = Buffer.from(supplied)
   const expectedBytes = Buffer.from(expected)
-  if (suppliedBytes.length !== expectedBytes.length || !timingSafeEqual(suppliedBytes, expectedBytes)) {
+  if (
+    suppliedBytes.length !== expectedBytes.length ||
+    !timingSafeEqual(suppliedBytes, expectedBytes)
+  ) {
     throw new HttpError({ statusCode: 403, message: 'The CSRF token is invalid.' })
   }
 }
@@ -98,7 +107,13 @@ const authorizationUrl = ({ transaction }: { transaction: OAuthTransaction }): s
   return url.toString()
 }
 
-const exchangeCode = async ({ code, verifier }: { code: string; verifier: string }): Promise<string> => {
+const exchangeCode = async ({
+  code,
+  verifier,
+}: {
+  code: string
+  verifier: string
+}): Promise<string> => {
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -111,17 +126,27 @@ const exchangeCode = async ({ code, verifier }: { code: string; verifier: string
       code_verifier: verifier,
     }),
   })
-  if (!response.ok) throw new Error(`Google rejected the authorization code (${response.status}).`)
-  const token = await response.json() as { access_token?: string }
-  if (!token.access_token) throw new Error('Google did not provide an access token.')
+  if (!response.ok) {
+    throw new Error(`Google rejected the authorization code (${response.status}).`)
+  }
+  const token = (await response.json()) as { access_token?: string }
+  if (!token.access_token) {
+    throw new Error('Google did not provide an access token.')
+  }
   return token.access_token
 }
 
-const fetchGoogleProfile = async ({ accessToken }: { accessToken: string }): Promise<GoogleProfile> => {
+const fetchGoogleProfile = async ({
+  accessToken,
+}: {
+  accessToken: string
+}): Promise<GoogleProfile> => {
   const response = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
     headers: { Authorization: `Bearer ${accessToken}` },
   })
-  if (!response.ok) throw new Error(`Google user information failed (${response.status}).`)
+  if (!response.ok) {
+    throw new Error(`Google user information failed (${response.status}).`)
+  }
   return response.json() as Promise<GoogleProfile>
 }
 
@@ -137,8 +162,11 @@ export const registerAuthRoutes = async ({ app }: { app: FastifyInstance }): Pro
       state: randomBytes(32).toString('base64url'),
       verifier: randomBytes(48).toString('base64url'),
     }
-    reply.setCookie(OAUTH_COOKIE, Buffer.from(JSON.stringify(transaction)).toString('base64url'),
-      cookieOptions({ maxAge: 10 * 60 }))
+    reply.setCookie(
+      OAUTH_COOKIE,
+      Buffer.from(JSON.stringify(transaction)).toString('base64url'),
+      cookieOptions({ maxAge: 10 * 60 }),
+    )
     return reply.redirect(authorizationUrl({ transaction }))
   })
 
@@ -150,11 +178,20 @@ export const registerAuthRoutes = async ({ app }: { app: FastifyInstance }): Pro
           throw new Error('Google authorization was not completed.')
         }
         const encoded = readSignedCookie({ request, name: OAUTH_COOKIE })
-        if (!encoded) throw new Error('The OAuth transaction cookie is missing or invalid.')
-        const transaction = JSON.parse(Buffer.from(encoded, 'base64url').toString()) as OAuthTransaction
-        if (transaction.state !== request.query.state) throw new Error('The OAuth state did not match.')
+        if (!encoded) {
+          throw new Error('The OAuth transaction cookie is missing or invalid.')
+        }
+        const transaction = JSON.parse(
+          Buffer.from(encoded, 'base64url').toString(),
+        ) as OAuthTransaction
+        if (transaction.state !== request.query.state) {
+          throw new Error('The OAuth state did not match.')
+        }
 
-        const accessToken = await exchangeCode({ code: request.query.code, verifier: transaction.verifier })
+        const accessToken = await exchangeCode({
+          code: request.query.code,
+          verifier: transaction.verifier,
+        })
         const profile = await fetchGoogleProfile({ accessToken })
         if (!profile.sub || !profile.email || profile.email_verified !== true) {
           throw new Error('Google did not provide a verified identity.')
@@ -177,25 +214,35 @@ export const registerAuthRoutes = async ({ app }: { app: FastifyInstance }): Pro
     },
   )
 
-  app.get('/api/auth/current-user-identity', {
-    preHandler: authenticate,
-    schema: { response: { 200: Type.Ref(UserResponse) } },
-  }, async (request) => {
-    const { user } = requireSession({ request })
-    return { id: user.id, name: user.name, email: user.email }
-  })
+  app.get(
+    '/api/auth/current-user-identity',
+    {
+      preHandler: authenticate,
+      schema: { response: { 200: Type.Ref(UserResponse) } },
+    },
+    async (request) => {
+      const { user } = requireSession({ request })
+      return { id: user.id, name: user.name, email: user.email }
+    },
+  )
 
-  app.get('/api/auth/csrf', {
-    preHandler: authenticate,
-    schema: { response: { 200: Type.Ref(CsrfResponse) } },
-  }, async (request) => ({
-    headerName: 'X-XSRF-TOKEN' as const,
-    token: requireSession({ request }).csrfToken,
-  }))
+  app.get(
+    '/api/auth/csrf',
+    {
+      preHandler: authenticate,
+      schema: { response: { 200: Type.Ref(CsrfResponse) } },
+    },
+    async (request) => ({
+      headerName: 'X-XSRF-TOKEN' as const,
+      token: requireSession({ request }).csrfToken,
+    }),
+  )
 
   app.post('/api/auth/logout', { preHandler: verifyCsrf }, async (request, reply) => {
     const token = readSignedCookie({ request, name: SESSION_COOKIE })
-    if (token) await deleteSession({ token })
+    if (token) {
+      await deleteSession({ token })
+    }
     reply.clearCookie(SESSION_COOKIE, cookieOptions({ maxAge: 0 }))
     return reply.code(204).send()
   })

@@ -42,8 +42,7 @@ const getConnection = () => {
 
 export const getDatabase = () => getConnection().db
 
-export const hashToken = (token: string): string =>
-  createHash('sha256').update(token).digest('hex')
+export const hashToken = (token: string): string => createHash('sha256').update(token).digest('hex')
 
 export const initializeDatabase = (): Promise<void> => {
   initialization ??= (async () => {
@@ -135,7 +134,9 @@ export async function provisionUser({
       set: { email, displayName: name },
     })
     .returning()
-  if (!row) throw new Error('Google user could not be provisioned.')
+  if (!row) {
+    throw new Error('Google user could not be provisioned.')
+  }
   return {
     id: row.id.toString(),
     googleSubject: row.googleSubject,
@@ -174,11 +175,14 @@ export async function findSession({ token }: { token: string }): Promise<Session
     .innerJoin(users, eq(users.id, appSessions.userId))
     .where(and(eq(appSessions.tokenHash, tokenHash), gt(appSessions.expiresAt, new Date())))
     .limit(1)
-  if (!row) return undefined
+  if (!row) {
+    return undefined
+  }
 
   const hourAgo = new Date(Date.now() - 60 * 60 * 1000)
   if (row.session.lastAccessedAt < hourAgo) {
-    await db.update(appSessions)
+    await db
+      .update(appSessions)
       .set({
         lastAccessedAt: new Date(),
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -200,7 +204,9 @@ export async function findSession({ token }: { token: string }): Promise<Session
 
 export async function deleteSession({ token }: { token: string }): Promise<void> {
   await initializeDatabase()
-  await getDatabase().delete(appSessions).where(eq(appSessions.tokenHash, hashToken(token)))
+  await getDatabase()
+    .delete(appSessions)
+    .where(eq(appSessions.tokenHash, hashToken(token)))
 }
 
 const shapeValues = ({
@@ -242,7 +248,10 @@ async function replacePages({
   documentId: bigint
   input: DocumentInput
 }): Promise<void> {
-  const existing = await tx.select({ id: pages.id }).from(pages).where(eq(pages.documentId, documentId))
+  const existing = await tx
+    .select({ id: pages.id })
+    .from(pages)
+    .where(eq(pages.documentId, documentId))
   const existingIds = new Set(existing.map(({ id }) => id.toString()))
   const retainedIds: bigint[] = []
 
@@ -251,11 +260,13 @@ async function replacePages({
     let pageId: bigint
     if (requestedId && existingIds.has(requestedId)) {
       pageId = BigInt(requestedId)
-      await tx.update(pages)
+      await tx
+        .update(pages)
         .set({ pageNumber: page.pageNumber, width: page.width, height: page.height })
         .where(and(eq(pages.id, pageId), eq(pages.documentId, documentId)))
     } else {
-      const [created] = await tx.insert(pages)
+      const [created] = await tx
+        .insert(pages)
         .values({
           documentId,
           pageNumber: page.pageNumber,
@@ -263,20 +274,26 @@ async function replacePages({
           height: page.height,
         })
         .returning({ id: pages.id })
-      if (!created) throw new Error('Page could not be created.')
+      if (!created) {
+        throw new Error('Page could not be created.')
+      }
       pageId = created.id
     }
 
     retainedIds.push(pageId)
     await tx.delete(shapes).where(eq(shapes.pageId, pageId))
     const newShapes = (page.shapes ?? []).map((shape) => shapeValues({ pageId, shape }))
-    if (newShapes.length > 0) await tx.insert(shapes).values(newShapes)
+    if (newShapes.length > 0) {
+      await tx.insert(shapes).values(newShapes)
+    }
   }
 
   const ownedPages = eq(pages.documentId, documentId)
-  await tx.delete(pages).where(
-    retainedIds.length === 0 ? ownedPages : and(ownedPages, notInArray(pages.id, retainedIds)),
-  )
+  await tx
+    .delete(pages)
+    .where(
+      retainedIds.length === 0 ? ownedPages : and(ownedPages, notInArray(pages.id, retainedIds)),
+    )
 }
 
 const shapeResponse = (shape: typeof shapes.$inferSelect) => ({
@@ -306,26 +323,36 @@ const shapeResponse = (shape: typeof shapes.$inferSelect) => ({
 export async function getDocument({ id, userId }: { id: string; userId: string }) {
   await initializeDatabase()
   const db = getDatabase()
-  const [document] = await db.select().from(documents)
+  const [document] = await db
+    .select()
+    .from(documents)
     .where(and(eq(documents.id, BigInt(id)), eq(documents.userId, BigInt(userId))))
     .limit(1)
-  if (!document) return undefined
+  if (!document) {
+    return undefined
+  }
 
-  const documentPages = await db.select().from(pages)
+  const documentPages = await db
+    .select()
+    .from(pages)
     .where(eq(pages.documentId, document.id))
     .orderBy(asc(pages.pageNumber))
-  const resultPages = await Promise.all(documentPages.map(async (page) => {
-    const pageShapes = await db.select().from(shapes)
-      .where(eq(shapes.pageId, page.id))
-      .orderBy(asc(shapes.z))
-    return {
-      id: page.id.toString(),
-      pageNumber: page.pageNumber ?? 0,
-      width: page.width ?? 0,
-      height: page.height ?? 0,
-      shapes: pageShapes.map(shapeResponse),
-    }
-  }))
+  const resultPages = await Promise.all(
+    documentPages.map(async (page) => {
+      const pageShapes = await db
+        .select()
+        .from(shapes)
+        .where(eq(shapes.pageId, page.id))
+        .orderBy(asc(shapes.z))
+      return {
+        id: page.id.toString(),
+        pageNumber: page.pageNumber ?? 0,
+        width: page.width ?? 0,
+        height: page.height ?? 0,
+        shapes: pageShapes.map(shapeResponse),
+      }
+    }),
+  )
   return {
     id: document.id.toString(),
     name: document.name ?? 'Untitled',
@@ -346,34 +373,35 @@ export async function listDocuments({
 }) {
   await initializeDatabase()
   const db = getDatabase()
-  const countRows = await db.select({ value: count() }).from(documents)
+  const countRows = await db
+    .select({ value: count() })
+    .from(documents)
     .where(eq(documents.userId, BigInt(userId)))
   const totalItems = countRows[0]?.value ?? 0
-  const rows = await db.select({ id: documents.id }).from(documents)
+  const rows = await db
+    .select({ id: documents.id })
+    .from(documents)
     .where(eq(documents.userId, BigInt(userId)))
     .orderBy(desc(documents.updatedAt))
     .limit(size)
     .offset(page * size)
-  const items = (await Promise.all(rows.map(({ id }) =>
-    getDocument({ id: id.toString(), userId }),
-  ))).filter((document) => document !== undefined)
+  const items = (
+    await Promise.all(rows.map(({ id }) => getDocument({ id: id.toString(), userId })))
+  ).filter((document) => document !== undefined)
   const totalPages = Math.ceil(totalItems / size)
   return { items, page, size, totalItems, totalPages, hasNext: page + 1 < totalPages }
 }
 
-export async function createDocument({
-  userId,
-  input,
-}: {
-  userId: string
-  input: DocumentInput
-}) {
+export async function createDocument({ userId, input }: { userId: string; input: DocumentInput }) {
   await initializeDatabase()
   const id = await getDatabase().transaction(async (tx) => {
-    const [document] = await tx.insert(documents)
+    const [document] = await tx
+      .insert(documents)
       .values({ userId: BigInt(userId), name: input.name })
       .returning({ id: documents.id })
-    if (!document) throw new Error('Document could not be created.')
+    if (!document) {
+      throw new Error('Document could not be created.')
+    }
     await replacePages({ tx, documentId: document.id, input })
     return document.id.toString()
   })
@@ -391,11 +419,14 @@ export async function updateDocument({
 }) {
   await initializeDatabase()
   const updated = await getDatabase().transaction(async (tx) => {
-    const rows = await tx.update(documents)
+    const rows = await tx
+      .update(documents)
       .set({ name: input.name, updatedAt: new Date() })
       .where(and(eq(documents.id, BigInt(id)), eq(documents.userId, BigInt(userId))))
       .returning({ id: documents.id })
-    if (rows.length === 0) return false
+    if (rows.length === 0) {
+      return false
+    }
     await replacePages({ tx, documentId: BigInt(id), input })
     return true
   })
@@ -412,16 +443,24 @@ export async function renameDocument({
   name: string
 }) {
   await initializeDatabase()
-  const rows = await getDatabase().update(documents)
+  const rows = await getDatabase()
+    .update(documents)
     .set({ name: name.trim(), updatedAt: new Date() })
     .where(and(eq(documents.id, BigInt(id)), eq(documents.userId, BigInt(userId))))
     .returning({ id: documents.id })
   return rows.length === 0 ? undefined : getDocument({ id, userId })
 }
 
-export async function deleteDocument({ id, userId }: { id: string; userId: string }): Promise<boolean> {
+export async function deleteDocument({
+  id,
+  userId,
+}: {
+  id: string
+  userId: string
+}): Promise<boolean> {
   await initializeDatabase()
-  const rows = await getDatabase().delete(documents)
+  const rows = await getDatabase()
+    .delete(documents)
     .where(and(eq(documents.id, BigInt(id)), eq(documents.userId, BigInt(userId))))
     .returning({ id: documents.id })
   return rows.length > 0

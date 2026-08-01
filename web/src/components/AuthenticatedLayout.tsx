@@ -25,7 +25,9 @@ export function AuthenticatedLayout({ user, loggingOut, onLogout, children }: Pr
   useEffect(() => {
     window.localStorage.setItem(themeStorageKey, theme)
     applyTheme(theme)
-    if (theme !== 'system') return
+    if (theme !== 'system') {
+      return
+    }
 
     const media = window.matchMedia('(prefers-color-scheme: dark)')
     const syncSystemTheme = () => applyTheme('system')
@@ -34,12 +36,18 @@ export function AuthenticatedLayout({ user, loggingOut, onLogout, children }: Pr
   }, [theme])
 
   useEffect(() => {
-    if (!menuOpen) return
+    if (!menuOpen) {
+      return
+    }
     const closeOnOutsideClick = (event: MouseEvent) => {
-      if (!menuRef.current?.contains(event.target as Node)) setMenuOpen(false)
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false)
+      }
     }
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false)
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+      }
     }
     document.addEventListener('mousedown', closeOnOutsideClick)
     document.addEventListener('keydown', closeOnEscape)
@@ -58,12 +66,16 @@ export function AuthenticatedLayout({ user, loggingOut, onLogout, children }: Pr
   return (
     <div className="flex h-dvh overflow-hidden flex-col bg-gray-50 font-sans text-gray-900 dark:bg-gray-950 dark:text-gray-100">
       <header className="sticky top-0 z-40 shrink-0 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-950/95">
-        <div className="flex w-full items-center justify-between gap-4 px-3 py-2">
-          <Link className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600" to="/">
+        <div className="flex h-11 w-full items-center gap-3 px-3">
+          <Link
+            className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600"
+            to="/"
+          >
             <PublicationsLogo className="size-7" size={28} />
             <span className="text-sm font-semibold tracking-tight">Publications</span>
           </Link>
-          <div className="relative" ref={menuRef}>
+          <div id="editor-toolbar-slot" className="flex min-w-0 flex-1 items-center" />
+          <div className="relative ml-auto" ref={menuRef}>
             <button
               className="flex items-center gap-2 rounded-lg px-2 py-1 text-left transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 dark:hover:bg-gray-800"
               type="button"
@@ -71,22 +83,41 @@ export function AuthenticatedLayout({ user, loggingOut, onLogout, children }: Pr
               aria-haspopup="menu"
               aria-expanded={menuOpen}
             >
-              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700 dark:bg-violet-950 dark:text-violet-300" aria-hidden="true">
+              <span
+                className="grid size-7 shrink-0 place-items-center rounded-full bg-violet-100 text-xs font-semibold text-violet-700 dark:bg-violet-950 dark:text-violet-300"
+                aria-hidden="true"
+              >
                 {initials}
               </span>
-              <span className="hidden max-w-44 truncate text-sm font-medium sm:block">{user.name ?? 'Signed-in user'}</span>
-              <ChevronDown className={`size-4 text-gray-400 transition-transform ${menuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+              <span className="hidden max-w-44 truncate text-sm font-medium sm:block">
+                {user.name ?? 'Signed-in user'}
+              </span>
+              <ChevronDown
+                className={`size-4 text-gray-400 transition-transform ${menuOpen ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              />
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-72 rounded-xl border border-gray-200 bg-white p-2 shadow-xl dark:border-gray-700 dark:bg-gray-900" role="menu">
+              <div
+                className="absolute right-0 mt-2 w-72 rounded-xl border border-gray-200 bg-white p-2 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+                role="menu"
+              >
                 <div className="border-b border-gray-200 px-2 pb-3 pt-1 dark:border-gray-700">
                   <p className="truncate text-sm font-medium">{user.name ?? 'Signed-in user'}</p>
-                  <p className="truncate text-xs text-gray-500 dark:text-gray-400">{user.email ?? ''}</p>
+                  <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+                    {user.email ?? ''}
+                  </p>
                 </div>
                 <div className="p-2">
-                  <p className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">Appearance</p>
-                  <div className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800" role="group" aria-label="Color theme">
+                  <p className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                    Appearance
+                  </p>
+                  <div
+                    className="grid grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800"
+                    role="group"
+                    aria-label="Color theme"
+                  >
                     {themeOptions.map(({ value, label, icon: Icon }) => (
                       <button
                         key={value}

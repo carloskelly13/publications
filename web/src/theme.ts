@@ -8,9 +8,12 @@ export function storedTheme(): ThemePreference {
 }
 
 export function applyTheme(theme: ThemePreference) {
-  const dark = theme === 'dark'
-    || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  const dark =
+    theme === 'dark' ||
+    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
   document.documentElement.classList.toggle('dark', dark)
   document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#030712' : '#44403c')
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute('content', dark ? '#030712' : '#44403c')
 }

@@ -22,7 +22,9 @@ const richTextExtensions = [
 ]
 
 function legacyText(text?: string) {
-  if (!text) return ''
+  if (!text) {
+    return ''
+  }
   return new DOMParser().parseFromString(text, 'text/html').body.textContent ?? ''
 }
 
@@ -33,10 +35,12 @@ function richTextDocument(content: unknown, text?: string): JSONContent {
   const value = legacyText(text)
   return {
     type: 'doc',
-    content: [{
-      type: 'paragraph',
-      content: value ? [{ type: 'text', text: value }] : undefined,
-    }],
+    content: [
+      {
+        type: 'paragraph',
+        content: value ? [{ type: 'text', text: value }] : undefined,
+      },
+    ],
   }
 }
 
@@ -53,9 +57,15 @@ function safeTextStyle(attributes: Record<string, unknown> | undefined): CSSProp
   const color = attributes?.color
   const fontSize = attributes?.fontSize
   const lineHeight = attributes?.lineHeight
-  if (typeof color === 'string' && /^#[\da-f]{3,8}$/i.test(color)) style.color = color
-  if (typeof fontSize === 'string' && /^\d+(?:\.\d+)?px$/.test(fontSize)) style.fontSize = fontSize
-  if (typeof lineHeight === 'string' && /^\d+(?:\.\d+)?$/.test(lineHeight)) style.lineHeight = lineHeight
+  if (typeof color === 'string' && /^#[\da-f]{3,8}$/i.test(color)) {
+    style.color = color
+  }
+  if (typeof fontSize === 'string' && /^\d+(?:\.\d+)?px$/.test(fontSize)) {
+    style.fontSize = fontSize
+  }
+  if (typeof lineHeight === 'string' && /^\d+(?:\.\d+)?$/.test(lineHeight)) {
+    style.lineHeight = lineHeight
+  }
   return style
 }
 
@@ -64,26 +74,52 @@ function renderRichTextNode(node: JSONContent, key: string): ReactNode {
     let content: ReactNode = node.text ?? ''
     for (const [index, mark] of (node.marks ?? []).entries()) {
       const markKey = `${key}-mark-${index}`
-      if (mark.type === 'bold') content = <strong key={markKey}>{content}</strong>
-      else if (mark.type === 'italic') content = <em key={markKey}>{content}</em>
-      else if (mark.type === 'underline') content = <u key={markKey}>{content}</u>
-      else if (mark.type === 'strike') content = <s key={markKey}>{content}</s>
-      else if (mark.type === 'textStyle') content = <span key={markKey} style={safeTextStyle(mark.attrs)}>{content}</span>
+      if (mark.type === 'bold') {
+        content = <strong key={markKey}>{content}</strong>
+      } else if (mark.type === 'italic') {
+        content = <em key={markKey}>{content}</em>
+      } else if (mark.type === 'underline') {
+        content = <u key={markKey}>{content}</u>
+      } else if (mark.type === 'strike') {
+        content = <s key={markKey}>{content}</s>
+      } else if (mark.type === 'textStyle') {
+        content = (
+          <span key={markKey} style={safeTextStyle(mark.attrs)}>
+            {content}
+          </span>
+        )
+      }
     }
     return <Fragment key={key}>{content}</Fragment>
   }
 
-  if (node.type === 'hardBreak') return <br key={key} />
-  const children = (node.content ?? []).map((child, index) => renderRichTextNode(child, `${key}-${index}`))
-  if (node.type === 'paragraph') {
-    const alignment = typeof node.attrs?.textAlign === 'string' && ['left', 'center', 'right', 'justify'].includes(node.attrs.textAlign)
-      ? node.attrs.textAlign as CSSProperties['textAlign']
-      : undefined
-    return <p key={key} style={{ textAlign: alignment }}>{children}</p>
+  if (node.type === 'hardBreak') {
+    return <br key={key} />
   }
-  if (node.type === 'bulletList') return <ul key={key}>{children}</ul>
-  if (node.type === 'orderedList') return <ol key={key}>{children}</ol>
-  if (node.type === 'listItem') return <li key={key}>{children}</li>
+  const children = (node.content ?? []).map((child, index) =>
+    renderRichTextNode(child, `${key}-${index}`),
+  )
+  if (node.type === 'paragraph') {
+    const alignment =
+      typeof node.attrs?.textAlign === 'string' &&
+      ['left', 'center', 'right', 'justify'].includes(node.attrs.textAlign)
+        ? (node.attrs.textAlign as CSSProperties['textAlign'])
+        : undefined
+    return (
+      <p key={key} style={{ textAlign: alignment }}>
+        {children}
+      </p>
+    )
+  }
+  if (node.type === 'bulletList') {
+    return <ul key={key}>{children}</ul>
+  }
+  if (node.type === 'orderedList') {
+    return <ol key={key}>{children}</ol>
+  }
+  if (node.type === 'listItem') {
+    return <li key={key}>{children}</li>
+  }
   return <Fragment key={key}>{children}</Fragment>
 }
 
@@ -92,7 +128,13 @@ function StaticRichText({ shape }: { shape: CanvasShape }) {
   return <div className="rich-text-content h-full">{renderRichTextNode(document, 'document')}</div>
 }
 
-export function RichTextEditor({ shape, onChange, onEditorChange, onFinishEditing, scale = 1 }: Props) {
+export function RichTextEditor({
+  shape,
+  onChange,
+  onEditorChange,
+  onFinishEditing,
+  scale = 1,
+}: Props) {
   const initialContent = useMemo(
     () => richTextDocument(shape.richTextContent, shape.text),
     // A shape editor is remounted for a new frame; updates flow from Tiptap to the document.
@@ -108,13 +150,17 @@ export function RichTextEditor({ shape, onChange, onEditorChange, onFinishEditin
   })
 
   useEffect(() => {
-    if (!editor) return
+    if (!editor) {
+      return
+    }
     const frame = window.requestAnimationFrame(() => editor.view.dom.focus({ preventScroll: true }))
     return () => window.cancelAnimationFrame(frame)
   }, [editor])
 
   useEffect(() => {
-    if (!editor) return
+    if (!editor) {
+      return
+    }
     onEditorChange?.(editor)
     return () => onEditorChange?.(null)
   }, [editor, onEditorChange])
@@ -128,7 +174,9 @@ export function RichTextEditor({ shape, onChange, onEditorChange, onFinishEditin
         transform: `scale(${scale})`,
       }}
       onKeyDownCapture={(event) => {
-        if (event.key !== 'Escape') return
+        if (event.key !== 'Escape') {
+          return
+        }
         event.preventDefault()
         editor?.commands.blur()
         onFinishEditing?.()

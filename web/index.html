@@ -8,10 +8,12 @@
     <link rel="icon" href="/publications-logo.svg" type="image/svg+xml" />
     <title>Publications</title>
     <script>
-      (() => {
+      ;(() => {
         const saved = localStorage.getItem('publications-theme')
         const theme = saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system'
-        const dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+        const dark =
+          theme === 'dark' ||
+          (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
         document.documentElement.classList.toggle('dark', dark)
         document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
         document.querySelector('meta[name="theme-color"]').content = dark ? '#030712' : '#44403c'

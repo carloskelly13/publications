@@ -1,5 +1,19 @@
-import { BringToFront, Circle, Copy, GripVertical, MoveDown, MoveUp, SendToBack, Spline, Square, Trash2, Type } from 'lucide-react'
-import { useRef, useState } from 'react'
+import {
+  BringToFront,
+  Circle,
+  Copy,
+  GripVertical,
+  ListChecks,
+  ListX,
+  MoveDown,
+  MoveUp,
+  SendToBack,
+  Spline,
+  Square,
+  Trash2,
+  Type,
+} from 'lucide-react'
+import { useState } from 'react'
 import { cn } from '../lib/cn'
 import type { ShapeResponse } from '../types'
 
@@ -11,98 +25,113 @@ type Props = {
   selectedShapeId: string | null
   selectedShapeIds: string[]
   onSelect: ({ shapeId, additive }: { shapeId: string; additive?: boolean }) => void
-  onReorder: ({ draggedShapeId, targetShapeId, position }: { draggedShapeId: string; targetShapeId: string; position: DropPosition }) => void
+  onReorder: ({
+    draggedShapeId,
+    targetShapeId,
+    position,
+  }: {
+    draggedShapeId: string
+    targetShapeId: string
+    position: DropPosition
+  }) => void
   onMove: ({ shapeId, direction }: { shapeId: string; direction: LayerDirection }) => void
   onDuplicate: ({ shapeId }: { shapeId: string }) => void
   onDelete: ({ shapeIds }: { shapeIds: string[] }) => void
-  width: number
-  onResize: ({ width }: { width: number }) => void
+  onSelectionChange: ({ shapeIds }: { shapeIds: string[] }) => void
 }
 
-const MIN_PANEL_WIDTH = 240
-const MAX_PANEL_WIDTH = 480
-
 const layerName = ({ shape }: { shape: ShapeResponse }) => {
-  if (shape.type === 'ellipse') return 'Ellipse'
-  if (shape.type === 'text') return 'Text'
-  if (shape.type === 'line') return 'Line'
+  if (shape.type === 'ellipse') {
+    return 'Ellipse'
+  }
+  if (shape.type === 'text') {
+    return 'Text'
+  }
+  if (shape.type === 'line') {
+    return 'Line'
+  }
   return 'Rectangle'
 }
 
 const LayerIcon = ({ shape }: { shape: ShapeResponse }) => {
-  if (shape.type === 'ellipse') return <Circle className="size-4" aria-hidden="true" />
-  if (shape.type === 'text') return <Type className="size-4" aria-hidden="true" />
-  if (shape.type === 'line') return <Spline className="size-4" aria-hidden="true" />
+  if (shape.type === 'ellipse') {
+    return <Circle className="size-4" aria-hidden="true" />
+  }
+  if (shape.type === 'text') {
+    return <Type className="size-4" aria-hidden="true" />
+  }
+  if (shape.type === 'line') {
+    return <Spline className="size-4" aria-hidden="true" />
+  }
   return <Square className="size-4" aria-hidden="true" />
 }
 
-export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelect, onReorder, onMove, onDuplicate, onDelete, width, onResize }: Props) {
+export function LayersPanel({
+  shapes,
+  selectedShapeId,
+  selectedShapeIds,
+  onSelect,
+  onReorder,
+  onMove,
+  onDuplicate,
+  onDelete,
+  onSelectionChange,
+}: Props) {
   const [draggedShapeId, setDraggedShapeId] = useState<string | null>(null)
-  const [dropTarget, setDropTarget] = useState<{ shapeId: string; position: DropPosition } | null>(null)
-  const resizeStart = useRef<{ pointerX: number; width: number } | null>(null)
+  const [dropTarget, setDropTarget] = useState<{ shapeId: string; position: DropPosition } | null>(
+    null,
+  )
   const layers = [...shapes].sort((left, right) => (right.z ?? 0) - (left.z ?? 0))
   const selectedIndex = layers.findIndex(({ id }) => id === selectedShapeId)
   const singleSelection = selectedShapeIds.length === 1
 
-  const resizeTo = ({ nextWidth }: { nextWidth: number }) => {
-    onResize({ width: Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, nextWidth)) })
-  }
-
   return (
-    <aside
-      className="relative flex shrink-0 flex-col border-l border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
-      style={{ width }}
-      aria-label="Layers panel"
-    >
-      <div
-        className="absolute inset-y-0 -left-1 z-20 w-2 cursor-col-resize touch-none outline-none after:absolute after:inset-y-0 after:left-1/2 after:w-px after:-translate-x-1/2 after:bg-transparent hover:after:bg-violet-500 focus-visible:after:bg-violet-500"
-        role="separator"
-        aria-label="Resize layers panel"
-        aria-orientation="vertical"
-        aria-valuemin={MIN_PANEL_WIDTH}
-        aria-valuemax={MAX_PANEL_WIDTH}
-        aria-valuenow={width}
-        tabIndex={0}
-        onPointerDown={(event) => {
-          event.preventDefault()
-          resizeStart.current = { pointerX: event.clientX, width }
-          event.currentTarget.setPointerCapture(event.pointerId)
-        }}
-        onPointerMove={(event) => {
-          if (!resizeStart.current) return
-          resizeTo({ nextWidth: resizeStart.current.width + resizeStart.current.pointerX - event.clientX })
-        }}
-        onPointerUp={(event) => {
-          resizeStart.current = null
-          event.currentTarget.releasePointerCapture(event.pointerId)
-        }}
-        onPointerCancel={() => {
-          resizeStart.current = null
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'ArrowLeft') {
-            event.preventDefault()
-            resizeTo({ nextWidth: width + 16 })
-          }
-          if (event.key === 'ArrowRight') {
-            event.preventDefault()
-            resizeTo({ nextWidth: width - 16 })
-          }
-        }}
-      />
-      <div className="flex h-7 shrink-0 items-center justify-between border-b border-gray-300 bg-gray-50 px-3 dark:border-gray-700 dark:bg-gray-900">
+    <section className="flex min-h-0 flex-1 flex-col" aria-label="Layers panel">
+      <div className="flex h-7 shrink-0 items-center gap-2 border-b border-gray-300 bg-gray-50 px-3 dark:border-gray-700 dark:bg-gray-900">
         <h2 className="text-xs font-semibold text-gray-900 dark:text-gray-100">Layers</h2>
-        {layers.length > 0 && <span className="text-xs tabular-nums text-gray-400">{layers.length}</span>}
+        {layers.length > 0 && (
+          <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+            {layers.length}
+          </span>
+        )}
       </div>
 
-      <div className="flex h-11 shrink-0 items-center justify-start gap-1 border-b border-gray-200 px-2 dark:border-gray-700" role="toolbar" aria-label="Selected layer controls">
+      <div
+        className="flex h-11 shrink-0 items-center justify-start gap-1 border-b border-gray-200 px-2 dark:border-gray-700"
+        role="toolbar"
+        aria-label="Selected layer controls"
+      >
+        {shapes.length > 0 && selectedShapeIds.length === shapes.length ? (
+          <button
+            className="grid size-8 place-items-center rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            type="button"
+            aria-label="Deselect all layers"
+            title="Deselect all layers"
+            onClick={() => onSelectionChange({ shapeIds: [] })}
+          >
+            <ListX className="size-4" aria-hidden="true" />
+          </button>
+        ) : (
+          <button
+            className="grid size-8 place-items-center rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-30 dark:text-gray-300 dark:hover:bg-gray-800"
+            type="button"
+            aria-label="Select all layers"
+            title="Select all layers"
+            disabled={shapes.length === 0}
+            onClick={() => onSelectionChange({ shapeIds: shapes.map(({ id }) => id) })}
+          >
+            <ListChecks className="size-4" aria-hidden="true" />
+          </button>
+        )}
         <button
           className="grid size-8 place-items-center rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-30 dark:text-gray-300 dark:hover:bg-gray-800"
           type="button"
           aria-label="Bring layer to front"
           title="Bring layer to front"
           disabled={!singleSelection || !selectedShapeId || selectedIndex <= 0}
-          onClick={() => selectedShapeId && onMove({ shapeId: selectedShapeId, direction: 'front' })}
+          onClick={() =>
+            selectedShapeId && onMove({ shapeId: selectedShapeId, direction: 'front' })
+          }
         >
           <BringToFront className="size-4" aria-hidden="true" />
         </button>
@@ -121,7 +150,12 @@ export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelec
           type="button"
           aria-label="Move layer backward"
           title="Move layer backward one position"
-          disabled={!singleSelection || !selectedShapeId || selectedIndex < 0 || selectedIndex >= layers.length - 1}
+          disabled={
+            !singleSelection ||
+            !selectedShapeId ||
+            selectedIndex < 0 ||
+            selectedIndex >= layers.length - 1
+          }
           onClick={() => selectedShapeId && onMove({ shapeId: selectedShapeId, direction: 'down' })}
         >
           <MoveDown className="size-4" aria-hidden="true" />
@@ -131,7 +165,12 @@ export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelec
           type="button"
           aria-label="Send layer to back"
           title="Send layer to back"
-          disabled={!singleSelection || !selectedShapeId || selectedIndex < 0 || selectedIndex >= layers.length - 1}
+          disabled={
+            !singleSelection ||
+            !selectedShapeId ||
+            selectedIndex < 0 ||
+            selectedIndex >= layers.length - 1
+          }
           onClick={() => selectedShapeId && onMove({ shapeId: selectedShapeId, direction: 'back' })}
         >
           <SendToBack className="size-4" aria-hidden="true" />
@@ -160,7 +199,9 @@ export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelec
 
       <ol className="min-h-0 flex-1 overflow-y-auto p-2" aria-label="Layers, front to back">
         {layers.length === 0 && (
-          <li className="px-2 py-6 text-center text-xs text-gray-500 dark:text-gray-400">No layers yet.</li>
+          <li className="px-2 py-6 text-center text-xs text-gray-500 dark:text-gray-400">
+            No layers yet.
+          </li>
         )}
         {layers.map((shape) => {
           const selected = selectedShapeIds.includes(shape.id)
@@ -189,13 +230,19 @@ export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelec
                 setDropTarget({ shapeId: shape.id, position })
               }}
               onDragLeave={() => {
-                if (dropTarget?.shapeId === shape.id) setDropTarget(null)
+                if (dropTarget?.shapeId === shape.id) {
+                  setDropTarget(null)
+                }
               }}
               onDrop={(event) => {
                 event.preventDefault()
                 const sourceId = draggedShapeId ?? event.dataTransfer.getData('text/plain')
                 if (sourceId && sourceId !== shape.id) {
-                  onReorder({ draggedShapeId: sourceId, targetShapeId: shape.id, position: dropTarget?.position ?? 'before' })
+                  onReorder({
+                    draggedShapeId: sourceId,
+                    targetShapeId: shape.id,
+                    position: dropTarget?.position ?? 'before',
+                  })
                 }
                 setDraggedShapeId(null)
                 setDropTarget(null)
@@ -214,14 +261,19 @@ export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelec
                   aria-hidden="true"
                 />
               )}
-              <GripVertical className="ml-1 size-4 shrink-0 cursor-grab text-gray-400 active:cursor-grabbing" aria-hidden="true" />
+              <GripVertical
+                className="ml-1 size-4 shrink-0 cursor-grab text-gray-400 active:cursor-grabbing"
+                aria-hidden="true"
+              />
               <button
                 className="flex min-w-0 flex-1 items-center gap-2 px-2 text-left text-sm"
                 type="button"
-                onClick={(event) => onSelect({
-                  shapeId: shape.id,
-                  additive: event.shiftKey || event.metaKey || event.ctrlKey,
-                })}
+                onClick={(event) =>
+                  onSelect({
+                    shapeId: shape.id,
+                    additive: event.shiftKey || event.metaKey || event.ctrlKey,
+                  })
+                }
               >
                 <span className="grid size-6 shrink-0 place-items-center rounded bg-white text-gray-500 shadow-sm ring-1 ring-black/10 dark:bg-gray-800 dark:text-gray-300 dark:ring-white/10">
                   <LayerIcon shape={shape} />
@@ -232,7 +284,6 @@ export function LayersPanel({ shapes, selectedShapeId, selectedShapeIds, onSelec
           )
         })}
       </ol>
-
-    </aside>
+    </section>
   )
 }

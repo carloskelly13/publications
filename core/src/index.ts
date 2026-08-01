@@ -69,18 +69,19 @@ for (const schema of [
   PdfRequest,
   UserResponse,
   CsrfResponse,
-]) app.addSchema(schema)
+]) {
+  app.addSchema(schema)
+}
 
 app.setErrorHandler((error: unknown, request, reply) => {
   const validationError = typeof error === 'object' && error !== null && 'validation' in error
   const errorName = error instanceof Error ? error.name : 'Error'
-  const errorMessage = error instanceof Error ? error.message : 'The request could not be completed.'
-  const statusCode = error instanceof HttpError
-    ? error.statusCode
-    : validationError
-      ? 400
-      : 500
-  if (statusCode >= 500) request.log.error({ err: error }, 'Request failed')
+  const errorMessage =
+    error instanceof Error ? error.message : 'The request could not be completed.'
+  const statusCode = error instanceof HttpError ? error.statusCode : validationError ? 400 : 500
+  if (statusCode >= 500) {
+    request.log.error({ err: error }, 'Request failed')
+  }
   return reply.code(statusCode).send({
     statusCode,
     error: statusCode >= 500 ? 'Internal Server Error' : errorName,
@@ -103,85 +104,141 @@ const ListQuery = Type.Object({
   size: Type.Optional(Type.Integer({ minimum: 1, maximum: 20, default: 4 })),
 })
 
-app.get<{ Querystring: { page?: number; size?: number } }>('/api/documents', {
-  preHandler: authenticate,
-  schema: {
-    querystring: ListQuery,
-    response: { 200: Type.Ref(DocumentPageResponse) },
+app.get<{ Querystring: { page?: number; size?: number } }>(
+  '/api/documents',
+  {
+    preHandler: authenticate,
+    schema: {
+      querystring: ListQuery,
+      response: { 200: Type.Ref(DocumentPageResponse) },
+    },
   },
-}, async (request) => listDocuments({
-  userId: request.currentSession!.user.id,
-  page: request.query.page ?? 0,
-  size: request.query.size ?? 4,
-}))
+  async (request) =>
+    listDocuments({
+      userId: request.currentSession!.user.id,
+      page: request.query.page ?? 0,
+      size: request.query.size ?? 4,
+    }),
+)
 
-app.get<{ Params: { id: string } }>('/api/documents/:id', {
-  preHandler: authenticate,
-  schema: { params: IdParams, response: { 200: Type.Ref(DocumentResponse) } },
-}, async (request) => {
-  const document = await getDocument({ id: request.params.id, userId: request.currentSession!.user.id })
-  if (!document) throw new HttpError({ statusCode: 404, message: 'Document not found.' })
-  return document
-})
+app.get<{ Params: { id: string } }>(
+  '/api/documents/:id',
+  {
+    preHandler: authenticate,
+    schema: { params: IdParams, response: { 200: Type.Ref(DocumentResponse) } },
+  },
+  async (request) => {
+    const document = await getDocument({
+      id: request.params.id,
+      userId: request.currentSession!.user.id,
+    })
+    if (!document) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    return document
+  },
+)
 
-app.post<{ Body: DocumentInput }>('/api/documents', {
-  preHandler: verifyCsrf,
-  schema: { body: Type.Ref(DocumentRequest), response: { 201: Type.Ref(DocumentResponse) } },
-}, async (request, reply) => {
-  const document = await createDocument({ userId: request.currentSession!.user.id, input: request.body })
-  return reply.code(201).send(document)
-})
+app.post<{ Body: DocumentInput }>(
+  '/api/documents',
+  {
+    preHandler: verifyCsrf,
+    schema: { body: Type.Ref(DocumentRequest), response: { 201: Type.Ref(DocumentResponse) } },
+  },
+  async (request, reply) => {
+    const document = await createDocument({
+      userId: request.currentSession!.user.id,
+      input: request.body,
+    })
+    return reply.code(201).send(document)
+  },
+)
 
-app.put<{ Params: { id: string }; Body: DocumentInput }>('/api/documents/:id', {
-  preHandler: verifyCsrf,
-  schema: { params: IdParams, body: Type.Ref(DocumentRequest), response: { 200: Type.Ref(DocumentResponse) } },
-}, async (request) => {
-  const document = await updateDocument({
-    id: request.params.id,
-    userId: request.currentSession!.user.id,
-    input: request.body,
-  })
-  if (!document) throw new HttpError({ statusCode: 404, message: 'Document not found.' })
-  return document
-})
+app.put<{ Params: { id: string }; Body: DocumentInput }>(
+  '/api/documents/:id',
+  {
+    preHandler: verifyCsrf,
+    schema: {
+      params: IdParams,
+      body: Type.Ref(DocumentRequest),
+      response: { 200: Type.Ref(DocumentResponse) },
+    },
+  },
+  async (request) => {
+    const document = await updateDocument({
+      id: request.params.id,
+      userId: request.currentSession!.user.id,
+      input: request.body,
+    })
+    if (!document) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    return document
+  },
+)
 
-app.patch<{ Params: { id: string }; Body: { name: string } }>('/api/documents/:id', {
-  preHandler: verifyCsrf,
-  schema: { params: IdParams, body: Type.Ref(RenameDocumentRequest), response: { 200: Type.Ref(DocumentResponse) } },
-}, async (request) => {
-  const document = await renameDocument({
-    id: request.params.id,
-    userId: request.currentSession!.user.id,
-    name: request.body.name,
-  })
-  if (!document) throw new HttpError({ statusCode: 404, message: 'Document not found.' })
-  return document
-})
+app.patch<{ Params: { id: string }; Body: { name: string } }>(
+  '/api/documents/:id',
+  {
+    preHandler: verifyCsrf,
+    schema: {
+      params: IdParams,
+      body: Type.Ref(RenameDocumentRequest),
+      response: { 200: Type.Ref(DocumentResponse) },
+    },
+  },
+  async (request) => {
+    const document = await renameDocument({
+      id: request.params.id,
+      userId: request.currentSession!.user.id,
+      name: request.body.name,
+    })
+    if (!document) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    return document
+  },
+)
 
-app.delete<{ Params: { id: string } }>('/api/documents/:id', {
-  preHandler: verifyCsrf,
-  schema: { params: IdParams },
-}, async (request, reply) => {
-  const deleted = await deleteDocument({
-    id: request.params.id,
-    userId: request.currentSession!.user.id,
-  })
-  if (!deleted) throw new HttpError({ statusCode: 404, message: 'Document not found.' })
-  return reply.code(204).send()
-})
+app.delete<{ Params: { id: string } }>(
+  '/api/documents/:id',
+  {
+    preHandler: verifyCsrf,
+    schema: { params: IdParams },
+  },
+  async (request, reply) => {
+    const deleted = await deleteDocument({
+      id: request.params.id,
+      userId: request.currentSession!.user.id,
+    })
+    if (!deleted) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    return reply.code(204).send()
+  },
+)
 
-app.post<{ Params: { id: string }; Body: PdfInput }>('/api/documents/:id/pdf', {
-  preHandler: verifyCsrf,
-  schema: { params: IdParams, body: Type.Ref(PdfRequest) },
-}, async (request, reply) => {
-  const document = await getDocument({ id: request.params.id, userId: request.currentSession!.user.id })
-  if (!document) throw new HttpError({ statusCode: 404, message: 'Document not found.' })
-  const pdf = await renderPdf({ input: request.body })
-  const filename = `${document.name.replace(/[\r\n\\/]/g, '_')}.pdf`
-  return reply
-    .type('application/pdf')
-    .header('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`)
-    .send(pdf)
-})
+app.post<{ Params: { id: string }; Body: PdfInput }>(
+  '/api/documents/:id/pdf',
+  {
+    preHandler: verifyCsrf,
+    schema: { params: IdParams, body: Type.Ref(PdfRequest) },
+  },
+  async (request, reply) => {
+    const document = await getDocument({
+      id: request.params.id,
+      userId: request.currentSession!.user.id,
+    })
+    if (!document) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    const pdf = await renderPdf({ input: request.body })
+    const filename = `${document.name.replace(/[\r\n\\/]/g, '_')}.pdf`
+    return reply
+      .type('application/pdf')
+      .header('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`)
+      .send(pdf)
+  },
+)
 
 void app.listen({ port: config.port, host: '0.0.0.0' })

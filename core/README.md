@@ -15,17 +15,17 @@ Sessions are stored in PostgreSQL. The browser receives only a signed opaque coo
 
 ## REST API
 
-| Method | Route | Purpose |
-| --- | --- | --- |
-| `GET` | `/api/auth/csrf` | Return the current session's CSRF header name and token. |
-| `GET` | `/api/auth/current-user-identity` | Return the current Google-backed user. |
-| `POST` | `/api/auth/logout` | Delete the current session. |
-| `GET` | `/api/documents?page=0&size=4` | List the user's documents with pagination. |
-| `POST` | `/api/documents` | Create a document. |
-| `GET` | `/api/documents/{id}` | Read one owned document. |
-| `PUT` | `/api/documents/{id}` | Replace an owned document. |
-| `PATCH` | `/api/documents/{id}` | Rename an owned document. |
-| `DELETE` | `/api/documents/{id}` | Delete an owned document. |
-| `POST` | `/api/documents/{id}/pdf` | Render submitted SVG as a PDF. |
+| Method   | Route                             | Purpose                                                  |
+| -------- | --------------------------------- | -------------------------------------------------------- |
+| `GET`    | `/api/auth/csrf`                  | Return the current session's CSRF header name and token. |
+| `GET`    | `/api/auth/current-user-identity` | Return the current Google-backed user.                   |
+| `POST`   | `/api/auth/logout`                | Delete the current session.                              |
+| `GET`    | `/api/documents?page=0&size=4`    | List the user's documents with pagination.               |
+| `POST`   | `/api/documents`                  | Create a document.                                       |
+| `GET`    | `/api/documents/{id}`             | Read one owned document.                                 |
+| `PUT`    | `/api/documents/{id}`             | Replace an owned document.                               |
+| `PATCH`  | `/api/documents/{id}`             | Rename an owned document.                                |
+| `DELETE` | `/api/documents/{id}`             | Delete an owned document.                                |
+| `POST`   | `/api/documents/{id}/pdf`         | Render submitted SVG as a PDF.                           |
 
 Mutating requests send the CSRF value in the `X-XSRF-TOKEN` header. Chromium runs with JavaScript disabled and external requests blocked while rendering PDFs.

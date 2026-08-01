@@ -2,7 +2,9 @@ import 'dotenv/config'
 
 const required = (name: string): string => {
   const value = process.env[name]
-  if (!value) throw new Error(`${name} is required.`)
+  if (!value) {
+    throw new Error(`${name} is required.`)
+  }
   return value
 }
 
@@ -15,8 +17,12 @@ export const config = {
   get databaseUrl() {
     const raw = required('DATABASE_URL').replace(/^jdbc:/, '')
     const url = new URL(raw)
-    if (!url.username && process.env.DATABASE_USER) url.username = process.env.DATABASE_USER
-    if (!url.password && process.env.DATABASE_PASSWORD) url.password = process.env.DATABASE_PASSWORD
+    if (!url.username && process.env.DATABASE_USER) {
+      url.username = process.env.DATABASE_USER
+    }
+    if (!url.password && process.env.DATABASE_PASSWORD) {
+      url.password = process.env.DATABASE_PASSWORD
+    }
     return url.toString()
   },
   get googleClientId() {
@@ -36,11 +42,16 @@ export const config = {
   },
   get sessionSecret() {
     const secret = required('SESSION_SECRET')
-    if (secret.length < 32) throw new Error('SESSION_SECRET must contain at least 32 characters.')
+    if (secret.length < 32) {
+      throw new Error('SESSION_SECRET must contain at least 32 characters.')
+    }
     return secret
   },
   get secureCookies() {
-    return boolean({ name: 'SESSION_COOKIE_SECURE', fallback: process.env.NODE_ENV === 'production' })
+    return boolean({
+      name: 'SESSION_COOKIE_SECURE',
+      fallback: process.env.NODE_ENV === 'production',
+    })
   },
   port: Number(process.env.PORT ?? 4004),
 }

@@ -10,7 +10,15 @@ type Props = {
   zoom?: number
   selectedShapeId: string | null
   selectedShapeIds: string[]
-  onSelectShape: ({ shapeId, additive, preserveGroup }: { shapeId: string | null; additive?: boolean; preserveGroup?: boolean }) => void
+  onSelectShape: ({
+    shapeId,
+    additive,
+    preserveGroup,
+  }: {
+    shapeId: string | null
+    additive?: boolean
+    preserveGroup?: boolean
+  }) => void
   onSelectShapes: ({ shapeIds }: { shapeIds: string[] }) => void
   onShapeChange: (shapeId: string, changes: Partial<ShapeInput>) => void
   editingShapeId: string | null
@@ -22,11 +30,27 @@ type Props = {
 
 const BASE_PIXELS_PER_INCH = 96
 
-export function EditorWorkspace({ page, title, zoom = 1, selectedShapeId, selectedShapeIds, onSelectShape, onSelectShapes, onShapeChange, editingShapeId, onStartTextEditing, onFinishTextEditing, onTextEditorChange, snapToGrid }: Props) {
+export function EditorWorkspace({
+  page,
+  title,
+  zoom = 1,
+  selectedShapeId,
+  selectedShapeIds,
+  onSelectShape,
+  onSelectShapes,
+  onShapeChange,
+  editingShapeId,
+  onStartTextEditing,
+  onFinishTextEditing,
+  onTextEditorChange,
+  snapToGrid,
+}: Props) {
   const pixelsPerInch = BASE_PIXELS_PER_INCH * zoom
   const canvasWidth = (page.width ?? 8.5) * pixelsPerInch
   const canvasHeight = (page.height ?? 11) * pixelsPerInch
-  const editingShape = (page.shapes ?? []).find((shape) => 'id' in shape && shape.id === editingShapeId)
+  const editingShape = (page.shapes ?? []).find(
+    (shape) => 'id' in shape && shape.id === editingShapeId,
+  )
 
   return (
     <div

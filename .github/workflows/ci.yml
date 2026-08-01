@@ -14,12 +14,8 @@ concurrency:
 
 jobs:
   quality:
-    name: ${{ matrix.project }} lint and typecheck
+    name: Format, lint, and typecheck
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        project: [core, web]
 
     steps:
       - name: Check out repository
@@ -30,16 +26,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: ${{ matrix.project }}/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        working-directory: ${{ matrix.project }}
         run: npm ci
 
-      - name: Lint
-        working-directory: ${{ matrix.project }}
-        run: npm run lint
-
-      - name: Typecheck
-        working-directory: ${{ matrix.project }}
-        run: npm run typecheck
+      - name: Check formatting, lint, and types
+        run: npm run check
