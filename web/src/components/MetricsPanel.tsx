@@ -1,7 +1,7 @@
 import type { Editor } from '@tiptap/core'
 import { Link2, Unlink2 } from 'lucide-react'
 import { PaintBucket, PenLine } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cn } from '../lib/cn'
 import type { ShapeInput, ShapeResponse } from '../types'
 import { ColorControl, TextFormattingControls } from './EditorToolbar'
@@ -22,7 +22,7 @@ type MetricInputProps = {
   step?: number
   decimals?: number
   placeholder?: string
-  onCommit: ({ value }: { value: number }) => void
+  onValueChange: ({ value }: { value: number }) => void
 }
 
 const displayedValue = ({ value, decimals }: { value: number | null; decimals: number }) =>
@@ -38,26 +38,39 @@ function MetricInput({
   step = 0.25,
   decimals = 2,
   placeholder,
-  onCommit,
+  onValueChange,
 }: MetricInputProps) {
   const [draft, setDraft] = useState(displayedValue({ value, decimals }))
+  const editingRef = useRef(false)
+  const discardOnBlurRef = useRef(false)
+  const valueOnFocusRef = useRef<number | null>(value)
 
-  useEffect(() => setDraft(displayedValue({ value, decimals })), [value, decimals])
-
-  const commit = () => {
-    if (draft.trim() === '') {
+  useEffect(() => {
+    if (!editingRef.current) {
       setDraft(displayedValue({ value, decimals }))
+    }
+  }, [value, decimals])
+
+  function applyDraft({ draftValue, finalize }: { draftValue: string; finalize: boolean }) {
+    if (draftValue.trim() === '') {
+      if (finalize) {
+        setDraft(displayedValue({ value, decimals }))
+      }
       return
     }
-    const parsed = Number(draft)
+    const parsed = Number(draftValue)
     if (!Number.isFinite(parsed)) {
-      setDraft(displayedValue({ value, decimals }))
+      if (finalize) {
+        setDraft(displayedValue({ value, decimals }))
+      }
       return
     }
     const constrainedValue = min === undefined ? parsed : Math.max(min, parsed)
-    const nextValue = Number(constrainedValue.toFixed(decimals))
-    setDraft(displayedValue({ value: nextValue, decimals }))
-    onCommit({ value: nextValue })
+    const nextValue = finalize ? Number(constrainedValue.toFixed(decimals)) : constrainedValue
+    if (finalize) {
+      setDraft(displayedValue({ value: nextValue, decimals }))
+    }
+    onValueChange({ value: nextValue })
   }
 
   return (
@@ -82,15 +95,34 @@ function MetricInput({
           placeholder={placeholder}
           min={min}
           step={step}
-          onChange={(event) => setDraft(event.target.value)}
-          onBlur={commit}
+          onFocus={() => {
+            editingRef.current = true
+            valueOnFocusRef.current = value
+          }}
+          onChange={(event) => {
+            const draftValue = event.target.value
+            setDraft(draftValue)
+            applyDraft({ draftValue, finalize: false })
+          }}
+          onBlur={() => {
+            editingRef.current = false
+            if (discardOnBlurRef.current) {
+              discardOnBlurRef.current = false
+              return
+            }
+            applyDraft({ draftValue: draft, finalize: true })
+          }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
-              commit()
               event.currentTarget.blur()
             }
             if (event.key === 'Escape') {
-              setDraft(displayedValue({ value, decimals }))
+              const originalValue = valueOnFocusRef.current
+              discardOnBlurRef.current = true
+              setDraft(displayedValue({ value: originalValue, decimals }))
+              if (originalValue !== null) {
+                onValueChange({ value: originalValue })
+              }
               event.currentTarget.blur()
             }
           }}
@@ -109,6 +141,59 @@ const groupPosition = ({ shapes }: { shapes: ShapeResponse[] }) => ({
     ...shapes.map((shape) => Math.min(shape.y ?? 0, (shape.y ?? 0) + (shape.height ?? 0))),
   ),
 })
+
+type Point = { x: number; y: number }
+type LinePoint = 'start' | 'end' | 'bend'
+type Axis = 'x' | 'y'
+
+function lineMetricPoints({ shape }: { shape: ShapeResponse }) {
+  const origin = { x: shape.x ?? 0, y: shape.y ?? 0 }
+  const commands = shape.pathGeometry?.commands ?? []
+  const startCommand = commands[0]
+  const endCommand = commands[1]
+  const start = {
+    x: origin.x + (startCommand?.x ?? 0),
+    y: origin.y + (startCommand?.y ?? 0),
+  }
+  const end = {
+    x: origin.x + (endCommand?.x ?? shape.width ?? 0),
+    y: origin.y + (endCommand?.y ?? shape.height ?? 0),
+  }
+  const curved = endCommand?.type === 'quadratic'
+  const bend = curved
+    ? {
+        x:
+          origin.x +
+          0.25 * (startCommand?.x ?? 0) +
+          0.5 * endCommand.controlX +
+          0.25 * endCommand.x,
+        y:
+          origin.y +
+          0.25 * (startCommand?.y ?? 0) +
+          0.5 * endCommand.controlY +
+          0.25 * endCommand.y,
+      }
+    : midpoint({ start, end })
+  return { start, end, bend, curved }
+}
+
+function midpoint({ start, end }: { start: Point; end: Point }) {
+  return { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }
+}
+
+function distanceToLine({ point, start, end }: { point: Point; start: Point; end: Point }) {
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const lengthSquared = dx * dx + dy * dy
+  if (lengthSquared === 0) {
+    return Math.hypot(point.x - start.x, point.y - start.y)
+  }
+  const ratio = Math.min(
+    1,
+    Math.max(0, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared),
+  )
+  return Math.hypot(point.x - (start.x + ratio * dx), point.y - (start.y + ratio * dy))
+}
 
 export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
   const [cornersLinked, setCornersLinked] = useState(true)
@@ -136,6 +221,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
   )
     ? cornerRadii[0]
     : null
+  const linePoints = shape?.type === 'line' ? lineMetricPoints({ shape }) : undefined
 
   useEffect(() => {
     if (shape?.id) {
@@ -192,44 +278,105 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
               </div>
             )}
             <div className="grid grid-cols-2 gap-3">
-              <MetricInput
-                label="X"
-                value={position.x}
-                unit="in"
-                onCommit={({ value }) => onChange({ changes: { x: value } })}
-              />
-              <MetricInput
-                label="Y"
-                value={position.y}
-                unit="in"
-                onCommit={({ value }) => onChange({ changes: { y: value } })}
-              />
-              {shape && (
+              {linePoints ? (
                 <>
                   <MetricInput
-                    label="Width"
-                    value={shape.width ?? 0}
+                    label="Start X"
+                    value={linePoints.start.x}
                     unit="in"
-                    min={shape.type === 'line' ? undefined : 0.05}
-                    onCommit={({ value }) => onChange({ changes: { width: value } })}
-                  />
-                  <MetricInput
-                    label="Height"
-                    value={shape.height ?? 0}
-                    unit="in"
-                    min={shape.type === 'line' ? undefined : 0.05}
-                    onCommit={({ value }) => onChange({ changes: { height: value } })}
-                  />
-                  <MetricInput
-                    label="Rotation"
-                    value={rotation}
-                    unit="°"
-                    step={1}
-                    decimals={0}
-                    onCommit={({ value }) =>
-                      onChange({ changes: { rotation: ((Math.round(value) % 360) + 360) % 360 } })
+                    onValueChange={({ value }) =>
+                      updateLinePoint({ point: 'start', axis: 'x', value })
                     }
                   />
+                  <MetricInput
+                    label="Start Y"
+                    value={linePoints.start.y}
+                    unit="in"
+                    onValueChange={({ value }) =>
+                      updateLinePoint({ point: 'start', axis: 'y', value })
+                    }
+                  />
+                  <MetricInput
+                    label="End X"
+                    value={linePoints.end.x}
+                    unit="in"
+                    onValueChange={({ value }) =>
+                      updateLinePoint({ point: 'end', axis: 'x', value })
+                    }
+                  />
+                  <MetricInput
+                    label="End Y"
+                    value={linePoints.end.y}
+                    unit="in"
+                    onValueChange={({ value }) =>
+                      updateLinePoint({ point: 'end', axis: 'y', value })
+                    }
+                  />
+                  <MetricInput
+                    label="Bend X"
+                    value={linePoints.bend.x}
+                    unit="in"
+                    onValueChange={({ value }) =>
+                      updateLinePoint({ point: 'bend', axis: 'x', value })
+                    }
+                  />
+                  <MetricInput
+                    label="Bend Y"
+                    value={linePoints.bend.y}
+                    unit="in"
+                    onValueChange={({ value }) =>
+                      updateLinePoint({ point: 'bend', axis: 'y', value })
+                    }
+                  />
+                </>
+              ) : (
+                <>
+                  <MetricInput
+                    label="X"
+                    value={position.x}
+                    unit="in"
+                    onValueChange={({ value }) => onChange({ changes: { x: value } })}
+                  />
+                  <MetricInput
+                    label="Y"
+                    value={position.y}
+                    unit="in"
+                    onValueChange={({ value }) => onChange({ changes: { y: value } })}
+                  />
+                </>
+              )}
+              {shape && (
+                <>
+                  {shape.type !== 'line' && (
+                    <>
+                      <MetricInput
+                        label="Width"
+                        value={shape.width ?? 0}
+                        unit="in"
+                        min={0.05}
+                        onValueChange={({ value }) => onChange({ changes: { width: value } })}
+                      />
+                      <MetricInput
+                        label="Height"
+                        value={shape.height ?? 0}
+                        unit="in"
+                        min={0.05}
+                        onValueChange={({ value }) => onChange({ changes: { height: value } })}
+                      />
+                      <MetricInput
+                        label="Rotation"
+                        value={rotation}
+                        unit="°"
+                        step={1}
+                        decimals={0}
+                        onValueChange={({ value }) =>
+                          onChange({
+                            changes: { rotation: ((Math.round(value) % 360) + 360) % 360 },
+                          })
+                        }
+                      />
+                    </>
+                  )}
                   {shape.type !== 'text' && (
                     <>
                       <div
@@ -243,7 +390,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
                         min={0}
                         step={1}
                         decimals={0}
-                        onCommit={({ value }) =>
+                        onValueChange={({ value }) =>
                           onChange({ changes: { strokeWidth: (Math.min(100, value) * 72) / 96 } })
                         }
                       />
@@ -282,7 +429,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
                                 step={1}
                                 decimals={0}
                                 placeholder="Mixed"
-                                onCommit={({ value }) => {
+                                onValueChange={({ value }) => {
                                   const radius = (value * 72) / 96
                                   onChange({
                                     changes: {
@@ -304,7 +451,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
                                   min={0}
                                   step={1}
                                   decimals={0}
-                                  onCommit={({ value }) =>
+                                  onValueChange={({ value }) =>
                                     onChange({ changes: { radiusTopLeft: (value * 72) / 96 } })
                                   }
                                 />
@@ -316,7 +463,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
                                   min={0}
                                   step={1}
                                   decimals={0}
-                                  onCommit={({ value }) =>
+                                  onValueChange={({ value }) =>
                                     onChange({ changes: { radiusTopRight: (value * 72) / 96 } })
                                   }
                                 />
@@ -328,7 +475,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
                                   min={0}
                                   step={1}
                                   decimals={0}
-                                  onCommit={({ value }) =>
+                                  onValueChange={({ value }) =>
                                     onChange({ changes: { radiusBottomLeft: (value * 72) / 96 } })
                                   }
                                 />
@@ -340,7 +487,7 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
                                   min={0}
                                   step={1}
                                   decimals={0}
-                                  onCommit={({ value }) =>
+                                  onValueChange={({ value }) =>
                                     onChange({ changes: { radiusBottomRight: (value * 72) / 96 } })
                                   }
                                 />
@@ -359,4 +506,55 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
       </div>
     </section>
   )
+
+  function updateLinePoint({
+    point,
+    axis,
+    value,
+  }: {
+    point: LinePoint
+    axis: Axis
+    value: number
+  }) {
+    if (!shape || !linePoints) {
+      return
+    }
+    const start = { ...linePoints.start }
+    const end = { ...linePoints.end }
+    let bend = { ...linePoints.bend }
+    const target = point === 'start' ? start : point === 'end' ? end : bend
+    target[axis] = value
+
+    if (!linePoints.curved && point !== 'bend') {
+      bend = midpoint({ start, end })
+    }
+    const curved =
+      point === 'bend' ? distanceToLine({ point: bend, start, end }) > 0.05 : linePoints.curved
+    const relativeEnd = { x: end.x - start.x, y: end.y - start.y }
+    const relativeBend = { x: bend.x - start.x, y: bend.y - start.y }
+    onChange({
+      changes: {
+        x: start.x,
+        y: start.y,
+        width: relativeEnd.x,
+        height: relativeEnd.y,
+        rotation: 0,
+        pathGeometry: {
+          version: 1,
+          commands: [
+            { type: 'move', x: 0, y: 0 },
+            curved
+              ? {
+                  type: 'quadratic',
+                  controlX: 2 * relativeBend.x - 0.5 * relativeEnd.x,
+                  controlY: 2 * relativeBend.y - 0.5 * relativeEnd.y,
+                  x: relativeEnd.x,
+                  y: relativeEnd.y,
+                }
+              : { type: 'line', x: relativeEnd.x, y: relativeEnd.y },
+          ],
+        },
+      },
+    })
+  }
 }

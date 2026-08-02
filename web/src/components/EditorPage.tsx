@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core'
 import { createPortal } from 'react-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { ApiError, api, fetchClient } from '../api'
 import type { DocumentDraft, PublicationDocument, ShapeInput, ShapeResponse } from '../types'
@@ -65,9 +65,11 @@ export function EditorPage() {
   const [layersWidth, setLayersWidth] = useState(272)
   const [layersPanelHeight, setLayersPanelHeight] = useState(308)
   const [snapToGrid, setSnapToGrid] = useState(true)
+  const [clipboardShapes, setClipboardShapes] = useState<ShapeResponse[]>([])
   const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null)
   const exportCanvasRef = useRef<SVGSVGElement>(null)
   const saveFeedbackTimerRef = useRef<number | null>(null)
+  const pasteCountRef = useRef(0)
   const documentQuery = api.useQuery(
     'get',
     '/api/documents/{id}',
@@ -120,6 +122,48 @@ export function EditorPage() {
           : 'Unable to load this document',
     })
   }, [documentQuery.error])
+
+  const handleKeyboard = useEffectEvent((event: KeyboardEvent) => {
+    const target = event.target as HTMLElement | null
+    const typing =
+      target?.isContentEditable ||
+      target?.closest('input, textarea, select, [contenteditable="true"]') !== null
+    if (typing || editingShapeId) {
+      return
+    }
+
+    const modifier = event.metaKey || event.ctrlKey
+    const key = event.key.toLowerCase()
+    if (modifier && key === 'x' && selectedShapeIds.length > 0) {
+      event.preventDefault()
+      cutSelection()
+    } else if (modifier && key === 'c' && selectedShapeIds.length > 0) {
+      event.preventDefault()
+      copySelection()
+    } else if (modifier && key === 'v' && clipboardShapes.length > 0) {
+      event.preventDefault()
+      pasteSelection()
+    } else if (modifier && key === 'd' && selectedShapeIds.length > 0) {
+      event.preventDefault()
+      duplicateSelection()
+    } else if (modifier && key === 'a' && state.status === 'loaded') {
+      event.preventDefault()
+      selectAllShapes()
+    } else if (
+      (event.key === 'Backspace' || event.key === 'Delete') &&
+      selectedShapeIds.length > 0
+    ) {
+      event.preventDefault()
+      deleteLayers({ shapeIds: selectedShapeIds })
+    } else if (event.key === 'Escape' && selectedShapeIds.length > 0) {
+      setSelectedShapeIds([])
+    }
+  })
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyboard)
+    return () => document.removeEventListener('keydown', handleKeyboard)
+  }, [])
 
   const updateShape = ({ shapeId, changes }: { shapeId: string; changes: Partial<ShapeInput> }) => {
     setState((current) => {
@@ -458,6 +502,18 @@ export function EditorPage() {
             onToggleLayers={() => setLayersOpen((open) => !open)}
             snapToGrid={snapToGrid}
             onToggleSnapToGrid={() => setSnapToGrid((enabled) => !enabled)}
+            canEditSelection={selectedShapeIds.length > 0}
+            canPaste={clipboardShapes.length > 0}
+            allSelected={
+              (page.shapes?.length ?? 0) > 0 && selectedShapeIds.length === page.shapes?.length
+            }
+            onCut={cutSelection}
+            onCopy={copySelection}
+            onPaste={pasteSelection}
+            onDuplicate={duplicateSelection}
+            onDelete={() => deleteLayers({ shapeIds: selectedShapeIds })}
+            onSelectAll={selectAllShapes}
+            onDeselectAll={() => setSelectedShapeIds([])}
           />,
           toolbarTarget,
         )}
@@ -662,5 +718,88 @@ export function EditorPage() {
       setEditingShapeId(null)
       setTextEditor(null)
     }
+  }
+
+  function copySelection() {
+    const copied = (page.shapes ?? [])
+      .filter(({ id }) => selectedShapeIds.includes(id))
+      .map((shape) => structuredClone(shape))
+    if (copied.length === 0) {
+      return
+    }
+    setClipboardShapes(copied)
+    pasteCountRef.current = 0
+  }
+
+  function cutSelection() {
+    if (selectedShapeIds.length === 0) {
+      return
+    }
+    copySelection()
+    deleteLayers({ shapeIds: selectedShapeIds })
+  }
+
+  function pasteSelection() {
+    if (clipboardShapes.length === 0) {
+      return
+    }
+    pasteCountRef.current += 1
+    insertCopies({ sourceShapes: clipboardShapes, offset: pasteCountRef.current * 0.25 })
+  }
+
+  function duplicateSelection() {
+    const sourceShapes = (page.shapes ?? []).filter(({ id }) => selectedShapeIds.includes(id))
+    if (sourceShapes.length === 0) {
+      return
+    }
+    insertCopies({ sourceShapes, offset: 0.25 })
+  }
+
+  function insertCopies({
+    sourceShapes,
+    offset,
+  }: {
+    sourceShapes: ShapeResponse[]
+    offset: number
+  }) {
+    const existingShapes = page.shapes ?? []
+    const topZ = Math.max(0, ...existingShapes.map(({ z }) => z ?? 0))
+    const copies = sourceShapes.map((source, index) => ({
+      ...structuredClone(source),
+      id: `draft-${crypto.randomUUID()}`,
+      x: (source.x ?? 0) + offset,
+      y: (source.y ?? 0) + offset,
+      z: topZ + index + 1,
+    }))
+    setState((current) => {
+      if (current.status !== 'loaded') {
+        return current
+      }
+      const pages = current.document.pages ?? []
+      const firstPage = pages[0]
+      if (!firstPage) {
+        return current
+      }
+      return {
+        status: 'loaded',
+        document: {
+          ...current.document,
+          pages: [
+            { ...firstPage, shapes: [...(firstPage.shapes ?? []), ...copies] },
+            ...pages.slice(1),
+          ],
+        },
+      }
+    })
+    setSelectedShapeIds(copies.map(({ id }) => id))
+    setEditingShapeId(null)
+    setTextEditor(null)
+    setSaveStatus('idle')
+  }
+
+  function selectAllShapes() {
+    setSelectedShapeIds((page.shapes ?? []).map(({ id }) => id))
+    setEditingShapeId(null)
+    setTextEditor(null)
   }
 }

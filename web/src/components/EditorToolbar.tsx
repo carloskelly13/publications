@@ -6,7 +6,11 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  ChevronDown,
   Circle,
+  ClipboardPaste,
+  Copy,
+  CopyPlus,
   FileDown,
   Grid2x2,
   Grid2x2Check,
@@ -18,10 +22,12 @@ import {
   Minus,
   Plus,
   Save,
+  Scissors,
   Shapes,
   Spline,
   Square,
   Strikethrough,
+  Trash2,
   Type,
   Underline,
   type LucideIcon,
@@ -46,6 +52,16 @@ type Props = {
   onToggleLayers: () => void
   snapToGrid: boolean
   onToggleSnapToGrid: () => void
+  canEditSelection: boolean
+  canPaste: boolean
+  allSelected: boolean
+  onCut: () => void
+  onCopy: () => void
+  onPaste: () => void
+  onDuplicate: () => void
+  onDelete: () => void
+  onSelectAll: () => void
+  onDeselectAll: () => void
 }
 
 type DocumentTitleControlProps = {
@@ -375,7 +391,7 @@ export function ColorControl({
   )
 }
 
-function AddShapeControl({
+function InsertMenu({
   onAddShape,
 }: {
   onAddShape: (type: 'rect' | 'circle' | 'text' | 'line') => void
@@ -387,13 +403,22 @@ function AddShapeControl({
     if (!open) {
       return
     }
-    const close = (event: MouseEvent) => {
+    const close = (event: PointerEvent) => {
       if (!containerRef.current?.contains(event.target as Node)) {
         setOpen(false)
       }
     }
-    document.addEventListener('mousedown', close)
-    return () => document.removeEventListener('mousedown', close)
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', close, true)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', close, true)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
   }, [open])
 
   const options = [
@@ -406,16 +431,21 @@ function AddShapeControl({
   return (
     <div className="relative" ref={containerRef}>
       <button
-        className="grid size-8 place-items-center rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
         type="button"
-        aria-label="Add shape"
-        title="Add shape"
+        aria-expanded={open}
+        aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
       >
         <Shapes className="size-4" aria-hidden="true" />
+        Insert
+        <ChevronDown className="size-3.5" aria-hidden="true" />
       </button>
       {open && (
-        <div className="absolute left-0 top-10 z-40 grid w-52 grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-900">
+        <div
+          className="absolute left-0 top-10 z-40 grid w-52 grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          role="menu"
+        >
           {options.map(({ type, label, icon: Icon }) => (
             <button
               key={type}
@@ -434,6 +464,137 @@ function AddShapeControl({
       )}
     </div>
   )
+}
+
+type EditMenuProps = {
+  canEditSelection: boolean
+  canPaste: boolean
+  allSelected: boolean
+  onCut: () => void
+  onCopy: () => void
+  onPaste: () => void
+  onDuplicate: () => void
+  onDelete: () => void
+  onSelectAll: () => void
+  onDeselectAll: () => void
+}
+
+function EditMenu({
+  canEditSelection,
+  canPaste,
+  allSelected,
+  onCut,
+  onCopy,
+  onPaste,
+  onDuplicate,
+  onDelete,
+  onSelectAll,
+  onDeselectAll,
+}: EditMenuProps) {
+  const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+    const close = (event: PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', close, true)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', close, true)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [open])
+
+  const items = [
+    { label: 'Cut', shortcut: '⌘X', icon: Scissors, disabled: !canEditSelection, action: onCut },
+    { label: 'Copy', shortcut: '⌘C', icon: Copy, disabled: !canEditSelection, action: onCopy },
+    { label: 'Paste', shortcut: '⌘V', icon: ClipboardPaste, disabled: !canPaste, action: onPaste },
+    {
+      label: 'Duplicate',
+      shortcut: '⌘D',
+      icon: CopyPlus,
+      disabled: !canEditSelection,
+      action: onDuplicate,
+      divider: true,
+    },
+    {
+      label: 'Delete',
+      shortcut: '⌫',
+      icon: Trash2,
+      disabled: !canEditSelection,
+      action: onDelete,
+      divider: true,
+    },
+  ]
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <button
+        className="flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpen((value) => !value)}
+      >
+        Edit
+        <ChevronDown className="size-3.5" aria-hidden="true" />
+      </button>
+      {open && (
+        <div
+          className="absolute left-0 top-10 z-40 w-56 rounded-lg border border-gray-200 bg-white py-1.5 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          role="menu"
+        >
+          {items.map(({ label, shortcut, icon: Icon, disabled, action, divider }) => (
+            <div
+              key={label}
+              className={
+                divider ? 'mt-1 border-t border-gray-200 pt-1 dark:border-gray-700' : undefined
+              }
+            >
+              <button
+                className="flex h-8 w-full items-center gap-2 px-3 text-left text-sm text-gray-700 hover:bg-gray-100 disabled:text-gray-300 disabled:hover:bg-transparent dark:text-gray-200 dark:hover:bg-gray-800 dark:disabled:text-gray-600"
+                type="button"
+                role="menuitem"
+                disabled={disabled}
+                onClick={() => runAction({ action })}
+              >
+                <Icon className="size-4" aria-hidden="true" />
+                <span>{label}</span>
+                <span className="ml-auto text-xs text-gray-400">{shortcut}</span>
+              </button>
+            </div>
+          ))}
+          <div className="mt-1 border-t border-gray-200 pt-1 dark:border-gray-700">
+            <button
+              className="flex h-8 w-full items-center px-3 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+              type="button"
+              role="menuitem"
+              onClick={() => runAction({ action: allSelected ? onDeselectAll : onSelectAll })}
+            >
+              {allSelected ? 'Deselect all' : 'Select all'}
+              <span className="ml-auto text-xs text-gray-400">⌘A</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
+  function runAction({ action }: { action: () => void }) {
+    action()
+    setOpen(false)
+  }
 }
 
 const fontSizes = [8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72]
@@ -630,6 +791,16 @@ export function EditorToolbar({
   onToggleLayers,
   snapToGrid,
   onToggleSnapToGrid,
+  canEditSelection,
+  canPaste,
+  allSelected,
+  onCut,
+  onCopy,
+  onPaste,
+  onDuplicate,
+  onDelete,
+  onSelectAll,
+  onDeselectAll,
 }: Props) {
   const zoomBy = (amount: number) => {
     onZoomChange(Math.min(maxZoom, Math.max(minZoom, Number((zoom + amount).toFixed(2)))))
@@ -692,7 +863,19 @@ export function EditorToolbar({
       </button>
 
       <div className="h-6 w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
-      <AddShapeControl onAddShape={onAddShape} />
+      <EditMenu
+        canEditSelection={canEditSelection}
+        canPaste={canPaste}
+        allSelected={allSelected}
+        onCut={onCut}
+        onCopy={onCopy}
+        onPaste={onPaste}
+        onDuplicate={onDuplicate}
+        onDelete={onDelete}
+        onSelectAll={onSelectAll}
+        onDeselectAll={onDeselectAll}
+      />
+      <InsertMenu onAddShape={onAddShape} />
       <div className="ml-auto flex items-center gap-1">
         <button
           className={cn(
