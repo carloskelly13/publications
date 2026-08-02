@@ -1,11 +1,11 @@
 import type { Editor } from '@tiptap/core'
-import { Link2, Unlink2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Link2, Unlink2 } from 'lucide-react'
 import { PaintBucket, PenLine } from 'lucide-react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import type { ElementPatch } from '../elements'
 import { elementBounds } from '../elements'
 import { cn } from '../lib/cn'
-import type { ElementResponse, PageResponse, PathCommand } from '../types'
+import type { ElementResponse, PageResponse, PathCommand, ShapeGeometry } from '../types'
 import { ColorControl, TextFormattingControls } from './EditorToolbar'
 
 type Props = {
@@ -108,8 +108,9 @@ type MetricInputProps = {
   ariaLabel?: string
   subtleLabel?: boolean
   value: number | null
-  unit: 'in' | 'px' | '°'
+  unit?: 'in' | 'px' | '°' | '%'
   min?: number
+  max?: number
   step?: number
   decimals?: number
   placeholder?: string
@@ -132,6 +133,7 @@ function MetricInput({
   value,
   unit,
   min,
+  max,
   step = 0.25,
   decimals = 2,
   placeholder,
@@ -163,7 +165,10 @@ function MetricInput({
       }
       return
     }
-    const constrainedValue = min === undefined ? parsed : Math.max(min, parsed)
+    const constrainedValue = Math.min(
+      max ?? Number.POSITIVE_INFINITY,
+      Math.max(min ?? Number.NEGATIVE_INFINITY, parsed),
+    )
     const nextValue = finalize ? Number(constrainedValue.toFixed(decimals)) : constrainedValue
     if (finalize) {
       setDraft(displayedValue({ value: nextValue, decimals }))
@@ -192,6 +197,7 @@ function MetricInput({
           value={draft}
           placeholder={placeholder}
           min={min}
+          max={max}
           step={step}
           data-metric-input="true"
           onFocus={() => {
@@ -226,7 +232,7 @@ function MetricInput({
             }
           }}
         />
-        <span className="pr-2 text-[10px] text-gray-400">{unit}</span>
+        {unit && <span className="pr-2 text-[10px] text-gray-400">{unit}</span>}
       </span>
     </label>
   )
@@ -235,7 +241,7 @@ function MetricInput({
 type MetricShape = {
   element: ElementResponse
   id: string
-  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star'
+  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star' | 'arrow'
   x: number
   y: number
   width: number
@@ -280,6 +286,64 @@ type Point = { x: number; y: number }
 type LinePoint = 'start' | 'end' | 'bend'
 type Axis = 'x' | 'y'
 type PropertiesView = 'selection' | 'document'
+type StarGeometry = Extract<ShapeGeometry, { type: 'star' }>
+type ArrowGeometry = Extract<ShapeGeometry, { type: 'arrow' }>
+
+function ArrowEndsControl({
+  value,
+  onValueChange,
+}: {
+  value: ArrowGeometry['ends']
+  onValueChange: ({ ends }: { ends: ArrowGeometry['ends'] }) => void
+}) {
+  const startEnabled = value === 'start' || value === 'both'
+  const endEnabled = value === 'end' || value === 'both'
+  return (
+    <div className="col-span-2 block text-[11px] font-medium text-gray-600 dark:text-gray-300">
+      <span>Arrowheads</span>
+      <div className="mt-1 grid h-8 grid-cols-2 overflow-hidden rounded-md border border-gray-300 bg-white dark:border-gray-700 dark:bg-gray-950">
+        <button
+          className={cn(
+            'grid place-items-center border-r border-gray-300 outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-violet-500 dark:border-gray-700',
+            startEnabled
+              ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300'
+              : 'text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800',
+          )}
+          type="button"
+          aria-label="Start arrowhead"
+          title="Start arrowhead"
+          aria-pressed={startEnabled}
+          onClick={() =>
+            onValueChange({
+              ends: startEnabled ? (endEnabled ? 'end' : 'start') : endEnabled ? 'both' : 'start',
+            })
+          }
+        >
+          <ArrowLeft className="size-4" aria-hidden="true" />
+        </button>
+        <button
+          className={cn(
+            'grid place-items-center outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-violet-500',
+            endEnabled
+              ? 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300'
+              : 'text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800',
+          )}
+          type="button"
+          aria-label="End arrowhead"
+          title="End arrowhead"
+          aria-pressed={endEnabled}
+          onClick={() =>
+            onValueChange({
+              ends: endEnabled ? (startEnabled ? 'start' : 'end') : startEnabled ? 'both' : 'end',
+            })
+          }
+        >
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  )
+}
 
 function lineMetricPoints({ shape }: { shape: MetricShape }) {
   const origin = { x: shape.x ?? 0, y: shape.y ?? 0 }
@@ -425,6 +489,14 @@ export function PropertiesPanel({
     ? cornerRadii[0]
     : null
   const linePoints = shape?.type === 'line' ? lineMetricPoints({ shape }) : undefined
+  const starGeometry =
+    shape?.element.kind === 'shape' && shape.element.data.geometry.type === 'star'
+      ? shape.element.data.geometry
+      : undefined
+  const arrowGeometry =
+    shape?.element.kind === 'shape' && shape.element.data.geometry.type === 'arrow'
+      ? shape.element.data.geometry
+      : undefined
   const onChange = ({ changes }: { changes: MetricShapePatch }) => {
     if (!shape) {
       onElementChange({
@@ -729,6 +801,113 @@ export function PropertiesPanel({
                             onChange({ changes: { strokeWidth: (Math.min(100, value) * 72) / 96 } })
                           }
                         />
+                        {starGeometry && (
+                          <>
+                            <div
+                              className="col-span-2 h-px bg-gray-200 dark:bg-gray-700"
+                              aria-hidden="true"
+                            />
+                            <MetricInput
+                              label="Points"
+                              value={starGeometry.points}
+                              min={3}
+                              max={100}
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateStarGeometry({ changes: { points: Math.round(value) } })
+                              }
+                            />
+                            <MetricInput
+                              label="Inner radius"
+                              value={starGeometry.innerRadius * 100}
+                              unit="%"
+                              min={1}
+                              max={99}
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateStarGeometry({ changes: { innerRadius: value / 100 } })
+                              }
+                            />
+                            <MetricInput
+                              label="Roundness"
+                              value={starGeometry.roundness * 100}
+                              unit="%"
+                              min={0}
+                              max={100}
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateStarGeometry({ changes: { roundness: value / 100 } })
+                              }
+                            />
+                            <MetricInput
+                              label="Phase"
+                              value={starGeometry.phase}
+                              unit="°"
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateStarGeometry({ changes: { phase: value } })
+                              }
+                            />
+                          </>
+                        )}
+                        {arrowGeometry && (
+                          <>
+                            <div
+                              className="col-span-2 h-px bg-gray-200 dark:bg-gray-700"
+                              aria-hidden="true"
+                            />
+                            <ArrowEndsControl
+                              value={arrowGeometry.ends}
+                              onValueChange={({ ends }) => {
+                                onEditStart()
+                                updateArrowGeometry({ changes: { ends } })
+                                window.queueMicrotask(onEditEnd)
+                              }}
+                            />
+                            <MetricInput
+                              label="Shaft"
+                              value={arrowGeometry.shaftThickness * 100}
+                              unit="%"
+                              min={5}
+                              max={100}
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateArrowGeometry({
+                                  changes: { shaftThickness: value / 100 },
+                                })
+                              }
+                            />
+                            <MetricInput
+                              label="Head inset"
+                              value={arrowGeometry.headInset * 100}
+                              unit="%"
+                              min={5}
+                              max={49}
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateArrowGeometry({ changes: { headInset: value / 100 } })
+                              }
+                            />
+                            <MetricInput
+                              label="Head angle"
+                              value={arrowGeometry.headAngle ?? 0}
+                              unit="°"
+                              min={-75}
+                              max={75}
+                              step={1}
+                              decimals={0}
+                              onValueChange={({ value }) =>
+                                updateArrowGeometry({ changes: { headAngle: value } })
+                              }
+                            />
+                          </>
+                        )}
                         {shape.type === 'rect' && (
                           <div className="col-span-2">
                             <div className="flex items-center gap-1">
@@ -895,6 +1074,28 @@ export function PropertiesPanel({
               : { type: 'line', x: relativeEnd.x, y: relativeEnd.y },
           ],
         },
+      },
+    })
+  }
+
+  function updateStarGeometry({ changes }: { changes: Partial<Omit<StarGeometry, 'type'>> }) {
+    if (!starGeometry) {
+      return
+    }
+    onElementChange({
+      changes: {
+        geometry: { ...starGeometry, ...changes },
+      },
+    })
+  }
+
+  function updateArrowGeometry({ changes }: { changes: Partial<Omit<ArrowGeometry, 'type'>> }) {
+    if (!arrowGeometry) {
+      return
+    }
+    onElementChange({
+      changes: {
+        geometry: { ...arrowGeometry, ...changes },
       },
     })
   }

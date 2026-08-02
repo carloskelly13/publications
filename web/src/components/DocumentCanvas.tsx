@@ -41,7 +41,7 @@ type PathGeometry = { commands: PathCommand[] }
 type CanvasShape = {
   element: CanvasElement
   id?: string
-  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star'
+  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star' | 'arrow'
   x: number
   y: number
   width: number
@@ -204,6 +204,37 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
     )
   } else if (shape.type === 'text' && shape.element.kind === 'text') {
     node = hideText ? null : <RichTextShape element={shape.element} />
+  } else if (shape.element.kind === 'shape' && shape.element.data.geometry.type === 'arrow') {
+    node = (
+      <path
+        d={arrowShapePath({
+          x,
+          y,
+          width,
+          height,
+          geometry: shape.element.data.geometry,
+        })}
+        {...common}
+        strokeLinejoin="round"
+      />
+    )
+  } else if (
+    shape.element.kind === 'shape' &&
+    (shape.element.data.geometry.type === 'star' || shape.element.data.geometry.type === 'polygon')
+  ) {
+    node = (
+      <path
+        d={radialShapePath({
+          x,
+          y,
+          width,
+          height,
+          geometry: shape.element.data.geometry,
+        })}
+        {...common}
+        strokeLinejoin="round"
+      />
+    )
   } else {
     const maximumRadius = Math.max(0, Math.min(width, height) / 2)
     const topLeft = Math.min(number(shape.radiusTopLeft) / 72, maximumRadius)
@@ -234,6 +265,140 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
       {node}
     </g>
   )
+}
+
+function arrowShapePath({
+  x,
+  y,
+  width,
+  height,
+  geometry,
+}: {
+  x: number
+  y: number
+  width: number
+  height: number
+  geometry: Extract<
+    Extract<CanvasElement, { kind: 'shape' }>['data']['geometry'],
+    { type: 'arrow' }
+  >
+}) {
+  const headWidth = width * geometry.headInset
+  const shaftTop = y + (height * (1 - geometry.shaftThickness)) / 2
+  const shaftBottom = y + height - (height * (1 - geometry.shaftThickness)) / 2
+  const leftHead = x + headWidth
+  const rightHead = x + width - headWidth
+  const shoulderHeight = (height * (1 - geometry.shaftThickness)) / 2
+  const maximumAngleInset =
+    geometry.ends === 'both' ? Math.max(0, (rightHead - leftHead) / 2) : headWidth * 0.9
+  const angleInset = Math.max(
+    -headWidth * 0.9,
+    Math.min(
+      maximumAngleInset,
+      Math.tan(((geometry.headAngle ?? 0) * Math.PI) / 180) * shoulderHeight,
+    ),
+  )
+  const leftNeck = leftHead + angleInset
+  const rightNeck = rightHead - angleInset
+  const points =
+    geometry.ends === 'both'
+      ? [
+          { x, y: y + height / 2 },
+          { x: leftHead, y },
+          { x: leftNeck, y: shaftTop },
+          { x: rightNeck, y: shaftTop },
+          { x: rightHead, y },
+          { x: x + width, y: y + height / 2 },
+          { x: rightHead, y: y + height },
+          { x: rightNeck, y: shaftBottom },
+          { x: leftNeck, y: shaftBottom },
+          { x: leftHead, y: y + height },
+        ]
+      : geometry.ends === 'start'
+        ? [
+            { x, y: y + height / 2 },
+            { x: leftHead, y },
+            { x: leftNeck, y: shaftTop },
+            { x: x + width, y: shaftTop },
+            { x: x + width, y: shaftBottom },
+            { x: leftNeck, y: shaftBottom },
+            { x: leftHead, y: y + height },
+          ]
+        : [
+            { x, y: shaftTop },
+            { x: rightNeck, y: shaftTop },
+            { x: rightHead, y },
+            { x: x + width, y: y + height / 2 },
+            { x: rightHead, y: y + height },
+            { x: rightNeck, y: shaftBottom },
+            { x, y: shaftBottom },
+          ]
+  return `${points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')} Z`
+}
+
+function radialShapePath({
+  x,
+  y,
+  width,
+  height,
+  geometry,
+}: {
+  x: number
+  y: number
+  width: number
+  height: number
+  geometry: Extract<
+    Extract<CanvasElement, { kind: 'shape' }>['data']['geometry'],
+    { type: 'polygon' | 'star' }
+  >
+}) {
+  const pointCount = geometry.type === 'star' ? geometry.points * 2 : geometry.sides
+  const phase = (geometry.phase * Math.PI) / 180
+  const radialPoints = Array.from({ length: pointCount }, (_, index) => {
+    const radius = geometry.type === 'star' && index % 2 === 1 ? geometry.innerRadius : 1
+    const angle = phase + (index * Math.PI * 2) / pointCount
+    return {
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius,
+    }
+  })
+  const bounds = {
+    left: Math.min(...radialPoints.map((point) => point.x)),
+    top: Math.min(...radialPoints.map((point) => point.y)),
+    right: Math.max(...radialPoints.map((point) => point.x)),
+    bottom: Math.max(...radialPoints.map((point) => point.y)),
+  }
+  const points = radialPoints.map((point) => ({
+    x: x + ((point.x - bounds.left) / (bounds.right - bounds.left)) * width,
+    y: y + ((point.y - bounds.top) / (bounds.bottom - bounds.top)) * height,
+  }))
+  const roundness = geometry.type === 'star' ? geometry.roundness : 0
+  if (roundness <= 0) {
+    return `${points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')} Z`
+  }
+  const inset = Math.min(0.45, roundness * 0.35)
+  const corners = points.map((point, index) => {
+    const previous = points[(index - 1 + points.length) % points.length]
+    const next = points[(index + 1) % points.length]
+    return {
+      point,
+      entry: interpolatePoint({ from: point, to: previous, ratio: inset }),
+      exit: interpolatePoint({ from: point, to: next, ratio: inset }),
+    }
+  })
+  return `${corners
+    .map(
+      ({ point, entry, exit }, index) =>
+        `${index === 0 ? `M ${entry.x} ${entry.y}` : `L ${entry.x} ${entry.y}`} Q ${point.x} ${point.y} ${exit.x} ${exit.y}`,
+    )
+    .join(' ')} Z`
+}
+
+function interpolatePoint({ from, to, ratio }: { from: Point; to: Point; ratio: number }) {
+  return {
+    x: from.x + (to.x - from.x) * ratio,
+    y: from.y + (to.y - from.y) * ratio,
+  }
 }
 
 type Handle = 'nw' | 'n' | 'ne' | 'w' | 'e' | 'sw' | 's' | 'se'

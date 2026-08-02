@@ -6,6 +6,7 @@ import {
   AlignJustify,
   AlignLeft,
   AlignRight,
+  ArrowRight,
   Bold,
   Check,
   ChevronDown,
@@ -28,6 +29,7 @@ import {
   Shapes,
   Spline,
   Square,
+  Star,
   Strikethrough,
   Trash2,
   Type,
@@ -42,6 +44,7 @@ import { cn } from '../lib/cn'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 export type ExportStatus = 'idle' | 'exporting' | 'error'
+export type InsertElementType = 'rect' | 'circle' | 'star' | 'arrow' | 'text' | 'line'
 
 type Props = {
   documentTitle: string
@@ -49,7 +52,7 @@ type Props = {
   onZoomChange: (zoom: number) => void
   onSave: () => void
   saveStatus: SaveStatus
-  onAddShape: (type: 'rect' | 'circle' | 'text' | 'line') => void
+  onAddShape: (type: InsertElementType) => void
   onExportPdf: () => void
   exportStatus: ExportStatus
   layersOpen: boolean
@@ -313,11 +316,7 @@ export function ColorControl({
   )
 }
 
-function InsertMenu({
-  onAddShape,
-}: {
-  onAddShape: (type: 'rect' | 'circle' | 'text' | 'line') => void
-}) {
+function InsertMenu({ onAddShape }: { onAddShape: (type: InsertElementType) => void }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -346,6 +345,8 @@ function InsertMenu({
   const options = [
     { type: 'rect' as const, label: 'Rectangle', icon: Square },
     { type: 'circle' as const, label: 'Circle', icon: Circle },
+    { type: 'star' as const, label: 'Star', icon: Star },
+    { type: 'arrow' as const, label: 'Arrow', icon: ArrowRight },
     { type: 'text' as const, label: 'Text', icon: Type },
     { type: 'line' as const, label: 'Line', icon: Spline },
   ]

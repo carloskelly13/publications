@@ -1,5 +1,6 @@
 import {
   BringToFront,
+  ArrowRight,
   Circle,
   Copy,
   GripVertical,
@@ -10,6 +11,7 @@ import {
   SendToBack,
   Spline,
   Square,
+  Star,
   Trash2,
   Type,
 } from 'lucide-react'
@@ -46,6 +48,12 @@ const layerName = ({ shape }: { shape: ElementResponse }) => elementLabel({ elem
 const LayerIcon = ({ shape }: { shape: ElementResponse }) => {
   if (shape.kind === 'shape' && shape.data.geometry.type === 'ellipse') {
     return <Circle className="size-4" aria-hidden="true" />
+  }
+  if (shape.kind === 'shape' && shape.data.geometry.type === 'star') {
+    return <Star className="size-4" aria-hidden="true" />
+  }
+  if (shape.kind === 'shape' && shape.data.geometry.type === 'arrow') {
+    return <ArrowRight className="size-4" aria-hidden="true" />
   }
   if (shape.kind === 'text') {
     return <Type className="size-4" aria-hidden="true" />

@@ -7,7 +7,12 @@ import { applyElementPatch, elementBounds, elementInput } from '../elements'
 import type { ElementPatch } from '../elements'
 import type { DocumentDraft, ElementResponse, PublicationDocument } from '../types'
 import { DocumentCanvas } from './DocumentCanvas'
-import { EditorToolbar, type ExportStatus, type SaveStatus } from './EditorToolbar'
+import {
+  EditorToolbar,
+  type ExportStatus,
+  type InsertElementType,
+  type SaveStatus,
+} from './EditorToolbar'
 import { EditorSidebar } from './EditorSidebar'
 import { EditorWorkspace } from './EditorWorkspace'
 import { LayersPanel } from './LayersPanel'
@@ -360,7 +365,7 @@ export function EditorPage() {
     setSaveStatus('idle')
   }
 
-  const addShape = (type: 'rect' | 'circle' | 'text' | 'line') => {
+  const addShape = (type: InsertElementType) => {
     if (state.status !== 'loaded' || !state.document.pages?.[0]) {
       return
     }
@@ -376,7 +381,7 @@ export function EditorPage() {
         return current
       }
       const size =
-        type === 'circle'
+        type === 'circle' || type === 'star'
           ? { width: 1.5, height: 1.5 }
           : type === 'text'
             ? { width: 4, height: 1.5 }
@@ -427,15 +432,31 @@ export function EditorPage() {
                   geometry:
                     type === 'circle'
                       ? { type: 'ellipse' }
-                      : {
-                          type: 'rectangle',
-                          radius: {
-                            topLeft: 0,
-                            topRight: 0,
-                            bottomRight: 0,
-                            bottomLeft: 0,
-                          },
-                        },
+                      : type === 'star'
+                        ? {
+                            type: 'star',
+                            points: 5,
+                            innerRadius: 0.45,
+                            phase: -90,
+                            roundness: 0,
+                          }
+                        : type === 'arrow'
+                          ? {
+                              type: 'arrow',
+                              ends: 'end',
+                              shaftThickness: 0.35,
+                              headInset: 0.3,
+                              headAngle: 0,
+                            }
+                          : {
+                              type: 'rectangle',
+                              radius: {
+                                topLeft: 0,
+                                topRight: 0,
+                                bottomRight: 0,
+                                bottomLeft: 0,
+                              },
+                            },
                   fill: { color: '#a78bfa', opacity: 1 },
                   border: { color: '#7c3aed', opacity: 1, width: 1 },
                 },

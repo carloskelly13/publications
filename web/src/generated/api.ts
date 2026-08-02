@@ -465,6 +465,13 @@ export interface components {
             type: "ellipse";
         } | {
             /** @enum {string} */
+            type: "arrow";
+            ends: "start" | "end" | "both";
+            shaftThickness: number;
+            headInset: number;
+            headAngle?: number;
+        } | {
+            /** @enum {string} */
             type: "polygon";
             sides: number;
             phase: number;

@@ -59,6 +59,13 @@ export const ShapeGeometry = Type.Union(
     Type.Object({ type: Type.Literal('rectangle'), radius: Type.Ref(CornerRadii) }),
     Type.Object({ type: Type.Literal('ellipse') }),
     Type.Object({
+      type: Type.Literal('arrow'),
+      ends: Type.Union([Type.Literal('start'), Type.Literal('end'), Type.Literal('both')]),
+      shaftThickness: Type.Number({ minimum: 0.05, maximum: 1 }),
+      headInset: Type.Number({ minimum: 0.05, maximum: 0.49 }),
+      headAngle: Type.Optional(Type.Number({ minimum: -75, maximum: 75 })),
+    }),
+    Type.Object({
       type: Type.Literal('polygon'),
       sides: Type.Integer({ minimum: 3, maximum: 100 }),
       phase: Type.Number(),

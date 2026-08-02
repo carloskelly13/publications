@@ -133,6 +133,9 @@ export function elementLabel({ element }: { element: CanvasElement }) {
   if (geometry.type === 'ellipse') {
     return 'Ellipse'
   }
+  if (geometry.type === 'arrow') {
+    return 'Arrow'
+  }
   if (geometry.type === 'polygon') {
     return 'Polygon'
   }
