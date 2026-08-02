@@ -1,7 +1,7 @@
 import type { Editor } from '@tiptap/core'
 import { Link2, Unlink2 } from 'lucide-react'
 import { PaintBucket, PenLine } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { cn } from '../lib/cn'
 import type { ShapeInput, ShapeResponse } from '../types'
 import { ColorControl, TextFormattingControls } from './EditorToolbar'
@@ -10,6 +10,9 @@ type Props = {
   shapes: ShapeResponse[]
   textEditor: Editor | null
   onChange: ({ changes }: { changes: Partial<ShapeInput> }) => void
+  onEditStart: () => void
+  onEditEnd: () => void
+  onEditCancel: () => void
 }
 
 type MetricInputProps = {
@@ -24,6 +27,12 @@ type MetricInputProps = {
   placeholder?: string
   onValueChange: ({ value }: { value: number }) => void
 }
+
+const PropertyEditContext = createContext({
+  onEditStart: () => undefined,
+  onEditEnd: () => undefined,
+  onEditCancel: () => undefined,
+})
 
 const displayedValue = ({ value, decimals }: { value: number | null; decimals: number }) =>
   value === null ? '' : value.toFixed(decimals)
@@ -40,6 +49,7 @@ function MetricInput({
   placeholder,
   onValueChange,
 }: MetricInputProps) {
+  const { onEditStart, onEditEnd, onEditCancel } = useContext(PropertyEditContext)
   const [draft, setDraft] = useState(displayedValue({ value, decimals }))
   const editingRef = useRef(false)
   const discardOnBlurRef = useRef(false)
@@ -95,9 +105,11 @@ function MetricInput({
           placeholder={placeholder}
           min={min}
           step={step}
+          data-metric-input="true"
           onFocus={() => {
             editingRef.current = true
             valueOnFocusRef.current = value
+            onEditStart()
           }}
           onChange={(event) => {
             const draftValue = event.target.value
@@ -111,6 +123,7 @@ function MetricInput({
               return
             }
             applyDraft({ draftValue: draft, finalize: true })
+            onEditEnd()
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
@@ -120,9 +133,7 @@ function MetricInput({
               const originalValue = valueOnFocusRef.current
               discardOnBlurRef.current = true
               setDraft(displayedValue({ value: originalValue, decimals }))
-              if (originalValue !== null) {
-                onValueChange({ value: originalValue })
-              }
+              onEditCancel()
               event.currentTarget.blur()
             }
           }}
@@ -195,7 +206,14 @@ function distanceToLine({ point, start, end }: { point: Point; start: Point; end
   return Math.hypot(point.x - (start.x + ratio * dx), point.y - (start.y + ratio * dy))
 }
 
-export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
+export function PropertiesPanel({
+  shapes,
+  textEditor,
+  onChange,
+  onEditStart,
+  onEditEnd,
+  onEditCancel,
+}: Props) {
   const [cornersLinked, setCornersLinked] = useState(true)
   const shape = shapes.length === 1 ? shapes[0] : undefined
   const position = shape
@@ -230,281 +248,295 @@ export function PropertiesPanel({ shapes, textEditor, onChange }: Props) {
   }, [shape?.id, unifiedCornerRadius])
 
   return (
-    <section className="flex h-full min-h-0 w-full flex-1 flex-col" aria-label="Properties panel">
-      <div className="flex h-7 shrink-0 items-center gap-2 border-b border-gray-300 bg-gray-50 px-3 dark:border-gray-700 dark:bg-gray-900">
-        <h2 className="text-xs font-semibold text-gray-900 dark:text-gray-100">Properties</h2>
-        {shapes.length > 1 && (
-          <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-            {shapes.length} selected
-          </span>
-        )}
-      </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        {!position && (
-          <p className="py-4 text-center text-xs text-gray-500 dark:text-gray-400">
-            Nothing selected
-          </p>
-        )}
-        {position && (
-          <>
-            {shape && (
-              <div className="mb-3 flex flex-wrap items-center gap-1 border-b border-gray-200 pb-3 dark:border-gray-700">
-                {shape.type === 'text' ? (
-                  <TextFormattingControls editor={textEditor} />
-                ) : (
-                  <div className="grid w-full grid-cols-2 gap-2">
-                    {shape.type !== 'line' && (
+    <PropertyEditContext.Provider value={{ onEditStart, onEditEnd, onEditCancel }}>
+      <section className="flex h-full min-h-0 w-full flex-1 flex-col" aria-label="Properties panel">
+        <div className="flex h-7 shrink-0 items-center gap-2 border-b border-gray-300 bg-gray-50 px-3 dark:border-gray-700 dark:bg-gray-900">
+          <h2 className="text-xs font-semibold text-gray-900 dark:text-gray-100">Properties</h2>
+          {shapes.length > 1 && (
+            <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+              {shapes.length} selected
+            </span>
+          )}
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          {!position && (
+            <p className="py-4 text-center text-xs text-gray-500 dark:text-gray-400">
+              Nothing selected
+            </p>
+          )}
+          {position && (
+            <>
+              {shape && (
+                <div className="mb-3 flex flex-wrap items-center gap-1 border-b border-gray-200 pb-3 dark:border-gray-700">
+                  {shape.type === 'text' ? (
+                    <TextFormattingControls editor={textEditor} />
+                  ) : (
+                    <div className="grid w-full grid-cols-2 gap-2">
+                      {shape.type !== 'line' && (
+                        <ColorControl
+                          label="Fill"
+                          icon={PaintBucket}
+                          color={shape.fill}
+                          disabled={false}
+                          panel
+                          panelSide="left"
+                          onChange={(fill) => onChange({ changes: { fill } })}
+                          onEditStart={onEditStart}
+                          onEditEnd={onEditEnd}
+                          onEditCancel={onEditCancel}
+                        />
+                      )}
                       <ColorControl
-                        label="Fill"
-                        icon={PaintBucket}
-                        color={shape.fill}
+                        label="Border"
+                        icon={PenLine}
+                        color={shape.stroke}
                         disabled={false}
                         panel
-                        panelSide="left"
-                        onChange={(fill) => onChange({ changes: { fill } })}
+                        panelSide={shape.type === 'line' ? 'left' : 'right'}
+                        onChange={(border) => onChange({ changes: { stroke: border } })}
+                        onEditStart={onEditStart}
+                        onEditEnd={onEditEnd}
+                        onEditCancel={onEditCancel}
                       />
-                    )}
-                    <ColorControl
-                      label="Border"
-                      icon={PenLine}
-                      color={shape.stroke}
-                      disabled={false}
-                      panel
-                      panelSide={shape.type === 'line' ? 'left' : 'right'}
-                      onChange={(border) => onChange({ changes: { stroke: border } })}
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                {linePoints ? (
+                  <>
+                    <MetricInput
+                      label="Start X"
+                      value={linePoints.start.x}
+                      unit="in"
+                      onValueChange={({ value }) =>
+                        updateLinePoint({ point: 'start', axis: 'x', value })
+                      }
                     />
-                  </div>
+                    <MetricInput
+                      label="Start Y"
+                      value={linePoints.start.y}
+                      unit="in"
+                      onValueChange={({ value }) =>
+                        updateLinePoint({ point: 'start', axis: 'y', value })
+                      }
+                    />
+                    <MetricInput
+                      label="End X"
+                      value={linePoints.end.x}
+                      unit="in"
+                      onValueChange={({ value }) =>
+                        updateLinePoint({ point: 'end', axis: 'x', value })
+                      }
+                    />
+                    <MetricInput
+                      label="End Y"
+                      value={linePoints.end.y}
+                      unit="in"
+                      onValueChange={({ value }) =>
+                        updateLinePoint({ point: 'end', axis: 'y', value })
+                      }
+                    />
+                    <MetricInput
+                      label="Bend X"
+                      value={linePoints.bend.x}
+                      unit="in"
+                      onValueChange={({ value }) =>
+                        updateLinePoint({ point: 'bend', axis: 'x', value })
+                      }
+                    />
+                    <MetricInput
+                      label="Bend Y"
+                      value={linePoints.bend.y}
+                      unit="in"
+                      onValueChange={({ value }) =>
+                        updateLinePoint({ point: 'bend', axis: 'y', value })
+                      }
+                    />
+                  </>
+                ) : (
+                  <>
+                    <MetricInput
+                      label="X"
+                      value={position.x}
+                      unit="in"
+                      onValueChange={({ value }) => onChange({ changes: { x: value } })}
+                    />
+                    <MetricInput
+                      label="Y"
+                      value={position.y}
+                      unit="in"
+                      onValueChange={({ value }) => onChange({ changes: { y: value } })}
+                    />
+                  </>
+                )}
+                {shape && (
+                  <>
+                    {shape.type !== 'line' && (
+                      <>
+                        <MetricInput
+                          label="Width"
+                          value={shape.width ?? 0}
+                          unit="in"
+                          min={0.05}
+                          onValueChange={({ value }) => onChange({ changes: { width: value } })}
+                        />
+                        <MetricInput
+                          label="Height"
+                          value={shape.height ?? 0}
+                          unit="in"
+                          min={0.05}
+                          onValueChange={({ value }) => onChange({ changes: { height: value } })}
+                        />
+                        <MetricInput
+                          label="Rotation"
+                          value={rotation}
+                          unit="°"
+                          step={1}
+                          decimals={0}
+                          onValueChange={({ value }) =>
+                            onChange({
+                              changes: { rotation: ((Math.round(value) % 360) + 360) % 360 },
+                            })
+                          }
+                        />
+                      </>
+                    )}
+                    {shape.type !== 'text' && (
+                      <>
+                        <div
+                          className="col-span-2 h-px bg-gray-200 dark:bg-gray-700"
+                          aria-hidden="true"
+                        />
+                        <MetricInput
+                          label="Border width"
+                          value={borderThickness}
+                          unit="px"
+                          min={0}
+                          step={1}
+                          decimals={0}
+                          onValueChange={({ value }) =>
+                            onChange({ changes: { strokeWidth: (Math.min(100, value) * 72) / 96 } })
+                          }
+                        />
+                        {shape.type === 'rect' && (
+                          <div className="col-span-2">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] font-medium text-gray-600 dark:text-gray-300">
+                                Radius
+                              </span>
+                              <button
+                                className="grid size-4 place-items-center rounded text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                                type="button"
+                                aria-label={
+                                  cornersLinked
+                                    ? 'Edit corners separately'
+                                    : 'Edit corners together'
+                                }
+                                title={
+                                  cornersLinked
+                                    ? 'Edit corners separately'
+                                    : 'Edit corners together'
+                                }
+                                aria-pressed={cornersLinked}
+                                onClick={() => setCornersLinked((linked) => !linked)}
+                              >
+                                {cornersLinked ? (
+                                  <Link2 className="size-3" aria-hidden="true" />
+                                ) : (
+                                  <Unlink2 className="size-3" aria-hidden="true" />
+                                )}
+                              </button>
+                            </div>
+                            <div className="mt-1 grid grid-cols-2 gap-3">
+                              {cornersLinked ? (
+                                <MetricInput
+                                  ariaLabel="All corners radius"
+                                  value={unifiedCornerRadius}
+                                  unit="px"
+                                  min={0}
+                                  step={1}
+                                  decimals={0}
+                                  placeholder="Mixed"
+                                  onValueChange={({ value }) => {
+                                    const radius = (value * 72) / 96
+                                    onChange({
+                                      changes: {
+                                        radiusTopLeft: radius,
+                                        radiusTopRight: radius,
+                                        radiusBottomRight: radius,
+                                        radiusBottomLeft: radius,
+                                      },
+                                    })
+                                  }}
+                                />
+                              ) : (
+                                <>
+                                  <MetricInput
+                                    label="Top left"
+                                    subtleLabel
+                                    value={cornerRadii[0]}
+                                    unit="px"
+                                    min={0}
+                                    step={1}
+                                    decimals={0}
+                                    onValueChange={({ value }) =>
+                                      onChange({ changes: { radiusTopLeft: (value * 72) / 96 } })
+                                    }
+                                  />
+                                  <MetricInput
+                                    label="Top right"
+                                    subtleLabel
+                                    value={cornerRadii[1]}
+                                    unit="px"
+                                    min={0}
+                                    step={1}
+                                    decimals={0}
+                                    onValueChange={({ value }) =>
+                                      onChange({ changes: { radiusTopRight: (value * 72) / 96 } })
+                                    }
+                                  />
+                                  <MetricInput
+                                    label="Bottom left"
+                                    subtleLabel
+                                    value={cornerRadii[3]}
+                                    unit="px"
+                                    min={0}
+                                    step={1}
+                                    decimals={0}
+                                    onValueChange={({ value }) =>
+                                      onChange({ changes: { radiusBottomLeft: (value * 72) / 96 } })
+                                    }
+                                  />
+                                  <MetricInput
+                                    label="Bottom right"
+                                    subtleLabel
+                                    value={cornerRadii[2]}
+                                    unit="px"
+                                    min={0}
+                                    step={1}
+                                    decimals={0}
+                                    onValueChange={({ value }) =>
+                                      onChange({
+                                        changes: { radiusBottomRight: (value * 72) / 96 },
+                                      })
+                                    }
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
                 )}
               </div>
-            )}
-            <div className="grid grid-cols-2 gap-3">
-              {linePoints ? (
-                <>
-                  <MetricInput
-                    label="Start X"
-                    value={linePoints.start.x}
-                    unit="in"
-                    onValueChange={({ value }) =>
-                      updateLinePoint({ point: 'start', axis: 'x', value })
-                    }
-                  />
-                  <MetricInput
-                    label="Start Y"
-                    value={linePoints.start.y}
-                    unit="in"
-                    onValueChange={({ value }) =>
-                      updateLinePoint({ point: 'start', axis: 'y', value })
-                    }
-                  />
-                  <MetricInput
-                    label="End X"
-                    value={linePoints.end.x}
-                    unit="in"
-                    onValueChange={({ value }) =>
-                      updateLinePoint({ point: 'end', axis: 'x', value })
-                    }
-                  />
-                  <MetricInput
-                    label="End Y"
-                    value={linePoints.end.y}
-                    unit="in"
-                    onValueChange={({ value }) =>
-                      updateLinePoint({ point: 'end', axis: 'y', value })
-                    }
-                  />
-                  <MetricInput
-                    label="Bend X"
-                    value={linePoints.bend.x}
-                    unit="in"
-                    onValueChange={({ value }) =>
-                      updateLinePoint({ point: 'bend', axis: 'x', value })
-                    }
-                  />
-                  <MetricInput
-                    label="Bend Y"
-                    value={linePoints.bend.y}
-                    unit="in"
-                    onValueChange={({ value }) =>
-                      updateLinePoint({ point: 'bend', axis: 'y', value })
-                    }
-                  />
-                </>
-              ) : (
-                <>
-                  <MetricInput
-                    label="X"
-                    value={position.x}
-                    unit="in"
-                    onValueChange={({ value }) => onChange({ changes: { x: value } })}
-                  />
-                  <MetricInput
-                    label="Y"
-                    value={position.y}
-                    unit="in"
-                    onValueChange={({ value }) => onChange({ changes: { y: value } })}
-                  />
-                </>
-              )}
-              {shape && (
-                <>
-                  {shape.type !== 'line' && (
-                    <>
-                      <MetricInput
-                        label="Width"
-                        value={shape.width ?? 0}
-                        unit="in"
-                        min={0.05}
-                        onValueChange={({ value }) => onChange({ changes: { width: value } })}
-                      />
-                      <MetricInput
-                        label="Height"
-                        value={shape.height ?? 0}
-                        unit="in"
-                        min={0.05}
-                        onValueChange={({ value }) => onChange({ changes: { height: value } })}
-                      />
-                      <MetricInput
-                        label="Rotation"
-                        value={rotation}
-                        unit="°"
-                        step={1}
-                        decimals={0}
-                        onValueChange={({ value }) =>
-                          onChange({
-                            changes: { rotation: ((Math.round(value) % 360) + 360) % 360 },
-                          })
-                        }
-                      />
-                    </>
-                  )}
-                  {shape.type !== 'text' && (
-                    <>
-                      <div
-                        className="col-span-2 h-px bg-gray-200 dark:bg-gray-700"
-                        aria-hidden="true"
-                      />
-                      <MetricInput
-                        label="Border width"
-                        value={borderThickness}
-                        unit="px"
-                        min={0}
-                        step={1}
-                        decimals={0}
-                        onValueChange={({ value }) =>
-                          onChange({ changes: { strokeWidth: (Math.min(100, value) * 72) / 96 } })
-                        }
-                      />
-                      {shape.type === 'rect' && (
-                        <div className="col-span-2">
-                          <div className="flex items-center gap-1">
-                            <span className="text-[11px] font-medium text-gray-600 dark:text-gray-300">
-                              Radius
-                            </span>
-                            <button
-                              className="grid size-4 place-items-center rounded text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                              type="button"
-                              aria-label={
-                                cornersLinked ? 'Edit corners separately' : 'Edit corners together'
-                              }
-                              title={
-                                cornersLinked ? 'Edit corners separately' : 'Edit corners together'
-                              }
-                              aria-pressed={cornersLinked}
-                              onClick={() => setCornersLinked((linked) => !linked)}
-                            >
-                              {cornersLinked ? (
-                                <Link2 className="size-3" aria-hidden="true" />
-                              ) : (
-                                <Unlink2 className="size-3" aria-hidden="true" />
-                              )}
-                            </button>
-                          </div>
-                          <div className="mt-1 grid grid-cols-2 gap-3">
-                            {cornersLinked ? (
-                              <MetricInput
-                                ariaLabel="All corners radius"
-                                value={unifiedCornerRadius}
-                                unit="px"
-                                min={0}
-                                step={1}
-                                decimals={0}
-                                placeholder="Mixed"
-                                onValueChange={({ value }) => {
-                                  const radius = (value * 72) / 96
-                                  onChange({
-                                    changes: {
-                                      radiusTopLeft: radius,
-                                      radiusTopRight: radius,
-                                      radiusBottomRight: radius,
-                                      radiusBottomLeft: radius,
-                                    },
-                                  })
-                                }}
-                              />
-                            ) : (
-                              <>
-                                <MetricInput
-                                  label="Top left"
-                                  subtleLabel
-                                  value={cornerRadii[0]}
-                                  unit="px"
-                                  min={0}
-                                  step={1}
-                                  decimals={0}
-                                  onValueChange={({ value }) =>
-                                    onChange({ changes: { radiusTopLeft: (value * 72) / 96 } })
-                                  }
-                                />
-                                <MetricInput
-                                  label="Top right"
-                                  subtleLabel
-                                  value={cornerRadii[1]}
-                                  unit="px"
-                                  min={0}
-                                  step={1}
-                                  decimals={0}
-                                  onValueChange={({ value }) =>
-                                    onChange({ changes: { radiusTopRight: (value * 72) / 96 } })
-                                  }
-                                />
-                                <MetricInput
-                                  label="Bottom left"
-                                  subtleLabel
-                                  value={cornerRadii[3]}
-                                  unit="px"
-                                  min={0}
-                                  step={1}
-                                  decimals={0}
-                                  onValueChange={({ value }) =>
-                                    onChange({ changes: { radiusBottomLeft: (value * 72) / 96 } })
-                                  }
-                                />
-                                <MetricInput
-                                  label="Bottom right"
-                                  subtleLabel
-                                  value={cornerRadii[2]}
-                                  unit="px"
-                                  min={0}
-                                  step={1}
-                                  decimals={0}
-                                  onValueChange={({ value }) =>
-                                    onChange({ changes: { radiusBottomRight: (value * 72) / 96 } })
-                                  }
-                                />
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </section>
+            </>
+          )}
+        </div>
+      </section>
+    </PropertyEditContext.Provider>
   )
 
   function updateLinePoint({

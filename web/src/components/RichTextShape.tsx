@@ -16,6 +16,10 @@ const richTextExtensions = [
     heading: false,
     horizontalRule: false,
     link: false,
+    undoRedo: {
+      depth: 100,
+      newGroupDelay: 750,
+    },
   }),
   TextStyleKit,
   TextAlign.configure({ types: ['paragraph'] }),

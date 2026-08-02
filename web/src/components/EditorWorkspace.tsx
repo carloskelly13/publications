@@ -21,6 +21,8 @@ type Props = {
   }) => void
   onSelectShapes: ({ shapeIds }: { shapeIds: string[] }) => void
   onShapeChange: (shapeId: string, changes: Partial<ShapeInput>) => void
+  onInteractionStart: () => void
+  onInteractionEnd: () => void
   editingShapeId: string | null
   onStartTextEditing: (shapeId: string) => void
   onFinishTextEditing: () => void
@@ -39,6 +41,8 @@ export function EditorWorkspace({
   onSelectShape,
   onSelectShapes,
   onShapeChange,
+  onInteractionStart,
+  onInteractionEnd,
   editingShapeId,
   onStartTextEditing,
   onFinishTextEditing,
@@ -80,6 +84,8 @@ export function EditorWorkspace({
             onSelectShape={onSelectShape}
             onSelectShapes={onSelectShapes}
             onShapeChange={onShapeChange}
+            onInteractionStart={onInteractionStart}
+            onInteractionEnd={onInteractionEnd}
             editingShapeId={editingShapeId}
             onStartTextEditing={onStartTextEditing}
             snapToGrid={snapToGrid}

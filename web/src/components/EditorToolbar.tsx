@@ -30,6 +30,8 @@ import {
   Trash2,
   Type,
   Underline,
+  Undo2,
+  Redo2,
   type LucideIcon,
 } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -62,6 +64,10 @@ type Props = {
   onDelete: () => void
   onSelectAll: () => void
   onDeselectAll: () => void
+  canUndo: boolean
+  canRedo: boolean
+  onUndo: () => void
+  onRedo: () => void
 }
 
 type DocumentTitleControlProps = {
@@ -243,6 +249,9 @@ type ColorControlProps = {
   panel?: boolean
   panelSide?: 'left' | 'right'
   onChange: (color: string) => void
+  onEditStart?: () => void
+  onEditEnd?: () => void
+  onEditCancel?: () => void
 }
 
 export function ColorControl({
@@ -253,6 +262,9 @@ export function ColorControl({
   panel = false,
   panelSide = 'left',
   onChange,
+  onEditStart,
+  onEditEnd,
+  onEditCancel,
 }: ColorControlProps) {
   const [open, setOpen] = useState(false)
   const [hex, setHex] = useState(normalizedHex(color ?? '') ?? '')
@@ -264,23 +276,25 @@ export function ColorControl({
     if (!open) {
       return
     }
-    const close = (event: MouseEvent) => {
+    const close = (event: PointerEvent) => {
       if (!containerRef.current?.contains(event.target as Node)) {
         setOpen(false)
+        onEditEnd?.()
       }
     }
     const escape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpen(false)
+        onEditCancel?.()
       }
     }
-    document.addEventListener('mousedown', close)
+    document.addEventListener('pointerdown', close, true)
     document.addEventListener('keydown', escape)
     return () => {
-      document.removeEventListener('mousedown', close)
+      document.removeEventListener('pointerdown', close, true)
       document.removeEventListener('keydown', escape)
     }
-  }, [open])
+  }, [open, onEditCancel, onEditEnd])
 
   return (
     <div className="relative" ref={containerRef}>
@@ -300,7 +314,15 @@ export function ColorControl({
         aria-label={label}
         title={label}
         disabled={disabled}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          if (open) {
+            setOpen(false)
+            onEditEnd?.()
+          } else {
+            onEditStart?.()
+            setOpen(true)
+          }
+        }}
       >
         <Icon className="size-4" aria-hidden="true" />
         <span
@@ -342,6 +364,7 @@ export function ColorControl({
                 onClick={() => {
                   onChange(swatch)
                   setOpen(false)
+                  onEditEnd?.()
                 }}
               />
             ))}
@@ -352,6 +375,7 @@ export function ColorControl({
             onClick={() => {
               onChange('none')
               setOpen(false)
+              onEditEnd?.()
             }}
           >
             <span
@@ -477,6 +501,10 @@ type EditMenuProps = {
   onDelete: () => void
   onSelectAll: () => void
   onDeselectAll: () => void
+  canUndo: boolean
+  canRedo: boolean
+  onUndo: () => void
+  onRedo: () => void
 }
 
 function EditMenu({
@@ -490,6 +518,10 @@ function EditMenu({
   onDelete,
   onSelectAll,
   onDeselectAll,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
 }: EditMenuProps) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -517,7 +549,16 @@ function EditMenu({
   }, [open])
 
   const items = [
-    { label: 'Cut', shortcut: '⌘X', icon: Scissors, disabled: !canEditSelection, action: onCut },
+    { label: 'Undo', shortcut: '⌘Z', icon: Undo2, disabled: !canUndo, action: onUndo },
+    { label: 'Redo', shortcut: '⇧⌘Z', icon: Redo2, disabled: !canRedo, action: onRedo },
+    {
+      label: 'Cut',
+      shortcut: '⌘X',
+      icon: Scissors,
+      disabled: !canEditSelection,
+      action: onCut,
+      divider: true,
+    },
     { label: 'Copy', shortcut: '⌘C', icon: Copy, disabled: !canEditSelection, action: onCopy },
     { label: 'Paste', shortcut: '⌘V', icon: ClipboardPaste, disabled: !canPaste, action: onPaste },
     {
@@ -801,6 +842,10 @@ export function EditorToolbar({
   onDelete,
   onSelectAll,
   onDeselectAll,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
 }: Props) {
   const zoomBy = (amount: number) => {
     onZoomChange(Math.min(maxZoom, Math.max(minZoom, Number((zoom + amount).toFixed(2)))))
@@ -874,6 +919,10 @@ export function EditorToolbar({
         onDelete={onDelete}
         onSelectAll={onSelectAll}
         onDeselectAll={onDeselectAll}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onUndo={onUndo}
+        onRedo={onRedo}
       />
       <InsertMenu onAddShape={onAddShape} />
       <div className="ml-auto flex items-center gap-1">

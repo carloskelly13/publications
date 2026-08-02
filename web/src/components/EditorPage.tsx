@@ -16,6 +16,18 @@ type LoadState =
   | { status: 'loaded'; document: PublicationDocument }
   | { status: 'error'; message: string }
 
+type HistorySnapshot = {
+  document: PublicationDocument
+  selectedShapeIds: string[]
+}
+
+type HistoryState = {
+  past: HistorySnapshot[]
+  future: HistorySnapshot[]
+}
+
+const historyLimit = 100
+
 const shapeInput = (shape: ShapeResponse): ShapeInput => ({
   type: shape.type,
   width: shape.width,
@@ -66,10 +78,13 @@ export function EditorPage() {
   const [layersPanelHeight, setLayersPanelHeight] = useState(308)
   const [snapToGrid, setSnapToGrid] = useState(true)
   const [clipboardShapes, setClipboardShapes] = useState<ShapeResponse[]>([])
+  const [history, setHistory] = useState<HistoryState>({ past: [], future: [] })
   const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null)
   const exportCanvasRef = useRef<SVGSVGElement>(null)
   const saveFeedbackTimerRef = useRef<number | null>(null)
   const pasteCountRef = useRef(0)
+  const transactionRef = useRef<HistorySnapshot | null>(null)
+  const transactionChangedRef = useRef(false)
   const documentQuery = api.useQuery(
     'get',
     '/api/documents/{id}',
@@ -101,6 +116,9 @@ export function EditorPage() {
     setSelectedShapeIds([])
     setEditingShapeId(null)
     setTextEditor(null)
+    setHistory({ past: [], future: [] })
+    transactionRef.current = null
+    transactionChangedRef.current = false
   }, [documentId])
 
   useEffect(() => {
@@ -134,7 +152,16 @@ export function EditorPage() {
 
     const modifier = event.metaKey || event.ctrlKey
     const key = event.key.toLowerCase()
-    if (modifier && key === 'x' && selectedShapeIds.length > 0) {
+    if (modifier && key === 'z' && event.shiftKey && history.future.length > 0) {
+      event.preventDefault()
+      redo()
+    } else if (modifier && key === 'z' && history.past.length > 0) {
+      event.preventDefault()
+      undo()
+    } else if (modifier && key === 'y' && history.future.length > 0) {
+      event.preventDefault()
+      redo()
+    } else if (modifier && key === 'x' && selectedShapeIds.length > 0) {
       event.preventDefault()
       cutSelection()
     } else if (modifier && key === 'c' && selectedShapeIds.length > 0) {
@@ -166,6 +193,7 @@ export function EditorPage() {
   }, [])
 
   const updateShape = ({ shapeId, changes }: { shapeId: string; changes: Partial<ShapeInput> }) => {
+    recordDocumentChange()
     setState((current) => {
       if (current.status !== 'loaded') {
         return current
@@ -195,6 +223,15 @@ export function EditorPage() {
     targetShapeId: string
     position: 'before' | 'after'
   }) => {
+    const currentLayers = [
+      ...(state.status === 'loaded' ? (state.document.pages?.[0]?.shapes ?? []) : []),
+    ]
+    const sourceIndex = currentLayers.findIndex(({ id }) => id === draggedShapeId)
+    const targetIndex = currentLayers.findIndex(({ id }) => id === targetShapeId)
+    if (sourceIndex < 0 || targetIndex < 0 || sourceIndex === targetIndex) {
+      return
+    }
+    recordDocumentChange()
     setState((current) => {
       if (current.status !== 'loaded') {
         return current
@@ -258,6 +295,14 @@ export function EditorPage() {
   }
 
   const duplicateLayer = ({ shapeId }: { shapeId: string }) => {
+    const original =
+      state.status === 'loaded'
+        ? state.document.pages?.[0]?.shapes?.find(({ id }) => id === shapeId)
+        : undefined
+    if (!original) {
+      return
+    }
+    recordDocumentChange()
     const duplicateId = `draft-${crypto.randomUUID()}`
     setState((current) => {
       if (current.status !== 'loaded') {
@@ -296,6 +341,13 @@ export function EditorPage() {
 
   const deleteLayers = ({ shapeIds }: { shapeIds: string[] }) => {
     const deleting = new Set(shapeIds)
+    const hasMatchingShape =
+      state.status === 'loaded' &&
+      state.document.pages?.[0]?.shapes?.some(({ id }) => deleting.has(id))
+    if (!hasMatchingShape) {
+      return
+    }
+    recordDocumentChange()
     setState((current) => {
       if (current.status !== 'loaded') {
         return current
@@ -328,6 +380,10 @@ export function EditorPage() {
   }
 
   const addShape = (type: 'rect' | 'circle' | 'text' | 'line') => {
+    if (state.status !== 'loaded' || !state.document.pages?.[0]) {
+      return
+    }
+    recordDocumentChange()
     const id = `draft-${crypto.randomUUID()}`
     setState((current) => {
       if (current.status !== 'loaded') {
@@ -514,6 +570,10 @@ export function EditorPage() {
             onDelete={() => deleteLayers({ shapeIds: selectedShapeIds })}
             onSelectAll={selectAllShapes}
             onDeselectAll={() => setSelectedShapeIds([])}
+            canUndo={history.past.length > 0}
+            canRedo={history.future.length > 0}
+            onUndo={undo}
+            onRedo={redo}
           />,
           toolbarTarget,
         )}
@@ -527,17 +587,17 @@ export function EditorPage() {
             selectedShapeIds={selectedShapeIds}
             onSelectShape={selectShapes}
             onSelectShapes={({ shapeIds }) => {
+              if (editingShapeId) {
+                finishTextEditing()
+              }
               setSelectedShapeIds(shapeIds)
-              setEditingShapeId(null)
-              setTextEditor(null)
             }}
             onShapeChange={(shapeId, changes) => updateShape({ shapeId, changes })}
+            onInteractionStart={beginHistoryTransaction}
+            onInteractionEnd={commitHistoryTransaction}
             editingShapeId={editingShapeId}
-            onStartTextEditing={setEditingShapeId}
-            onFinishTextEditing={() => {
-              setEditingShapeId(null)
-              setTextEditor(null)
-            }}
+            onStartTextEditing={startTextEditing}
+            onFinishTextEditing={finishTextEditing}
             onTextEditorChange={setTextEditor}
             snapToGrid={snapToGrid}
           />
@@ -558,9 +618,10 @@ export function EditorPage() {
                 onDuplicate={duplicateLayer}
                 onDelete={deleteLayers}
                 onSelectionChange={({ shapeIds }) => {
+                  if (editingShapeId) {
+                    finishTextEditing()
+                  }
                   setSelectedShapeIds(shapeIds)
-                  setEditingShapeId(null)
-                  setTextEditor(null)
                 }}
               />
             }
@@ -569,6 +630,9 @@ export function EditorPage() {
                 shapes={selectedShapes}
                 textEditor={textEditor}
                 onChange={updateMetrics}
+                onEditStart={beginHistoryTransaction}
+                onEditEnd={commitHistoryTransaction}
+                onEditCancel={cancelHistoryTransaction}
               />
             }
           />
@@ -585,6 +649,112 @@ export function EditorPage() {
       </div>
     </>
   )
+
+  function captureSnapshot(): HistorySnapshot | null {
+    if (state.status !== 'loaded') {
+      return null
+    }
+    return {
+      document: structuredClone(state.document),
+      selectedShapeIds: [...selectedShapeIds],
+    }
+  }
+
+  function pushHistorySnapshot({ snapshot }: { snapshot: HistorySnapshot }) {
+    setHistory((current) => ({
+      past: [...current.past, snapshot].slice(-historyLimit),
+      future: [],
+    }))
+  }
+
+  function recordDocumentChange() {
+    if (transactionRef.current) {
+      transactionChangedRef.current = true
+      return
+    }
+    const snapshot = captureSnapshot()
+    if (snapshot) {
+      pushHistorySnapshot({ snapshot })
+    }
+  }
+
+  function beginHistoryTransaction() {
+    if (transactionRef.current) {
+      return
+    }
+    transactionRef.current = captureSnapshot()
+    transactionChangedRef.current = false
+  }
+
+  function commitHistoryTransaction() {
+    const snapshot = transactionRef.current
+    const changed = transactionChangedRef.current
+    transactionRef.current = null
+    transactionChangedRef.current = false
+    if (snapshot && changed) {
+      pushHistorySnapshot({ snapshot })
+    }
+  }
+
+  function cancelHistoryTransaction() {
+    const snapshot = transactionRef.current
+    transactionRef.current = null
+    transactionChangedRef.current = false
+    if (snapshot) {
+      restoreSnapshot({ snapshot })
+    }
+  }
+
+  function undo() {
+    if (transactionRef.current || history.past.length === 0) {
+      return
+    }
+    const snapshot = history.past.at(-1)
+    const current = captureSnapshot()
+    if (!snapshot || !current) {
+      return
+    }
+    setHistory({
+      past: history.past.slice(0, -1),
+      future: [current, ...history.future].slice(0, historyLimit),
+    })
+    restoreSnapshot({ snapshot })
+  }
+
+  function redo() {
+    if (transactionRef.current || history.future.length === 0) {
+      return
+    }
+    const snapshot = history.future[0]
+    const current = captureSnapshot()
+    if (!current) {
+      return
+    }
+    setHistory({
+      past: [...history.past, current].slice(-historyLimit),
+      future: history.future.slice(1),
+    })
+    restoreSnapshot({ snapshot })
+  }
+
+  function restoreSnapshot({ snapshot }: { snapshot: HistorySnapshot }) {
+    setState({ status: 'loaded', document: structuredClone(snapshot.document) })
+    setSelectedShapeIds([...snapshot.selectedShapeIds])
+    setEditingShapeId(null)
+    setTextEditor(null)
+    setSaveStatus('idle')
+  }
+
+  function startTextEditing(shapeId: string) {
+    beginHistoryTransaction()
+    setEditingShapeId(shapeId)
+  }
+
+  function finishTextEditing() {
+    commitHistoryTransaction()
+    setEditingShapeId(null)
+    setTextEditor(null)
+  }
 
   async function renameDocument({ name }: { name: string }) {
     if (!documentId) {
@@ -665,6 +835,7 @@ export function EditorPage() {
     )
     const dx = changes.x === undefined ? 0 : changes.x - left
     const dy = changes.y === undefined ? 0 : changes.y - top
+    recordDocumentChange()
     setState((current) => {
       if (current.status !== 'loaded') {
         return current
@@ -700,6 +871,9 @@ export function EditorPage() {
     additive?: boolean
     preserveGroup?: boolean
   }) {
+    if (editingShapeId && shapeId !== editingShapeId) {
+      finishTextEditing()
+    }
     setSelectedShapeIds((current) => {
       if (!shapeId) {
         return []
@@ -714,10 +888,6 @@ export function EditorPage() {
       }
       return [shapeId]
     })
-    if (shapeId !== editingShapeId) {
-      setEditingShapeId(null)
-      setTextEditor(null)
-    }
   }
 
   function copySelection() {
@@ -762,6 +932,10 @@ export function EditorPage() {
     sourceShapes: ShapeResponse[]
     offset: number
   }) {
+    if (sourceShapes.length === 0) {
+      return
+    }
+    recordDocumentChange()
     const existingShapes = page.shapes ?? []
     const topZ = Math.max(0, ...existingShapes.map(({ z }) => z ?? 0))
     const copies = sourceShapes.map((source, index) => ({

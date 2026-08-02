@@ -21,6 +21,8 @@ type Props = {
   }) => void
   onSelectShapes?: ({ shapeIds }: { shapeIds: string[] }) => void
   onShapeChange?: (shapeId: string, changes: Partial<ShapeInput>) => void
+  onInteractionStart?: () => void
+  onInteractionEnd?: () => void
   editingShapeId?: string | null
   onStartTextEditing?: (shapeId: string) => void
   snapToGrid?: boolean
@@ -490,6 +492,8 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     onSelectShape,
     onSelectShapes,
     onShapeChange,
+    onInteractionStart,
+    onInteractionEnd,
     editingShapeId,
     onStartTextEditing,
     snapToGrid = false,
@@ -584,6 +588,7 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     }
     svg.setPointerCapture(event.pointerId)
     onSelectShape?.({ shapeId, preserveGroup: true })
+    onInteractionStart?.()
   }
 
   const handlePointerMove = (event: ReactPointerEvent<SVGSVGElement>) => {
@@ -781,6 +786,7 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
       return
     }
     interactionRef.current = null
+    onInteractionEnd?.()
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
     }
