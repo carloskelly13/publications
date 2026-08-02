@@ -31,12 +31,24 @@ const middleware: Middleware = {
     headers.set(csrf.headerName, csrf.token)
     return new Request(request, { headers })
   },
-  onResponse({ response }) {
+  async onResponse({ response }) {
     if (response.ok) {
       return
     }
+    const body = await response.clone().text()
+    let message = response.statusText || 'Unable to complete this request'
+    if (body) {
+      try {
+        const payload = JSON.parse(body) as { message?: unknown }
+        if (typeof payload.message === 'string' && payload.message) {
+          message = payload.message
+        }
+      } catch {
+        // Keep the HTTP status text when the response is not JSON
+      }
+    }
     throw new ApiError({
-      message: response.statusText || 'Unable to complete this request',
+      message,
       status: response.status,
     })
   },

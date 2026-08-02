@@ -91,13 +91,14 @@ app.setErrorHandler((error: unknown, request, reply) => {
   const errorMessage =
     error instanceof Error ? error.message : 'The request could not be completed.'
   const statusCode = error instanceof HttpError ? error.statusCode : validationError ? 400 : 500
+  const exposeMessage = statusCode < 500 || process.env.NODE_ENV !== 'production'
   if (statusCode >= 500) {
     request.log.error({ err: error }, 'Request failed')
   }
   return reply.code(statusCode).send({
     statusCode,
     error: statusCode >= 500 ? 'Internal Server Error' : errorName,
-    message: statusCode >= 500 ? 'The request could not be completed.' : errorMessage,
+    message: exposeMessage ? errorMessage : 'The request could not be completed.',
   })
 })
 
@@ -114,9 +115,20 @@ const IdParams = Type.Object({ id: Type.String({ pattern: '^[0-9]+$' }) })
 const ListQuery = Type.Object({
   page: Type.Optional(Type.Integer({ minimum: 0, default: 0 })),
   size: Type.Optional(Type.Integer({ minimum: 1, maximum: 20, default: 4 })),
+  search: Type.Optional(Type.String({ maxLength: 100 })),
+  sort: Type.Optional(Type.Union([Type.Literal('updatedAt'), Type.Literal('name')])),
+  direction: Type.Optional(Type.Union([Type.Literal('asc'), Type.Literal('desc')])),
 })
 
-app.get<{ Querystring: { page?: number; size?: number } }>(
+app.get<{
+  Querystring: {
+    page?: number
+    size?: number
+    search?: string
+    sort?: 'updatedAt' | 'name'
+    direction?: 'asc' | 'desc'
+  }
+}>(
   '/api/documents',
   {
     preHandler: authenticate,
@@ -130,6 +142,9 @@ app.get<{ Querystring: { page?: number; size?: number } }>(
       userId: request.currentSession!.user.id,
       page: request.query.page ?? 0,
       size: request.query.size ?? 4,
+      search: request.query.search,
+      sort: request.query.sort ?? 'updatedAt',
+      direction: request.query.direction ?? 'desc',
     }),
 )
 

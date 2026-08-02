@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { and, asc, count, desc, eq, gt, lt, notInArray } from 'drizzle-orm'
+import { and, asc, count, desc, eq, gt, ilike, lt, notInArray } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import { config } from './config.js'
@@ -343,23 +343,33 @@ export async function listDocuments({
   userId,
   page,
   size,
+  search,
+  sort,
+  direction,
 }: {
   userId: string
   page: number
   size: number
+  search?: string
+  sort: 'updatedAt' | 'name'
+  direction: 'asc' | 'desc'
 }) {
   await initializeDatabase()
   const db = getDatabase()
-  const countRows = await db
-    .select({ value: count() })
-    .from(documents)
-    .where(eq(documents.userId, BigInt(userId)))
+  const normalizedSearch = search?.trim()
+  const filter = and(
+    eq(documents.userId, BigInt(userId)),
+    normalizedSearch ? ilike(documents.name, `%${normalizedSearch}%`) : undefined,
+  )
+  const sortColumn = sort === 'name' ? documents.name : documents.updatedAt
+  const order = direction === 'asc' ? asc : desc
+  const countRows = await db.select({ value: count() }).from(documents).where(filter)
   const totalItems = countRows[0]?.value ?? 0
   const rows = await db
     .select({ id: documents.id })
     .from(documents)
-    .where(eq(documents.userId, BigInt(userId)))
-    .orderBy(desc(documents.updatedAt))
+    .where(filter)
+    .orderBy(order(sortColumn), order(documents.id))
     .limit(size)
     .offset(page * size)
   const items = (

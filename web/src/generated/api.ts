@@ -218,6 +218,9 @@ export interface paths {
                 query?: {
                     page?: number;
                     size?: number;
+                    search?: string;
+                    sort?: "updatedAt" | "name";
+                    direction?: "asc" | "desc";
                 };
                 header?: never;
                 path?: never;
