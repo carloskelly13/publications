@@ -3,6 +3,7 @@ import puppeteer, { type Browser } from 'puppeteer-core'
 import { existsSync } from 'node:fs'
 import { HttpError } from './errors.js'
 import type { PdfInput } from './schemas.js'
+import { embeddedFontsCss } from './fonts.js'
 
 let browserPromise: Promise<Browser> | undefined
 
@@ -45,12 +46,25 @@ const html = ({ svg }: { svg: string }): string => `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src data:; img-src data: blob:">
   <style>
+    ${embeddedFontsCss}
     @page { margin: 0; }
     html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
     svg { display: block; width: 100%; height: 100%; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .rich-text-content {
+      overflow: hidden;
+      color: #111827;
+      font-family: 'Inter Variable', sans-serif;
+      font-size: 16px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+    .rich-text-content p { margin: 0; min-height: 1.25em; }
+    .rich-text-content ul, .rich-text-content ol { margin: 0; padding-left: 1.5em; }
+    .rich-text-content ul { list-style: disc; }
+    .rich-text-content ol { list-style: decimal; }
   </style>
 </head>
 <body>${svg}</body>
@@ -65,6 +79,7 @@ export const renderPdf = async ({ input }: { input: PdfInput }): Promise<Buffer>
     await page.setRequestInterception(true)
     page.on('request', (request) => void request.abort())
     await page.setContent(html({ svg: input.svg }))
+    await page.evaluate(() => document.fonts.ready)
     await page.emulateMediaType('screen')
     const bytes = await page.pdf({
       width: `${input.width}in`,

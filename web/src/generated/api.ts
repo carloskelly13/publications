@@ -419,72 +419,24 @@ export interface components {
         RichTextContent: {
             [key: string]: unknown;
         };
-        ShapeInput: {
-            type?: string;
-            width?: number;
-            height?: number;
-            x?: number;
-            y?: number;
-            pathGeometry?: {
-                /** @enum {number} */
-                version: 1;
-                commands: ({
-                    /** @enum {string} */
-                    type: "move";
-                    x: number;
-                    y: number;
-                } | {
-                    /** @enum {string} */
-                    type: "line";
-                    x: number;
-                    y: number;
-                } | {
-                    /** @enum {string} */
-                    type: "quadratic";
-                    controlX: number;
-                    controlY: number;
-                    x: number;
-                    y: number;
-                })[];
-            };
-            z?: number;
-            radiusTopLeft?: number;
-            radiusTopRight?: number;
-            radiusBottomRight?: number;
-            radiusBottomLeft?: number;
-            rotation?: number;
-            fill?: string;
-            fillOpacity?: number;
-            stroke?: string;
-            strokeWidth?: number;
-            strokeOpacity?: number;
-            text?: string;
-            richTextContent?: {
-                [key: string]: unknown;
-            };
-            contentVersion?: number;
+        Paint: {
+            color: string;
+            opacity: number;
         };
-        PathGeometry: {
-            /** @enum {number} */
-            version: 1;
-            commands: ({
-                /** @enum {string} */
-                type: "move";
-                x: number;
-                y: number;
-            } | {
-                /** @enum {string} */
-                type: "line";
-                x: number;
-                y: number;
-            } | {
-                /** @enum {string} */
-                type: "quadratic";
-                controlX: number;
-                controlY: number;
-                x: number;
-                y: number;
-            })[];
+        Border: {
+            color: string;
+            opacity: number;
+            width: number;
+        };
+        Size: {
+            width: number;
+            height: number;
+        };
+        CornerRadii: {
+            topLeft: number;
+            topRight: number;
+            bottomRight: number;
+            bottomLeft: number;
         };
         PathCommand: {
             /** @enum {string} */
@@ -504,155 +456,260 @@ export interface components {
             x: number;
             y: number;
         };
-        ShapeResponse: {
+        ShapeGeometry: {
+            /** @enum {string} */
+            type: "rectangle";
+            radius: components["schemas"]["CornerRadii"];
+        } | {
+            /** @enum {string} */
+            type: "ellipse";
+        } | {
+            /** @enum {string} */
+            type: "polygon";
+            sides: number;
+            phase: number;
+        } | {
+            /** @enum {string} */
+            type: "star";
+            points: number;
+            innerRadius: number;
+            phase: number;
+            roundness: number;
+        };
+        ElementInput: {
+            id?: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "shape";
+            data: {
+                size: components["schemas"]["Size"];
+                geometry: components["schemas"]["ShapeGeometry"];
+                fill: components["schemas"]["Paint"] | null;
+                border: components["schemas"]["Border"] | null;
+            };
+        } | {
+            id?: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "path";
+            data: {
+                commands: components["schemas"]["PathCommand"][];
+                fill: components["schemas"]["Paint"] | null;
+                border: components["schemas"]["Border"];
+            };
+        } | {
+            id?: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "text";
+            data: {
+                size: components["schemas"]["Size"];
+                content: components["schemas"]["RichTextContent"];
+                padding: {
+                    top: number;
+                    right: number;
+                    bottom: number;
+                    left: number;
+                };
+                verticalAlignment: "top" | "middle" | "bottom";
+            };
+        };
+        ElementResponse: {
             id: string;
-        } & {
-            type?: string;
-            width?: number;
-            height?: number;
-            x?: number;
-            y?: number;
-            pathGeometry?: {
-                /** @enum {number} */
-                version: 1;
-                commands: ({
-                    /** @enum {string} */
-                    type: "move";
-                    x: number;
-                    y: number;
-                } | {
-                    /** @enum {string} */
-                    type: "line";
-                    x: number;
-                    y: number;
-                } | {
-                    /** @enum {string} */
-                    type: "quadratic";
-                    controlX: number;
-                    controlY: number;
-                    x: number;
-                    y: number;
-                })[];
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "shape";
+            data: {
+                size: components["schemas"]["Size"];
+                geometry: components["schemas"]["ShapeGeometry"];
+                fill: components["schemas"]["Paint"] | null;
+                border: components["schemas"]["Border"] | null;
             };
-            z?: number;
-            radiusTopLeft?: number;
-            radiusTopRight?: number;
-            radiusBottomRight?: number;
-            radiusBottomLeft?: number;
-            rotation?: number;
-            fill?: string;
-            fillOpacity?: number;
-            stroke?: string;
-            strokeWidth?: number;
-            strokeOpacity?: number;
-            text?: string;
-            richTextContent?: {
-                [key: string]: unknown;
+        } | {
+            id: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "path";
+            data: {
+                commands: components["schemas"]["PathCommand"][];
+                fill: components["schemas"]["Paint"] | null;
+                border: components["schemas"]["Border"];
             };
-            contentVersion?: number;
+        } | {
+            id: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "text";
+            data: {
+                size: components["schemas"]["Size"];
+                content: components["schemas"]["RichTextContent"];
+                padding: {
+                    top: number;
+                    right: number;
+                    bottom: number;
+                    left: number;
+                };
+                verticalAlignment: "top" | "middle" | "bottom";
+            };
         };
         PageInput: {
             id?: number | string;
             pageNumber: number;
             width: number;
             height: number;
-            shapes?: {
-                type?: string;
-                width?: number;
-                height?: number;
-                x?: number;
-                y?: number;
-                pathGeometry?: {
-                    /** @enum {number} */
-                    version: 1;
-                    commands: ({
-                        /** @enum {string} */
-                        type: "move";
-                        x: number;
-                        y: number;
-                    } | {
-                        /** @enum {string} */
-                        type: "line";
-                        x: number;
-                        y: number;
-                    } | {
-                        /** @enum {string} */
-                        type: "quadratic";
-                        controlX: number;
-                        controlY: number;
-                        x: number;
-                        y: number;
-                    })[];
+            elements?: ({
+                id?: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "shape";
+                data: {
+                    size: components["schemas"]["Size"];
+                    geometry: components["schemas"]["ShapeGeometry"];
+                    fill: components["schemas"]["Paint"] | null;
+                    border: components["schemas"]["Border"] | null;
                 };
-                z?: number;
-                radiusTopLeft?: number;
-                radiusTopRight?: number;
-                radiusBottomRight?: number;
-                radiusBottomLeft?: number;
-                rotation?: number;
-                fill?: string;
-                fillOpacity?: number;
-                stroke?: string;
-                strokeWidth?: number;
-                strokeOpacity?: number;
-                text?: string;
-                richTextContent?: {
-                    [key: string]: unknown;
+            } | {
+                id?: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "path";
+                data: {
+                    commands: components["schemas"]["PathCommand"][];
+                    fill: components["schemas"]["Paint"] | null;
+                    border: components["schemas"]["Border"];
                 };
-                contentVersion?: number;
-            }[];
+            } | {
+                id?: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "text";
+                data: {
+                    size: components["schemas"]["Size"];
+                    content: components["schemas"]["RichTextContent"];
+                    padding: {
+                        top: number;
+                        right: number;
+                        bottom: number;
+                        left: number;
+                    };
+                    verticalAlignment: "top" | "middle" | "bottom";
+                };
+            })[];
         };
         PageResponse: {
             id: string;
             pageNumber: number;
             width: number;
             height: number;
-            shapes: ({
+            elements: ({
                 id: string;
-            } & {
-                type?: string;
-                width?: number;
-                height?: number;
-                x?: number;
-                y?: number;
-                pathGeometry?: {
-                    /** @enum {number} */
-                    version: 1;
-                    commands: ({
-                        /** @enum {string} */
-                        type: "move";
-                        x: number;
-                        y: number;
-                    } | {
-                        /** @enum {string} */
-                        type: "line";
-                        x: number;
-                        y: number;
-                    } | {
-                        /** @enum {string} */
-                        type: "quadratic";
-                        controlX: number;
-                        controlY: number;
-                        x: number;
-                        y: number;
-                    })[];
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "shape";
+                data: {
+                    size: components["schemas"]["Size"];
+                    geometry: components["schemas"]["ShapeGeometry"];
+                    fill: components["schemas"]["Paint"] | null;
+                    border: components["schemas"]["Border"] | null;
                 };
-                z?: number;
-                radiusTopLeft?: number;
-                radiusTopRight?: number;
-                radiusBottomRight?: number;
-                radiusBottomLeft?: number;
-                rotation?: number;
-                fill?: string;
-                fillOpacity?: number;
-                stroke?: string;
-                strokeWidth?: number;
-                strokeOpacity?: number;
-                text?: string;
-                richTextContent?: {
-                    [key: string]: unknown;
+            } | {
+                id: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "path";
+                data: {
+                    commands: components["schemas"]["PathCommand"][];
+                    fill: components["schemas"]["Paint"] | null;
+                    border: components["schemas"]["Border"];
                 };
-                contentVersion?: number;
+            } | {
+                id: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "text";
+                data: {
+                    size: components["schemas"]["Size"];
+                    content: components["schemas"]["RichTextContent"];
+                    padding: {
+                        top: number;
+                        right: number;
+                        bottom: number;
+                        left: number;
+                    };
+                    verticalAlignment: "top" | "middle" | "bottom";
+                };
             })[];
         };
         DocumentRequest: {
@@ -662,51 +719,62 @@ export interface components {
                 pageNumber: number;
                 width: number;
                 height: number;
-                shapes?: {
-                    type?: string;
-                    width?: number;
-                    height?: number;
-                    x?: number;
-                    y?: number;
-                    pathGeometry?: {
-                        /** @enum {number} */
-                        version: 1;
-                        commands: ({
-                            /** @enum {string} */
-                            type: "move";
-                            x: number;
-                            y: number;
-                        } | {
-                            /** @enum {string} */
-                            type: "line";
-                            x: number;
-                            y: number;
-                        } | {
-                            /** @enum {string} */
-                            type: "quadratic";
-                            controlX: number;
-                            controlY: number;
-                            x: number;
-                            y: number;
-                        })[];
+                elements?: ({
+                    id?: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "shape";
+                    data: {
+                        size: components["schemas"]["Size"];
+                        geometry: components["schemas"]["ShapeGeometry"];
+                        fill: components["schemas"]["Paint"] | null;
+                        border: components["schemas"]["Border"] | null;
                     };
-                    z?: number;
-                    radiusTopLeft?: number;
-                    radiusTopRight?: number;
-                    radiusBottomRight?: number;
-                    radiusBottomLeft?: number;
-                    rotation?: number;
-                    fill?: string;
-                    fillOpacity?: number;
-                    stroke?: string;
-                    strokeWidth?: number;
-                    strokeOpacity?: number;
-                    text?: string;
-                    richTextContent?: {
-                        [key: string]: unknown;
+                } | {
+                    id?: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "path";
+                    data: {
+                        commands: components["schemas"]["PathCommand"][];
+                        fill: components["schemas"]["Paint"] | null;
+                        border: components["schemas"]["Border"];
                     };
-                    contentVersion?: number;
-                }[];
+                } | {
+                    id?: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "text";
+                    data: {
+                        size: components["schemas"]["Size"];
+                        content: components["schemas"]["RichTextContent"];
+                        padding: {
+                            top: number;
+                            right: number;
+                            bottom: number;
+                            left: number;
+                        };
+                        verticalAlignment: "top" | "middle" | "bottom";
+                    };
+                })[];
             }[];
         };
         DocumentResponse: {
@@ -721,52 +789,61 @@ export interface components {
                 pageNumber: number;
                 width: number;
                 height: number;
-                shapes: ({
+                elements: ({
                     id: string;
-                } & {
-                    type?: string;
-                    width?: number;
-                    height?: number;
-                    x?: number;
-                    y?: number;
-                    pathGeometry?: {
-                        /** @enum {number} */
-                        version: 1;
-                        commands: ({
-                            /** @enum {string} */
-                            type: "move";
-                            x: number;
-                            y: number;
-                        } | {
-                            /** @enum {string} */
-                            type: "line";
-                            x: number;
-                            y: number;
-                        } | {
-                            /** @enum {string} */
-                            type: "quadratic";
-                            controlX: number;
-                            controlY: number;
-                            x: number;
-                            y: number;
-                        })[];
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "shape";
+                    data: {
+                        size: components["schemas"]["Size"];
+                        geometry: components["schemas"]["ShapeGeometry"];
+                        fill: components["schemas"]["Paint"] | null;
+                        border: components["schemas"]["Border"] | null;
                     };
-                    z?: number;
-                    radiusTopLeft?: number;
-                    radiusTopRight?: number;
-                    radiusBottomRight?: number;
-                    radiusBottomLeft?: number;
-                    rotation?: number;
-                    fill?: string;
-                    fillOpacity?: number;
-                    stroke?: string;
-                    strokeWidth?: number;
-                    strokeOpacity?: number;
-                    text?: string;
-                    richTextContent?: {
-                        [key: string]: unknown;
+                } | {
+                    id: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "path";
+                    data: {
+                        commands: components["schemas"]["PathCommand"][];
+                        fill: components["schemas"]["Paint"] | null;
+                        border: components["schemas"]["Border"];
                     };
-                    contentVersion?: number;
+                } | {
+                    id: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "text";
+                    data: {
+                        size: components["schemas"]["Size"];
+                        content: components["schemas"]["RichTextContent"];
+                        padding: {
+                            top: number;
+                            right: number;
+                            bottom: number;
+                            left: number;
+                        };
+                        verticalAlignment: "top" | "middle" | "bottom";
+                    };
                 })[];
             }[];
         };
@@ -783,52 +860,61 @@ export interface components {
                     pageNumber: number;
                     width: number;
                     height: number;
-                    shapes: ({
+                    elements: ({
                         id: string;
-                    } & {
-                        type?: string;
-                        width?: number;
-                        height?: number;
-                        x?: number;
-                        y?: number;
-                        pathGeometry?: {
-                            /** @enum {number} */
-                            version: 1;
-                            commands: ({
-                                /** @enum {string} */
-                                type: "move";
-                                x: number;
-                                y: number;
-                            } | {
-                                /** @enum {string} */
-                                type: "line";
-                                x: number;
-                                y: number;
-                            } | {
-                                /** @enum {string} */
-                                type: "quadratic";
-                                controlX: number;
-                                controlY: number;
-                                x: number;
-                                y: number;
-                            })[];
+                        x: number;
+                        y: number;
+                        rotation: number;
+                        z: number;
+                        opacity: number;
+                        locked: boolean;
+                        hidden: boolean;
+                        /** @enum {string} */
+                        kind: "shape";
+                        data: {
+                            size: components["schemas"]["Size"];
+                            geometry: components["schemas"]["ShapeGeometry"];
+                            fill: components["schemas"]["Paint"] | null;
+                            border: components["schemas"]["Border"] | null;
                         };
-                        z?: number;
-                        radiusTopLeft?: number;
-                        radiusTopRight?: number;
-                        radiusBottomRight?: number;
-                        radiusBottomLeft?: number;
-                        rotation?: number;
-                        fill?: string;
-                        fillOpacity?: number;
-                        stroke?: string;
-                        strokeWidth?: number;
-                        strokeOpacity?: number;
-                        text?: string;
-                        richTextContent?: {
-                            [key: string]: unknown;
+                    } | {
+                        id: string;
+                        x: number;
+                        y: number;
+                        rotation: number;
+                        z: number;
+                        opacity: number;
+                        locked: boolean;
+                        hidden: boolean;
+                        /** @enum {string} */
+                        kind: "path";
+                        data: {
+                            commands: components["schemas"]["PathCommand"][];
+                            fill: components["schemas"]["Paint"] | null;
+                            border: components["schemas"]["Border"];
                         };
-                        contentVersion?: number;
+                    } | {
+                        id: string;
+                        x: number;
+                        y: number;
+                        rotation: number;
+                        z: number;
+                        opacity: number;
+                        locked: boolean;
+                        hidden: boolean;
+                        /** @enum {string} */
+                        kind: "text";
+                        data: {
+                            size: components["schemas"]["Size"];
+                            content: components["schemas"]["RichTextContent"];
+                            padding: {
+                                top: number;
+                                right: number;
+                                bottom: number;
+                                left: number;
+                            };
+                            verticalAlignment: "top" | "middle" | "bottom";
+                        };
                     })[];
                 }[];
             }[];

@@ -1,5 +1,6 @@
 import { forwardRef, useId, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
-import type { CanvasPage, ShapeInput, ShapeResponse } from '../types'
+import type { ElementPatch } from '../elements'
+import type { CanvasElement, CanvasPage, PathCommand } from '../types'
 import { RichTextShape } from './RichTextShape'
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
     preserveGroup?: boolean
   }) => void
   onSelectShapes?: ({ shapeIds }: { shapeIds: string[] }) => void
-  onShapeChange?: (shapeId: string, changes: Partial<ShapeInput>) => void
+  onShapeChange?: (shapeId: string, changes: ElementPatch) => void
   onInteractionStart?: () => void
   onInteractionEnd?: () => void
   editingShapeId?: string | null
@@ -28,13 +29,99 @@ type Props = {
   snapToGrid?: boolean
 }
 
-type CanvasShape = ShapeInput | ShapeResponse
-type PathGeometry = NonNullable<ShapeInput['pathGeometry']>
-type PathCommand = PathGeometry['commands'][number]
+type LegacyShapePatch = {
+  x?: number
+  y?: number
+  width?: number
+  height?: number
+  rotation?: number
+  pathGeometry?: PathGeometry
+}
+type PathGeometry = { commands: PathCommand[] }
+type CanvasShape = {
+  element: CanvasElement
+  id?: string
+  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star'
+  x: number
+  y: number
+  width: number
+  height: number
+  rotation: number
+  z: number
+  fill: string
+  fillOpacity: number
+  stroke: string
+  strokeOpacity: number
+  strokeWidth: number
+  radiusTopLeft: number
+  radiusTopRight: number
+  radiusBottomRight: number
+  radiusBottomLeft: number
+  pathGeometry?: PathGeometry
+}
 
 const number = (value: number | undefined, fallback = 0) => value ?? fallback
 const shapeKey = (shape: CanvasShape, index: number) =>
-  'id' in shape && typeof shape.id === 'string' ? shape.id : `${shape.type}-${index}`
+  typeof shape.id === 'string' ? shape.id : `${shape.type}-${index}`
+
+const canvasShape = ({ element }: { element: CanvasElement }): CanvasShape => {
+  if (element.kind === 'path') {
+    const points = element.data.commands.flatMap((command) =>
+      command.type === 'quadratic'
+        ? [
+            { x: command.controlX, y: command.controlY },
+            { x: command.x, y: command.y },
+          ]
+        : [{ x: command.x, y: command.y }],
+    )
+    return {
+      element,
+      id: 'id' in element ? element.id : undefined,
+      type: 'line',
+      x: element.x,
+      y: element.y,
+      width: Math.max(...points.map(({ x }) => x)) - Math.min(...points.map(({ x }) => x)),
+      height: Math.max(...points.map(({ y }) => y)) - Math.min(...points.map(({ y }) => y)),
+      rotation: element.rotation,
+      z: element.z,
+      fill: 'none',
+      fillOpacity: 0,
+      stroke: element.data.border.color,
+      strokeOpacity: element.data.border.opacity,
+      strokeWidth: element.data.border.width,
+      radiusTopLeft: 0,
+      radiusTopRight: 0,
+      radiusBottomRight: 0,
+      radiusBottomLeft: 0,
+      pathGeometry: { commands: element.data.commands },
+    }
+  }
+  const isText = element.kind === 'text'
+  const geometry = element.kind === 'shape' ? element.data.geometry : undefined
+  const radius = geometry?.type === 'rectangle' ? geometry.radius : undefined
+  const fill = element.kind === 'shape' ? element.data.fill : null
+  const border = element.kind === 'shape' ? element.data.border : null
+  return {
+    element,
+    id: 'id' in element ? element.id : undefined,
+    type: isText ? 'text' : geometry?.type === 'rectangle' ? 'rect' : (geometry?.type ?? 'rect'),
+    x: element.x,
+    y: element.y,
+    width: element.data.size.width,
+    height: element.data.size.height,
+    rotation: element.rotation,
+    z: element.z,
+    fill: fill?.color ?? 'none',
+    fillOpacity: fill?.opacity ?? 0,
+    stroke: border?.color ?? 'none',
+    strokeOpacity: border?.opacity ?? 0,
+    strokeWidth: border?.width ?? 0,
+    radiusTopLeft: radius?.topLeft ?? 0,
+    radiusTopRight: radius?.topRight ?? 0,
+    radiusBottomRight: radius?.bottomRight ?? 0,
+    radiusBottomLeft: radius?.bottomLeft ?? 0,
+  }
+}
 
 type Point = { x: number; y: number }
 
@@ -92,7 +179,7 @@ const linePathGeometry = ({
   } else {
     commands.push({ type: 'line', x: rounded(end.x), y: rounded(end.y) })
   }
-  return { version: 1, commands }
+  return { commands }
 }
 
 function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?: boolean }) {
@@ -115,8 +202,8 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
     node = (
       <ellipse cx={x + width / 2} cy={y + height / 2} rx={width / 2} ry={height / 2} {...common} />
     )
-  } else if (shape.type === 'text') {
-    node = hideText ? null : <RichTextShape shape={shape} />
+  } else if (shape.type === 'text' && shape.element.kind === 'text') {
+    node = hideText ? null : <RichTextShape element={shape.element} />
   } else {
     const maximumRadius = Math.max(0, Math.min(width, height) / 2)
     const topLeft = Math.min(number(shape.radiusTopLeft) / 72, maximumRadius)
@@ -140,7 +227,10 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
 
   const rotation = number(shape.rotation)
   return (
-    <g transform={rotation ? `rotate(${rotation} ${x + width / 2} ${y + height / 2})` : undefined}>
+    <g
+      opacity={shape.element.opacity}
+      transform={rotation ? `rotate(${rotation} ${x + width / 2} ${y + height / 2})` : undefined}
+    >
       {node}
     </g>
   )
@@ -235,7 +325,7 @@ function SelectionFrame({ shape, pixelsPerInch, onStart, onDoubleClick }: FrameP
         y1={y}
         x2={x + width / 2}
         y2={y - rotateOffset}
-        stroke="#8b5cf6"
+        stroke="#3b82f6"
         strokeWidth={strokeWidth}
       />
       <rect
@@ -244,7 +334,7 @@ function SelectionFrame({ shape, pixelsPerInch, onStart, onDoubleClick }: FrameP
         width={width}
         height={height}
         fill="transparent"
-        stroke="#8b5cf6"
+        stroke="#3b82f6"
         strokeWidth={strokeWidth}
         className="cursor-move"
         onPointerDown={(event) => {
@@ -270,7 +360,7 @@ function SelectionFrame({ shape, pixelsPerInch, onStart, onDoubleClick }: FrameP
         cy={y - rotateOffset}
         r={halfHandle}
         fill="white"
-        stroke="#8b5cf6"
+        stroke="#3b82f6"
         strokeWidth={strokeWidth}
         className="cursor-grab active:cursor-grabbing"
         onPointerDown={(event) => onStart(event, 'rotate')}
@@ -283,8 +373,8 @@ function SelectionFrame({ shape, pixelsPerInch, onStart, onDoubleClick }: FrameP
           width={handleSize}
           height={handleSize}
           rx={1.5 / pixelsPerInch}
-          fill="#8b5cf6"
-          stroke="white"
+          fill="white"
+          stroke="#111827"
           strokeWidth={strokeWidth}
           style={{ cursor: `${handle}-resize` }}
           onPointerDown={(event) => onStart(event, 'resize', handle)}
@@ -318,7 +408,7 @@ function LineSelectionFrame({ shape, pixelsPerInch, onStart }: LineSelectionFram
       <path
         d={pathData({ shape })}
         fill="none"
-        stroke="#8b5cf6"
+        stroke="#3b82f6"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         className="cursor-move"
@@ -330,7 +420,7 @@ function LineSelectionFrame({ shape, pixelsPerInch, onStart }: LineSelectionFram
         width={handleSize}
         height={handleSize}
         fill="white"
-        stroke="#8b5cf6"
+        stroke="#111827"
         strokeWidth={strokeWidth}
         className="cursor-crosshair"
         onPointerDown={(event) => onStart({ event, mode: 'line-start' })}
@@ -341,7 +431,7 @@ function LineSelectionFrame({ shape, pixelsPerInch, onStart }: LineSelectionFram
         width={handleSize}
         height={handleSize}
         fill="white"
-        stroke="#8b5cf6"
+        stroke="#111827"
         strokeWidth={strokeWidth}
         className="cursor-crosshair"
         onPointerDown={(event) => onStart({ event, mode: 'line-end' })}
@@ -351,18 +441,13 @@ function LineSelectionFrame({ shape, pixelsPerInch, onStart }: LineSelectionFram
         cy={origin.y + bend.y}
         r={halfHandle}
         fill="#84cc16"
-        stroke="white"
+        stroke="#111827"
         strokeWidth={strokeWidth}
         className="cursor-grab active:cursor-grabbing"
         onPointerDown={(event) => onStart({ event, mode: 'line-bend' })}
       />
     </g>
   )
-}
-
-type MultiSelectionFrameProps = {
-  shapes: CanvasShape[]
-  pixelsPerInch: number
 }
 
 const visualBounds = ({ shape }: { shape: CanvasShape }) => {
@@ -408,16 +493,13 @@ const selectionCenter = ({ shape }: { shape: CanvasShape }) => {
 }
 
 function SelectionOutline({ shape, pixelsPerInch }: { shape: CanvasShape; pixelsPerInch: number }) {
-  const strokeWidth = 1.5 / pixelsPerInch
+  const strokeWidth = 1.25 / pixelsPerInch
   if (shape.type === 'line') {
     return (
-      <path
-        d={pathData({ shape })}
-        fill="none"
-        stroke="#8b5cf6"
-        strokeWidth={strokeWidth}
-        pointerEvents="none"
-      />
+      <g pointerEvents="none">
+        <path d={pathData({ shape })} fill="none" stroke="white" strokeWidth={5 / pixelsPerInch} />
+        <path d={pathData({ shape })} fill="none" stroke="#3b82f6" strokeWidth={strokeWidth} />
+      </g>
     )
   }
 
@@ -436,7 +518,7 @@ function SelectionOutline({ shape, pixelsPerInch }: { shape: CanvasShape; pixels
         rx={width / 2}
         ry={height / 2}
         fill="none"
-        stroke="#8b5cf6"
+        stroke="#3b82f6"
         strokeWidth={strokeWidth}
         transform={transform}
         pointerEvents="none"
@@ -450,31 +532,9 @@ function SelectionOutline({ shape, pixelsPerInch }: { shape: CanvasShape; pixels
       width={width}
       height={height}
       fill="none"
-      stroke="#8b5cf6"
+      stroke="#3b82f6"
       strokeWidth={strokeWidth}
       transform={transform}
-      pointerEvents="none"
-    />
-  )
-}
-
-function MultiSelectionFrame({ shapes, pixelsPerInch }: MultiSelectionFrameProps) {
-  const bounds = shapes.map((shape) => visualBounds({ shape }))
-  const left = Math.min(...bounds.map((item) => item.left))
-  const top = Math.min(...bounds.map((item) => item.top))
-  const right = Math.max(...bounds.map((item) => item.right))
-  const bottom = Math.max(...bounds.map((item) => item.bottom))
-
-  return (
-    <rect
-      x={left}
-      y={top}
-      width={right - left}
-      height={bottom - top}
-      fill="transparent"
-      stroke="#8b5cf6"
-      strokeWidth={1.5 / pixelsPerInch}
-      strokeDasharray={`${5 / pixelsPerInch} ${3 / pixelsPerInch}`}
       pointerEvents="none"
     />
   )
@@ -491,7 +551,7 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     selectedShapeIds = selectedShapeId ? [selectedShapeId] : [],
     onSelectShape,
     onSelectShapes,
-    onShapeChange,
+    onShapeChange: onElementChange,
     onInteractionStart,
     onInteractionEnd,
     editingShapeId,
@@ -502,7 +562,9 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
 ) {
   const width = number(page.width, 8.5)
   const height = number(page.height, 11)
-  const shapes = page.shapes ?? []
+  const shapes = (page.elements ?? [])
+    .filter((element) => !element.hidden)
+    .map((element) => canvasShape({ element }))
   const gridId = useId().replace(/:/g, '')
   const svgRef = useRef<SVGSVGElement>(null)
   const interactionRef = useRef<Interaction | null>(null)
@@ -514,6 +576,22 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     selectedShapeIds.length === 1
       ? keyedShapes.find(({ key }) => key === selectedShapeId)?.shape
       : undefined
+  const onShapeChange = onElementChange
+    ? (shapeId: string, changes: LegacyShapePatch) => {
+        const patch: ElementPatch = {
+          ...(changes.x === undefined ? {} : { x: changes.x }),
+          ...(changes.y === undefined ? {} : { y: changes.y }),
+          ...(changes.rotation === undefined ? {} : { rotation: changes.rotation }),
+          ...(changes.width === undefined && changes.height === undefined
+            ? {}
+            : { size: { width: changes.width, height: changes.height } }),
+          ...(changes.pathGeometry === undefined
+            ? {}
+            : { commands: changes.pathGeometry.commands }),
+        }
+        onElementChange(shapeId, patch)
+      }
+    : undefined
   const snapCoordinate = ({ value }: { value: number }) =>
     snapToGrid ? Math.round(value / 0.25) * 0.25 : value
 
@@ -630,6 +708,7 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
     ) {
       const initialLine = editableLine({
         shape: {
+          ...(selectedShape ?? keyedShapes.find(({ key }) => key === interaction.shapeId)?.shape)!,
           type: 'line',
           x: initial.x,
           y: initial.y,
@@ -840,9 +919,13 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
         .map(({ shape, key }) => (
           <g
             key={key}
-            className={onShapeChange && editingShapeId !== key ? 'cursor-move' : undefined}
+            className={
+              onShapeChange && !shape.element.locked && editingShapeId !== key
+                ? 'cursor-move'
+                : undefined
+            }
             onPointerDown={
-              onShapeChange && editingShapeId !== key
+              onShapeChange && !shape.element.locked && editingShapeId !== key
                 ? (event) => {
                     if (shape.type === 'text' && onStartTextEditing && event.detail === 2) {
                       event.preventDefault()
@@ -892,13 +975,14 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
             )}
           </g>
         ))}
-      {(marquee || selectedShapes.length > 1) &&
+      {marquee &&
         selectedShapes.map(({ shape, key }) => (
           <SelectionOutline key={`outline-${key}`} shape={shape} pixelsPerInch={pixelsPerInch} />
         ))}
       {selectedShape &&
         selectedShapeId &&
         onShapeChange &&
+        !selectedShape.element.locked &&
         editingShapeId !== selectedShapeId &&
         !marquee &&
         (selectedShape.type === 'line' ? (
@@ -923,21 +1007,45 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
             }
           />
         ))}
-      {selectedShapes.length > 1 && selectedShapeId && onShapeChange && !marquee && (
-        <MultiSelectionFrame
-          shapes={selectedShapes.map(({ shape }) => shape)}
-          pixelsPerInch={pixelsPerInch}
-        />
-      )}
+      {selectedShapes.length > 1 &&
+        onShapeChange &&
+        !marquee &&
+        selectedShapes
+          .filter(({ shape }) => !shape.element.locked)
+          .map(({ shape, key }) =>
+            shape.type === 'line' ? (
+              <LineSelectionFrame
+                key={`frame-${key}`}
+                shape={shape}
+                pixelsPerInch={pixelsPerInch}
+                onStart={({ event, mode }) => startInteraction(event, shape, key, mode)}
+              />
+            ) : (
+              <SelectionFrame
+                key={`frame-${key}`}
+                shape={shape}
+                pixelsPerInch={pixelsPerInch}
+                onStart={(event, mode, handle) => startInteraction(event, shape, key, mode, handle)}
+                onDoubleClick={
+                  shape.type === 'text' && onStartTextEditing
+                    ? () => {
+                        onSelectShape?.({ shapeId: key })
+                        onStartTextEditing(key)
+                      }
+                    : undefined
+                }
+              />
+            ),
+          )}
       {marquee && (
         <rect
           x={Math.min(marquee.start.x, marquee.current.x)}
           y={Math.min(marquee.start.y, marquee.current.y)}
           width={Math.abs(marquee.current.x - marquee.start.x)}
           height={Math.abs(marquee.current.y - marquee.start.y)}
-          fill="#8b5cf6"
-          fillOpacity="0.08"
-          stroke="#8b5cf6"
+          fill="#6b7280"
+          fillOpacity="0.4"
+          stroke="#4b5563"
           strokeWidth={1.5 / pixelsPerInch}
           pointerEvents="none"
         />

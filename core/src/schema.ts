@@ -1,20 +1,20 @@
 import {
   bigint,
   bigserial,
+  boolean,
   doublePrecision,
   index,
   integer,
   jsonb,
   pgTable,
-  text,
   timestamp,
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core'
-import type { Static } from '@sinclair/typebox'
-import { PathGeometry } from './schemas.js'
+import type { ElementInputType } from './schemas.js'
 
-type PathGeometryType = Static<typeof PathGeometry>
+type ElementKind = ElementInputType['kind']
+type ElementData = ElementInputType['data']
 
 export const users = pgTable(
   'users',
@@ -55,36 +55,25 @@ export const pages = pgTable(
   (table) => [index('pages_document_id_idx').on(table.documentId)],
 )
 
-export const shapes = pgTable(
-  'shapes',
+export const elements = pgTable(
+  'elements',
   {
     id: bigserial('id', { mode: 'bigint' }).primaryKey(),
     pageId: bigint('page_id', { mode: 'bigint' })
       .notNull()
       .references(() => pages.id, { onDelete: 'cascade' }),
-    type: varchar('type', { length: 255 }),
-    width: doublePrecision('width'),
-    height: doublePrecision('height'),
-    x: doublePrecision('x'),
-    y: doublePrecision('y'),
-    pathGeometry: jsonb('path_geometry').$type<PathGeometryType>(),
-    z: integer('z'),
-    legacyRadius: doublePrecision('r'),
-    radiusTopLeft: doublePrecision('radius_top_left').notNull().default(0),
-    radiusTopRight: doublePrecision('radius_top_right').notNull().default(0),
-    radiusBottomRight: doublePrecision('radius_bottom_right').notNull().default(0),
-    radiusBottomLeft: doublePrecision('radius_bottom_left').notNull().default(0),
+    kind: varchar('kind', { length: 32 }).$type<ElementKind>().notNull(),
+    x: doublePrecision('x').notNull().default(0),
+    y: doublePrecision('y').notNull().default(0),
     rotation: doublePrecision('rotation').notNull().default(0),
-    fill: varchar('fill', { length: 255 }),
-    fillOpacity: doublePrecision('fill_opacity'),
-    stroke: varchar('stroke', { length: 255 }),
-    strokeWidth: doublePrecision('stroke_width'),
-    strokeOpacity: doublePrecision('stroke_opacity'),
-    text: text('text'),
-    richTextContent: jsonb('rich_text_content').$type<Record<string, unknown>>(),
-    contentVersion: integer('content_version').notNull().default(1),
+    z: integer('z').notNull().default(0),
+    opacity: doublePrecision('opacity').notNull().default(1),
+    locked: boolean('locked').notNull().default(false),
+    hidden: boolean('hidden').notNull().default(false),
+    schemaVersion: integer('schema_version').notNull().default(1),
+    data: jsonb('data').$type<ElementData>().notNull(),
   },
-  (table) => [index('shapes_page_id_idx').on(table.pageId)],
+  (table) => [index('elements_page_id_idx').on(table.pageId)],
 )
 
 export const appSessions = pgTable(
@@ -102,4 +91,4 @@ export const appSessions = pgTable(
   (table) => [index('app_sessions_expires_at_idx').on(table.expiresAt)],
 )
 
-export const schema = { users, documents, pages, shapes, appSessions }
+export const schema = { users, documents, pages, elements, appSessions }

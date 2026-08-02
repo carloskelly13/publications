@@ -15,13 +15,14 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '../lib/cn'
-import type { ShapeResponse } from '../types'
+import { elementLabel } from '../elements'
+import type { ElementResponse } from '../types'
 
 type LayerDirection = 'front' | 'up' | 'down' | 'back'
 type DropPosition = 'before' | 'after'
 
 type Props = {
-  shapes: ShapeResponse[]
+  shapes: ElementResponse[]
   selectedShapeId: string | null
   selectedShapeIds: string[]
   onSelect: ({ shapeId, additive }: { shapeId: string; additive?: boolean }) => void
@@ -40,27 +41,16 @@ type Props = {
   onSelectionChange: ({ shapeIds }: { shapeIds: string[] }) => void
 }
 
-const layerName = ({ shape }: { shape: ShapeResponse }) => {
-  if (shape.type === 'ellipse') {
-    return 'Ellipse'
-  }
-  if (shape.type === 'text') {
-    return 'Text'
-  }
-  if (shape.type === 'line') {
-    return 'Line'
-  }
-  return 'Rectangle'
-}
+const layerName = ({ shape }: { shape: ElementResponse }) => elementLabel({ element: shape })
 
-const LayerIcon = ({ shape }: { shape: ShapeResponse }) => {
-  if (shape.type === 'ellipse') {
+const LayerIcon = ({ shape }: { shape: ElementResponse }) => {
+  if (shape.kind === 'shape' && shape.data.geometry.type === 'ellipse') {
     return <Circle className="size-4" aria-hidden="true" />
   }
-  if (shape.type === 'text') {
+  if (shape.kind === 'text') {
     return <Type className="size-4" aria-hidden="true" />
   }
-  if (shape.type === 'line') {
+  if (shape.kind === 'path') {
     return <Spline className="size-4" aria-hidden="true" />
   }
   return <Square className="size-4" aria-hidden="true" />

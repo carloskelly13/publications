@@ -4,9 +4,11 @@ import { TextStyleKit } from '@tiptap/extension-text-style'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Fragment, useEffect, useMemo, type CSSProperties, type ReactNode } from 'react'
-import type { ShapeInput, ShapeResponse } from '../types'
+import type { ElementPatch } from '../elements'
+import { fontFamilyStack } from '../fonts'
+import type { CanvasElement } from '../types'
 
-type CanvasShape = ShapeInput | ShapeResponse
+type CanvasTextElement = Extract<CanvasElement, { kind: 'text' }>
 
 const richTextExtensions = [
   StarterKit.configure({
@@ -25,32 +27,19 @@ const richTextExtensions = [
   TextAlign.configure({ types: ['paragraph'] }),
 ]
 
-function legacyText(text?: string) {
-  if (!text) {
-    return ''
-  }
-  return new DOMParser().parseFromString(text, 'text/html').body.textContent ?? ''
-}
-
-function richTextDocument(content: unknown, text?: string): JSONContent {
+function richTextDocument(content: unknown): JSONContent {
   if (content && typeof content === 'object' && (content as { type?: unknown }).type === 'doc') {
     return content as JSONContent
   }
-  const value = legacyText(text)
   return {
     type: 'doc',
-    content: [
-      {
-        type: 'paragraph',
-        content: value ? [{ type: 'text', text: value }] : undefined,
-      },
-    ],
+    content: [{ type: 'paragraph' }],
   }
 }
 
 type Props = {
-  shape: CanvasShape
-  onChange?: (changes: Partial<ShapeInput>) => void
+  element: CanvasTextElement
+  onChange?: (changes: ElementPatch) => void
   onEditorChange?: (editor: Editor | null) => void
   onFinishEditing?: () => void
   scale?: number
@@ -61,6 +50,7 @@ function safeTextStyle(attributes: Record<string, unknown> | undefined): CSSProp
   const color = attributes?.color
   const fontSize = attributes?.fontSize
   const lineHeight = attributes?.lineHeight
+  const fontFamily = attributes?.fontFamily
   if (typeof color === 'string' && /^#[\da-f]{3,8}$/i.test(color)) {
     style.color = color
   }
@@ -69,6 +59,9 @@ function safeTextStyle(attributes: Record<string, unknown> | undefined): CSSProp
   }
   if (typeof lineHeight === 'string' && /^\d+(?:\.\d+)?$/.test(lineHeight)) {
     style.lineHeight = lineHeight
+  }
+  if (typeof fontFamily === 'string') {
+    style.fontFamily = fontFamilyStack({ family: fontFamily })
   }
   return style
 }
@@ -127,20 +120,20 @@ function renderRichTextNode(node: JSONContent, key: string): ReactNode {
   return <Fragment key={key}>{children}</Fragment>
 }
 
-function StaticRichText({ shape }: { shape: CanvasShape }) {
-  const document = richTextDocument(shape.richTextContent, shape.text)
+function StaticRichText({ element }: { element: CanvasTextElement }) {
+  const document = richTextDocument(element.data.content)
   return <div className="rich-text-content h-full">{renderRichTextNode(document, 'document')}</div>
 }
 
 export function RichTextEditor({
-  shape,
+  element,
   onChange,
   onEditorChange,
   onFinishEditing,
   scale = 1,
 }: Props) {
   const initialContent = useMemo(
-    () => richTextDocument(shape.richTextContent, shape.text),
+    () => richTextDocument(element.data.content),
     // A shape editor is remounted for a new frame; updates flow from Tiptap to the document.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -149,7 +142,7 @@ export function RichTextEditor({
     extensions: richTextExtensions,
     content: initialContent,
     onUpdate: ({ editor: currentEditor }) => {
-      onChange?.({ richTextContent: currentEditor.getJSON(), contentVersion: 1 })
+      onChange?.({ content: currentEditor.getJSON() })
     },
   })
 
@@ -173,8 +166,8 @@ export function RichTextEditor({
     <div
       className="origin-top-left"
       style={{
-        width: `${(shape.width ?? 0) * 96}px`,
-        height: `${(shape.height ?? 0) * 96}px`,
+        width: `${element.data.size.width * 96}px`,
+        height: `${element.data.size.height * 96}px`,
         transform: `scale(${scale})`,
       }}
       onKeyDownCapture={(event) => {
@@ -191,16 +184,15 @@ export function RichTextEditor({
   )
 }
 
-export function RichTextShape({ shape }: { shape: CanvasShape }) {
-  const width = shape.width ?? 0
-  const height = shape.height ?? 0
+export function RichTextShape({ element }: { element: CanvasTextElement }) {
+  const { width, height } = element.data.size
   const scale = 1 / 96
 
   return (
-    <g transform={`matrix(${scale} 0 0 ${scale} ${shape.x ?? 0} ${shape.y ?? 0})`}>
+    <g transform={`matrix(${scale} 0 0 ${scale} ${element.x} ${element.y})`}>
       <foreignObject width={width * 96} height={height * 96} overflow="hidden" pointerEvents="none">
         <div style={{ width: `${width * 96}px`, height: `${height * 96}px` }}>
-          <StaticRichText shape={shape} />
+          <StaticRichText element={element} />
         </div>
       </foreignObject>
     </g>

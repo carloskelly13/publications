@@ -1,4 +1,5 @@
-import type { CanvasPage, ShapeInput } from '../types'
+import type { CanvasPage } from '../types'
+import type { ElementPatch } from '../elements'
 import type { Editor } from '@tiptap/core'
 import { DocumentCanvas } from './DocumentCanvas'
 import { EditorRulers, RULER_SIZE } from './EditorRulers'
@@ -20,7 +21,7 @@ type Props = {
     preserveGroup?: boolean
   }) => void
   onSelectShapes: ({ shapeIds }: { shapeIds: string[] }) => void
-  onShapeChange: (shapeId: string, changes: Partial<ShapeInput>) => void
+  onShapeChange: (shapeId: string, changes: ElementPatch) => void
   onInteractionStart: () => void
   onInteractionEnd: () => void
   editingShapeId: string | null
@@ -52,7 +53,7 @@ export function EditorWorkspace({
   const pixelsPerInch = BASE_PIXELS_PER_INCH * zoom
   const canvasWidth = (page.width ?? 8.5) * pixelsPerInch
   const canvasHeight = (page.height ?? 11) * pixelsPerInch
-  const editingShape = (page.shapes ?? []).find(
+  const editingShape = (page.elements ?? []).find(
     (shape) => 'id' in shape && shape.id === editingShapeId,
   )
 
@@ -91,19 +92,19 @@ export function EditorWorkspace({
             snapToGrid={snapToGrid}
             className="block bg-white"
           />
-          {editingShape?.type === 'text' && editingShapeId && (
+          {editingShape?.kind === 'text' && editingShapeId && (
             <div
               className="absolute overflow-hidden outline outline-2 outline-violet-500"
               style={{
-                left: (editingShape.x ?? 0) * pixelsPerInch,
-                top: (editingShape.y ?? 0) * pixelsPerInch,
-                width: (editingShape.width ?? 0) * pixelsPerInch,
-                height: (editingShape.height ?? 0) * pixelsPerInch,
-                transform: `rotate(${editingShape.rotation ?? 0}deg)`,
+                left: editingShape.x * pixelsPerInch,
+                top: editingShape.y * pixelsPerInch,
+                width: editingShape.data.size.width * pixelsPerInch,
+                height: editingShape.data.size.height * pixelsPerInch,
+                transform: `rotate(${editingShape.rotation}deg)`,
               }}
             >
               <RichTextEditor
-                shape={editingShape}
+                element={editingShape}
                 scale={zoom}
                 onChange={(changes) => onShapeChange(editingShapeId, changes)}
                 onEditorChange={onTextEditorChange}

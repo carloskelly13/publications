@@ -3,7 +3,9 @@ import { createPortal } from 'react-dom'
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { ApiError, api, fetchClient } from '../api'
-import type { DocumentDraft, PublicationDocument, ShapeInput, ShapeResponse } from '../types'
+import { applyElementPatch, elementBounds, elementInput } from '../elements'
+import type { ElementPatch } from '../elements'
+import type { DocumentDraft, ElementResponse, PublicationDocument } from '../types'
 import { DocumentCanvas } from './DocumentCanvas'
 import { EditorToolbar, type ExportStatus, type SaveStatus } from './EditorToolbar'
 import { EditorSidebar } from './EditorSidebar'
@@ -28,36 +30,13 @@ type HistoryState = {
 
 const historyLimit = 100
 
-const shapeInput = (shape: ShapeResponse): ShapeInput => ({
-  type: shape.type,
-  width: shape.width,
-  height: shape.height,
-  x: shape.x,
-  y: shape.y,
-  pathGeometry: shape.pathGeometry,
-  z: shape.z,
-  radiusTopLeft: shape.radiusTopLeft,
-  radiusTopRight: shape.radiusTopRight,
-  radiusBottomRight: shape.radiusBottomRight,
-  radiusBottomLeft: shape.radiusBottomLeft,
-  rotation: shape.rotation,
-  fill: shape.fill,
-  fillOpacity: shape.fillOpacity,
-  stroke: shape.stroke,
-  strokeWidth: shape.strokeWidth,
-  strokeOpacity: shape.strokeOpacity,
-  text: shape.text,
-  richTextContent: shape.richTextContent,
-  contentVersion: shape.contentVersion,
-})
-
 const documentDraft = (document: PublicationDocument): DocumentDraft => ({
   name: document.name ?? 'Untitled',
   pages: (document.pages ?? []).map((page, index) => ({
     pageNumber: page.pageNumber ?? index + 1,
     width: page.width ?? 8.5,
     height: page.height ?? 11,
-    shapes: (page.shapes ?? []).map(shapeInput),
+    elements: (page.elements ?? []).map((element) => elementInput({ element })),
   })),
 })
 
@@ -77,7 +56,7 @@ export function EditorPage() {
   const [layersWidth, setLayersWidth] = useState(272)
   const [layersPanelHeight, setLayersPanelHeight] = useState(308)
   const [snapToGrid, setSnapToGrid] = useState(true)
-  const [clipboardShapes, setClipboardShapes] = useState<ShapeResponse[]>([])
+  const [clipboardShapes, setClipboardShapes] = useState<ElementResponse[]>([])
   const [history, setHistory] = useState<HistoryState>({ past: [], future: [] })
   const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null)
   const exportCanvasRef = useRef<SVGSVGElement>(null)
@@ -92,7 +71,6 @@ export function EditorPage() {
     { enabled: Boolean(documentId) },
   )
   const saveMutation = api.useMutation('put', '/api/documents/{id}')
-  const renameMutation = api.useMutation('patch', '/api/documents/{id}')
 
   useEffect(() => {
     setToolbarTarget(document.getElementById('editor-toolbar-slot'))
@@ -192,7 +170,7 @@ export function EditorPage() {
     return () => document.removeEventListener('keydown', handleKeyboard)
   }, [])
 
-  const updateShape = ({ shapeId, changes }: { shapeId: string; changes: Partial<ShapeInput> }) => {
+  const updateShape = ({ shapeId, changes }: { shapeId: string; changes: ElementPatch }) => {
     recordDocumentChange()
     setState((current) => {
       if (current.status !== 'loaded') {
@@ -204,8 +182,8 @@ export function EditorPage() {
           ...current.document,
           pages: (current.document.pages ?? []).map((page) => ({
             ...page,
-            shapes: (page.shapes ?? []).map((shape) =>
-              shape.id === shapeId ? { ...shape, ...changes } : shape,
+            elements: (page.elements ?? []).map((shape) =>
+              shape.id === shapeId ? applyElementPatch({ element: shape, patch: changes }) : shape,
             ),
           })),
         },
@@ -224,7 +202,7 @@ export function EditorPage() {
     position: 'before' | 'after'
   }) => {
     const currentLayers = [
-      ...(state.status === 'loaded' ? (state.document.pages?.[0]?.shapes ?? []) : []),
+      ...(state.status === 'loaded' ? (state.document.pages?.[0]?.elements ?? []) : []),
     ]
     const sourceIndex = currentLayers.findIndex(({ id }) => id === draggedShapeId)
     const targetIndex = currentLayers.findIndex(({ id }) => id === targetShapeId)
@@ -241,7 +219,7 @@ export function EditorPage() {
       if (!firstPage) {
         return current
       }
-      const layers = [...(firstPage.shapes ?? [])].sort(
+      const layers = [...(firstPage.elements ?? [])].sort(
         (left, right) => (right.z ?? 0) - (left.z ?? 0),
       )
       const sourceIndex = layers.findIndex(({ id }) => id === draggedShapeId)
@@ -256,7 +234,10 @@ export function EditorPage() {
       const shapes = layers.reverse().map((shape, index) => ({ ...shape, z: index + 1 }))
       return {
         status: 'loaded',
-        document: { ...current.document, pages: [{ ...firstPage, shapes }, ...pages.slice(1)] },
+        document: {
+          ...current.document,
+          pages: [{ ...firstPage, elements: shapes }, ...pages.slice(1)],
+        },
       }
     })
     setSaveStatus('idle')
@@ -272,7 +253,7 @@ export function EditorPage() {
     if (state.status !== 'loaded') {
       return
     }
-    const layers = [...(state.document.pages?.[0]?.shapes ?? [])].sort(
+    const layers = [...(state.document.pages?.[0]?.elements ?? [])].sort(
       (left, right) => (right.z ?? 0) - (left.z ?? 0),
     )
     const sourceIndex = layers.findIndex(({ id }) => id === shapeId)
@@ -297,7 +278,7 @@ export function EditorPage() {
   const duplicateLayer = ({ shapeId }: { shapeId: string }) => {
     const original =
       state.status === 'loaded'
-        ? state.document.pages?.[0]?.shapes?.find(({ id }) => id === shapeId)
+        ? state.document.pages?.[0]?.elements?.find(({ id }) => id === shapeId)
         : undefined
     if (!original) {
       return
@@ -313,12 +294,12 @@ export function EditorPage() {
       if (!firstPage) {
         return current
       }
-      const shapes = firstPage.shapes ?? []
+      const shapes = firstPage.elements ?? []
       const original = shapes.find(({ id }) => id === shapeId)
       if (!original) {
         return current
       }
-      const duplicate: ShapeResponse = {
+      const duplicate: ElementResponse = {
         ...structuredClone(original),
         id: duplicateId,
         x: (original.x ?? 0) + 0.25,
@@ -329,7 +310,7 @@ export function EditorPage() {
         status: 'loaded',
         document: {
           ...current.document,
-          pages: [{ ...firstPage, shapes: [...shapes, duplicate] }, ...pages.slice(1)],
+          pages: [{ ...firstPage, elements: [...shapes, duplicate] }, ...pages.slice(1)],
         },
       }
     })
@@ -343,7 +324,7 @@ export function EditorPage() {
     const deleting = new Set(shapeIds)
     const hasMatchingShape =
       state.status === 'loaded' &&
-      state.document.pages?.[0]?.shapes?.some(({ id }) => deleting.has(id))
+      state.document.pages?.[0]?.elements?.some(({ id }) => deleting.has(id))
     if (!hasMatchingShape) {
       return
     }
@@ -364,7 +345,7 @@ export function EditorPage() {
           pages: [
             {
               ...firstPage,
-              shapes: (firstPage.shapes ?? []).filter(({ id }) => !deleting.has(id)),
+              elements: (firstPage.elements ?? []).filter(({ id }) => !deleting.has(id)),
             },
             ...pages.slice(1),
           ],
@@ -402,43 +383,68 @@ export function EditorPage() {
             : type === 'line'
               ? { width: 4, height: 0 }
               : { width: 2, height: 1.5 }
-      const shapes = firstPage.shapes ?? []
-      const shape: ShapeResponse = {
+      const shapes = firstPage.elements ?? []
+      const common = {
         id,
-        type: type === 'circle' ? 'ellipse' : type,
         x: Math.max(0, ((firstPage.width ?? 8.5) - size.width) / 2),
         y: Math.max(0, ((firstPage.height ?? 11) - size.height) / 2),
-        ...size,
-        pathGeometry:
-          type === 'line'
-            ? {
-                version: 1,
+        z: Math.max(0, ...shapes.map((item) => item.z ?? 0)) + 1,
+        rotation: 0,
+        opacity: 1,
+        locked: false,
+        hidden: false,
+      }
+      const shape: ElementResponse =
+        type === 'line'
+          ? {
+              ...common,
+              kind: 'path',
+              data: {
                 commands: [
                   { type: 'move', x: 0, y: 0 },
                   { type: 'line', x: size.width, y: size.height },
                 ],
+                fill: null,
+                border: { color: '#7c3aed', opacity: 1, width: 2 },
+              },
+            }
+          : type === 'text'
+            ? {
+                ...common,
+                kind: 'text',
+                data: {
+                  size,
+                  content: { type: 'doc', content: [{ type: 'paragraph' }] },
+                  padding: { top: 0, right: 0, bottom: 0, left: 0 },
+                  verticalAlignment: 'top',
+                },
               }
-            : undefined,
-        z: Math.max(0, ...shapes.map((item) => item.z ?? 0)) + 1,
-        radiusTopLeft: 0,
-        radiusTopRight: 0,
-        radiusBottomRight: 0,
-        radiusBottomLeft: 0,
-        rotation: 0,
-        fill: type === 'text' || type === 'line' ? 'none' : '#a78bfa',
-        fillOpacity: 1,
-        stroke: type === 'text' ? 'none' : '#7c3aed',
-        strokeWidth: type === 'text' ? 0 : type === 'line' ? 2 : 1,
-        strokeOpacity: 1,
-        richTextContent:
-          type === 'text' ? { type: 'doc', content: [{ type: 'paragraph' }] } : undefined,
-        contentVersion: 1,
-      }
+            : {
+                ...common,
+                kind: 'shape',
+                data: {
+                  size,
+                  geometry:
+                    type === 'circle'
+                      ? { type: 'ellipse' }
+                      : {
+                          type: 'rectangle',
+                          radius: {
+                            topLeft: 0,
+                            topRight: 0,
+                            bottomRight: 0,
+                            bottomLeft: 0,
+                          },
+                        },
+                  fill: { color: '#a78bfa', opacity: 1 },
+                  border: { color: '#7c3aed', opacity: 1, width: 1 },
+                },
+              }
       return {
         status: 'loaded',
         document: {
           ...current.document,
-          pages: [{ ...firstPage, shapes: [...shapes, shape] }, ...pages.slice(1)],
+          pages: [{ ...firstPage, elements: [...shapes, shape] }, ...pages.slice(1)],
         },
       }
     })
@@ -538,7 +544,7 @@ export function EditorPage() {
   }
 
   const selectedShapeId = selectedShapeIds.at(-1) ?? null
-  const selectedShapes = (page.shapes ?? []).filter(({ id }) => selectedShapeIds.includes(id))
+  const selectedShapes = (page.elements ?? []).filter(({ id }) => selectedShapeIds.includes(id))
 
   return (
     <>
@@ -546,7 +552,6 @@ export function EditorPage() {
         createPortal(
           <EditorToolbar
             documentTitle={state.document.name ?? 'Untitled'}
-            onRenameDocument={renameDocument}
             zoom={zoom}
             onZoomChange={setZoom}
             onSave={() => void save()}
@@ -561,7 +566,7 @@ export function EditorPage() {
             canEditSelection={selectedShapeIds.length > 0}
             canPaste={clipboardShapes.length > 0}
             allSelected={
-              (page.shapes?.length ?? 0) > 0 && selectedShapeIds.length === page.shapes?.length
+              (page.elements?.length ?? 0) > 0 && selectedShapeIds.length === page.elements?.length
             }
             onCut={cutSelection}
             onCopy={copySelection}
@@ -609,7 +614,7 @@ export function EditorPage() {
             onSplitResize={({ height }) => setLayersPanelHeight(height)}
             layers={
               <LayersPanel
-                shapes={page.shapes ?? []}
+                shapes={page.elements ?? []}
                 selectedShapeId={selectedShapeId}
                 selectedShapeIds={selectedShapeIds}
                 onSelect={selectShapes}
@@ -627,9 +632,13 @@ export function EditorPage() {
             }
             properties={
               <PropertiesPanel
+                documentName={state.document.name ?? 'Untitled'}
+                page={page}
                 shapes={selectedShapes}
                 textEditor={textEditor}
                 onChange={updateMetrics}
+                onDocumentNameChange={updateDocumentName}
+                onPageChange={updatePageMetrics}
                 onEditStart={beginHistoryTransaction}
                 onEditEnd={commitHistoryTransaction}
                 onEditCancel={cancelHistoryTransaction}
@@ -756,30 +765,26 @@ export function EditorPage() {
     setTextEditor(null)
   }
 
-  async function renameDocument({ name }: { name: string }) {
-    if (!documentId) {
-      throw new Error('This document has no identifier')
-    }
-    await renameMutation.mutateAsync({
-      params: { path: { id: documentId } },
-      body: { name },
-    })
+  function updateDocumentName({ name }: { name: string }) {
+    recordDocumentChange()
     setState((current) =>
       current.status === 'loaded'
         ? { status: 'loaded', document: { ...current.document, name } }
         : current,
     )
+    setSaveStatus('idle')
   }
 
-  function updateMetrics({ changes }: { changes: Partial<ShapeInput> }) {
+  function updateMetrics({ changes }: { changes: ElementPatch }) {
     if (selectedShapes.length === 0) {
       return
     }
     if (selectedShapes.length === 1) {
       const shape = selectedShapes[0]
       const nextChanges = { ...changes }
-      if (shape.type === 'line' && shape.pathGeometry && changes.rotation !== undefined) {
-        const currentAngle = Math.atan2(shape.height ?? 0, shape.width ?? 0)
+      if (shape.kind === 'path' && changes.rotation !== undefined) {
+        const endpoint = shape.data.commands.at(-1)
+        const currentAngle = Math.atan2(endpoint?.y ?? 0, endpoint?.x ?? 0)
         const nextAngle = (changes.rotation * Math.PI) / 180
         const delta = nextAngle - currentAngle
         const cos = Math.cos(delta)
@@ -788,51 +793,23 @@ export function EditorPage() {
           x: Number((x * cos - y * sin).toFixed(4)),
           y: Number((x * sin + y * cos).toFixed(4)),
         })
-        nextChanges.pathGeometry = {
-          ...shape.pathGeometry,
-          commands: shape.pathGeometry.commands.map((command) => {
-            const point = rotatePoint({ x: command.x, y: command.y })
-            if (command.type !== 'quadratic') {
-              return { ...command, ...point }
-            }
-            const control = rotatePoint({ x: command.controlX, y: command.controlY })
-            return { ...command, ...point, controlX: control.x, controlY: control.y }
-          }),
-        }
-        const endpoint = nextChanges.pathGeometry.commands.at(-1)
-        nextChanges.width = endpoint?.x ?? shape.width
-        nextChanges.height = endpoint?.y ?? shape.height
+        nextChanges.commands = shape.data.commands.map((command) => {
+          const point = rotatePoint({ x: command.x, y: command.y })
+          if (command.type !== 'quadratic') {
+            return { ...command, ...point }
+          }
+          const control = rotatePoint({ x: command.controlX, y: command.controlY })
+          return { ...command, ...point, controlX: control.x, controlY: control.y }
+        })
         nextChanges.rotation = 0
-      }
-      if (
-        shape.type === 'line' &&
-        shape.pathGeometry &&
-        (changes.width !== undefined || changes.height !== undefined)
-      ) {
-        const width = changes.width ?? shape.width ?? 0
-        const height = changes.height ?? shape.height ?? 0
-        nextChanges.pathGeometry = {
-          ...shape.pathGeometry,
-          commands: shape.pathGeometry.commands.map((command, index, commands) =>
-            index === commands.length - 1 && command.type !== 'move'
-              ? { ...command, x: width, y: height }
-              : command,
-          ),
-        }
       }
       updateShape({ shapeId: shape.id, changes: nextChanges })
       return
     }
 
     const selectedIds = new Set(selectedShapeIds)
-    const left = Math.min(
-      ...selectedShapes.map((shape) => Math.min(shape.x ?? 0, (shape.x ?? 0) + (shape.width ?? 0))),
-    )
-    const top = Math.min(
-      ...selectedShapes.map((shape) =>
-        Math.min(shape.y ?? 0, (shape.y ?? 0) + (shape.height ?? 0)),
-      ),
-    )
+    const left = Math.min(...selectedShapes.map((shape) => elementBounds({ element: shape }).left))
+    const top = Math.min(...selectedShapes.map((shape) => elementBounds({ element: shape }).top))
     const dx = changes.x === undefined ? 0 : changes.x - left
     const dy = changes.y === undefined ? 0 : changes.y - top
     recordDocumentChange()
@@ -848,7 +825,7 @@ export function EditorPage() {
             pageIndex === 0
               ? {
                   ...currentPage,
-                  shapes: (currentPage.shapes ?? []).map((shape) =>
+                  elements: (currentPage.elements ?? []).map((shape) =>
                     selectedIds.has(shape.id)
                       ? { ...shape, x: (shape.x ?? 0) + dx, y: (shape.y ?? 0) + dy }
                       : shape,
@@ -856,6 +833,28 @@ export function EditorPage() {
                 }
               : currentPage,
           ),
+        },
+      }
+    })
+    setSaveStatus('idle')
+  }
+
+  function updatePageMetrics({ changes }: { changes: Pick<typeof page, 'width' | 'height'> }) {
+    recordDocumentChange()
+    setState((current) => {
+      if (current.status !== 'loaded') {
+        return current
+      }
+      const pages = current.document.pages ?? []
+      const firstPage = pages[0]
+      if (!firstPage) {
+        return current
+      }
+      return {
+        status: 'loaded',
+        document: {
+          ...current.document,
+          pages: [{ ...firstPage, ...changes }, ...pages.slice(1)],
         },
       }
     })
@@ -891,7 +890,7 @@ export function EditorPage() {
   }
 
   function copySelection() {
-    const copied = (page.shapes ?? [])
+    const copied = (page.elements ?? [])
       .filter(({ id }) => selectedShapeIds.includes(id))
       .map((shape) => structuredClone(shape))
     if (copied.length === 0) {
@@ -918,7 +917,7 @@ export function EditorPage() {
   }
 
   function duplicateSelection() {
-    const sourceShapes = (page.shapes ?? []).filter(({ id }) => selectedShapeIds.includes(id))
+    const sourceShapes = (page.elements ?? []).filter(({ id }) => selectedShapeIds.includes(id))
     if (sourceShapes.length === 0) {
       return
     }
@@ -929,14 +928,14 @@ export function EditorPage() {
     sourceShapes,
     offset,
   }: {
-    sourceShapes: ShapeResponse[]
+    sourceShapes: ElementResponse[]
     offset: number
   }) {
     if (sourceShapes.length === 0) {
       return
     }
     recordDocumentChange()
-    const existingShapes = page.shapes ?? []
+    const existingShapes = page.elements ?? []
     const topZ = Math.max(0, ...existingShapes.map(({ z }) => z ?? 0))
     const copies = sourceShapes.map((source, index) => ({
       ...structuredClone(source),
@@ -959,7 +958,7 @@ export function EditorPage() {
         document: {
           ...current.document,
           pages: [
-            { ...firstPage, shapes: [...(firstPage.shapes ?? []), ...copies] },
+            { ...firstPage, elements: [...(firstPage.elements ?? []), ...copies] },
             ...pages.slice(1),
           ],
         },
@@ -972,7 +971,7 @@ export function EditorPage() {
   }
 
   function selectAllShapes() {
-    setSelectedShapeIds((page.shapes ?? []).map(({ id }) => id))
+    setSelectedShapeIds((page.elements ?? []).map(({ id }) => id))
     setEditingShapeId(null)
     setTextEditor(null)
   }

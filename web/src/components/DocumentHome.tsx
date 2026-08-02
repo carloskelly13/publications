@@ -10,28 +10,28 @@ const letterPage: PageInput = {
   pageNumber: 1,
   width: 8.5,
   height: 11,
-  shapes: [],
+  elements: [],
 }
 
 const landscapeLetterPage: PageInput = {
   pageNumber: 1,
   width: 11,
   height: 8.5,
-  shapes: [],
+  elements: [],
 }
 
 const postcardPage: PageInput = {
   pageNumber: 1,
   width: 6,
   height: 4,
-  shapes: [],
+  elements: [],
 }
 
 const envelopePage: PageInput = {
   pageNumber: 1,
   width: 9.5,
   height: 4.125,
-  shapes: [],
+  elements: [],
 }
 
 const templates: Array<{ id: string; label: string; document: DocumentDraft }> = [

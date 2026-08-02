@@ -1,11 +1,13 @@
 import type { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
+import * as Select from '@radix-ui/react-select'
 import {
   AlignCenter,
   AlignJustify,
   AlignLeft,
   AlignRight,
   Bold,
+  Check,
   ChevronDown,
   Circle,
   ClipboardPaste,
@@ -34,7 +36,8 @@ import {
   Redo2,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { defaultFontFamily, fontFamilies, fontFamilyStack } from '../fonts'
 import { cn } from '../lib/cn'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
@@ -42,7 +45,6 @@ export type ExportStatus = 'idle' | 'exporting' | 'error'
 
 type Props = {
   documentTitle: string
-  onRenameDocument: ({ name }: { name: string }) => Promise<void>
   zoom: number
   onZoomChange: (zoom: number) => void
   onSave: () => void
@@ -68,136 +70,6 @@ type Props = {
   canRedo: boolean
   onUndo: () => void
   onRedo: () => void
-}
-
-type DocumentTitleControlProps = {
-  title: string
-  onRename: ({ name }: { name: string }) => Promise<void>
-}
-
-function DocumentTitleControl({ title, onRename }: DocumentTitleControlProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const titleMeasureRef = useRef<HTMLSpanElement>(null)
-  const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(title)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [collapsedWidth, setCollapsedWidth] = useState<number | null>(null)
-
-  useLayoutEffect(() => {
-    if (titleMeasureRef.current) {
-      setCollapsedWidth(
-        Math.min(176, Math.ceil(titleMeasureRef.current.getBoundingClientRect().width)),
-      )
-    }
-  }, [title])
-
-  useEffect(() => {
-    if (!editing) {
-      setDraft(title)
-    }
-  }, [editing, title])
-
-  useEffect(() => {
-    if (!editing) {
-      return
-    }
-    const dismissOnOutsidePointer = (event: PointerEvent) => {
-      if (!containerRef.current?.contains(event.target as Node) && !saving) {
-        setDraft(title)
-        setError(null)
-        setEditing(false)
-      }
-    }
-    document.addEventListener('pointerdown', dismissOnOutsidePointer, true)
-    return () => document.removeEventListener('pointerdown', dismissOnOutsidePointer, true)
-  }, [editing, saving, title])
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative shrink-0 transition-[width] duration-200 ease-out motion-reduce:transition-none"
-      style={{
-        width: editing ? '11rem' : collapsedWidth === null ? 'fit-content' : collapsedWidth,
-      }}
-    >
-      <span
-        ref={titleMeasureRef}
-        className="pointer-events-none absolute invisible whitespace-nowrap px-2 text-sm font-medium"
-        aria-hidden="true"
-      >
-        {title}
-      </span>
-      {editing ? (
-        <input
-          className={cn(
-            'h-8 w-full rounded-md border bg-white px-2 text-sm font-medium text-gray-900 outline-none focus:ring-2 focus:ring-violet-500 dark:bg-gray-900 dark:text-gray-100',
-            error ? 'border-red-500' : 'border-gray-300 dark:border-gray-700',
-          )}
-          value={draft}
-          aria-label="Document title"
-          aria-invalid={Boolean(error)}
-          title={error ?? 'Press Enter to save'}
-          autoFocus
-          disabled={saving}
-          onChange={(event) => {
-            setDraft(event.target.value)
-            setError(null)
-          }}
-          onBlur={cancelEditing}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault()
-              void submitTitle()
-            }
-            if (event.key === 'Escape') {
-              cancelEditing()
-            }
-          }}
-        />
-      ) : (
-        <button
-          className="h-8 w-full truncate rounded-md px-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 dark:text-gray-200 dark:hover:bg-gray-800"
-          type="button"
-          title={`Rename ${title}`}
-          onClick={() => setEditing(true)}
-        >
-          {title}
-        </button>
-      )}
-    </div>
-  )
-
-  async function submitTitle() {
-    const name = draft.trim()
-    if (name.length < 2) {
-      setError('Use at least 2 characters')
-      return
-    }
-    if (name === title) {
-      setEditing(false)
-      return
-    }
-
-    setSaving(true)
-    try {
-      await onRename({ name })
-      setEditing(false)
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Unable to rename document')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  function cancelEditing() {
-    if (saving) {
-      return
-    }
-    setDraft(title)
-    setError(null)
-    setEditing(false)
-  }
 }
 
 const zoomOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4]
@@ -245,10 +117,12 @@ type ColorControlProps = {
   label: string
   icon: LucideIcon
   color?: string
+  opacity?: number
   disabled: boolean
   panel?: boolean
   panelSide?: 'left' | 'right'
   onChange: (color: string) => void
+  onOpacityChange?: (opacity: number) => void
   onEditStart?: () => void
   onEditEnd?: () => void
   onEditCancel?: () => void
@@ -258,10 +132,12 @@ export function ColorControl({
   label,
   icon: Icon,
   color,
+  opacity = 1,
   disabled,
   panel = false,
   panelSide = 'left',
   onChange,
+  onOpacityChange,
   onEditStart,
   onEditEnd,
   onEditCancel,
@@ -270,6 +146,7 @@ export function ColorControl({
   const [hex, setHex] = useState(normalizedHex(color ?? '') ?? '')
   const containerRef = useRef<HTMLDivElement>(null)
   const validHex = normalizedHex(hex)
+  const opacityPercent = Math.round(Math.min(1, Math.max(0, opacity)) * 100)
 
   useEffect(() => setHex(normalizedHex(color ?? '') ?? ''), [color])
   useEffect(() => {
@@ -331,7 +208,10 @@ export function ColorControl({
             panel ? 'h-4 min-w-0 flex-1 rounded-sm' : 'absolute bottom-0.5 left-1 right-1 h-1',
             color === 'none' && 'bg-white',
           )}
-          style={{ background: color === 'none' ? undefined : color }}
+          style={{
+            background: color === 'none' ? undefined : color,
+            opacity: color === 'none' ? 1 : opacity,
+          }}
           aria-hidden="true"
         >
           {color === 'none' && (
@@ -408,6 +288,24 @@ export function ColorControl({
           </label>
           {hex && !validHex && (
             <p className="mt-1 text-xs text-red-600 dark:text-red-400">Use #RGB or #RRGGBB.</p>
+          )}
+          {onOpacityChange && (
+            <label className="mt-3 block text-xs font-medium text-gray-500 dark:text-gray-400">
+              <span className="flex items-center justify-between gap-2">
+                Opacity
+                <span className="tabular-nums text-gray-400">{opacityPercent}%</span>
+              </span>
+              <input
+                className="mt-2 block w-full accent-violet-600 disabled:opacity-40"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value={opacityPercent}
+                disabled={color === 'none'}
+                onChange={(event) => onOpacityChange(Number(event.target.value) / 100)}
+              />
+            </label>
           )}
         </div>
       )}
@@ -640,6 +538,109 @@ function EditMenu({
 
 const fontSizes = [8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 72]
 
+function FontFamilyControl({
+  value,
+  disabled,
+  onChange,
+}: {
+  value: string
+  disabled: boolean
+  onChange: ({ family }: { family: string }) => void
+}) {
+  const selected = fontFamilies.find(({ value: optionValue }) => optionValue === value)
+
+  return (
+    <Select.Root value={value} disabled={disabled} onValueChange={(family) => onChange({ family })}>
+      <Select.Trigger
+        className="flex h-8 w-full items-center rounded-md bg-gray-100 px-2 text-sm font-medium outline-none disabled:opacity-35 dark:bg-gray-800"
+        style={{ fontFamily: fontFamilyStack({ family: value }) }}
+        aria-label="Font family"
+        title="Font family"
+      >
+        <Select.Value>{selected?.label ?? defaultFontFamily.label}</Select.Value>
+        <Select.Icon className="ml-auto text-gray-500 dark:text-gray-400">
+          <ChevronDown className="size-3.5" aria-hidden="true" />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          className="z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          position="popper"
+          sideOffset={4}
+        >
+          <Select.Viewport>
+            {fontFamilies.map(({ label, value: optionValue }) => (
+              <Select.Item
+                key={optionValue}
+                value={optionValue}
+                className="relative flex h-9 cursor-default select-none items-center rounded-md px-2 pr-8 text-sm text-gray-700 outline-none data-[highlighted]:bg-violet-100 data-[highlighted]:text-violet-700 dark:text-gray-200 dark:data-[highlighted]:bg-violet-950 dark:data-[highlighted]:text-violet-300"
+                style={{ fontFamily: fontFamilyStack({ family: optionValue }) }}
+              >
+                <Select.ItemText>{label}</Select.ItemText>
+                <Select.ItemIndicator className="absolute right-2">
+                  <Check className="size-4" aria-hidden="true" />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  )
+}
+
+function FontSizeControl({
+  value,
+  disabled,
+  onChange,
+}: {
+  value: number
+  disabled: boolean
+  onChange: ({ points }: { points: number }) => void
+}) {
+  return (
+    <Select.Root
+      value={String(value)}
+      disabled={disabled}
+      onValueChange={(points) => onChange({ points: Number(points) })}
+    >
+      <Select.Trigger
+        className="flex h-8 w-full items-center rounded-md bg-gray-100 px-2 text-sm font-medium outline-none disabled:opacity-35 dark:bg-gray-800"
+        aria-label="Font size"
+        title="Font size"
+      >
+        <Select.Value />
+        <Select.Icon className="ml-auto text-gray-500 dark:text-gray-400">
+          <ChevronDown className="size-3.5" aria-hidden="true" />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          className="z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          position="popper"
+          sideOffset={4}
+          align="end"
+        >
+          <Select.Viewport>
+            {fontSizes.map((points) => (
+              <Select.Item
+                key={points}
+                value={String(points)}
+                className="relative flex h-9 cursor-default select-none items-center rounded-md px-2 pr-8 text-sm text-gray-700 outline-none data-[highlighted]:bg-violet-100 data-[highlighted]:text-violet-700 dark:text-gray-200 dark:data-[highlighted]:bg-violet-950 dark:data-[highlighted]:text-violet-300"
+              >
+                <Select.ItemText>{points} pt</Select.ItemText>
+                <Select.ItemIndicator className="absolute right-2">
+                  <Check className="size-4" aria-hidden="true" />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  )
+}
+
 function TextFormatButton({
   label,
   icon: Icon,
@@ -674,6 +675,52 @@ function TextFormatButton({
   )
 }
 
+function ZoomControl({
+  value,
+  onChange,
+}: {
+  value: number
+  onChange: ({ zoom }: { zoom: number }) => void
+}) {
+  return (
+    <Select.Root value={String(value)} onValueChange={(zoom) => onChange({ zoom: Number(zoom) })}>
+      <Select.Trigger
+        className="flex h-8 min-w-20 items-center rounded-md bg-gray-100 px-2 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-500 dark:bg-gray-800"
+        aria-label="Zoom level"
+        title="Zoom level"
+      >
+        <Select.Value>{Math.round(value * 100)}%</Select.Value>
+        <Select.Icon className="ml-auto text-gray-500 dark:text-gray-400">
+          <ChevronDown className="size-3.5" aria-hidden="true" />
+        </Select.Icon>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content
+          className="z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          position="popper"
+          sideOffset={4}
+          align="center"
+        >
+          <Select.Viewport>
+            {zoomOptions.map((option) => (
+              <Select.Item
+                key={option}
+                value={String(option)}
+                className="relative flex h-9 cursor-default select-none items-center rounded-md px-2 pr-8 text-sm text-gray-700 outline-none data-[highlighted]:bg-violet-100 data-[highlighted]:text-violet-700 dark:text-gray-200 dark:data-[highlighted]:bg-violet-950 dark:data-[highlighted]:text-violet-300"
+              >
+                <Select.ItemText>{Math.round(option * 100)}%</Select.ItemText>
+                <Select.ItemIndicator className="absolute right-2">
+                  <Check className="size-4" aria-hidden="true" />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  )
+}
+
 export function TextFormattingControls({ editor }: { editor: Editor | null }) {
   const state = useEditorState({
     editor,
@@ -692,6 +739,7 @@ export function TextFormattingControls({ editor }: { editor: Editor | null }) {
               ) ?? 'left',
             color: current.getAttributes('textStyle').color as string | undefined,
             fontSize: current.getAttributes('textStyle').fontSize as string | undefined,
+            fontFamily: current.getAttributes('textStyle').fontFamily as string | undefined,
           }
         : null,
   })
@@ -699,6 +747,9 @@ export function TextFormattingControls({ editor }: { editor: Editor | null }) {
   const currentPoints = state?.fontSize
     ? Math.round((Number.parseFloat(state.fontSize) * 72) / 96)
     : 12
+  const currentFontFamily = fontFamilies.some(({ value }) => value === state?.fontFamily)
+    ? (state?.fontFamily ?? defaultFontFamily.value)
+    : defaultFontFamily.value
   const run = (command: (editor: Editor) => void) => {
     if (editor) {
       command(editor)
@@ -707,29 +758,31 @@ export function TextFormattingControls({ editor }: { editor: Editor | null }) {
 
   return (
     <>
-      <div className="w-full">
-        <select
-          className="h-8 w-full rounded-md bg-gray-100 px-2 text-sm font-medium outline-none disabled:opacity-35 dark:bg-gray-800"
-          aria-label="Font size"
-          title="Font size"
+      <div className="grid w-full grid-cols-[minmax(0,3fr)_minmax(4.5rem,1fr)] gap-2">
+        <FontFamilyControl
+          disabled={disabled}
+          value={currentFontFamily}
+          onChange={({ family }) => {
+            run((current) =>
+              family === defaultFontFamily.value
+                ? current.chain().focus().unsetFontFamily().run()
+                : current.chain().focus().setFontFamily(family).run(),
+            )
+          }}
+        />
+        <FontSizeControl
           disabled={disabled}
           value={fontSizes.includes(currentPoints) ? currentPoints : 12}
-          onChange={(event) =>
+          onChange={({ points }) =>
             run((current) =>
               current
                 .chain()
                 .focus()
-                .setFontSize(`${(Number(event.target.value) * 96) / 72}px`)
+                .setFontSize(`${(points * 96) / 72}px`)
                 .run(),
             )
           }
-        >
-          {fontSizes.map((points) => (
-            <option key={points} value={points}>
-              {points} pt
-            </option>
-          ))}
-        </select>
+        />
       </div>
       <TextFormatButton
         label="Bold"
@@ -820,7 +873,6 @@ export function TextFormattingControls({ editor }: { editor: Editor | null }) {
 
 export function EditorToolbar({
   documentTitle,
-  onRenameDocument,
   zoom,
   onZoomChange,
   onSave,
@@ -857,7 +909,12 @@ export function EditorToolbar({
       role="toolbar"
       aria-label="Document controls"
     >
-      <DocumentTitleControl title={documentTitle} onRename={onRenameDocument} />
+      <span
+        className="max-w-44 shrink-0 truncate px-2 text-sm font-medium text-gray-700 dark:text-gray-200"
+        title={documentTitle}
+      >
+        {documentTitle}
+      </span>
       <div className="mx-1 h-6 w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
       <button
         className={cn(
@@ -971,18 +1028,7 @@ export function EditorToolbar({
         >
           <Minus className="size-4" aria-hidden="true" />
         </button>
-        <select
-          className="h-8 rounded-md bg-gray-100 px-2 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-violet-500 dark:bg-gray-800"
-          aria-label="Zoom level"
-          value={zoom}
-          onChange={(event) => onZoomChange(Number(event.target.value))}
-        >
-          {zoomOptions.map((option) => (
-            <option key={option} value={option}>
-              {Math.round(option * 100)}%
-            </option>
-          ))}
-        </select>
+        <ZoomControl value={zoom} onChange={({ zoom: nextZoom }) => onZoomChange(nextZoom)} />
         <button
           className="grid size-8 place-items-center rounded-md text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
           type="button"

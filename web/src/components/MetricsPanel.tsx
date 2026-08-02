@@ -2,17 +2,105 @@ import type { Editor } from '@tiptap/core'
 import { Link2, Unlink2 } from 'lucide-react'
 import { PaintBucket, PenLine } from 'lucide-react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import type { ElementPatch } from '../elements'
+import { elementBounds } from '../elements'
 import { cn } from '../lib/cn'
-import type { ShapeInput, ShapeResponse } from '../types'
+import type { ElementResponse, PageResponse, PathCommand } from '../types'
 import { ColorControl, TextFormattingControls } from './EditorToolbar'
 
 type Props = {
-  shapes: ShapeResponse[]
+  documentName: string
+  page: PageResponse
+  shapes: ElementResponse[]
   textEditor: Editor | null
-  onChange: ({ changes }: { changes: Partial<ShapeInput> }) => void
+  onChange: ({ changes }: { changes: ElementPatch }) => void
+  onDocumentNameChange: ({ name }: { name: string }) => void
+  onPageChange: ({ changes }: { changes: Pick<PageResponse, 'width' | 'height'> }) => void
   onEditStart: () => void
   onEditEnd: () => void
   onEditCancel: () => void
+}
+
+function DocumentNameInput({
+  value,
+  onValueChange,
+}: {
+  value: string
+  onValueChange: ({ name }: { name: string }) => void
+}) {
+  const { onEditStart, onEditEnd, onEditCancel } = useContext(PropertyEditContext)
+  const [draft, setDraft] = useState(value)
+  const [error, setError] = useState<string | null>(null)
+  const editingRef = useRef(false)
+
+  useEffect(() => {
+    if (!editingRef.current) {
+      setDraft(value)
+    }
+  }, [value])
+
+  return (
+    <label className="block text-[11px] font-medium text-gray-600 dark:text-gray-300">
+      <span>Name</span>
+      <input
+        className={cn(
+          'mt-1 h-8 w-full rounded-md border bg-white px-2 text-xs font-medium text-gray-900 outline-none focus:ring-1 dark:bg-gray-950 dark:text-gray-100',
+          error
+            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+            : 'border-gray-300 focus:border-violet-500 focus:ring-violet-500 dark:border-gray-700',
+        )}
+        value={draft}
+        aria-label="Document name"
+        aria-invalid={Boolean(error)}
+        title={error ?? 'Saved with the document'}
+        onFocus={() => {
+          editingRef.current = true
+          onEditStart()
+        }}
+        onChange={(event) => {
+          setDraft(event.target.value)
+          setError(null)
+        }}
+        onBlur={commit}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            if (draft.trim().length < 2) {
+              setError('Use at least 2 characters')
+              return
+            }
+            event.currentTarget.blur()
+          }
+          if (event.key === 'Escape') {
+            editingRef.current = false
+            setDraft(value)
+            setError(null)
+            onEditCancel()
+            event.currentTarget.blur()
+          }
+        }}
+      />
+    </label>
+  )
+
+  function commit() {
+    if (!editingRef.current) {
+      return
+    }
+    editingRef.current = false
+    const name = draft.trim()
+    if (name.length < 2) {
+      setDraft(value)
+      setError(null)
+      onEditCancel()
+      return
+    }
+    setDraft(name)
+    if (name !== value) {
+      onValueChange({ name })
+    }
+    onEditEnd()
+  }
 }
 
 type MetricInputProps = {
@@ -144,20 +232,56 @@ function MetricInput({
   )
 }
 
-const groupPosition = ({ shapes }: { shapes: ShapeResponse[] }) => ({
-  x: Math.min(
-    ...shapes.map((shape) => Math.min(shape.x ?? 0, (shape.x ?? 0) + (shape.width ?? 0))),
-  ),
-  y: Math.min(
-    ...shapes.map((shape) => Math.min(shape.y ?? 0, (shape.y ?? 0) + (shape.height ?? 0))),
-  ),
+type MetricShape = {
+  element: ElementResponse
+  id: string
+  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star'
+  x: number
+  y: number
+  width: number
+  height: number
+  rotation: number
+  fill: string
+  fillOpacity: number
+  stroke: string
+  strokeOpacity: number
+  strokeWidth: number
+  radiusTopLeft: number
+  radiusTopRight: number
+  radiusBottomRight: number
+  radiusBottomLeft: number
+  pathGeometry?: { commands: PathCommand[] }
+}
+
+type MetricShapePatch = {
+  x?: number
+  y?: number
+  width?: number
+  height?: number
+  rotation?: number
+  fill?: string
+  fillOpacity?: number
+  stroke?: string
+  strokeOpacity?: number
+  strokeWidth?: number
+  radiusTopLeft?: number
+  radiusTopRight?: number
+  radiusBottomRight?: number
+  radiusBottomLeft?: number
+  pathGeometry?: { commands: PathCommand[] }
+}
+
+const groupPosition = ({ shapes }: { shapes: MetricShape[] }) => ({
+  x: Math.min(...shapes.map(({ element }) => elementBounds({ element }).left)),
+  y: Math.min(...shapes.map(({ element }) => elementBounds({ element }).top)),
 })
 
 type Point = { x: number; y: number }
 type LinePoint = 'start' | 'end' | 'bend'
 type Axis = 'x' | 'y'
+type PropertiesView = 'selection' | 'document'
 
-function lineMetricPoints({ shape }: { shape: ShapeResponse }) {
+function lineMetricPoints({ shape }: { shape: MetricShape }) {
   const origin = { x: shape.x ?? 0, y: shape.y ?? 0 }
   const commands = shape.pathGeometry?.commands ?? []
   const startCommand = commands[0]
@@ -192,6 +316,60 @@ function midpoint({ start, end }: { start: Point; end: Point }) {
   return { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }
 }
 
+function metricShape({ element }: { element: ElementResponse }): MetricShape {
+  if (element.kind === 'path') {
+    const end = element.data.commands.at(-1)
+    return {
+      element,
+      id: element.id,
+      type: 'line',
+      x: element.x,
+      y: element.y,
+      width: end?.x ?? 0,
+      height: end?.y ?? 0,
+      rotation: element.rotation,
+      fill: 'none',
+      fillOpacity: 0,
+      stroke: element.data.border.color,
+      strokeOpacity: element.data.border.opacity,
+      strokeWidth: element.data.border.width,
+      radiusTopLeft: 0,
+      radiusTopRight: 0,
+      radiusBottomRight: 0,
+      radiusBottomLeft: 0,
+      pathGeometry: { commands: element.data.commands },
+    }
+  }
+  const geometry = element.kind === 'shape' ? element.data.geometry : undefined
+  const radius = geometry?.type === 'rectangle' ? geometry.radius : undefined
+  const fill = element.kind === 'shape' ? element.data.fill : null
+  const border = element.kind === 'shape' ? element.data.border : null
+  return {
+    element,
+    id: element.id,
+    type:
+      element.kind === 'text'
+        ? 'text'
+        : geometry?.type === 'rectangle'
+          ? 'rect'
+          : (geometry?.type ?? 'rect'),
+    x: element.x,
+    y: element.y,
+    width: element.data.size.width,
+    height: element.data.size.height,
+    rotation: element.rotation,
+    fill: fill?.color ?? 'none',
+    fillOpacity: fill?.opacity ?? 0,
+    stroke: border?.color ?? 'none',
+    strokeOpacity: border?.opacity ?? 0,
+    strokeWidth: border?.width ?? 0,
+    radiusTopLeft: radius?.topLeft ?? 0,
+    radiusTopRight: radius?.topRight ?? 0,
+    radiusBottomRight: radius?.bottomRight ?? 0,
+    radiusBottomLeft: radius?.bottomLeft ?? 0,
+  }
+}
+
 function distanceToLine({ point, start, end }: { point: Point; start: Point; end: Point }) {
   const dx = end.x - start.x
   const dy = end.y - start.y
@@ -207,15 +385,22 @@ function distanceToLine({ point, start, end }: { point: Point; start: Point; end
 }
 
 export function PropertiesPanel({
-  shapes,
+  documentName,
+  page,
+  shapes: elements,
   textEditor,
-  onChange,
+  onChange: onElementChange,
+  onDocumentNameChange,
+  onPageChange,
   onEditStart,
   onEditEnd,
   onEditCancel,
 }: Props) {
+  const shapes = elements.map((element) => metricShape({ element }))
   const [cornersLinked, setCornersLinked] = useState(true)
+  const [view, setView] = useState<PropertiesView>(shapes.length > 0 ? 'selection' : 'document')
   const shape = shapes.length === 1 ? shapes[0] : undefined
+  const selectionKey = shapes.map(({ id }) => id).join(',')
   const position = shape
     ? { x: shape.x ?? 0, y: shape.y ?? 0 }
     : shapes.length > 0
@@ -240,6 +425,64 @@ export function PropertiesPanel({
     ? cornerRadii[0]
     : null
   const linePoints = shape?.type === 'line' ? lineMetricPoints({ shape }) : undefined
+  const onChange = ({ changes }: { changes: MetricShapePatch }) => {
+    if (!shape) {
+      onElementChange({
+        changes: {
+          ...(changes.x === undefined ? {} : { x: changes.x }),
+          ...(changes.y === undefined ? {} : { y: changes.y }),
+        },
+      })
+      return
+    }
+    const element = shape.element
+    const patch: ElementPatch = {
+      ...(changes.x === undefined ? {} : { x: changes.x }),
+      ...(changes.y === undefined ? {} : { y: changes.y }),
+      ...(changes.rotation === undefined ? {} : { rotation: changes.rotation }),
+      ...(changes.width === undefined && changes.height === undefined
+        ? {}
+        : { size: { width: changes.width, height: changes.height } }),
+      ...(changes.pathGeometry === undefined ? {} : { commands: changes.pathGeometry.commands }),
+    }
+    if (element.kind === 'shape') {
+      if (changes.fill !== undefined || changes.fillOpacity !== undefined) {
+        patch.fill = {
+          color: changes.fill ?? element.data.fill?.color ?? '#000000',
+          opacity: changes.fillOpacity ?? element.data.fill?.opacity ?? 1,
+        }
+      }
+      if (
+        changes.stroke !== undefined ||
+        changes.strokeOpacity !== undefined ||
+        changes.strokeWidth !== undefined
+      ) {
+        patch.border = {
+          color: changes.stroke ?? element.data.border?.color ?? '#000000',
+          opacity: changes.strokeOpacity ?? element.data.border?.opacity ?? 1,
+          width: changes.strokeWidth ?? element.data.border?.width ?? 0,
+        }
+      }
+      if (element.data.geometry.type === 'rectangle') {
+        patch.geometry = {
+          type: 'rectangle',
+          radius: {
+            topLeft: changes.radiusTopLeft ?? element.data.geometry.radius.topLeft,
+            topRight: changes.radiusTopRight ?? element.data.geometry.radius.topRight,
+            bottomRight: changes.radiusBottomRight ?? element.data.geometry.radius.bottomRight,
+            bottomLeft: changes.radiusBottomLeft ?? element.data.geometry.radius.bottomLeft,
+          },
+        }
+      }
+    } else if (element.kind === 'path' && changes.stroke !== undefined) {
+      patch.border = { ...element.data.border, color: changes.stroke }
+    } else if (element.kind === 'path' && changes.strokeOpacity !== undefined) {
+      patch.border = { ...element.data.border, opacity: changes.strokeOpacity }
+    } else if (element.kind === 'path' && changes.strokeWidth !== undefined) {
+      patch.border = { ...element.data.border, width: changes.strokeWidth }
+    }
+    onElementChange({ changes: patch })
+  }
 
   useEffect(() => {
     if (shape?.id) {
@@ -247,24 +490,85 @@ export function PropertiesPanel({
     }
   }, [shape?.id, unifiedCornerRadius])
 
+  useEffect(() => {
+    setView(shapes.length > 0 ? 'selection' : 'document')
+  }, [selectionKey, shapes.length])
+
   return (
     <PropertyEditContext.Provider value={{ onEditStart, onEditEnd, onEditCancel }}>
       <section className="flex h-full min-h-0 w-full flex-1 flex-col" aria-label="Properties panel">
         <div className="flex h-7 shrink-0 items-center gap-2 border-b border-gray-300 bg-gray-50 px-3 dark:border-gray-700 dark:bg-gray-900">
           <h2 className="text-xs font-semibold text-gray-900 dark:text-gray-100">Properties</h2>
-          {shapes.length > 1 && (
-            <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-              {shapes.length} selected
-            </span>
-          )}
+        </div>
+        <div
+          className="flex h-8 shrink-0 items-end gap-3 border-b border-gray-200 px-3 dark:border-gray-700"
+          role="tablist"
+          aria-label="Property views"
+        >
+          <button
+            className={cn(
+              'flex h-full items-center gap-1 border-b-2 px-0.5 text-[11px] font-medium',
+              view === 'selection'
+                ? 'border-violet-500 text-violet-700 dark:text-violet-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 disabled:cursor-default disabled:opacity-40 dark:text-gray-400 dark:hover:text-gray-200',
+            )}
+            type="button"
+            role="tab"
+            aria-selected={view === 'selection'}
+            disabled={shapes.length === 0}
+            onClick={() => setView('selection')}
+          >
+            Format
+            {shapes.length > 1 && (
+              <span className="rounded-full bg-gray-200 px-1.5 py-0.5 text-[9px] font-semibold leading-none tabular-nums text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                {shapes.length}
+              </span>
+            )}
+          </button>
+          <button
+            className={cn(
+              'h-full border-b-2 px-0.5 text-[11px] font-medium',
+              view === 'document'
+                ? 'border-violet-500 text-violet-700 dark:text-violet-300'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
+            )}
+            type="button"
+            role="tab"
+            aria-selected={view === 'document'}
+            onClick={() => setView('document')}
+          >
+            Document
+          </button>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto p-3">
-          {!position && (
-            <p className="py-4 text-center text-xs text-gray-500 dark:text-gray-400">
-              Nothing selected
-            </p>
+          {view === 'document' && (
+            <div className="space-y-4">
+              <DocumentNameInput value={documentName} onValueChange={onDocumentNameChange} />
+              <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
+                <div className="grid grid-cols-2 gap-3">
+                  <MetricInput
+                    label="Width"
+                    value={page.width}
+                    unit="in"
+                    min={0.5}
+                    onValueChange={({ value }) =>
+                      onPageChange({ changes: { width: value, height: page.height } })
+                    }
+                  />
+                  <MetricInput
+                    label="Height"
+                    value={page.height}
+                    unit="in"
+                    min={0.5}
+                    onValueChange={({ value }) =>
+                      onPageChange({ changes: { width: page.width, height: value } })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           )}
-          {position && (
+          {view === 'selection' && position && (
             <>
               {shape && (
                 <div className="mb-3 flex flex-wrap items-center gap-1 border-b border-gray-200 pb-3 dark:border-gray-700">
@@ -277,10 +581,12 @@ export function PropertiesPanel({
                           label="Fill"
                           icon={PaintBucket}
                           color={shape.fill}
+                          opacity={shape.fillOpacity ?? 1}
                           disabled={false}
                           panel
                           panelSide="left"
                           onChange={(fill) => onChange({ changes: { fill } })}
+                          onOpacityChange={(fillOpacity) => onChange({ changes: { fillOpacity } })}
                           onEditStart={onEditStart}
                           onEditEnd={onEditEnd}
                           onEditCancel={onEditCancel}
@@ -290,10 +596,14 @@ export function PropertiesPanel({
                         label="Border"
                         icon={PenLine}
                         color={shape.stroke}
+                        opacity={shape.strokeOpacity ?? 1}
                         disabled={false}
                         panel
                         panelSide={shape.type === 'line' ? 'left' : 'right'}
                         onChange={(border) => onChange({ changes: { stroke: border } })}
+                        onOpacityChange={(strokeOpacity) =>
+                          onChange({ changes: { strokeOpacity } })
+                        }
                         onEditStart={onEditStart}
                         onEditEnd={onEditEnd}
                         onEditCancel={onEditCancel}
@@ -572,7 +882,6 @@ export function PropertiesPanel({
         height: relativeEnd.y,
         rotation: 0,
         pathGeometry: {
-          version: 1,
           commands: [
             { type: 'move', x: 0, y: 0 },
             curved

@@ -1,11 +1,43 @@
 import { Type, type Static } from '@sinclair/typebox'
 
-const OptionalNumber = Type.Optional(Type.Number())
-const OptionalString = Type.Optional(Type.String())
-
 export const RichTextContent = Type.Record(Type.String(), Type.Unknown(), {
   $id: 'RichTextContent',
 })
+
+export const Paint = Type.Object(
+  {
+    color: Type.String(),
+    opacity: Type.Number({ minimum: 0, maximum: 1 }),
+  },
+  { $id: 'Paint' },
+)
+
+export const Border = Type.Object(
+  {
+    color: Type.String(),
+    opacity: Type.Number({ minimum: 0, maximum: 1 }),
+    width: Type.Number({ minimum: 0 }),
+  },
+  { $id: 'Border' },
+)
+
+export const Size = Type.Object(
+  {
+    width: Type.Number({ minimum: 0.01 }),
+    height: Type.Number({ minimum: 0.01 }),
+  },
+  { $id: 'Size' },
+)
+
+export const CornerRadii = Type.Object(
+  {
+    topLeft: Type.Number({ minimum: 0 }),
+    topRight: Type.Number({ minimum: 0 }),
+    bottomRight: Type.Number({ minimum: 0 }),
+    bottomLeft: Type.Number({ minimum: 0 }),
+  },
+  { $id: 'CornerRadii' },
+)
 
 export const PathCommand = Type.Union(
   [
@@ -22,43 +54,118 @@ export const PathCommand = Type.Union(
   { $id: 'PathCommand' },
 )
 
-export const PathGeometry = Type.Object(
-  {
-    version: Type.Literal(1),
-    commands: Type.Array(PathCommand, { minItems: 2 }),
-  },
-  { $id: 'PathGeometry' },
+export const ShapeGeometry = Type.Union(
+  [
+    Type.Object({ type: Type.Literal('rectangle'), radius: Type.Ref(CornerRadii) }),
+    Type.Object({ type: Type.Literal('ellipse') }),
+    Type.Object({
+      type: Type.Literal('polygon'),
+      sides: Type.Integer({ minimum: 3, maximum: 100 }),
+      phase: Type.Number(),
+    }),
+    Type.Object({
+      type: Type.Literal('star'),
+      points: Type.Integer({ minimum: 3, maximum: 100 }),
+      innerRadius: Type.Number({ exclusiveMinimum: 0, exclusiveMaximum: 1 }),
+      phase: Type.Number(),
+      roundness: Type.Number({ minimum: 0, maximum: 1 }),
+    }),
+  ],
+  { $id: 'ShapeGeometry' },
 )
 
-export const ShapeInput = Type.Object(
-  {
-    type: OptionalString,
-    width: OptionalNumber,
-    height: OptionalNumber,
-    x: OptionalNumber,
-    y: OptionalNumber,
-    pathGeometry: Type.Optional(PathGeometry),
-    z: Type.Optional(Type.Integer()),
-    radiusTopLeft: OptionalNumber,
-    radiusTopRight: OptionalNumber,
-    radiusBottomRight: OptionalNumber,
-    radiusBottomLeft: OptionalNumber,
-    rotation: OptionalNumber,
-    fill: OptionalString,
-    fillOpacity: OptionalNumber,
-    stroke: OptionalString,
-    strokeWidth: OptionalNumber,
-    strokeOpacity: OptionalNumber,
-    text: OptionalString,
-    richTextContent: Type.Optional(RichTextContent),
-    contentVersion: Type.Optional(Type.Integer()),
-  },
-  { $id: 'ShapeInput' },
-)
+const ElementFields = {
+  x: Type.Number(),
+  y: Type.Number(),
+  rotation: Type.Number(),
+  z: Type.Integer(),
+  opacity: Type.Number({ minimum: 0, maximum: 1 }),
+  locked: Type.Boolean(),
+  hidden: Type.Boolean(),
+}
 
-export const ShapeResponse = Type.Intersect([Type.Object({ id: Type.String() }), ShapeInput], {
-  $id: 'ShapeResponse',
+const InputId = Type.Optional(Type.String())
+const ResponseId = Type.String()
+
+const ShapeData = Type.Object({
+  size: Type.Ref(Size),
+  geometry: Type.Ref(ShapeGeometry),
+  fill: Type.Union([Type.Ref(Paint), Type.Null()]),
+  border: Type.Union([Type.Ref(Border), Type.Null()]),
 })
+
+const PathData = Type.Object({
+  commands: Type.Array(Type.Ref(PathCommand), { minItems: 2 }),
+  fill: Type.Union([Type.Ref(Paint), Type.Null()]),
+  border: Type.Ref(Border),
+})
+
+const TextData = Type.Object({
+  size: Type.Ref(Size),
+  content: Type.Ref(RichTextContent),
+  padding: Type.Object({
+    top: Type.Number({ minimum: 0 }),
+    right: Type.Number({ minimum: 0 }),
+    bottom: Type.Number({ minimum: 0 }),
+    left: Type.Number({ minimum: 0 }),
+  }),
+  verticalAlignment: Type.Union([
+    Type.Literal('top'),
+    Type.Literal('middle'),
+    Type.Literal('bottom'),
+  ]),
+})
+
+const ShapeElementInput = Type.Object({
+  id: InputId,
+  ...ElementFields,
+  kind: Type.Literal('shape'),
+  data: ShapeData,
+})
+
+const PathElementInput = Type.Object({
+  id: InputId,
+  ...ElementFields,
+  kind: Type.Literal('path'),
+  data: PathData,
+})
+
+const TextElementInput = Type.Object({
+  id: InputId,
+  ...ElementFields,
+  kind: Type.Literal('text'),
+  data: TextData,
+})
+
+const ShapeElementResponse = Type.Object({
+  id: ResponseId,
+  ...ElementFields,
+  kind: Type.Literal('shape'),
+  data: ShapeData,
+})
+
+const PathElementResponse = Type.Object({
+  id: ResponseId,
+  ...ElementFields,
+  kind: Type.Literal('path'),
+  data: PathData,
+})
+
+const TextElementResponse = Type.Object({
+  id: ResponseId,
+  ...ElementFields,
+  kind: Type.Literal('text'),
+  data: TextData,
+})
+
+export const ElementInput = Type.Union([ShapeElementInput, PathElementInput, TextElementInput], {
+  $id: 'ElementInput',
+})
+
+export const ElementResponse = Type.Union(
+  [ShapeElementResponse, PathElementResponse, TextElementResponse],
+  { $id: 'ElementResponse' },
+)
 
 export const PageInput = Type.Object(
   {
@@ -66,7 +173,7 @@ export const PageInput = Type.Object(
     pageNumber: Type.Integer(),
     width: Type.Number(),
     height: Type.Number(),
-    shapes: Type.Optional(Type.Array(ShapeInput)),
+    elements: Type.Optional(Type.Array(ElementInput)),
   },
   { $id: 'PageInput' },
 )
@@ -77,7 +184,7 @@ export const PageResponse = Type.Object(
     pageNumber: Type.Integer(),
     width: Type.Number(),
     height: Type.Number(),
-    shapes: Type.Array(ShapeResponse),
+    elements: Type.Array(ElementResponse),
   },
   { $id: 'PageResponse' },
 )
@@ -148,5 +255,5 @@ export const CsrfResponse = Type.Object(
 
 export type DocumentInput = Static<typeof DocumentRequest>
 export type PageInputType = Static<typeof PageInput>
-export type ShapeInputType = Static<typeof ShapeInput>
+export type ElementInputType = Static<typeof ElementInput>
 export type PdfInput = Static<typeof PdfRequest>
