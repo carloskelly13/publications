@@ -2,21 +2,35 @@ import cookie from '@fastify/cookie'
 import cors from '@fastify/cors'
 import swagger from '@fastify/swagger'
 import { Type } from '@sinclair/typebox'
+import { del, get, head } from '@vercel/blob'
+import { generateClientTokenFromReadWriteToken } from '@vercel/blob/client'
 import Fastify from 'fastify'
+import { randomUUID } from 'node:crypto'
+import { Readable } from 'node:stream'
 import { registerAuthRoutes, authenticate, verifyCsrf } from './auth.js'
 import { config } from './config.js'
 import {
   createDocument,
+  createDocumentAsset,
+  completeDocumentAsset,
+  deleteDocumentAssets,
   deleteDocument,
+  getDocumentAsset,
   getDocument,
   initializeDatabase,
   listDocuments,
+  listDocumentAssetPathnames,
+  listUnreferencedDocumentAssets,
   renameDocument,
   updateDocument,
 } from './database.js'
 import { HttpError } from './errors.js'
 import { renderPdf } from './pdf.js'
 import {
+  AssetCompleteRequest,
+  AssetResponse,
+  AssetUploadRequest,
+  AssetUploadResponse,
   Border,
   CornerRadii,
   CsrfResponse,
@@ -36,6 +50,8 @@ import {
   Size,
   UserResponse,
   type DocumentInput,
+  type AssetCompleteInput,
+  type AssetUploadInput,
   type PdfInput,
 } from './schemas.js'
 
@@ -78,6 +94,10 @@ for (const schema of [
   DocumentResponse,
   DocumentPageResponse,
   RenameDocumentRequest,
+  AssetUploadRequest,
+  AssetUploadResponse,
+  AssetCompleteRequest,
+  AssetResponse,
   PdfRequest,
   UserResponse,
   CsrfResponse,
@@ -112,6 +132,11 @@ app.get('/actuator/health', async () => {
 await registerAuthRoutes({ app })
 
 const IdParams = Type.Object({ id: Type.String({ pattern: '^[0-9]+$' }) })
+const AssetParams = Type.Object({
+  id: Type.String({ pattern: '^[0-9]+$' }),
+  assetId: Type.String({ minLength: 36, maxLength: 36 }),
+})
+const AssetIdParams = Type.Object({ assetId: Type.String({ minLength: 36, maxLength: 36 }) })
 const ListQuery = Type.Object({
   page: Type.Optional(Type.Integer({ minimum: 0, default: 0 })),
   size: Type.Optional(Type.Integer({ minimum: 1, maximum: 20, default: 4 })),
@@ -166,6 +191,111 @@ app.get<{ Params: { id: string } }>(
   },
 )
 
+app.post<{ Params: { id: string }; Body: AssetUploadInput }>(
+  '/api/documents/:id/assets/upload-token',
+  {
+    preHandler: verifyCsrf,
+    schema: {
+      params: IdParams,
+      body: Type.Ref(AssetUploadRequest),
+      response: { 201: Type.Ref(AssetUploadResponse) },
+    },
+  },
+  async (request, reply) => {
+    const assetId = randomUUID()
+    const filename = safeAssetFilename({ filename: request.body.filename })
+    const pathname = `documents/${request.currentSession!.user.id}/${request.params.id}/${assetId}-${filename}`
+    const clientToken = await generateClientTokenFromReadWriteToken({
+      token: config.blobReadWriteToken,
+      pathname,
+      allowedContentTypes: [request.body.contentType],
+      maximumSizeInBytes: request.body.byteSize,
+      validUntil: Date.now() + 10 * 60 * 1000,
+      addRandomSuffix: false,
+      allowOverwrite: false,
+    })
+    const asset = await createDocumentAsset({
+      id: assetId,
+      documentId: request.params.id,
+      userId: request.currentSession!.user.id,
+      pathname,
+      contentType: request.body.contentType,
+      byteSize: request.body.byteSize,
+    })
+    if (!asset) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    return reply.code(201).send({ id: assetId, pathname, clientToken })
+  },
+)
+
+app.post<{ Params: { id: string; assetId: string }; Body: AssetCompleteInput }>(
+  '/api/documents/:id/assets/:assetId/complete',
+  {
+    preHandler: verifyCsrf,
+    schema: {
+      params: AssetParams,
+      body: Type.Ref(AssetCompleteRequest),
+      response: { 200: Type.Ref(AssetResponse) },
+    },
+  },
+  async (request) => {
+    let blob
+    try {
+      blob = await head(request.body.pathname, { token: config.blobReadWriteToken })
+    } catch {
+      throw new HttpError({ statusCode: 400, message: 'The uploaded image is unavailable.' })
+    }
+    const asset = await completeDocumentAsset({
+      id: request.params.assetId,
+      documentId: request.params.id,
+      userId: request.currentSession!.user.id,
+      pathname: blob.pathname,
+      contentType: blob.contentType,
+      byteSize: blob.size,
+      width: request.body.width,
+      height: request.body.height,
+    })
+    if (!asset) {
+      throw new HttpError({ statusCode: 400, message: 'The uploaded image does not match.' })
+    }
+    return documentAssetResponse({ asset })
+  },
+)
+
+app.get<{ Params: { assetId: string } }>(
+  '/api/assets/:assetId',
+  {
+    preHandler: authenticate,
+    schema: { params: AssetIdParams },
+  },
+  async (request, reply) => {
+    const asset = await getDocumentAsset({
+      id: request.params.assetId,
+      userId: request.currentSession!.user.id,
+    })
+    if (!asset) {
+      throw new HttpError({ statusCode: 404, message: 'Image not found.' })
+    }
+    const result = await get(asset.pathname, {
+      access: 'private',
+      token: config.blobReadWriteToken,
+      ifNoneMatch: request.headers['if-none-match'],
+    })
+    if (!result) {
+      throw new HttpError({ statusCode: 404, message: 'Image not found.' })
+    }
+    reply.header('Cache-Control', 'private, no-cache').header('ETag', result.blob.etag)
+    if (result.statusCode === 304 || !result.stream) {
+      return reply.code(304).send()
+    }
+    return reply
+      .type(result.blob.contentType ?? asset.contentType)
+      .header('X-Content-Type-Options', 'nosniff')
+      .send(Readable.fromWeb(result.stream as Parameters<typeof Readable.fromWeb>[0]))
+  },
+)
+
 app.post<{ Body: DocumentInput }>(
   '/api/documents',
   {
@@ -192,6 +322,15 @@ app.put<{ Params: { id: string }; Body: DocumentInput }>(
     },
   },
   async (request) => {
+    const retainedAssetIds = [
+      ...new Set(
+        request.body.pages.flatMap((page) =>
+          (page.elements ?? []).flatMap((element) =>
+            element.kind === 'image' ? [element.data.assetId] : [],
+          ),
+        ),
+      ),
+    ]
     const document = await updateDocument({
       id: request.params.id,
       userId: request.currentSession!.user.id,
@@ -199,6 +338,21 @@ app.put<{ Params: { id: string }; Body: DocumentInput }>(
     })
     if (!document) {
       throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    const unreferencedAssets = await listUnreferencedDocumentAssets({
+      documentId: request.params.id,
+      userId: request.currentSession!.user.id,
+      retainedAssetIds,
+    })
+    if (unreferencedAssets && unreferencedAssets.length > 0) {
+      await del(
+        unreferencedAssets.map(({ pathname }) => pathname),
+        { token: config.blobReadWriteToken },
+      )
+      await deleteDocumentAssets({
+        documentId: request.params.id,
+        assetIds: unreferencedAssets.map(({ id }) => id),
+      })
     }
     return document
   },
@@ -234,6 +388,16 @@ app.delete<{ Params: { id: string } }>(
     schema: { params: IdParams },
   },
   async (request, reply) => {
+    const assetPathnames = await listDocumentAssetPathnames({
+      documentId: request.params.id,
+      userId: request.currentSession!.user.id,
+    })
+    if (!assetPathnames) {
+      throw new HttpError({ statusCode: 404, message: 'Document not found.' })
+    }
+    if (assetPathnames.length > 0) {
+      await del(assetPathnames, { token: config.blobReadWriteToken })
+    }
     const deleted = await deleteDocument({
       id: request.params.id,
       userId: request.currentSession!.user.id,
@@ -259,7 +423,15 @@ app.post<{ Params: { id: string }; Body: PdfInput }>(
     if (!document) {
       throw new HttpError({ statusCode: 404, message: 'Document not found.' })
     }
-    const pdf = await renderPdf({ input: request.body })
+    const pdf = await renderPdf({
+      input: {
+        ...request.body,
+        svg: await hydratePdfAssets({
+          svg: request.body.svg,
+          userId: request.currentSession!.user.id,
+        }),
+      },
+    })
     const filename = `${document.name.replace(/[\r\n\\/]/g, '_')}.pdf`
     return reply
       .type('application/pdf')
@@ -269,3 +441,63 @@ app.post<{ Params: { id: string }; Body: PdfInput }>(
 )
 
 void app.listen({ port: config.port, host: '0.0.0.0' })
+
+function safeAssetFilename({ filename }: { filename: string }) {
+  const normalized = filename
+    .normalize('NFKC')
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .slice(-120)
+  return normalized || 'image'
+}
+
+function documentAssetResponse({
+  asset,
+}: {
+  asset: Awaited<ReturnType<typeof completeDocumentAsset>>
+}) {
+  if (!asset || asset.width === null || asset.height === null) {
+    throw new Error('The image asset is incomplete.')
+  }
+  return {
+    id: asset.id,
+    documentId: asset.documentId.toString(),
+    pathname: asset.pathname,
+    contentType: asset.contentType,
+    byteSize: asset.byteSize,
+    width: asset.width,
+    height: asset.height,
+  }
+}
+
+async function hydratePdfAssets({ svg, userId }: { svg: string; userId: string }) {
+  const assetIds = [
+    ...new Set(
+      Array.from(svg.matchAll(/\/api\/assets\/([0-9a-f-]{36})/gi)).flatMap((match) =>
+        match[1] ? [match[1]] : [],
+      ),
+    ),
+  ]
+  const replacements = await Promise.all(
+    assetIds.map(async (assetId) => {
+      const asset = await getDocumentAsset({ id: assetId, userId })
+      if (!asset) {
+        throw new HttpError({ statusCode: 400, message: 'A PDF image is unavailable.' })
+      }
+      const result = await get(asset.pathname, {
+        access: 'private',
+        token: config.blobReadWriteToken,
+      })
+      if (!result?.stream) {
+        throw new HttpError({ statusCode: 400, message: 'A PDF image is unavailable.' })
+      }
+      const bytes = Buffer.from(await new Response(result.stream).arrayBuffer())
+      const dataUrl = `data:${asset.contentType};base64,${bytes.toString('base64')}`
+      return { assetId, dataUrl }
+    }),
+  )
+  let hydrated = svg
+  replacements.forEach(({ assetId, dataUrl }) => {
+    hydrated = hydrated.replaceAll(`/api/assets/${assetId}`, dataUrl)
+  })
+  return hydrated
+}

@@ -376,6 +376,124 @@ export interface paths {
         };
         trace?: never;
     };
+    "/api/documents/{id}/assets/upload-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AssetUploadRequest"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetUploadResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/documents/{id}/assets/{assetId}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                    assetId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AssetCompleteRequest"];
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AssetResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/{assetId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    assetId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/documents/{id}/pdf": {
         parameters: {
             query?: never;
@@ -541,6 +659,24 @@ export interface components {
                 };
                 verticalAlignment: "top" | "middle" | "bottom";
             };
+        } | {
+            id?: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "image";
+            data: {
+                size: components["schemas"]["Size"];
+                assetId: string;
+                fit: "contain" | "cover";
+                positionX: number;
+                positionY: number;
+            };
         };
         ElementResponse: {
             id: string;
@@ -596,6 +732,24 @@ export interface components {
                     left: number;
                 };
                 verticalAlignment: "top" | "middle" | "bottom";
+            };
+        } | {
+            id: string;
+            x: number;
+            y: number;
+            rotation: number;
+            z: number;
+            opacity: number;
+            locked: boolean;
+            hidden: boolean;
+            /** @enum {string} */
+            kind: "image";
+            data: {
+                size: components["schemas"]["Size"];
+                assetId: string;
+                fit: "contain" | "cover";
+                positionX: number;
+                positionY: number;
             };
         };
         PageInput: {
@@ -658,6 +812,24 @@ export interface components {
                     };
                     verticalAlignment: "top" | "middle" | "bottom";
                 };
+            } | {
+                id?: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "image";
+                data: {
+                    size: components["schemas"]["Size"];
+                    assetId: string;
+                    fit: "contain" | "cover";
+                    positionX: number;
+                    positionY: number;
+                };
             })[];
         };
         PageResponse: {
@@ -719,6 +891,24 @@ export interface components {
                         left: number;
                     };
                     verticalAlignment: "top" | "middle" | "bottom";
+                };
+            } | {
+                id: string;
+                x: number;
+                y: number;
+                rotation: number;
+                z: number;
+                opacity: number;
+                locked: boolean;
+                hidden: boolean;
+                /** @enum {string} */
+                kind: "image";
+                data: {
+                    size: components["schemas"]["Size"];
+                    assetId: string;
+                    fit: "contain" | "cover";
+                    positionX: number;
+                    positionY: number;
                 };
             })[];
         };
@@ -783,6 +973,24 @@ export interface components {
                             left: number;
                         };
                         verticalAlignment: "top" | "middle" | "bottom";
+                    };
+                } | {
+                    id?: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "image";
+                    data: {
+                        size: components["schemas"]["Size"];
+                        assetId: string;
+                        fit: "contain" | "cover";
+                        positionX: number;
+                        positionY: number;
                     };
                 })[];
             }[];
@@ -853,6 +1061,24 @@ export interface components {
                             left: number;
                         };
                         verticalAlignment: "top" | "middle" | "bottom";
+                    };
+                } | {
+                    id: string;
+                    x: number;
+                    y: number;
+                    rotation: number;
+                    z: number;
+                    opacity: number;
+                    locked: boolean;
+                    hidden: boolean;
+                    /** @enum {string} */
+                    kind: "image";
+                    data: {
+                        size: components["schemas"]["Size"];
+                        assetId: string;
+                        fit: "contain" | "cover";
+                        positionX: number;
+                        positionY: number;
                     };
                 })[];
             }[];
@@ -925,6 +1151,24 @@ export interface components {
                             };
                             verticalAlignment: "top" | "middle" | "bottom";
                         };
+                    } | {
+                        id: string;
+                        x: number;
+                        y: number;
+                        rotation: number;
+                        z: number;
+                        opacity: number;
+                        locked: boolean;
+                        hidden: boolean;
+                        /** @enum {string} */
+                        kind: "image";
+                        data: {
+                            size: components["schemas"]["Size"];
+                            assetId: string;
+                            fit: "contain" | "cover";
+                            positionX: number;
+                            positionY: number;
+                        };
                     })[];
                 }[];
             }[];
@@ -936,6 +1180,30 @@ export interface components {
         };
         RenameDocumentRequest: {
             name: string;
+        };
+        AssetUploadRequest: {
+            filename: string;
+            contentType: "image/png" | "image/jpeg" | "image/webp";
+            byteSize: number;
+        };
+        AssetUploadResponse: {
+            id: string;
+            pathname: string;
+            clientToken: string;
+        };
+        AssetCompleteRequest: {
+            pathname: string;
+            width: number;
+            height: number;
+        };
+        AssetResponse: {
+            id: string;
+            documentId: string;
+            pathname: string;
+            contentType: string;
+            byteSize: number;
+            width: number;
+            height: number;
         };
         PdfRequest: {
             svg: string;

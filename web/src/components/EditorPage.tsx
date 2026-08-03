@@ -3,13 +3,16 @@ import { createPortal } from 'react-dom'
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { ApiError, api, fetchClient } from '../api'
-import { applyElementPatch, elementBounds, elementInput } from '../elements'
+import { applyElementPatch, elementBounds } from '../elements'
 import type { ElementPatch } from '../elements'
-import type { DocumentDraft, ElementResponse, PublicationDocument } from '../types'
+import type { ElementResponse, PublicationDocument } from '../types'
 import { DocumentCanvas } from './DocumentCanvas'
+import { createElement, documentDraft } from './editorDocument'
+import { uploadDocumentImage } from './editorImageUpload'
 import {
   EditorToolbar,
   type ExportStatus,
+  type ImageUploadStatus,
   type InsertElementType,
   type SaveStatus,
 } from './EditorToolbar'
@@ -17,33 +20,12 @@ import { EditorSidebar } from './EditorSidebar'
 import { EditorWorkspace } from './EditorWorkspace'
 import { LayersPanel } from './LayersPanel'
 import { PropertiesPanel } from './MetricsPanel'
+import { useEditorHistory, type HistorySnapshot } from './useEditorHistory'
 
 type LoadState =
   | { status: 'loading' }
   | { status: 'loaded'; document: PublicationDocument }
   | { status: 'error'; message: string }
-
-type HistorySnapshot = {
-  document: PublicationDocument
-  selectedShapeIds: string[]
-}
-
-type HistoryState = {
-  past: HistorySnapshot[]
-  future: HistorySnapshot[]
-}
-
-const historyLimit = 100
-
-const documentDraft = (document: PublicationDocument): DocumentDraft => ({
-  name: document.name ?? 'Untitled',
-  pages: (document.pages ?? []).map((page, index) => ({
-    pageNumber: page.pageNumber ?? index + 1,
-    width: page.width ?? 8.5,
-    height: page.height ?? 11,
-    elements: (page.elements ?? []).map((element) => elementInput({ element })),
-  })),
-})
 
 const wait = ({ durationMs }: { durationMs: number }) =>
   new Promise<void>((resolve) => window.setTimeout(resolve, durationMs))
@@ -54,6 +36,7 @@ export function EditorPage() {
   const [zoom, setZoom] = useState(1)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [exportStatus, setExportStatus] = useState<ExportStatus>('idle')
+  const [imageUploadStatus, setImageUploadStatus] = useState<ImageUploadStatus>('idle')
   const [selectedShapeIds, setSelectedShapeIds] = useState<string[]>([])
   const [editingShapeId, setEditingShapeId] = useState<string | null>(null)
   const [textEditor, setTextEditor] = useState<Editor | null>(null)
@@ -62,13 +45,10 @@ export function EditorPage() {
   const [layersPanelHeight, setLayersPanelHeight] = useState(308)
   const [snapToGrid, setSnapToGrid] = useState(true)
   const [clipboardShapes, setClipboardShapes] = useState<ElementResponse[]>([])
-  const [history, setHistory] = useState<HistoryState>({ past: [], future: [] })
   const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null)
   const exportCanvasRef = useRef<SVGSVGElement>(null)
   const saveFeedbackTimerRef = useRef<number | null>(null)
   const pasteCountRef = useRef(0)
-  const transactionRef = useRef<HistorySnapshot | null>(null)
-  const transactionChangedRef = useRef(false)
   const documentQuery = api.useQuery(
     'get',
     '/api/documents/{id}',
@@ -76,6 +56,22 @@ export function EditorPage() {
     { enabled: Boolean(documentId) },
   )
   const saveMutation = api.useMutation('put', '/api/documents/{id}')
+  const loadedDocument = state.status === 'loaded' ? state.document : null
+  const {
+    canUndo,
+    canRedo,
+    resetHistory,
+    recordDocumentChange,
+    beginHistoryTransaction,
+    commitHistoryTransaction,
+    cancelHistoryTransaction,
+    undo,
+    redo,
+  } = useEditorHistory({
+    document: loadedDocument,
+    selectedShapeIds,
+    onRestore: restoreSnapshot,
+  })
 
   useEffect(() => {
     setToolbarTarget(document.getElementById('editor-toolbar-slot'))
@@ -99,10 +95,8 @@ export function EditorPage() {
     setSelectedShapeIds([])
     setEditingShapeId(null)
     setTextEditor(null)
-    setHistory({ past: [], future: [] })
-    transactionRef.current = null
-    transactionChangedRef.current = false
-  }, [documentId])
+    resetHistory()
+  }, [documentId, resetHistory])
 
   useEffect(() => {
     if (documentQuery.data) {
@@ -135,13 +129,13 @@ export function EditorPage() {
 
     const modifier = event.metaKey || event.ctrlKey
     const key = event.key.toLowerCase()
-    if (modifier && key === 'z' && event.shiftKey && history.future.length > 0) {
+    if (modifier && key === 'z' && event.shiftKey && canRedo) {
       event.preventDefault()
       redo()
-    } else if (modifier && key === 'z' && history.past.length > 0) {
+    } else if (modifier && key === 'z' && canUndo) {
       event.preventDefault()
       undo()
-    } else if (modifier && key === 'y' && history.future.length > 0) {
+    } else if (modifier && key === 'y' && canRedo) {
       event.preventDefault()
       redo()
     } else if (modifier && key === 'x' && selectedShapeIds.length > 0) {
@@ -366,11 +360,12 @@ export function EditorPage() {
   }
 
   const addShape = (type: InsertElementType) => {
-    if (state.status !== 'loaded' || !state.document.pages?.[0]) {
+    const page = state.status === 'loaded' ? state.document.pages?.[0] : undefined
+    if (!page) {
       return
     }
     recordDocumentChange()
-    const id = `draft-${crypto.randomUUID()}`
+    const element = createElement({ type, page })
     setState((current) => {
       if (current.status !== 'loaded') {
         return current
@@ -380,97 +375,19 @@ export function EditorPage() {
       if (!firstPage) {
         return current
       }
-      const size =
-        type === 'circle' || type === 'star'
-          ? { width: 1.5, height: 1.5 }
-          : type === 'text'
-            ? { width: 4, height: 1.5 }
-            : type === 'line'
-              ? { width: 4, height: 0 }
-              : { width: 2, height: 1.5 }
-      const shapes = firstPage.elements ?? []
-      const common = {
-        id,
-        x: Math.max(0, ((firstPage.width ?? 8.5) - size.width) / 2),
-        y: Math.max(0, ((firstPage.height ?? 11) - size.height) / 2),
-        z: Math.max(0, ...shapes.map((item) => item.z ?? 0)) + 1,
-        rotation: 0,
-        opacity: 1,
-        locked: false,
-        hidden: false,
-      }
-      const shape: ElementResponse =
-        type === 'line'
-          ? {
-              ...common,
-              kind: 'path',
-              data: {
-                commands: [
-                  { type: 'move', x: 0, y: 0 },
-                  { type: 'line', x: size.width, y: size.height },
-                ],
-                fill: null,
-                border: { color: '#7c3aed', opacity: 1, width: 2 },
-              },
-            }
-          : type === 'text'
-            ? {
-                ...common,
-                kind: 'text',
-                data: {
-                  size,
-                  content: { type: 'doc', content: [{ type: 'paragraph' }] },
-                  padding: { top: 0, right: 0, bottom: 0, left: 0 },
-                  verticalAlignment: 'top',
-                },
-              }
-            : {
-                ...common,
-                kind: 'shape',
-                data: {
-                  size,
-                  geometry:
-                    type === 'circle'
-                      ? { type: 'ellipse' }
-                      : type === 'star'
-                        ? {
-                            type: 'star',
-                            points: 5,
-                            innerRadius: 0.45,
-                            phase: -90,
-                            roundness: 0,
-                          }
-                        : type === 'arrow'
-                          ? {
-                              type: 'arrow',
-                              ends: 'end',
-                              shaftThickness: 0.35,
-                              headInset: 0.3,
-                              headAngle: 0,
-                            }
-                          : {
-                              type: 'rectangle',
-                              radius: {
-                                topLeft: 0,
-                                topRight: 0,
-                                bottomRight: 0,
-                                bottomLeft: 0,
-                              },
-                            },
-                  fill: { color: '#a78bfa', opacity: 1 },
-                  border: { color: '#7c3aed', opacity: 1, width: 1 },
-                },
-              }
       return {
         status: 'loaded',
         document: {
           ...current.document,
-          pages: [{ ...firstPage, elements: [...shapes, shape] }, ...pages.slice(1)],
+          pages: [
+            { ...firstPage, elements: [...(firstPage.elements ?? []), element] },
+            ...pages.slice(1),
+          ],
         },
       }
     })
-    setSelectedShapeIds([id])
-    setEditingShapeId(type === 'text' ? id : null)
+    setSelectedShapeIds([element.id])
+    setEditingShapeId(type === 'text' ? element.id : null)
     setSaveStatus('idle')
   }
 
@@ -485,7 +402,7 @@ export function EditorPage() {
     try {
       const requestPromise = saveMutation.mutateAsync({
         params: { path: { id: documentId } },
-        body: documentDraft(state.document),
+        body: documentDraft({ document: state.document }),
       })
       const [request] = await Promise.allSettled([requestPromise, wait({ durationMs: 1000 })])
       if (request.status === 'rejected') {
@@ -495,6 +412,7 @@ export function EditorPage() {
       setSelectedShapeIds([])
       setEditingShapeId(null)
       setTextEditor(null)
+      resetHistory()
       setSaveStatus('saved')
       saveFeedbackTimerRef.current = window.setTimeout(() => setSaveStatus('idle'), 2000)
     } catch {
@@ -578,6 +496,8 @@ export function EditorPage() {
             onSave={() => void save()}
             saveStatus={saveStatus}
             onAddShape={addShape}
+            onAddImage={({ file }) => void addImage({ file })}
+            imageUploadStatus={imageUploadStatus}
             onExportPdf={() => void exportPdf()}
             exportStatus={exportStatus}
             layersOpen={layersOpen}
@@ -596,8 +516,8 @@ export function EditorPage() {
             onDelete={() => deleteLayers({ shapeIds: selectedShapeIds })}
             onSelectAll={selectAllShapes}
             onDeselectAll={() => setSelectedShapeIds([])}
-            canUndo={history.past.length > 0}
-            canRedo={history.future.length > 0}
+            canUndo={canUndo}
+            canRedo={canRedo}
             onUndo={undo}
             onRedo={redo}
           />,
@@ -679,93 +599,6 @@ export function EditorPage() {
       </div>
     </>
   )
-
-  function captureSnapshot(): HistorySnapshot | null {
-    if (state.status !== 'loaded') {
-      return null
-    }
-    return {
-      document: structuredClone(state.document),
-      selectedShapeIds: [...selectedShapeIds],
-    }
-  }
-
-  function pushHistorySnapshot({ snapshot }: { snapshot: HistorySnapshot }) {
-    setHistory((current) => ({
-      past: [...current.past, snapshot].slice(-historyLimit),
-      future: [],
-    }))
-  }
-
-  function recordDocumentChange() {
-    if (transactionRef.current) {
-      transactionChangedRef.current = true
-      return
-    }
-    const snapshot = captureSnapshot()
-    if (snapshot) {
-      pushHistorySnapshot({ snapshot })
-    }
-  }
-
-  function beginHistoryTransaction() {
-    if (transactionRef.current) {
-      return
-    }
-    transactionRef.current = captureSnapshot()
-    transactionChangedRef.current = false
-  }
-
-  function commitHistoryTransaction() {
-    const snapshot = transactionRef.current
-    const changed = transactionChangedRef.current
-    transactionRef.current = null
-    transactionChangedRef.current = false
-    if (snapshot && changed) {
-      pushHistorySnapshot({ snapshot })
-    }
-  }
-
-  function cancelHistoryTransaction() {
-    const snapshot = transactionRef.current
-    transactionRef.current = null
-    transactionChangedRef.current = false
-    if (snapshot) {
-      restoreSnapshot({ snapshot })
-    }
-  }
-
-  function undo() {
-    if (transactionRef.current || history.past.length === 0) {
-      return
-    }
-    const snapshot = history.past.at(-1)
-    const current = captureSnapshot()
-    if (!snapshot || !current) {
-      return
-    }
-    setHistory({
-      past: history.past.slice(0, -1),
-      future: [current, ...history.future].slice(0, historyLimit),
-    })
-    restoreSnapshot({ snapshot })
-  }
-
-  function redo() {
-    if (transactionRef.current || history.future.length === 0) {
-      return
-    }
-    const snapshot = history.future[0]
-    const current = captureSnapshot()
-    if (!current) {
-      return
-    }
-    setHistory({
-      past: [...history.past, current].slice(-historyLimit),
-      future: history.future.slice(1),
-    })
-    restoreSnapshot({ snapshot })
-  }
 
   function restoreSnapshot({ snapshot }: { snapshot: HistorySnapshot }) {
     setState({ status: 'loaded', document: structuredClone(snapshot.document) })
@@ -995,5 +828,45 @@ export function EditorPage() {
     setSelectedShapeIds((page.elements ?? []).map(({ id }) => id))
     setEditingShapeId(null)
     setTextEditor(null)
+  }
+
+  async function addImage({ file }: { file: File }) {
+    if (state.status !== 'loaded' || !documentId || !page) {
+      return
+    }
+    setImageUploadStatus('uploading')
+    try {
+      const image = await uploadDocumentImage({ file, documentId, page })
+      recordDocumentChange()
+      setState((current) => {
+        if (current.status !== 'loaded') {
+          return current
+        }
+        const pages = current.document.pages ?? []
+        const firstPage = pages[0]
+        if (!firstPage) {
+          return current
+        }
+        return {
+          status: 'loaded',
+          document: {
+            ...current.document,
+            pages: [
+              { ...firstPage, elements: [...(firstPage.elements ?? []), image] },
+              ...pages.slice(1),
+            ],
+          },
+        }
+      })
+      setSelectedShapeIds([image.id])
+      setEditingShapeId(null)
+      setTextEditor(null)
+      setSaveStatus('idle')
+      setImageUploadStatus('idle')
+    } catch (error) {
+      console.error('Image upload failed', error)
+      setImageUploadStatus('error')
+      window.setTimeout(() => setImageUploadStatus('idle'), 3000)
+    }
   }
 }

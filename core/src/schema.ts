@@ -55,6 +55,27 @@ export const pages = pgTable(
   (table) => [index('pages_document_id_idx').on(table.documentId)],
 )
 
+export const documentAssets = pgTable(
+  'document_assets',
+  {
+    id: varchar('id', { length: 36 }).primaryKey(),
+    documentId: bigint('document_id', { mode: 'bigint' })
+      .notNull()
+      .references(() => documents.id, { onDelete: 'cascade' }),
+    pathname: varchar('pathname', { length: 1024 }).notNull(),
+    contentType: varchar('content_type', { length: 100 }).notNull(),
+    byteSize: integer('byte_size').notNull(),
+    width: integer('width'),
+    height: integer('height'),
+    uploaded: boolean('uploaded').notNull().default(false),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('document_assets_document_id_idx').on(table.documentId),
+    uniqueIndex('document_assets_pathname_key').on(table.pathname),
+  ],
+)
+
 export const elements = pgTable(
   'elements',
   {
@@ -91,4 +112,4 @@ export const appSessions = pgTable(
   (table) => [index('app_sessions_expires_at_idx').on(table.expiresAt)],
 )
 
-export const schema = { users, documents, pages, elements, appSessions }
+export const schema = { users, documents, pages, documentAssets, elements, appSessions }

@@ -41,7 +41,7 @@ type PathGeometry = { commands: PathCommand[] }
 type CanvasShape = {
   element: CanvasElement
   id?: string
-  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star' | 'arrow'
+  type: 'rect' | 'ellipse' | 'text' | 'image' | 'line' | 'polygon' | 'star' | 'arrow'
   x: number
   y: number
   width: number
@@ -97,6 +97,7 @@ const canvasShape = ({ element }: { element: CanvasElement }): CanvasShape => {
     }
   }
   const isText = element.kind === 'text'
+  const isImage = element.kind === 'image'
   const geometry = element.kind === 'shape' ? element.data.geometry : undefined
   const radius = geometry?.type === 'rectangle' ? geometry.radius : undefined
   const fill = element.kind === 'shape' ? element.data.fill : null
@@ -104,7 +105,13 @@ const canvasShape = ({ element }: { element: CanvasElement }): CanvasShape => {
   return {
     element,
     id: 'id' in element ? element.id : undefined,
-    type: isText ? 'text' : geometry?.type === 'rectangle' ? 'rect' : (geometry?.type ?? 'rect'),
+    type: isText
+      ? 'text'
+      : isImage
+        ? 'image'
+        : geometry?.type === 'rectangle'
+          ? 'rect'
+          : (geometry?.type ?? 'rect'),
     x: element.x,
     y: element.y,
     width: element.data.size.width,
@@ -204,6 +211,18 @@ function ShapeNode({ shape, hideText = false }: { shape: CanvasShape; hideText?:
     )
   } else if (shape.type === 'text' && shape.element.kind === 'text') {
     node = hideText ? null : <RichTextShape element={shape.element} />
+  } else if (shape.type === 'image' && shape.element.kind === 'image') {
+    node = (
+      <image
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        href={`/api/assets/${encodeURIComponent(shape.element.data.assetId)}`}
+        preserveAspectRatio={`xMidYMid ${shape.element.data.fit === 'cover' ? 'slice' : 'meet'}`}
+        data-asset-id={shape.element.data.assetId}
+      />
+    )
   } else if (shape.element.kind === 'shape' && shape.element.data.geometry.type === 'arrow') {
     node = (
       <path

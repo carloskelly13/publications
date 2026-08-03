@@ -4,6 +4,7 @@ import {
   Circle,
   Copy,
   GripVertical,
+  Image as ImageIcon,
   ListChecks,
   ListX,
   MoveDown,
@@ -57,6 +58,9 @@ const LayerIcon = ({ shape }: { shape: ElementResponse }) => {
   }
   if (shape.kind === 'text') {
     return <Type className="size-4" aria-hidden="true" />
+  }
+  if (shape.kind === 'image') {
+    return <ImageIcon className="size-4" aria-hidden="true" />
   }
   if (shape.kind === 'path') {
     return <Spline className="size-4" aria-hidden="true" />

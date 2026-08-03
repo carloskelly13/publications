@@ -1,9 +1,10 @@
 import { createHash } from 'node:crypto'
-import { and, asc, count, desc, eq, gt, ilike, lt, notInArray } from 'drizzle-orm'
+import { and, asc, count, desc, eq, gt, ilike, inArray, lt, notInArray } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import { config } from './config.js'
-import { appSessions, documents, elements, pages, schema, users } from './schema.js'
+import { appSessions, documentAssets, documents, elements, pages, schema, users } from './schema.js'
+import { HttpError } from './errors.js'
 import type { DocumentInput, ElementInputType } from './schemas.js'
 
 export type CurrentUser = {
@@ -93,6 +94,19 @@ export const initializeDatabase = (): Promise<void> => {
         )
       `
       await tx`
+        create table if not exists document_assets (
+          id varchar(36) primary key,
+          document_id bigint not null references documents(id) on delete cascade,
+          pathname varchar(1024) not null unique,
+          content_type varchar(100) not null,
+          byte_size integer not null,
+          width integer,
+          height integer,
+          uploaded boolean not null default false,
+          created_at timestamp with time zone not null default current_timestamp
+        )
+      `
+      await tx`
         create table if not exists app_sessions (
           token_hash varchar(64) primary key,
           user_id bigint not null references users(id) on delete cascade,
@@ -105,6 +119,7 @@ export const initializeDatabase = (): Promise<void> => {
       await tx`create index if not exists documents_user_id_idx on documents(user_id)`
       await tx`create index if not exists pages_document_id_idx on pages(document_id)`
       await tx`create index if not exists elements_page_id_idx on elements(page_id)`
+      await tx`create index if not exists document_assets_document_id_idx on document_assets(document_id)`
       await tx`create index if not exists app_sessions_expires_at_idx on app_sessions(expires_at)`
     })
   })().catch((error) => {
@@ -236,6 +251,31 @@ async function replacePages({
   documentId: bigint
   input: DocumentInput
 }): Promise<void> {
+  const requestedAssetIds = [
+    ...new Set(
+      input.pages.flatMap((page) =>
+        (page.elements ?? []).flatMap((element) =>
+          element.kind === 'image' ? [element.data.assetId] : [],
+        ),
+      ),
+    ),
+  ]
+  if (requestedAssetIds.length > 0) {
+    const ownedAssets = await tx
+      .select({ id: documentAssets.id })
+      .from(documentAssets)
+      .where(
+        and(
+          eq(documentAssets.documentId, documentId),
+          eq(documentAssets.uploaded, true),
+          inArray(documentAssets.id, requestedAssetIds),
+        ),
+      )
+    if (ownedAssets.length !== requestedAssetIds.length) {
+      throw new HttpError({ statusCode: 400, message: 'An image asset is unavailable.' })
+    }
+  }
+
   const existing = await tx
     .select({ id: pages.id })
     .from(pages)
@@ -451,4 +491,171 @@ export async function deleteDocument({
     .where(and(eq(documents.id, BigInt(id)), eq(documents.userId, BigInt(userId))))
     .returning({ id: documents.id })
   return rows.length > 0
+}
+
+export async function createDocumentAsset({
+  id,
+  documentId,
+  userId,
+  pathname,
+  contentType,
+  byteSize,
+}: {
+  id: string
+  documentId: string
+  userId: string
+  pathname: string
+  contentType: string
+  byteSize: number
+}) {
+  await initializeDatabase()
+  const [document] = await getDatabase()
+    .select({ id: documents.id })
+    .from(documents)
+    .where(and(eq(documents.id, BigInt(documentId)), eq(documents.userId, BigInt(userId))))
+    .limit(1)
+  if (!document) {
+    return undefined
+  }
+  const [asset] = await getDatabase()
+    .insert(documentAssets)
+    .values({ id, documentId: document.id, pathname, contentType, byteSize })
+    .returning()
+  return asset
+}
+
+export async function completeDocumentAsset({
+  id,
+  documentId,
+  userId,
+  pathname,
+  contentType,
+  byteSize,
+  width,
+  height,
+}: {
+  id: string
+  documentId: string
+  userId: string
+  pathname: string
+  contentType: string
+  byteSize: number
+  width: number
+  height: number
+}) {
+  await initializeDatabase()
+  const db = getDatabase()
+  const [owned] = await db
+    .select({ asset: documentAssets })
+    .from(documentAssets)
+    .innerJoin(documents, eq(documents.id, documentAssets.documentId))
+    .where(
+      and(
+        eq(documentAssets.id, id),
+        eq(documentAssets.documentId, BigInt(documentId)),
+        eq(documentAssets.pathname, pathname),
+        eq(documents.userId, BigInt(userId)),
+      ),
+    )
+    .limit(1)
+  if (!owned || owned.asset.contentType !== contentType || owned.asset.byteSize !== byteSize) {
+    return undefined
+  }
+  const [asset] = await db
+    .update(documentAssets)
+    .set({ width, height, uploaded: true })
+    .where(eq(documentAssets.id, id))
+    .returning()
+  return asset
+}
+
+export async function getDocumentAsset({ id, userId }: { id: string; userId: string }) {
+  await initializeDatabase()
+  const [row] = await getDatabase()
+    .select({ asset: documentAssets })
+    .from(documentAssets)
+    .innerJoin(documents, eq(documents.id, documentAssets.documentId))
+    .where(
+      and(
+        eq(documentAssets.id, id),
+        eq(documentAssets.uploaded, true),
+        eq(documents.userId, BigInt(userId)),
+      ),
+    )
+    .limit(1)
+  return row?.asset
+}
+
+export async function listDocumentAssetPathnames({
+  documentId,
+  userId,
+}: {
+  documentId: string
+  userId: string
+}) {
+  await initializeDatabase()
+  const db = getDatabase()
+  const [document] = await db
+    .select({ id: documents.id })
+    .from(documents)
+    .where(and(eq(documents.id, BigInt(documentId)), eq(documents.userId, BigInt(userId))))
+    .limit(1)
+  if (!document) {
+    return undefined
+  }
+  const assets = await db
+    .select({ pathname: documentAssets.pathname })
+    .from(documentAssets)
+    .where(eq(documentAssets.documentId, document.id))
+  return assets.map(({ pathname }) => pathname)
+}
+
+export async function listUnreferencedDocumentAssets({
+  documentId,
+  userId,
+  retainedAssetIds,
+}: {
+  documentId: string
+  userId: string
+  retainedAssetIds: string[]
+}) {
+  await initializeDatabase()
+  const db = getDatabase()
+  const [document] = await db
+    .select({ id: documents.id })
+    .from(documents)
+    .where(and(eq(documents.id, BigInt(documentId)), eq(documents.userId, BigInt(userId))))
+    .limit(1)
+  if (!document) {
+    return undefined
+  }
+  return db
+    .select({ id: documentAssets.id, pathname: documentAssets.pathname })
+    .from(documentAssets)
+    .where(
+      retainedAssetIds.length > 0
+        ? and(
+            eq(documentAssets.documentId, document.id),
+            notInArray(documentAssets.id, retainedAssetIds),
+          )
+        : eq(documentAssets.documentId, document.id),
+    )
+}
+
+export async function deleteDocumentAssets({
+  documentId,
+  assetIds,
+}: {
+  documentId: string
+  assetIds: string[]
+}): Promise<void> {
+  if (assetIds.length === 0) {
+    return
+  }
+  await initializeDatabase()
+  await getDatabase()
+    .delete(documentAssets)
+    .where(
+      and(eq(documentAssets.documentId, BigInt(documentId)), inArray(documentAssets.id, assetIds)),
+    )
 }

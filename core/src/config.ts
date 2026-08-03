@@ -53,5 +53,8 @@ export const config = {
       fallback: process.env.NODE_ENV === 'production',
     })
   },
+  get blobReadWriteToken() {
+    return required('BLOB_READ_WRITE_TOKEN')
+  },
   port: Number(process.env.PORT ?? 4004),
 }

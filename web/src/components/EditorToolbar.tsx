@@ -17,6 +17,7 @@ import {
   FileDown,
   Grid2x2,
   Grid2x2Check,
+  ImagePlus,
   Italic,
   Layers3,
   List,
@@ -44,6 +45,7 @@ import { cn } from '../lib/cn'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 export type ExportStatus = 'idle' | 'exporting' | 'error'
+export type ImageUploadStatus = 'idle' | 'uploading' | 'error'
 export type InsertElementType = 'rect' | 'circle' | 'star' | 'arrow' | 'text' | 'line'
 
 type Props = {
@@ -53,6 +55,8 @@ type Props = {
   onSave: () => void
   saveStatus: SaveStatus
   onAddShape: (type: InsertElementType) => void
+  onAddImage: ({ file }: { file: File }) => void
+  imageUploadStatus: ImageUploadStatus
   onExportPdf: () => void
   exportStatus: ExportStatus
   layersOpen: boolean
@@ -316,9 +320,18 @@ export function ColorControl({
   )
 }
 
-function InsertMenu({ onAddShape }: { onAddShape: (type: InsertElementType) => void }) {
+function InsertMenu({
+  onAddShape,
+  onAddImage,
+  imageUploadStatus,
+}: {
+  onAddShape: (type: InsertElementType) => void
+  onAddImage: ({ file }: { file: File }) => void
+  imageUploadStatus: ImageUploadStatus
+}) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!open) {
@@ -369,6 +382,33 @@ function InsertMenu({ onAddShape }: { onAddShape: (type: InsertElementType) => v
           className="absolute left-0 top-10 z-40 grid w-52 grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-900"
           role="menu"
         >
+          <input
+            ref={fileInputRef}
+            className="hidden"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            onChange={(event) => {
+              const file = event.target.files?.[0]
+              event.target.value = ''
+              if (file) {
+                onAddImage({ file })
+                setOpen(false)
+              }
+            }}
+          />
+          <button
+            className="flex aspect-square flex-col items-center justify-center gap-2 rounded-lg bg-gray-100 text-xs font-medium text-gray-700 hover:bg-violet-100 hover:text-violet-700 disabled:cursor-wait disabled:opacity-50 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-violet-950 dark:hover:text-violet-300"
+            type="button"
+            disabled={imageUploadStatus === 'uploading'}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {imageUploadStatus === 'uploading' ? (
+              <LoaderCircle className="size-7 animate-spin" aria-hidden="true" />
+            ) : (
+              <ImagePlus className="size-7" aria-hidden="true" />
+            )}
+            {imageUploadStatus === 'uploading' ? 'Uploading' : 'Image'}
+          </button>
           {options.map(({ type, label, icon: Icon }) => (
             <button
               key={type}
@@ -879,6 +919,8 @@ export function EditorToolbar({
   onSave,
   saveStatus,
   onAddShape,
+  onAddImage,
+  imageUploadStatus,
   onExportPdf,
   exportStatus,
   layersOpen,
@@ -982,7 +1024,11 @@ export function EditorToolbar({
         onUndo={onUndo}
         onRedo={onRedo}
       />
-      <InsertMenu onAddShape={onAddShape} />
+      <InsertMenu
+        onAddShape={onAddShape}
+        onAddImage={onAddImage}
+        imageUploadStatus={imageUploadStatus}
+      />
       <div className="ml-auto flex items-center gap-1">
         <button
           className={cn(

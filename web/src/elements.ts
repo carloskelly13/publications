@@ -38,7 +38,7 @@ export function elementInput({ element }: { element: ElementResponse }): Element
 }
 
 export function elementSize({ element }: { element: CanvasElement }) {
-  if (element.kind === 'shape' || element.kind === 'text') {
+  if (element.kind === 'shape' || element.kind === 'text' || element.kind === 'image') {
     return element.data.size
   }
   const bounds = localPathBounds({ commands: element.data.commands })
@@ -108,6 +108,16 @@ export function applyElementPatch({
       },
     }
   }
+  if (element.kind === 'image') {
+    return {
+      ...common,
+      kind: 'image',
+      data: {
+        ...element.data,
+        size: { ...element.data.size, ...patch.size },
+      },
+    }
+  }
   return {
     ...common,
     kind: 'text',
@@ -125,6 +135,9 @@ export function elementLabel({ element }: { element: CanvasElement }) {
   }
   if (element.kind === 'path') {
     return 'Path'
+  }
+  if (element.kind === 'image') {
+    return 'Image'
   }
   const geometry = element.data.geometry
   if (geometry.type === 'rectangle') {

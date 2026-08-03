@@ -241,7 +241,7 @@ function MetricInput({
 type MetricShape = {
   element: ElementResponse
   id: string
-  type: 'rect' | 'ellipse' | 'text' | 'line' | 'polygon' | 'star' | 'arrow'
+  type: 'rect' | 'ellipse' | 'text' | 'image' | 'line' | 'polygon' | 'star' | 'arrow'
   x: number
   y: number
   width: number
@@ -414,9 +414,11 @@ function metricShape({ element }: { element: ElementResponse }): MetricShape {
     type:
       element.kind === 'text'
         ? 'text'
-        : geometry?.type === 'rectangle'
-          ? 'rect'
-          : (geometry?.type ?? 'rect'),
+        : element.kind === 'image'
+          ? 'image'
+          : geometry?.type === 'rectangle'
+            ? 'rect'
+            : (geometry?.type ?? 'rect'),
     x: element.x,
     y: element.y,
     width: element.data.size.width,
@@ -642,7 +644,7 @@ export function PropertiesPanel({
           )}
           {view === 'selection' && position && (
             <>
-              {shape && (
+              {shape && shape.type !== 'image' && (
                 <div className="mb-3 flex flex-wrap items-center gap-1 border-b border-gray-200 pb-3 dark:border-gray-700">
                   {shape.type === 'text' ? (
                     <TextFormattingControls editor={textEditor} />
@@ -784,7 +786,7 @@ export function PropertiesPanel({
                         />
                       </>
                     )}
-                    {shape.type !== 'text' && (
+                    {(shape.element.kind === 'shape' || shape.element.kind === 'path') && (
                       <>
                         <div
                           className="col-span-2 h-px bg-gray-200 dark:bg-gray-700"

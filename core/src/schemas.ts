@@ -123,6 +123,14 @@ const TextData = Type.Object({
   ]),
 })
 
+const ImageData = Type.Object({
+  size: Type.Ref(Size),
+  assetId: Type.String(),
+  fit: Type.Union([Type.Literal('contain'), Type.Literal('cover')]),
+  positionX: Type.Number({ minimum: 0, maximum: 1 }),
+  positionY: Type.Number({ minimum: 0, maximum: 1 }),
+})
+
 const ShapeElementInput = Type.Object({
   id: InputId,
   ...ElementFields,
@@ -142,6 +150,13 @@ const TextElementInput = Type.Object({
   ...ElementFields,
   kind: Type.Literal('text'),
   data: TextData,
+})
+
+const ImageElementInput = Type.Object({
+  id: InputId,
+  ...ElementFields,
+  kind: Type.Literal('image'),
+  data: ImageData,
 })
 
 const ShapeElementResponse = Type.Object({
@@ -165,12 +180,20 @@ const TextElementResponse = Type.Object({
   data: TextData,
 })
 
-export const ElementInput = Type.Union([ShapeElementInput, PathElementInput, TextElementInput], {
-  $id: 'ElementInput',
+const ImageElementResponse = Type.Object({
+  id: ResponseId,
+  ...ElementFields,
+  kind: Type.Literal('image'),
+  data: ImageData,
 })
 
+export const ElementInput = Type.Union(
+  [ShapeElementInput, PathElementInput, TextElementInput, ImageElementInput],
+  { $id: 'ElementInput' },
+)
+
 export const ElementResponse = Type.Union(
-  [ShapeElementResponse, PathElementResponse, TextElementResponse],
+  [ShapeElementResponse, PathElementResponse, TextElementResponse, ImageElementResponse],
   { $id: 'ElementResponse' },
 )
 
@@ -234,6 +257,50 @@ export const RenameDocumentRequest = Type.Object(
   { $id: 'RenameDocumentRequest' },
 )
 
+export const AssetUploadRequest = Type.Object(
+  {
+    filename: Type.String({ minLength: 1, maxLength: 255 }),
+    contentType: Type.Union([
+      Type.Literal('image/png'),
+      Type.Literal('image/jpeg'),
+      Type.Literal('image/webp'),
+    ]),
+    byteSize: Type.Integer({ minimum: 1, maximum: 20_000_000 }),
+  },
+  { $id: 'AssetUploadRequest' },
+)
+
+export const AssetUploadResponse = Type.Object(
+  {
+    id: Type.String(),
+    pathname: Type.String(),
+    clientToken: Type.String(),
+  },
+  { $id: 'AssetUploadResponse' },
+)
+
+export const AssetCompleteRequest = Type.Object(
+  {
+    pathname: Type.String(),
+    width: Type.Integer({ minimum: 1, maximum: 100_000 }),
+    height: Type.Integer({ minimum: 1, maximum: 100_000 }),
+  },
+  { $id: 'AssetCompleteRequest' },
+)
+
+export const AssetResponse = Type.Object(
+  {
+    id: Type.String(),
+    documentId: Type.String(),
+    pathname: Type.String(),
+    contentType: Type.String(),
+    byteSize: Type.Integer(),
+    width: Type.Integer(),
+    height: Type.Integer(),
+  },
+  { $id: 'AssetResponse' },
+)
+
 export const PdfRequest = Type.Object(
   {
     svg: Type.String({ minLength: 1, maxLength: 5_000_000 }),
@@ -264,3 +331,5 @@ export type DocumentInput = Static<typeof DocumentRequest>
 export type PageInputType = Static<typeof PageInput>
 export type ElementInputType = Static<typeof ElementInput>
 export type PdfInput = Static<typeof PdfRequest>
+export type AssetUploadInput = Static<typeof AssetUploadRequest>
+export type AssetCompleteInput = Static<typeof AssetCompleteRequest>
