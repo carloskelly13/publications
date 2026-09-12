@@ -33,6 +33,20 @@ export type ElementBounds = {
   height: number
 }
 
+function applySizePatch({
+  current,
+  patch,
+}: {
+  current: { width: number; height: number }
+  patch?: ElementPatch['size']
+}) {
+  return {
+    ...current,
+    ...(patch?.width === undefined ? {} : { width: patch.width }),
+    ...(patch?.height === undefined ? {} : { height: patch.height }),
+  }
+}
+
 export function elementInput({ element }: { element: ElementResponse }): ElementInput {
   return structuredClone(element)
 }
@@ -89,7 +103,7 @@ export function applyElementPatch({
       kind: 'shape',
       data: {
         ...element.data,
-        size: { ...element.data.size, ...patch.size },
+        size: applySizePatch({ current: element.data.size, patch: patch.size }),
         ...(patch.geometry === undefined ? {} : { geometry: patch.geometry }),
         ...(patch.fill === undefined ? {} : { fill: patch.fill }),
         ...(patch.border === undefined ? {} : { border: patch.border }),
@@ -114,7 +128,7 @@ export function applyElementPatch({
       kind: 'image',
       data: {
         ...element.data,
-        size: { ...element.data.size, ...patch.size },
+        size: applySizePatch({ current: element.data.size, patch: patch.size }),
       },
     }
   }
@@ -123,7 +137,7 @@ export function applyElementPatch({
     kind: 'text',
     data: {
       ...element.data,
-      size: { ...element.data.size, ...patch.size },
+      size: applySizePatch({ current: element.data.size, patch: patch.size }),
       ...(patch.content === undefined ? {} : { content: patch.content }),
     },
   }

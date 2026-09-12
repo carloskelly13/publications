@@ -768,7 +768,12 @@ export const DocumentCanvas = forwardRef<SVGSVGElement, Props>(function Document
           ...(changes.rotation === undefined ? {} : { rotation: changes.rotation }),
           ...(changes.width === undefined && changes.height === undefined
             ? {}
-            : { size: { width: changes.width, height: changes.height } }),
+            : {
+                size: {
+                  ...(changes.width === undefined ? {} : { width: changes.width }),
+                  ...(changes.height === undefined ? {} : { height: changes.height }),
+                },
+              }),
           ...(changes.pathGeometry === undefined
             ? {}
             : { commands: changes.pathGeometry.commands }),
