@@ -7,7 +7,11 @@ import { EditorPage } from './components/EditorPage'
 import { PublicationsLogo } from './components/PublicationsLogo'
 
 function App() {
-  const [authFailure, setAuthFailure] = useState<string | null>(null)
+  const [authFailure, setAuthFailure] = useState<string | null>(() =>
+    new URLSearchParams(window.location.search).get('auth') === 'failed'
+      ? 'Google sign-in was not completed. Please try again.'
+      : null,
+  )
   const [signedOut, setSignedOut] = useState(false)
   const currentUser = api.useQuery('get', '/api/auth/current-user-identity')
   const logoutMutation = api.useMutation('post', '/api/auth/logout', {
@@ -15,13 +19,11 @@ function App() {
   })
 
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search)
-    if (query.get('auth') !== 'failed') {
+    if (!authFailure) {
       return
     }
     window.history.replaceState({}, '', window.location.pathname)
-    setAuthFailure('Google sign-in was not completed. Please try again.')
-  }, [])
+  }, [authFailure])
 
   if (currentUser.data && !signedOut) {
     return (

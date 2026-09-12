@@ -463,10 +463,7 @@ export function PropertiesPanel({
   onEditCancel,
 }: Props) {
   const shapes = elements.map((element) => metricShape({ element }))
-  const [cornersLinked, setCornersLinked] = useState(true)
-  const [view, setView] = useState<PropertiesView>(shapes.length > 0 ? 'selection' : 'document')
   const shape = shapes.length === 1 ? shapes[0] : undefined
-  const selectionKey = shapes.map(({ id }) => id).join(',')
   const position = shape
     ? { x: shape.x ?? 0, y: shape.y ?? 0 }
     : shapes.length > 0
@@ -490,6 +487,8 @@ export function PropertiesPanel({
   )
     ? cornerRadii[0]
     : null
+  const [cornersLinked, setCornersLinked] = useState(unifiedCornerRadius !== null)
+  const [view, setView] = useState<PropertiesView>(shapes.length > 0 ? 'selection' : 'document')
   const linePoints = shape?.type === 'line' ? lineMetricPoints({ shape }) : undefined
   const starGeometry =
     shape?.element.kind === 'shape' && shape.element.data.geometry.type === 'star'
@@ -557,16 +556,6 @@ export function PropertiesPanel({
     }
     onElementChange({ changes: patch })
   }
-
-  useEffect(() => {
-    if (shape?.id) {
-      setCornersLinked(unifiedCornerRadius !== null)
-    }
-  }, [shape?.id, unifiedCornerRadius])
-
-  useEffect(() => {
-    setView(shapes.length > 0 ? 'selection' : 'document')
-  }, [selectionKey, shapes.length])
 
   return (
     <PropertyEditContext.Provider value={{ onEditStart, onEditEnd, onEditCancel }}>
@@ -652,6 +641,7 @@ export function PropertiesPanel({
                     <div className="grid w-full grid-cols-2 gap-2">
                       {shape.type !== 'line' && (
                         <ColorControl
+                          key={shape.fill}
                           label="Fill"
                           icon={PaintBucket}
                           color={shape.fill}
@@ -667,6 +657,7 @@ export function PropertiesPanel({
                         />
                       )}
                       <ColorControl
+                        key={shape.stroke}
                         label="Border"
                         icon={PenLine}
                         color={shape.stroke}

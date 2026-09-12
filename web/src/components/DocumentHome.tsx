@@ -16,7 +16,7 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useRef, useState, type Ref } from 'react'
+import { useEffect, useEffectEvent, useRef, useState, type Ref } from 'react'
 import { useNavigate } from 'react-router'
 import { api, fetchClient } from '../api'
 import { cn } from '../lib/cn'
@@ -101,7 +101,7 @@ function DocumentRow({
 }: DocumentRowProps) {
   const page = document.pages?.[0]
   const previewRef = useRef<SVGSVGElement>(null)
-  const downloadPdfRef = useRef<() => Promise<void>>(() => Promise.resolve())
+  const downloadPdfEvent = useEffectEvent(downloadPdf)
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(document.name ?? 'Untitled')
   const [renaming, setRenaming] = useState(false)
@@ -109,13 +109,11 @@ function DocumentRow({
   const [validationError, setValidationError] = useState<string | null>(null)
   const [downloadError, setDownloadError] = useState<string | null>(null)
 
-  downloadPdfRef.current = downloadPdf
-
   useEffect(() => {
     if (!document.id) {
       return
     }
-    return registerDownload({ id: document.id, download: () => downloadPdfRef.current() })
+    return registerDownload({ id: document.id, download: () => downloadPdfEvent() })
   }, [document.id, registerDownload])
 
   return (
@@ -455,13 +453,10 @@ export function DocumentHome() {
     const timeout = window.setTimeout(() => {
       setDebouncedSearch(search.trim())
       setPage(0)
+      setSelectedIds([])
     }, 300)
     return () => window.clearTimeout(timeout)
   }, [search])
-
-  useEffect(() => {
-    setSelectedIds([])
-  }, [page, debouncedSearch, sort])
 
   const currentDocumentIds = documents.flatMap((document) => (document.id ? [document.id] : []))
   const selectedDocuments = documents.filter(
@@ -594,7 +589,10 @@ export function DocumentHome() {
                   setSelectedIds([])
                 }}
                 onClearSelection={() => setSelectedIds([])}
-                onPageChange={setPage}
+                onPageChange={(nextPage) => {
+                  setPage(nextPage)
+                  setSelectedIds([])
+                }}
               />
             </div>
           ) : (
@@ -813,6 +811,7 @@ export function DocumentHome() {
           : 'desc'
     setSort(`${field}-${nextDirection}` as DocumentSort)
     setPage(0)
+    setSelectedIds([])
   }
 
   function openDocument(document: PublicationDocument) {

@@ -27,12 +27,82 @@ type LoadState =
   | { status: 'loaded'; document: PublicationDocument }
   | { status: 'error'; message: string }
 
+function EditorLoading() {
+  return (
+    <div className="grid min-h-0 flex-1 place-items-center bg-gray-200 text-sm text-gray-600 dark:bg-gray-950 dark:text-gray-400">
+      Loading document…
+    </div>
+  )
+}
+
+function EditorError({ message }: { message: string }) {
+  return (
+    <div className="grid min-h-0 flex-1 place-items-center bg-gray-100 px-6 text-center dark:bg-gray-950">
+      <div>
+        <h1 className="text-lg font-semibold">Unable to open the editor</h1>
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{message}</p>
+        <Link
+          className="mt-5 inline-block text-sm font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-400"
+          to="/"
+        >
+          Back to documents
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 const wait = ({ durationMs }: { durationMs: number }) =>
   new Promise<void>((resolve) => window.setTimeout(resolve, durationMs))
 
 export function EditorPage() {
   const { documentId } = useParams<{ documentId: string }>()
-  const [state, setState] = useState<LoadState>({ status: 'loading' })
+  const documentQuery = api.useQuery(
+    'get',
+    '/api/documents/{id}',
+    { params: { path: { id: documentId ?? '' } } },
+    { enabled: Boolean(documentId) },
+  )
+
+  if (!documentId) {
+    return <EditorError message="This document has no identifier." />
+  }
+  if (documentQuery.isPending) {
+    return <EditorLoading />
+  }
+  if (!documentQuery.data) {
+    const queryError: unknown = documentQuery.error
+    return (
+      <EditorError
+        message={
+          queryError instanceof ApiError && queryError.status === 404
+            ? 'Document not found'
+            : 'Unable to load this document'
+        }
+      />
+    )
+  }
+
+  return (
+    <LoadedEditorPage
+      key={documentId}
+      documentId={documentId}
+      initialDocument={documentQuery.data}
+    />
+  )
+}
+
+function LoadedEditorPage({
+  documentId,
+  initialDocument,
+}: {
+  documentId: string
+  initialDocument: PublicationDocument
+}) {
+  const [state, setState] = useState<LoadState>(() => ({
+    status: 'loaded',
+    document: initialDocument,
+  }))
   const [zoom, setZoom] = useState(1)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [exportStatus, setExportStatus] = useState<ExportStatus>('idle')
@@ -45,16 +115,10 @@ export function EditorPage() {
   const [layersPanelHeight, setLayersPanelHeight] = useState(308)
   const [snapToGrid, setSnapToGrid] = useState(true)
   const [clipboardShapes, setClipboardShapes] = useState<ElementResponse[]>([])
-  const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null)
+  const toolbarTarget = document.getElementById('editor-toolbar-slot')
   const exportCanvasRef = useRef<SVGSVGElement>(null)
   const saveFeedbackTimerRef = useRef<number | null>(null)
   const pasteCountRef = useRef(0)
-  const documentQuery = api.useQuery(
-    'get',
-    '/api/documents/{id}',
-    { params: { path: { id: documentId ?? '' } } },
-    { enabled: Boolean(documentId) },
-  )
   const saveMutation = api.useMutation('put', '/api/documents/{id}')
   const loadedDocument = state.status === 'loaded' ? state.document : null
   const {
@@ -73,10 +137,6 @@ export function EditorPage() {
     onRestore: restoreSnapshot,
   })
 
-  useEffect(() => {
-    setToolbarTarget(document.getElementById('editor-toolbar-slot'))
-  }, [])
-
   useEffect(
     () => () => {
       if (saveFeedbackTimerRef.current !== null) {
@@ -85,38 +145,6 @@ export function EditorPage() {
     },
     [],
   )
-
-  useEffect(() => {
-    if (!documentId) {
-      setState({ status: 'error', message: 'This document has no identifier.' })
-      return
-    }
-    setState({ status: 'loading' })
-    setSelectedShapeIds([])
-    setEditingShapeId(null)
-    setTextEditor(null)
-    resetHistory()
-  }, [documentId, resetHistory])
-
-  useEffect(() => {
-    if (documentQuery.data) {
-      setState({ status: 'loaded', document: documentQuery.data })
-    }
-  }, [documentQuery.data])
-
-  useEffect(() => {
-    const queryError: unknown = documentQuery.error
-    if (!queryError) {
-      return
-    }
-    setState({
-      status: 'error',
-      message:
-        queryError instanceof ApiError && queryError.status === 404
-          ? 'Document not found'
-          : 'Unable to load this document',
-    })
-  }, [documentQuery.error])
 
   const handleKeyboard = useEffectEvent((event: KeyboardEvent) => {
     const target = event.target as HTMLElement | null
@@ -319,7 +347,7 @@ export function EditorPage() {
     setSaveStatus('idle')
   }
 
-  const deleteLayers = ({ shapeIds }: { shapeIds: string[] }) => {
+  function deleteLayers({ shapeIds }: { shapeIds: string[] }) {
     const deleting = new Set(shapeIds)
     const hasMatchingShape =
       state.status === 'loaded' &&
@@ -573,6 +601,7 @@ export function EditorPage() {
             }
             properties={
               <PropertiesPanel
+                key={selectedShapeIds.join(',')}
                 documentName={state.document.name ?? 'Untitled'}
                 page={page}
                 shapes={selectedShapes}

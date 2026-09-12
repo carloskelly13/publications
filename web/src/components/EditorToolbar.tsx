@@ -155,7 +155,6 @@ export function ColorControl({
   const validHex = normalizedHex(hex)
   const opacityPercent = Math.round(Math.min(1, Math.max(0, opacity)) * 100)
 
-  useEffect(() => setHex(normalizedHex(color ?? '') ?? ''), [color])
   useEffect(() => {
     if (!open) {
       return
@@ -854,6 +853,7 @@ export function TextFormattingControls({ editor }: { editor: Editor | null }) {
         onClick={() => run((current) => current.chain().focus().toggleStrike().run())}
       />
       <ColorControl
+        key={state?.color ?? '#111827'}
         label="Text color"
         icon={Type}
         color={state?.color ?? '#111827'}
