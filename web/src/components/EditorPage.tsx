@@ -1,4 +1,5 @@
 import type { Editor } from '@tiptap/core'
+import { useQueryClient } from '@tanstack/react-query'
 import { createPortal } from 'react-dom'
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
@@ -99,6 +100,7 @@ function LoadedEditorPage({
   documentId: string
   initialDocument: PublicationDocument
 }) {
+  const queryClient = useQueryClient()
   const [state, setState] = useState<LoadState>(() => ({
     status: 'loaded',
     document: initialDocument,
@@ -436,6 +438,13 @@ function LoadedEditorPage({
       if (request.status === 'rejected') {
         throw request.reason
       }
+      queryClient.setQueryData(
+        api.queryOptions('get', '/api/documents/{id}', {
+          params: { path: { id: documentId } },
+        }).queryKey,
+        request.value,
+      )
+      void queryClient.invalidateQueries({ queryKey: ['get', '/api/documents'] })
       setState({ status: 'loaded', document: request.value })
       setSelectedShapeIds([])
       setEditingShapeId(null)
