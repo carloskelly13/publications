@@ -28,7 +28,7 @@
     "@vercel/blob": "2.8.0",
     "dotenv": "17.4.2",
     "drizzle-orm": "0.45.2",
-    "fastify": "5.12.4",
+    "fastify": "5.12.6",
     "postgres": "3.4.9",
     "puppeteer-core": "25.10.0"
   },
